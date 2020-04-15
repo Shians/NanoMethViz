@@ -1,26 +1,35 @@
 Package: NanoMethViz
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Visualise methlation data from Oxford Nanopore sequencing
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Author: Authors@R: c(
+    person("Shian", "Su", email = "su.s@wehi.edu.au", role = c("cre", "aut")))
+Maintainer: Shian Su <su.s@wehi.edu.au>
+Description: NanoMethViz is a toolkit for visualising methylation data from 
+    Oxford Nanopore sequencing.
+biocViews:
+    Software
+URL: https://github.com/shians/NanoMethViz
+BugReports: https://github.com/Shians/NanoMethViz
 Depends:
-    R (>= 3.6.0)
+    R (>= 3.6.0),
+    magrittr,
+    ggplot2
 Imports:
-    ggplot2,
     dplyr,
     tidyr,
     tibble,
     stringr,
     patchwork,
-    dbplyr,
-    ggthemes
+    ggthemes,
+    assertthat,
+    glue
 Suggests:
     AnnotationDbi,
     Mus.musculus,
     Homo.sapiens
-License: What license is it under?
+License: Apache License (>= 2.0)
 Encoding: UTF-8
 LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.0

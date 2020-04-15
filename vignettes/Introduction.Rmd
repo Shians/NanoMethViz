@@ -1,0 +1,66 @@
+---
+title: "Introduction"
+author: "Shian Su"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# preload to avoid loading messages
+library(NanoMethViz)
+library(readr)
+```
+
+```{r}
+library(NanoMethViz)
+library(readr)
+
+# helper function extracts exons from Mus.muculus pacakge
+exon_tibble <- get_exons_mus_musculus()
+```
+
+```{r}
+# loading saved results from previous bsseq analysis
+bsseq_dmr <- read.table(
+    system.file(package = "NanoMethViz", "dmr_subset.tsv.gz"),
+    sep = "\t",
+    header = TRUE,
+    stringsAsFactors = FALSE
+)
+
+# methylation data stored in tabix file
+methy <- system.file(package = "NanoMethViz", "methy_subset.tsv.bgz")
+```
+
+```{r}
+sample <-  c(
+    "B6Cast_Prom_1_bl6",
+    "B6Cast_Prom_1_cast",
+    "B6Cast_Prom_2_bl6",
+    "B6Cast_Prom_2_cast",
+    "B6Cast_Prom_3_bl6",
+    "B6Cast_Prom_3_cast"
+)
+group <- stringr::str_extract(sample, "(bl6|cast)")
+sample_anno <- data.frame(sample, group, stringsAsFactors = FALSE)
+```
+
+The genes we have avaiable are
+
+* Peg3
+* Meg3
+* Impact
+* Xist
+* Brca1
+* Brca2
+
+For demonstrative purposes we will plot Peg3 and Meg3.
+
+```{r}
+nmr <- NanoMethResult(methy, sample_anno, exon_tibble)
+
+plot_gene(nmr, "Peg3", anno_regions = bsseq_dmr)
+plot_gene(nmr, "Meg3", anno_regions = bsseq_dmr)
+```
+

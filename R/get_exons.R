@@ -1,29 +1,45 @@
+#' Get exon annotations for mus musculus
+#'
+#' @return data.frame containing exons
+#'
+#' @importFrom readr read_tsv
+#' @export
 get_exons_mus_musculus <- function() {
-    Mus.musculus <- getFromNamespace("Mus.musculus", "Mus.musculus")
-    genes <-  AnnotationDbi::keys(Mus.musculus, "GENEID")
-    exon_data <- AnnotationDbi::select(
-        Mus.musculus,
-        keys = genes,
-        keytype = "GENEID",
-        columns = c(
-            "GENEID",
-            "TXID",
-            "EXONCHROM",
-            "EXONSTRAND",
-            "EXONSTART",
-            "EXONEND",
-            "SYMBOL"
+    url <- "https://github.com/Shians/exon_annotations/raw/master/mus_musculus_exons.tsv.gz"
+
+    readr::read_tsv(
+        url,
+        col_types = readr::cols(
+            gene_id = readr::col_double(),
+            chr = readr::col_character(),
+            strand = readr::col_character(),
+            start = readr::col_double(),
+            end = readr::col_double(),
+            transcript_id = readr::col_double(),
+            symbol = readr::col_character()
         )
     )
+}
 
-    exon_tibble <- as_tibble(exon_data) %>%
-        dplyr::rename(
-            gene_id = GENEID,
-            chr = EXONCHROM,
-            strand = EXONSTRAND,
-            start = EXONSTART,
-            end = EXONEND,
-            transcript_id = TXID,
-            symbol = SYMBOL
+#' Get exon annotations for homo sapiens
+#'
+#' @return data.frame containing exons
+#'
+#' @importFrom readr read_tsv
+#' @export
+get_exons_homo_sapiens <- function() {
+    url <- "https://github.com/Shians/exon_annotations/raw/master/homo_sapiens_exons.tsv.gz"
+
+    readr::read_tsv(
+        url,
+        col_types = readr::cols(
+            gene_id = readr::col_double(),
+            chr = readr::col_character(),
+            strand = readr::col_character(),
+            start = readr::col_double(),
+            end = readr::col_double(),
+            transcript_id = readr::col_double(),
+            symbol = readr::col_character()
         )
+    )
 }

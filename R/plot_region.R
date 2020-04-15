@@ -1,36 +1,34 @@
-setGeneric("plot_gene", function(x, gene, ...) {
-  standardGeneric("plot_gene")
+setGeneric("plot_region", function(x, gene, ...) {
+  standardGeneric("plot_region")
 })
 
-setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
+setMethod("plot_region", signature(x = "NanoMethResult", gene = "character"),
     function(x, gene, ...) {
-        plot_gene(x, gene, ...)
+        plot_region(x, gene, ...)
     }
 )
 
-#' Plot gene
+#' Plot region
 #'
 #' @param x the NanoMethResults object
-#' @param gene the gene symbol for the gene to plot
+#' @param chr the chromosome to plot
+#' @param start the start of the plotting region
+#' @param end the end of the plotting region
 #' @param anno_regions the data.frame of regions to be annotated
 #' @param spaghetti whether spaghettis should be drawn
 #'
 #' @return
-#' @import patchwork
 #' @export
-plot_gene <- function(
+plot_region <- function(
     x,
-    gene,
+    chr,
+    start,
+    end,
     anno_regions = NULL,
     spaghetti = FALSE
     ) {
-    assertthat::assert_that(
-      nrow(exons(x)) > 0,
-      msg = "exons(x) is empty, gene cannot be queried"
-    )
-
     sample_anno <- samples(x)
-    exons_anno <- query_exons_symbol(exons(x), symbol = gene)
+    exons_anno <- query_exons_region(exons(x), chr = chr, start = start, end = end)
 
     feature <- list()
     feature$chr <- unique(exons_anno$chr)
@@ -40,7 +38,7 @@ plot_gene <- function(
     p1 <- with(exons_anno,
          plot_feature(
             feature,
-            title = gene,
+            title = glue::glue("{chr}:{start}-{end}"),
             methy = methy(x),
             sample_anno = sample_anno,
             anno_regions = anno_regions,

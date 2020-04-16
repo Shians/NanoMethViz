@@ -15,13 +15,13 @@ remotes::install_github("shians/NanoMethViz")
 
 ## Example
 
-A introductory example can be found in the package vignette:
+An introductory example can be found in the package vignette:
 
 ``` r
 vignette("Introduction", package = "NanoMethViz")
 ```
 
-A example of the visualisation for Peg3
+An example of the visualisation for Peg3
 
 ![](img/peg3_spaghetti.png)
 

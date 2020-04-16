@@ -1,3 +1,6 @@
+#' @importFrom RSQLite dbConnect SQLite SQLITE_RO dbDisconnect dbGetQuery
+#' @importFrom Rsamtools TabixFile scanTabix
+
 can_open_sql <- function(x) {
     assertthat::is.readable(x)
     out <- TRUE

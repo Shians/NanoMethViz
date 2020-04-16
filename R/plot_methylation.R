@@ -12,9 +12,9 @@ plot_methylation_internal <- function(
     if (!is.null(anno_regions)) {
         anno_regions <- anno_regions %>%
             dplyr::filter(
-                chr == unique(methy_data$chr),
-                end >= min(methy_data$pos),
-                start <= max(methy_data$pos)
+                .data$chr == unique(methy_data$chr),
+                .data$end >= min(methy_data$pos),
+                .data$start <= max(methy_data$pos)
             )
     }
 
@@ -23,13 +23,13 @@ plot_methylation_internal <- function(
         plot_data_prop <- methy_data %>%
             dplyr::inner_join(sample_anno, by = "sample") %>%
             dplyr::mutate(
-                mod_prob = e1071::sigmoid(statistic)
+                mod_prob = e1071::sigmoid(.data$statistic)
             ) %>%
             dplyr::group_by(
-                group, pos
+                .data$group, .data$pos
             ) %>%
             dplyr::summarise(
-                mod_prop = sum(mod_prob > 0.5) / dplyr::n()
+                mod_prop = sum(.data$mod_prob > 0.5) / dplyr::n()
             )
     }
 
@@ -37,15 +37,15 @@ plot_methylation_internal <- function(
     plot_data <- methy_data %>%
         dplyr::inner_join(sample_anno, by = "sample") %>%
         dplyr::mutate(
-            mod_prob = e1071::sigmoid(statistic)
+            mod_prob = e1071::sigmoid(.data$statistic)
         )
 
     smooth_span <- min(8000 / (end - start), 0.4)
     if (prop) {
-        p <- ggplot(plot_data, aes(x = pos, col = group)) +
-            stat_smooth(
+        p <- ggplot(plot_data, aes(x = .data$pos, col = .data$group)) +
+            ggplot2::stat_smooth(
                 data = plot_data_prop,
-                aes(y = mod_prop),
+                aes(y = .data$mod_prop),
                 geom = "smooth",
                 method = "loess",
                 size = 3,
@@ -53,9 +53,9 @@ plot_methylation_internal <- function(
                 formula = y ~ x
             )
     } else {
-        p <- ggplot(plot_data, aes(x = pos, col = group)) +
-            stat_smooth(
-                aes(y = mod_prob),
+        p <- ggplot(plot_data, aes(x = .data$pos, col = .data$group)) +
+            ggplot2::stat_smooth(
+                aes(y = .data$mod_prob),
                 geom = "smooth",
                 method = "loess",
                 size = 3,
@@ -66,8 +66,8 @@ plot_methylation_internal <- function(
 
     if (spaghetti) {
         p <- p +
-            stat_smooth(
-                aes(y = mod_prob, group = read_name),
+            ggplot2::stat_smooth(
+                aes(y = .data$mod_prob, group = .data$read_name),
                 alpha = 0.25,
                 geom = "line",
                 method = "loess",
@@ -81,7 +81,7 @@ plot_methylation_internal <- function(
         for (i in seq_len(nrow(anno_regions))) {
             region <- anno_regions[i,]
             p <- p +
-                annotate(
+                ggplot2::annotate(
                     "rect",
                     xmin = region$start,
                     xmax = region$end,
@@ -97,15 +97,15 @@ plot_methylation_internal <- function(
     x_max <- min(max(plot_data$pos), end)
 
     p +
-        geom_rug(aes(col = NULL), sides = "b") +
-        ggtitle(title) +
-        ylim(0, 1) +
-        xlab(chr) +
-        scale_x_continuous(
+        ggplot2::geom_rug(aes(col = NULL), sides = "b") +
+        ggplot2::ggtitle(title) +
+        ggplot2::ylim(0, 1) +
+        ggplot2::xlab(chr) +
+        ggplot2::scale_x_continuous(
             breaks = c(x_min, x_max),
-            label = scales::comma(c(x_min, x_max))) +
-        scale_color_brewer(palette = "Set1") +
-        scale_fill_brewer(palette = "Set1") +
+            labels = scales::comma(c(x_min, x_max))) +
+        ggplot2::scale_color_brewer(palette = "Set1") +
+        ggplot2::scale_fill_brewer(palette = "Set1") +
         ggthemes::theme_tufte()
 }
 
@@ -123,7 +123,7 @@ plot_agg <- function(
     window <- (end - start) * window_prop
 
     methy_data <- query_methy(methy, chr, start - window, end + window) %>%
-        dplyr::select(-strand, -modified) %>%
+        dplyr::select(-"strand", -"modified") %>%
         tibble::as_tibble()
 
     plot_methylation_internal(
@@ -152,7 +152,7 @@ plot_spaghetti_and_agg <- function(
     window <- (end - start) * window_prop
 
     methy_data <- query_methy(methy, chr, start - window, end + window) %>%
-        dplyr::select(-strand, -modified) %>%
+        dplyr::select(-"strand", -"modified") %>%
         tibble::as_tibble()
 
     plot_methylation_internal(

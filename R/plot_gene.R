@@ -1,24 +1,28 @@
+#' Plot gene
+#'
+#' @param x the NanoMethResults object.
+#' @param gene the gene symbol for the gene to plot.
+#' @param ... additional arguments
+#'
+#' @return None
+#' @export
 setGeneric("plot_gene", function(x, gene, ...) {
   standardGeneric("plot_gene")
 })
 
+#' @rdname plot_gene
+#'
+#' @param anno_regions the data.frame of regions to annotate.
+#' @param spaghetti whether or not individual reads should be shown.
+#'
+#' @export
 setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
-    function(x, gene, ...) {
-        plot_gene(x, gene, ...)
+    function(x, gene, anno_regions = NULL, spaghetti = FALSE) {
+        .plot_gene(x, gene, anno_regions = anno_regions, spaghetti = spaghetti)
     }
 )
 
-#' Plot gene
-#'
-#' @param x the NanoMethResults object
-#' @param gene the gene symbol for the gene to plot
-#' @param anno_regions the data.frame of regions to be annotated
-#' @param spaghetti whether spaghettis should be drawn
-#'
-#' @return
-#' @import patchwork
-#' @export
-plot_gene <- function(
+.plot_gene <- function(
     x,
     gene,
     anno_regions = NULL,

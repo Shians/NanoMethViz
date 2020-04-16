@@ -6,6 +6,8 @@
 #' @slot exons the data.frame of exon information containing at least columns
 #'   gene_id, chr, strand, start, end, transcript_id and symbol.
 #'
+#' @seealso [NanoMethResult()], [methy()], [samples()], [exons()].
+#'
 #' @return a NanoMethResult object to be used with plotting functions
 #' @export
 setClass(
@@ -40,7 +42,7 @@ NanoMethResult <- function(methy, samples, exons = NULL) {
         )
     }
 
-    new(
+    methods::new(
         "NanoMethResult",
         methy = methy,
         samples = tibble::as_tibble(samples),
@@ -51,13 +53,21 @@ NanoMethResult <- function(methy, samples, exons = NULL) {
 
 #' Get methylation data
 #'
-#' @param object
+#' @param object the object.
 #'
-#' @return
+#' @return path to methylation data.
 #' @export
 setGeneric("methy", valueClass = "character", function(object) {
     standardGeneric("methy")
 })
+
+#' Get methylation data
+#'
+#' @param object the NanoMethResult object.
+#'
+#' @return path to methylation data.
+#' @describeIn NanoMethResult-class methyation data path getter.
+#' @export
 setMethod("methy", signature("NanoMethResult"), function(object)
 {
     object@methy
@@ -65,13 +75,21 @@ setMethod("methy", signature("NanoMethResult"), function(object)
 
 #' Get sample annotation
 #'
-#' @param object
+#' @param object the object.
 #'
-#' @return
+#' @return data.frame of sample annotation.
 #' @export
 setGeneric("samples", valueClass = "data.frame", function(object) {
     standardGeneric("samples")
 })
+
+#' Get sample annotation
+#'
+#' @param object the NanoMethResult object.
+#'
+#' @return data.frame of sample annotation.
+#' @describeIn NanoMethResult-class sample annotation getter.
+#' @export
 setMethod("samples", signature("NanoMethResult"), function(object)
 {
     object@samples
@@ -79,13 +97,21 @@ setMethod("samples", signature("NanoMethResult"), function(object)
 
 #' Get exon annotation
 #'
-#' @param object
+#' @param object the object.
 #'
-#' @return
+#' @return data.frame of exon annotation.
 #' @export
 setGeneric("exons", valueClass = "data.frame", function(object) {
     standardGeneric("exons")
 })
+
+#' Get exon annotation
+#'
+#' @param object the NanoMethResult object.
+#'
+#' @return data.frame of exon annotation.
+#' @describeIn NanoMethResult-class exon annotation getter.
+#' @export
 setMethod("exons", signature("NanoMethResult"), function(object)
 {
     object@exons

@@ -2,6 +2,10 @@
 title: "Introduction"
 author: "Shian Su"
 output: html_document
+vignette: >
+  %\VignetteIndexEntry{Introduction}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
 ---
 
 ```{r setup, include=FALSE}

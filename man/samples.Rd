@@ -7,10 +7,10 @@
 samples(object)
 }
 \arguments{
-\item{object}{}
+\item{object}{the object.}
 }
 \value{
-
+data.frame of sample annotation.
 }
 \description{
 Get sample annotation

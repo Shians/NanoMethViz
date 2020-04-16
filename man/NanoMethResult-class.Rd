@@ -3,13 +3,47 @@
 \docType{class}
 \name{NanoMethResult-class}
 \alias{NanoMethResult-class}
+\alias{methy,NanoMethResult-method}
+\alias{samples,NanoMethResult-method}
+\alias{exons,NanoMethResult-method}
 \title{Nanopore Methylation Result}
+\usage{
+\S4method{methy}{NanoMethResult}(object)
+
+\S4method{samples}{NanoMethResult}(object)
+
+\S4method{exons}{NanoMethResult}(object)
+}
+\arguments{
+\item{object}{the NanoMethResult object.}
+}
 \value{
 a NanoMethResult object to be used with plotting functions
+
+path to methylation data.
+
+data.frame of sample annotation.
+
+data.frame of exon annotation.
 }
 \description{
 Nanopore Methylation Result
+
+Get methylation data
+
+Get sample annotation
+
+Get exon annotation
 }
+\section{Functions}{
+\itemize{
+\item \code{methy,NanoMethResult-method}: methyation data path getter.
+
+\item \code{samples,NanoMethResult-method}: sample annotation getter.
+
+\item \code{exons,NanoMethResult-method}: exon annotation getter.
+}}
+
 \section{Slots}{
 
 \describe{
@@ -22,3 +56,6 @@ sample and group.}
 gene_id, chr, strand, start, end, transcript_id and symbol.}
 }}
 
+\seealso{
+\code{\link[=NanoMethResult]{NanoMethResult()}}, \code{\link[=methy]{methy()}}, \code{\link[=samples]{samples()}}, \code{\link[=exons]{exons()}}.
+}

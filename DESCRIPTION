@@ -13,22 +13,33 @@ URL: https://github.com/shians/NanoMethViz
 BugReports: https://github.com/Shians/NanoMethViz
 Depends:
     R (>= 3.6.0),
+    methods,
     magrittr,
     ggplot2
 Imports:
-    dplyr,
-    tidyr,
-    tibble,
-    stringr,
-    patchwork,
-    ggthemes,
     assertthat,
-    glue
+    dplyr,
+    e1071,
+    GenomicRanges,
+    ggthemes,
+    glue,
+    patchwork,
+    readr,
+    rlang,
+    RSQLite,
+    Rsamtools,
+    scales,
+    stringr,
+    tibble,
+    tidyr
 Suggests:
     AnnotationDbi,
     Mus.musculus,
-    Homo.sapiens
+    Homo.sapiens,
+    knitr,
+    rmarkdown
 License: Apache License (>= 2.0)
+VignetteBuilder: knitr
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)

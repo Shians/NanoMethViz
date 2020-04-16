@@ -7,10 +7,10 @@
 exons(object)
 }
 \arguments{
-\item{object}{}
+\item{object}{the object.}
 }
 \value{
-
+data.frame of exon annotation.
 }
 \description{
 Get exon annotation

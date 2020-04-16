@@ -2,9 +2,12 @@
 % Please edit documentation in R/plot_region.R
 \name{plot_region}
 \alias{plot_region}
+\alias{plot_region,NanoMethResult,character,numeric,numeric-method}
 \title{Plot region}
 \usage{
-plot_region(x, chr, start, end, anno_regions = NULL, spaghetti = FALSE)
+plot_region(x, chr, start, end, ...)
+
+\S4method{plot_region}{NanoMethResult,character,numeric,numeric}(x, chr, start, end, anno_regions, spaghetti)
 }
 \arguments{
 \item{x}{the NanoMethResults object}
@@ -15,12 +18,14 @@ plot_region(x, chr, start, end, anno_regions = NULL, spaghetti = FALSE)
 
 \item{end}{the end of the plotting region}
 
+\item{...}{additional arguments}
+
 \item{anno_regions}{the data.frame of regions to be annotated}
 
-\item{spaghetti}{whether spaghettis should be drawn}
+\item{spaghetti}{whether or not individual reads should be shown.}
 }
 \value{
-
+None
 }
 \description{
 Plot region

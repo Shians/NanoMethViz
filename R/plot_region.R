@@ -1,25 +1,37 @@
-setGeneric("plot_region", function(x, gene, ...) {
-  standardGeneric("plot_region")
-})
-
-setMethod("plot_region", signature(x = "NanoMethResult", gene = "character"),
-    function(x, gene, ...) {
-        plot_region(x, gene, ...)
-    }
-)
-
 #' Plot region
 #'
 #' @param x the NanoMethResults object
 #' @param chr the chromosome to plot
 #' @param start the start of the plotting region
 #' @param end the end of the plotting region
-#' @param anno_regions the data.frame of regions to be annotated
-#' @param spaghetti whether spaghettis should be drawn
+#' @param ... additional arguments
 #'
-#' @return
+#' @return None
 #' @export
-plot_region <- function(
+setGeneric("plot_region", function(x, chr, start, end, ...) {
+  standardGeneric("plot_region")
+})
+
+#' @rdname plot_region
+#' @param anno_regions the data.frame of regions to be annotated
+#' @param spaghetti whether or not individual reads should be shown.
+#'
+#' @export
+setMethod("plot_region", signature(x = "NanoMethResult", chr = "character", start = "numeric", end = "numeric"),
+    function(x, chr, start, end, anno_regions, spaghetti) {
+      .plot_region(
+        x = x,
+        chr = chr,
+        start = start,
+        end = end,
+        anno_regions = anno_regions,
+        spaghetti = spaghetti
+      )
+    }
+)
+
+
+.plot_region <- function(
     x,
     chr,
     start,

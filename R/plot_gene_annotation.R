@@ -1,23 +1,23 @@
 plot_gene_annotation <- function(exons_df, plot_start, plot_end) {
     exons_df <- exons_df %>%
     dplyr::mutate(
-        uid = factor(paste(gene_id, transcript_id, sep = ".")),
-        y_offset = as.integer(uid) - 1
+        uid = factor(paste(.data$gene_id, .data$transcript_id, sep = ".")),
+        y_offset = as.integer(.data$uid) - 1
     )
 
     exons_count <- exons_df %>%
-        dplyr::group_by(uid, y_offset) %>%
+        dplyr::group_by(.data$uid, .data$y_offset) %>%
         dplyr::summarise(exons = dplyr::n())
 
     gap <- exons_df %>%
         dplyr::inner_join(exons_count, by = c("uid", "y_offset")) %>%
-        dplyr::filter(exons > 1) %>%
-        dplyr::group_by(uid, y_offset, strand) %>%
+        dplyr::filter(.data$exons > 1) %>%
+        dplyr::group_by(.data$uid, .data$y_offset, .data$strand) %>%
         dplyr::summarise(
-            gap_start = list(end[-length(end)]),
-            gap_end = list(start[-1])
+            gap_start = list(.data$end[-length(.data$end)]),
+            gap_end = list(.data$start[-1])
         ) %>%
-        tidyr::unnest(cols = c(gap_start, gap_end))
+        tidyr::unnest(cols = c(.data$gap_start, .data$gap_end))
 
     .get_gaps <- function(gaps, strand = c("+", "-", "*")) {
         strand <- match.arg(strand)
@@ -51,16 +51,16 @@ plot_gene_annotation <- function(exons_df, plot_start, plot_end) {
     gap_none <- .get_gaps(gap, "*")
 
     gene_middle <- exons_df %>%
-        dplyr::group_by(gene_id, symbol, transcript_id, y_offset) %>%
-        dplyr::summarise(gene_middle = (min(start) + max(end)) / 2)
+        dplyr::group_by(.data$gene_id, .data$symbol, .data$transcript_id, .data$y_offset) %>%
+        dplyr::summarise(gene_middle = (min(.data$start) + max(.data$end)) / 2)
 
     .exons <- function(exons_df) {
         ggplot2::geom_rect(
             ggplot2::aes(
-                xmin = start,
-                xmax = end,
-                ymin = y_offset + 0.05,
-                ymax = y_offset + 0.55
+                xmin = .data$start,
+                xmax = .data$end,
+                ymin = .data$y_offset + 0.05,
+                ymax = .data$y_offset + 0.55
             ),
             data = exons_df,
             fill = "#696969"
@@ -70,15 +70,15 @@ plot_gene_annotation <- function(exons_df, plot_start, plot_end) {
     .connector_arrows <- function(gaps) {
         ggplot2::geom_segment(
             ggplot2::aes(
-                x = gap_start,
-                xend = gap_end,
-                y = y_offset + 0.275,
-                yend = y_offset + 0.275
+                x = .data$gap_start,
+                xend = .data$gap_end,
+                y = .data$y_offset + 0.275,
+                yend = .data$y_offset + 0.275
             ),
             data = gaps,
             arrow = grid::arrow(
                 type = "closed",
-                length = unit(5, "points")
+                length = ggplot2::unit(5, "points")
             )
         )
     }
@@ -86,10 +86,10 @@ plot_gene_annotation <- function(exons_df, plot_start, plot_end) {
     .connector_lines <- function(gaps) {
         ggplot2::geom_segment(
             ggplot2::aes(
-                x = gap_end,
-                xend = gap_start,
-                y = y_offset + 0.275,
-                yend = y_offset + 0.275
+                x = .data$gap_end,
+                xend = .data$gap_start,
+                y = .data$y_offset + 0.275,
+                yend = .data$y_offset + 0.275
             ),
             data = gaps
         )
@@ -97,10 +97,10 @@ plot_gene_annotation <- function(exons_df, plot_start, plot_end) {
 
     .gene_labels <- function(gene_middle) {
         ggplot2::geom_text(
-            aes(x = gene_middle, y = y_offset + 0.8, label = symbol),
+            aes(x = .data$gene_middle, y = .data$y_offset + 0.8, label = .data$symbol),
             data = gene_middle,
             hjust = "center",
-            size = rel(3.5)
+            size = ggplot2::rel(3.5)
         )
     }
 

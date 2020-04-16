@@ -16,7 +16,7 @@ NULL
 #' @describeIn query_exons Query region.
 query_exons_region <- function(exons, chr, start, end) {
     genes_df <- exons %>%
-        dplyr::group_by(gene_id, chr) %>%
+        dplyr::group_by(.data$gene_id, .data$chr) %>%
         dplyr::summarise(
             start = min(start),
             end = max(end)
@@ -27,7 +27,7 @@ query_exons_region <- function(exons, chr, start, end) {
             start <= !!end & end >= !!start,
             chr == !!chr
         ) %>%
-        dplyr::select(gene_id)
+        dplyr::select("gene_id")
 
     exons %>%
         dplyr::inner_join(genes, by = "gene_id")

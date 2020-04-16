@@ -7,10 +7,10 @@
 methy(object)
 }
 \arguments{
-\item{object}{}
+\item{object}{the object.}
 }
 \value{
-
+path to methylation data.
 }
 \description{
 Get methylation data

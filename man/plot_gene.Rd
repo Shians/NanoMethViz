@@ -2,21 +2,26 @@
 % Please edit documentation in R/plot_gene.R
 \name{plot_gene}
 \alias{plot_gene}
+\alias{plot_gene,NanoMethResult,character-method}
 \title{Plot gene}
 \usage{
-plot_gene(x, gene, anno_regions = NULL, spaghetti = FALSE)
+plot_gene(x, gene, ...)
+
+\S4method{plot_gene}{NanoMethResult,character}(x, gene, anno_regions = NULL, spaghetti = FALSE)
 }
 \arguments{
-\item{x}{the NanoMethResults object}
+\item{x}{the NanoMethResults object.}
 
-\item{gene}{the gene symbol for the gene to plot}
+\item{gene}{the gene symbol for the gene to plot.}
 
-\item{anno_regions}{the data.frame of regions to be annotated}
+\item{...}{additional arguments}
 
-\item{spaghetti}{whether spaghettis should be drawn}
+\item{anno_regions}{the data.frame of regions to annotate.}
+
+\item{spaghetti}{whether or not individual reads should be shown.}
 }
 \value{
-
+None
 }
 \description{
 Plot gene

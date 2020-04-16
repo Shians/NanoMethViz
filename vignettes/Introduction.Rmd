@@ -59,12 +59,19 @@ The genes we have avaiable are
 * Brca1
 * Brca2
 
-For demonstrative purposes we will plot Peg3 and Meg3.
+For demonstrative purposes we will plot Peg3.
 
 ```{r}
 nmr <- NanoMethResult(methy, sample_anno, exon_tibble)
 
 plot_gene(nmr, "Peg3", anno_regions = bsseq_dmr)
-plot_gene(nmr, "Meg3", anno_regions = bsseq_dmr)
+```
+
+We can also draw a version where the individual long reads are visualised
+
+```{r, warning = FALSE}
+# warnings have been turned off in this vignette, but this will generally
+# generate many warnings as the smoothing for many reads will fail
+plot_gene(nmr, "Peg3", anno_regions = bsseq_dmr, spaghetti = TRUE)
 ```
 

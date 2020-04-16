@@ -19,38 +19,66 @@ library(readr)
 ```{r}
 library(NanoMethViz)
 library(readr)
-
-# helper function extracts exons from Mus.muculus pacakge
-exon_tibble <- get_exons_mus_musculus()
 ```
 
-```{r}
-# loading saved results from previous bsseq analysis
-bsseq_dmr <- read.table(
-    system.file(package = "NanoMethViz", "dmr_subset.tsv.gz"),
-    sep = "\t",
-    header = TRUE,
-    stringsAsFactors = FALSE
-)
+To generate a methylation plot we need 3 components:
 
+* methylation data in tabix format
+* annotation of exons
+* annotation of samples
+
+The methylation information has been modified from the output of nanopolish/f5c. It has then been compressed and indexed using `bgzip()` and `indexTabix()` from the `Rsamtools` package.
+
+```{r}
 # methylation data stored in tabix file
 methy <- system.file(package = "NanoMethViz", "methy_subset.tsv.bgz")
+
+# tabix is just a special gzipped tab-separated-values file
+read.table(gzfile(methy), col.names = methy_data_cols(), nrows = 6)
 ```
+
+The exon annotation was obtained from the Mus.musculus package, and joined into a single table. It is important that the chromosomes share the same convention as that found in the methylation data.
 
 ```{r}
-sample <-  c(
-    "B6Cast_Prom_1_bl6",
-    "B6Cast_Prom_1_cast",
-    "B6Cast_Prom_2_bl6",
-    "B6Cast_Prom_2_cast",
-    "B6Cast_Prom_3_bl6",
-    "B6Cast_Prom_3_cast"
-)
-group <- stringr::str_extract(sample, "(bl6|cast)")
-sample_anno <- data.frame(sample, group, stringsAsFactors = FALSE)
+# helper function extracts exons from Mus.muculus pacakge
+exon_tibble <- get_exons_mus_musculus()
+
+head(exon_tibble)
 ```
 
-The genes we have avaiable are
+We will defined the sample annotation ourselves. It is important that the sample names match those found in the methylation data.
+
+```{r}
+sample <- c(
+  "B6Cast_Prom_1_bl6",
+  "B6Cast_Prom_1_cast",
+  "B6Cast_Prom_2_bl6",
+  "B6Cast_Prom_2_cast",
+  "B6Cast_Prom_3_bl6",
+  "B6Cast_Prom_3_cast"
+)
+
+group <- c(
+  "bl6",
+  "cast",
+  "bl6",
+  "cast",
+  "bl6",
+  "cast"
+)
+
+sample_anno <- data.frame(sample, group, stringsAsFactors = FALSE)
+
+sample_anno
+```
+
+For convenience we assemble these three pieces of data into a single object.
+
+```{r}
+nmeth_results <- NanoMethResult(methy, sample_anno, exon_tibble)
+```
+
+The genes we have available are
 
 * Peg3
 * Meg3
@@ -62,16 +90,30 @@ The genes we have avaiable are
 For demonstrative purposes we will plot Peg3.
 
 ```{r}
-nmr <- NanoMethResult(methy, sample_anno, exon_tibble)
-
-plot_gene(nmr, "Peg3", anno_regions = bsseq_dmr)
+plot_gene(nmeth_results, "Peg3")
 ```
 
-We can also draw a version where the individual long reads are visualised
+We can also load in some DMR results to highlight DMR regions.
+
+```{r}
+# loading saved results from previous bsseq analysis
+bsseq_dmr <- read.table(
+    system.file(package = "NanoMethViz", "dmr_subset.tsv.gz"),
+    sep = "\t",
+    header = TRUE,
+    stringsAsFactors = FALSE
+)
+```
+
+```{r}
+plot_gene(nmeth_results, "Peg3", anno_regions = bsseq_dmr)
+```
+
+Individual long reads can be visualised using the `spaghetti` argument.
 
 ```{r, warning = FALSE}
 # warnings have been turned off in this vignette, but this will generally
 # generate many warnings as the smoothing for many reads will fail
-plot_gene(nmr, "Peg3", anno_regions = bsseq_dmr, spaghetti = TRUE)
+plot_gene(nmeth_results, "Peg3", anno_regions = bsseq_dmr, spaghetti = TRUE)
 ```
 

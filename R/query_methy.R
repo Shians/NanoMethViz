@@ -59,12 +59,16 @@ query_methy_sqlite <- function(x, chr, start, end) {
     tibble::as_tibble(out)
 }
 
-query_methy_tabix <- function(x, chr, start, end) {
-    tabix_file <- Rsamtools::TabixFile(x)
 
-    query <- GenomicRanges::GRanges(glue::glue("{chr}:{start}-{end}"))
-
-    col_names <- c(
+#' Column names for methylation data
+#'
+#' @return column names for methylation data
+#' @export
+#'
+#' @examples
+#' methy_data_cols()
+methy_data_cols <- function() {
+    c(
         "sample",
         "chr",
         "pos",
@@ -73,6 +77,14 @@ query_methy_tabix <- function(x, chr, start, end) {
         "statistic",
         "read_name"
     )
+}
+
+query_methy_tabix <- function(x, chr, start, end) {
+    tabix_file <- Rsamtools::TabixFile(x)
+
+    query <- GenomicRanges::GRanges(glue::glue("{chr}:{start}-{end}"))
+
+    col_names <- methy_data_cols()
 
     col_types <- readr::cols(
         "sample" = readr::col_character(),

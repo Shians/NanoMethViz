@@ -43,9 +43,9 @@ setMethod("plot_region", signature(x = "NanoMethResult", chr = "character", star
     exons_anno <- query_exons_region(exons(x), chr = chr, start = start, end = end)
 
     feature <- list()
-    feature$chr <- unique(exons_anno$chr)
-    feature$start <- min(exons_anno$start)
-    feature$end <- max(exons_anno$end)
+    feature$chr <- chr
+    feature$start <- start
+    feature$end <- end
 
     p1 <- with(exons_anno,
          plot_feature(

@@ -48,6 +48,7 @@ plot_methylation_internal <- function(
                 aes(y = .data$mod_prop),
                 geom = "smooth",
                 method = "loess",
+                na.rm = TRUE,
                 size = 3,
                 span = smooth_span,
                 formula = y ~ x
@@ -58,6 +59,7 @@ plot_methylation_internal <- function(
                 aes(y = .data$mod_prob),
                 geom = "smooth",
                 method = "loess",
+                na.rm = TRUE,
                 size = 3,
                 span = smooth_span,
                 formula = y ~ x
@@ -71,6 +73,7 @@ plot_methylation_internal <- function(
                 alpha = 0.25,
                 geom = "line",
                 method = "loess",
+                na.rm = TRUE,
                 se = FALSE,
                 span = 1,
                 formula = y ~ x

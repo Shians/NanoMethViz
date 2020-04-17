@@ -43,14 +43,18 @@ plot_gene_annotation <- function(exons_df, plot_start, plot_end) {
             )
         }
 
-        out
+        dplyr::rename(
+            out,
+            start = "gap_start",
+            end = "gap_end"
+        )
     }
 
     gap_pos <- .get_gaps(gap, "+")
     gap_neg <- .get_gaps(gap, "-")
     gap_none <- .get_gaps(gap, "*")
 
-    gene_middle <- exons_df %>%
+    gene_labels <- exons_df %>%
         dplyr::group_by(.data$gene_id, .data$symbol, .data$transcript_id, .data$y_offset, .data$strand) %>%
         dplyr::summarise(gene_middle = (min(.data$start) + max(.data$end)) / 2)
 
@@ -70,8 +74,8 @@ plot_gene_annotation <- function(exons_df, plot_start, plot_end) {
     .connector_arrows <- function(gaps) {
         ggplot2::geom_segment(
             ggplot2::aes(
-                x = .data$gap_start,
-                xend = .data$gap_end,
+                x = .data$start,
+                xend = .data$end,
                 y = .data$y_offset + 0.275,
                 yend = .data$y_offset + 0.275
             ),
@@ -86,8 +90,8 @@ plot_gene_annotation <- function(exons_df, plot_start, plot_end) {
     .connector_lines <- function(gaps) {
         ggplot2::geom_segment(
             ggplot2::aes(
-                x = .data$gap_end,
-                xend = .data$gap_start,
+                x = .data$end,
+                xend = .data$start,
                 y = .data$y_offset + 0.275,
                 yend = .data$y_offset + 0.275
             ),
@@ -95,24 +99,49 @@ plot_gene_annotation <- function(exons_df, plot_start, plot_end) {
         )
     }
 
-    .gene_labels <- function(gene_middle) {
-        gene_middle$symbol[gene_middle$strand == "+"] <- paste(
-            gene_middle$symbol[gene_middle$strand == "+"],
+    .gene_labels <- function(gene_labels) {
+        gene_labels$symbol[gene_labels$strand == "+"] <- paste(
+            gene_labels$symbol[gene_labels$strand == "+"],
             ">"
         )
 
-        gene_middle$symbol[gene_middle$strand == "-"] <- paste(
+        gene_labels$symbol[gene_labels$strand == "-"] <- paste(
             "<",
-            gene_middle$symbol[gene_middle$strand == "-"]
+            gene_labels$symbol[gene_labels$strand == "-"]
         )
 
         ggplot2::geom_text(
             aes(x = .data$gene_middle, y = .data$y_offset + 0.8, label = .data$symbol),
-            data = gene_middle,
+            data = gene_labels,
             hjust = "center",
             size = ggplot2::rel(3.5)
         )
     }
+
+    .truncate_region <- function(x, plot_start, plot_end, strand) {
+        if (strand == "-") {
+            x <- x %>%
+                dplyr::filter(end <= plot_end, start >= plot_start)
+            x$end[x$end < plot_start] <- plot_start
+            x$start[x$start > plot_end] <- plot_end
+        } else {
+            x <- x %>%
+                dplyr::filter(start <= plot_end, end >= plot_start)
+            x$start[x$start < plot_start] <- plot_start
+            x$end[x$end > plot_end] <- plot_end
+        }
+
+        x
+    }
+
+    exons_df <- .truncate_region(exons_df, plot_start, plot_end, "*")
+    gap_pos <- .truncate_region(gap_pos, plot_start, plot_end, "+")
+    gap_neg <- .truncate_region(gap_neg, plot_start, plot_end, "-")
+    gap_none <- .truncate_region(gap_none, plot_start, plot_end, "*")
+    gene_labels <- gene_labels %>%
+        dplyr::filter(
+            dplyr::between(.data$gene_middle, plot_start, plot_end)
+        )
 
     ggplot2::ggplot() +
         ggplot2::theme_void() +
@@ -120,7 +149,7 @@ plot_gene_annotation <- function(exons_df, plot_start, plot_end) {
         .connector_arrows(gap_pos) +
         .connector_arrows(gap_neg) +
         .connector_lines(gap_none) +
-        .gene_labels(gene_middle) +
+        .gene_labels(gene_labels) +
         ggplot2::xlim(plot_start, plot_end) +
         ggplot2::ylim(0, 1 + max(exons_df$y_offset))
 }

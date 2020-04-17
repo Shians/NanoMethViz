@@ -18,7 +18,7 @@ setGeneric("plot_region", function(x, chr, start, end, ...) {
 #'
 #' @export
 setMethod("plot_region", signature(x = "NanoMethResult", chr = "character", start = "numeric", end = "numeric"),
-    function(x, chr, start, end, anno_regions, spaghetti) {
+    function(x, chr, start, end, anno_regions = NULL, spaghetti = FALSE) {
       .plot_region(
         x = x,
         chr = chr,

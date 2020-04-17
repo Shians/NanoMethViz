@@ -42,6 +42,8 @@ NanoMethResult <- function(methy, samples, exons = NULL) {
         )
     }
 
+    assertthat::is.readable(methy)
+
     methods::new(
         "NanoMethResult",
         methy = methy,

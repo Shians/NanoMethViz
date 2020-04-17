@@ -51,7 +51,7 @@ plot_gene_annotation <- function(exons_df, plot_start, plot_end) {
     gap_none <- .get_gaps(gap, "*")
 
     gene_middle <- exons_df %>%
-        dplyr::group_by(.data$gene_id, .data$symbol, .data$transcript_id, .data$y_offset) %>%
+        dplyr::group_by(.data$gene_id, .data$symbol, .data$transcript_id, .data$y_offset, .data$strand) %>%
         dplyr::summarise(gene_middle = (min(.data$start) + max(.data$end)) / 2)
 
     .exons <- function(exons_df) {
@@ -96,6 +96,16 @@ plot_gene_annotation <- function(exons_df, plot_start, plot_end) {
     }
 
     .gene_labels <- function(gene_middle) {
+        gene_middle$symbol[gene_middle$strand == "+"] <- paste(
+            gene_middle$symbol[gene_middle$strand == "+"],
+            ">"
+        )
+
+        gene_middle$symbol[gene_middle$strand == "-"] <- paste(
+            "<",
+            gene_middle$symbol[gene_middle$strand == "-"]
+        )
+
         ggplot2::geom_text(
             aes(x = .data$gene_middle, y = .data$y_offset + 0.8, label = .data$symbol),
             data = gene_middle,

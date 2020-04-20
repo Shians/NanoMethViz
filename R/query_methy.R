@@ -97,5 +97,23 @@ query_methy_tabix <- function(x, chr, start, end) {
     )
 
     query_result <- Rsamtools::scanTabix(tabix_file, param = query)[[1]]
+
+    if (length(query_result) == 0) {
+        out <- tibble::tibble(
+            "sample" = character(),
+            "chr" = character(),
+            "pos" = integer(),
+            "strand" = character(),
+            "modified" = logical(),
+            "statistic" = numeric(),
+            "read_name" = character()
+        )
+        return(out)
+    }
+
+    if (length(query_result) == 1) {
+        query_result <- paste0(query_result, "\n")
+    }
+
     readr::read_tsv(query_result, col_names = col_names, col_types = col_types)
 }

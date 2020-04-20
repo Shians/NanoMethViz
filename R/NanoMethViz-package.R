@@ -15,6 +15,7 @@
 #' @importFrom readr cols col_character col_integer col_logical col_double
 #' @importFrom tibble tibble as_tibble
 #' @import patchwork
+#' @import assertthat
 #' @keywords internal
 "_PACKAGE"
 

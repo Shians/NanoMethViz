@@ -7,7 +7,7 @@
 \usage{
 plot_region(x, chr, start, end, ...)
 
-\S4method{plot_region}{NanoMethResult,character,numeric,numeric}(x, chr, start, end, anno_regions, spaghetti)
+\S4method{plot_region}{NanoMethResult,character,numeric,numeric}(x, chr, start, end, anno_regions = NULL, spaghetti = FALSE)
 }
 \arguments{
 \item{x}{the NanoMethResults object}

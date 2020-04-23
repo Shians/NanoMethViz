@@ -96,24 +96,30 @@ query_methy_tabix <- function(x, chr, start, end) {
         "read_name" = readr::col_character()
     )
 
-    query_result <- Rsamtools::scanTabix(tabix_file, param = query)[[1]]
+    query_result <- Rsamtools::scanTabix(tabix_file, param = query)
 
-    if (length(query_result) == 0) {
-        out <- tibble::tibble(
-            "sample" = character(),
-            "chr" = character(),
-            "pos" = integer(),
-            "strand" = character(),
-            "modified" = logical(),
-            "statistic" = numeric(),
-            "read_name" = character()
-        )
-        return(out)
+    parse_tabix <- function(x) {
+        if (length(x) == 0) {
+            return(
+                tibble::tibble(
+                    "sample" = character(),
+                    "chr" = character(),
+                    "pos" = integer(),
+                    "strand" = character(),
+                    "modified" = logical(),
+                    "statistic" = numeric(),
+                    "read_name" = character()
+                )
+            )
+        }
+        if (length(x) == 1) {
+            x <- paste0(x, "\n")
+        }
+        readr::read_tsv(x, col_names = col_names, col_types = col_types)
     }
 
-    if (length(query_result) == 1) {
-        query_result <- paste0(query_result, "\n")
-    }
-
-    readr::read_tsv(query_result, col_names = col_names, col_types = col_types)
+    purrr::map(
+        query_result,
+        parse_tabix
+    )
 }

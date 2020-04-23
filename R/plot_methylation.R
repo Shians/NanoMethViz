@@ -126,6 +126,7 @@ plot_agg <- function(
     window <- (end - start) * window_prop
 
     methy_data <- query_methy(methy, chr, start - window, end + window) %>%
+        dplyr::bind_rows() %>%
         dplyr::select(-"strand", -"modified") %>%
         tibble::as_tibble()
 
@@ -155,6 +156,7 @@ plot_spaghetti_and_agg <- function(
     window <- (end - start) * window_prop
 
     methy_data <- query_methy(methy, chr, start - window, end + window) %>%
+        dplyr::bind_rows() %>%
         dplyr::select(-"strand", -"modified") %>%
         tibble::as_tibble()
 

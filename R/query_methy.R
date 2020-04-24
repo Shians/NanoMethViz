@@ -115,7 +115,14 @@ query_methy_tabix <- function(x, chr, start, end) {
         if (length(x) == 1) {
             x <- paste0(x, "\n")
         }
-        readr::read_tsv(x, col_names = col_names, col_types = col_types)
+
+        # using readr::read_tsv on character vectors seems to leak memory
+        read.table(
+            textConnection(x),
+            col.names = col_names,
+            sep = "\t",
+            header = FALSE
+        )
     }
 
     purrr::map(

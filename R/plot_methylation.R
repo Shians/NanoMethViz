@@ -41,29 +41,22 @@ plot_methylation_internal <- function(
         )
 
     smooth_span <- min(8000 / (end - start), 0.4)
-    if (prop) {
-        p <- ggplot(plot_data, aes(x = .data$pos, col = .data$group)) +
-            ggplot2::stat_smooth(
-                data = plot_data_prop,
-                aes(y = .data$mod_prop),
-                geom = "smooth",
-                method = "loess",
-                na.rm = TRUE,
-                size = 3,
-                span = smooth_span,
-                formula = y ~ x
-            )
-    } else {
-        p <- ggplot(plot_data, aes(x = .data$pos, col = .data$group)) +
-            ggplot2::stat_smooth(
-                aes(y = .data$mod_prob),
-                geom = "smooth",
-                method = "loess",
-                na.rm = TRUE,
-                size = 3,
-                span = smooth_span,
-                formula = y ~ x
-            )
+
+    p <- ggplot(plot_data, aes(x = .data$pos, col = .data$group))
+
+    if (!is.null(anno_regions)) {
+        for (i in seq_len(nrow(anno_regions))) {
+            region <- anno_regions[i,]
+            p <- p +
+                ggplot2::annotate(
+                    "rect",
+                    xmin = region$start,
+                    xmax = region$end,
+                    ymin = 0,
+                    ymax = 1,
+                    alpha = 0.2
+                )
+        }
     }
 
     if (spaghetti) {
@@ -80,20 +73,29 @@ plot_methylation_internal <- function(
             )
     }
 
-    if (!is.null(anno_regions)) {
-        for (i in seq_len(nrow(anno_regions))) {
-            region <- anno_regions[i,]
-            p <- p +
-                ggplot2::annotate(
-                    "rect",
-                    xmin = region$start,
-                    xmax = region$end,
-                    ymin = 0,
-                    ymax = 1,
-                    alpha = 0.2,
-                    col = "green"
-                )
-        }
+    if (prop) {
+        p <- p +
+            ggplot2::stat_smooth(
+                data = plot_data_prop,
+                aes(y = .data$mod_prop, fill = .data$group),
+                geom = "smooth",
+                method = "loess",
+                na.rm = TRUE,
+                size = 3,
+                span = smooth_span,
+                formula = y ~ x
+            )
+    } else {
+        p <- p +
+            ggplot2::stat_smooth(
+                aes(y = .data$mod_prob, fill = .data$group),
+                geom = "smooth",
+                method = "loess",
+                na.rm = TRUE,
+                size = 3,
+                span = smooth_span,
+                formula = y ~ x
+            )
     }
 
     x_min <- max(min(plot_data$pos), start)

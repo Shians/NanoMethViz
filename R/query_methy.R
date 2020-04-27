@@ -117,11 +117,22 @@ query_methy_tabix <- function(x, chr, start, end) {
         }
 
         # using readr::read_tsv on character vectors seems to leak memory
-        read.table(
-            textConnection(x),
-            col.names = col_names,
-            sep = "\t",
-            header = FALSE
+        as_tibble(
+            read.table(
+                textConnection(x),
+                col.names = col_names,
+                sep = "\t",
+                colClasses = c(
+                    "character",
+                    "character",
+                    "integer",
+                    "character",
+                    "logical",
+                    "numeric",
+                    "character"
+                ),
+                header = FALSE
+            )
         )
     }
 

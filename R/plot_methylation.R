@@ -18,6 +18,10 @@ plot_methylation_internal <- function(
             )
     }
 
+    if (is.null(span)) {
+        span <- min(8000 / (end - start), 0.4)
+    }
+
     # extract group information and convert probabilities
     plot_data <- methy_data %>%
         dplyr::inner_join(sample_anno, by = "sample") %>%
@@ -25,12 +29,10 @@ plot_methylation_internal <- function(
             mod_prob = e1071::sigmoid(.data$statistic)
         )
 
-    if (is.null(span)) {
-        span <- min(8000 / (end - start), 0.4)
-    }
-
+    # set up plot
     p <- ggplot(plot_data, aes(x = .data$pos, col = .data$group))
 
+    # add annotated regions
     if (!is.null(anno_regions)) {
         for (i in seq_len(nrow(anno_regions))) {
             region <- anno_regions[i,]
@@ -46,6 +48,7 @@ plot_methylation_internal <- function(
         }
     }
 
+    # add spaghetti
     if (spaghetti) {
         p <- p +
             ggplot2::stat_smooth(
@@ -60,9 +63,15 @@ plot_methylation_internal <- function(
             )
     }
 
+    # add smoothed line
+    plot_data_smooth <- plot_data %>%
+        dplyr::group_by(.data$group, .data$pos) %>%
+        dplyr::summarise(mod_prob = mean(mod_prob))
+
     p <- p +
         ggplot2::stat_smooth(
             aes(y = .data$mod_prob, fill = .data$group),
+            data = plot_data_smooth,
             geom = "smooth",
             method = "loess",
             span = span,
@@ -71,9 +80,9 @@ plot_methylation_internal <- function(
             formula = y ~ x
         )
 
+    # add auxiliary elements and style
     x_min <- max(min(plot_data$pos), start)
     x_max <- min(max(plot_data$pos), end)
-
     p +
         ggplot2::geom_rug(aes(col = NULL), sides = "b") +
         ggplot2::ggtitle(title) +

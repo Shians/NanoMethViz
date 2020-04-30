@@ -13,19 +13,22 @@ setGeneric("plot_region", function(x, chr, start, end, ...) {
 })
 
 #' @rdname plot_region
+#'
 #' @param anno_regions the data.frame of regions to be annotated
 #' @param spaghetti whether or not individual reads should be shown.
+#' @param span the span for loess smoothing.
 #'
 #' @export
 setMethod("plot_region", signature(x = "NanoMethResult", chr = "character", start = "numeric", end = "numeric"),
-    function(x, chr, start, end, anno_regions = NULL, spaghetti = FALSE) {
+    function(x, chr, start, end, anno_regions = NULL, spaghetti = FALSE, span = NULL) {
       .plot_region(
         x = x,
         chr = chr,
         start = start,
         end = end,
         anno_regions = anno_regions,
-        spaghetti = spaghetti
+        spaghetti = spaghetti,
+        span = span
       )
     }
 )
@@ -37,7 +40,8 @@ setMethod("plot_region", signature(x = "NanoMethResult", chr = "character", star
     start,
     end,
     anno_regions = NULL,
-    spaghetti = FALSE
+    spaghetti = FALSE,
+    span = NULL
     ) {
     sample_anno <- samples(x)
     exons_anno <- query_exons_region(exons(x), chr = chr, start = start, end = end)
@@ -54,7 +58,8 @@ setMethod("plot_region", signature(x = "NanoMethResult", chr = "character", star
             methy = methy(x),
             sample_anno = sample_anno,
             anno_regions = anno_regions,
-            spaghetti = spaghetti
+            spaghetti = spaghetti,
+            span = span
         )
     )
 

@@ -66,7 +66,7 @@ plot_methylation_internal <- function(
     # add smoothed line
     plot_data_smooth <- plot_data %>%
         dplyr::group_by(.data$group, .data$pos) %>%
-        dplyr::summarise(mod_prob = mean(mod_prob))
+        dplyr::summarise(mod_prob = mean(.data$mod_prob))
 
     p <- p +
         ggplot2::stat_smooth(

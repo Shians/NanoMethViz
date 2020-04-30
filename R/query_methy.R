@@ -79,6 +79,7 @@ methy_data_cols <- function() {
     )
 }
 
+#' @importFrom utils read.table
 query_methy_tabix <- function(x, chr, start, end) {
     tabix_file <- Rsamtools::TabixFile(x)
 
@@ -118,7 +119,7 @@ query_methy_tabix <- function(x, chr, start, end) {
 
         # using readr::read_tsv on character vectors seems to leak memory
         as_tibble(
-            read.table(
+            utils::read.table(
                 textConnection(x),
                 col.names = col_names,
                 sep = "\t",
@@ -136,7 +137,7 @@ query_methy_tabix <- function(x, chr, start, end) {
         )
     }
 
-    purrr::map(
+    lapply(
         query_result,
         parse_tabix
     )

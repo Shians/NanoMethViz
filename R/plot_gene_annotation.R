@@ -102,11 +102,11 @@ plot_gene_annotation <- function(exons_df, plot_start, plot_end) {
     .gene_labels <- function(gene_labels) {
         gene_labels$symbol[gene_labels$strand == "+"] <- paste(
             gene_labels$symbol[gene_labels$strand == "+"],
-            "»"
+            ">"
         )
 
         gene_labels$symbol[gene_labels$strand == "-"] <- paste(
-            "«",
+            "<",
             gene_labels$symbol[gene_labels$strand == "-"]
         )
 
@@ -121,12 +121,12 @@ plot_gene_annotation <- function(exons_df, plot_start, plot_end) {
     .truncate_region <- function(x, plot_start, plot_end, strand) {
         if (strand == "-") {
             x <- x %>%
-                dplyr::filter(end <= plot_end, start >= plot_start)
+                dplyr::filter(.data$end <= plot_end, .data$start >= plot_start)
             x$end[x$end < plot_start] <- plot_start
             x$start[x$start > plot_end] <- plot_end
         } else {
             x <- x %>%
-                dplyr::filter(start <= plot_end, end >= plot_start)
+                dplyr::filter(.data$start <= plot_end, .data$end >= plot_start)
             x$start[x$start < plot_start] <- plot_start
             x$end[x$end > plot_end] <- plot_end
         }

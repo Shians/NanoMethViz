@@ -14,6 +14,7 @@ setGeneric("plot_gene", function(x, gene, ...) {
 #'
 #' @param anno_regions the data.frame of regions to annotate.
 #' @param spaghetti whether or not individual reads should be shown.
+#' @param span the span for loess smoothing.
 #'
 #' @export
 setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),

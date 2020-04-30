@@ -1,9 +1,9 @@
 #' @export
-plot_aggregate_features <- function(x, features, group_by = NULL) {
+plot_aggregate_regions_by_group <- function(x, features, group_by = NULL) {
     assert_that(is.null(group_by) || is.string(group_by))
     assert_that(features %has_name% group_by)
 
-    methy_data <- .get_features(features, methy = methy(nmr))
+    methy_data <- .get_features(features, methy = methy(x))
 
     if (!is.null(group_by)) {
         names(methy_data) <- features[[group_by]]
@@ -12,44 +12,48 @@ plot_aggregate_features <- function(x, features, group_by = NULL) {
     methy_data <- methy_data %>%
         dplyr::bind_rows(.id = "group")
 
-    p <- ggplot(
-            aes(
-                x = rel_pos,
-                y = e1071::sigmoid(statistic)
+    p <- ggplot2::ggplot(
+            ggplot2::aes(
+                x = .data$rel_pos,
+                y = e1071::sigmoid(.data$statistic)
             ),
             data = methy_data
         ) +
-        ylim(c(0, 1)) +
+        ggplot2::ylim(c(0, 1)) +
         ggthemes::theme_tufte()
 
     if (!is.null(group_by)) {
-        p + geom_smooth(aes(group = group, colour = group), na.rm = TRUE)
+        p + ggplot2::geom_smooth(aes(group = .data$group, colour = .data$group), na.rm = TRUE)
     } else {
-        p + geom_smooth(na.rm = TRUE)
+        p + ggplot2::geom_smooth(na.rm = TRUE)
     }
 }
 
 #' @export
-plot_aggregate_features2 <- function(x, features) {
-    methy_data <- .get_features(features, methy = methy(nmr))
+plot_aggregate_regions_by_sample <- function(x, features) {
+    methy_data <- .get_features(features, methy = methy(x))
 
     methy_data <- methy_data %>%
         dplyr::bind_rows() %>%
         dplyr::inner_join(samples(x), by = "sample")
 
-    p <- ggplot(
-            aes(
-                x = rel_pos,
-                y = e1071::sigmoid(statistic)
+    p <- ggplot2::ggplot(
+            ggplot2::aes(
+                x = .data$rel_pos,
+                y = e1071::sigmoid(.data$statistic)
             ),
             data = methy_data) +
-        ylim(c(0, 1)) +
+        ggplot2::ylim(c(0, 1)) +
         ggthemes::theme_tufte()
 
     if (!is.null(group_by)) {
-        p + geom_smooth(aes(group = group, colour = group), na.rm = TRUE)
+        p + ggplot2::geom_smooth(
+            ggplot2::aes(
+                group = .data$group, colour = .data$group
+            ),
+            na.rm = TRUE)
     } else {
-        p + geom_smooth(na.rm = TRUE)
+        p + ggplot2::geom_smooth(na.rm = TRUE)
     }
 }
 
@@ -61,6 +65,7 @@ plot_aggregate_features2 <- function(x, features) {
     parallel::mclapply(.split_rows(.x), .f, mc.cores = 4L, ...)
 }
 
+#' @importFrom purrr map2
 .get_features <- function(features, methy, feature_ids = NULL) {
     .scale_to_feature <- function(x, feature) {
         (x - feature$start) / (feature$end - feature$start)

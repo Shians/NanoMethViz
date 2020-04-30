@@ -102,11 +102,11 @@ plot_gene_annotation <- function(exons_df, plot_start, plot_end) {
     .gene_labels <- function(gene_labels) {
         gene_labels$symbol[gene_labels$strand == "+"] <- paste(
             gene_labels$symbol[gene_labels$strand == "+"],
-            ">"
+            "»"
         )
 
         gene_labels$symbol[gene_labels$strand == "-"] <- paste(
-            "<",
+            "«",
             gene_labels$symbol[gene_labels$strand == "-"]
         )
 

@@ -17,8 +17,8 @@ setGeneric("plot_gene", function(x, gene, ...) {
 #'
 #' @export
 setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
-    function(x, gene, anno_regions = NULL, spaghetti = FALSE) {
-        .plot_gene(x, gene, anno_regions = anno_regions, spaghetti = spaghetti)
+    function(x, gene, anno_regions = NULL, spaghetti = FALSE, span = NULL) {
+        .plot_gene(x, gene, anno_regions = anno_regions, spaghetti = spaghetti, span = span)
     }
 )
 
@@ -26,7 +26,8 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
     x,
     gene,
     anno_regions = NULL,
-    spaghetti = FALSE
+    spaghetti = FALSE,
+    span = NULL
     ) {
     assertthat::assert_that(
       nrow(exons(x)) > 0,
@@ -48,7 +49,8 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
             methy = methy(x),
             sample_anno = sample_anno,
             anno_regions = anno_regions,
-            spaghetti = spaghetti
+            spaghetti = spaghetti,
+            span = span
         )
     )
 

@@ -7,7 +7,7 @@ plot_methylation_internal <- function(
     title,
     anno_regions = NULL,
     spaghetti = FALSE,
-    prop = TRUE
+    span = NULL
     ) {
     if (!is.null(anno_regions)) {
         anno_regions <- anno_regions %>%
@@ -18,21 +18,6 @@ plot_methylation_internal <- function(
             )
     }
 
-    if (prop) {
-        # plot proportions
-        plot_data_prop <- methy_data %>%
-            dplyr::inner_join(sample_anno, by = "sample") %>%
-            dplyr::mutate(
-                mod_prob = e1071::sigmoid(.data$statistic)
-            ) %>%
-            dplyr::group_by(
-                .data$group, .data$pos
-            ) %>%
-            dplyr::summarise(
-                mod_prop = sum(.data$mod_prob > 0.5) / dplyr::n()
-            )
-    }
-
     # extract group information and convert probabilities
     plot_data <- methy_data %>%
         dplyr::inner_join(sample_anno, by = "sample") %>%
@@ -40,7 +25,9 @@ plot_methylation_internal <- function(
             mod_prob = e1071::sigmoid(.data$statistic)
         )
 
-    smooth_span <- min(8000 / (end - start), 0.4)
+    if (is.null(span)) {
+        span <- min(8000 / (end - start), 0.4)
+    }
 
     p <- ggplot(plot_data, aes(x = .data$pos, col = .data$group))
 
@@ -73,30 +60,16 @@ plot_methylation_internal <- function(
             )
     }
 
-    if (prop) {
-        p <- p +
-            ggplot2::stat_smooth(
-                data = plot_data_prop,
-                aes(y = .data$mod_prop, fill = .data$group),
-                geom = "smooth",
-                method = "loess",
-                na.rm = TRUE,
-                size = 3,
-                span = smooth_span,
-                formula = y ~ x
-            )
-    } else {
-        p <- p +
-            ggplot2::stat_smooth(
-                aes(y = .data$mod_prob, fill = .data$group),
-                geom = "smooth",
-                method = "loess",
-                na.rm = TRUE,
-                size = 3,
-                span = smooth_span,
-                formula = y ~ x
-            )
-    }
+    p <- p +
+        ggplot2::stat_smooth(
+            aes(y = .data$mod_prob, fill = .data$group),
+            geom = "smooth",
+            method = "loess",
+            span = span,
+            na.rm = TRUE,
+            size = 3,
+            formula = y ~ x
+        )
 
     x_min <- max(min(plot_data$pos), start)
     x_max <- min(max(plot_data$pos), end)
@@ -114,20 +87,23 @@ plot_methylation_internal <- function(
         ggthemes::theme_tufte()
 }
 
-plot_agg <- function(
-    chr,
-    start,
-    end,
-    title,
+plot_feature <- function(
+    feature,
+    title = "",
     methy,
     sample_anno,
     anno_regions = NULL,
     window_prop = 0.3,
-    prop = TRUE
+    spaghetti = TRUE,
+    span = NULL
     ) {
+    chr <- feature$chr
+    start <- feature$start
+    end <- feature$end
     window <- (end - start) * window_prop
 
-    methy_data <- query_methy(methy, chr, start - window, end + window) %>%
+    methy_data <-
+        query_methy(methy, chr, start - window, end + window) %>%
         dplyr::bind_rows() %>%
         dplyr::select(-"strand", -"modified") %>%
         tibble::as_tibble()
@@ -139,71 +115,8 @@ plot_agg <- function(
         chr = chr,
         title = title,
         anno_regions = anno_regions,
-        spaghetti = FALSE,
+        spaghetti = spaghetti,
         sample_anno = sample_anno,
-        prop = prop
+        span = span
     )
-}
-
-plot_spaghetti_and_agg <- function(
-    chr,
-    start,
-    end,
-    title,
-    methy,
-    sample_anno,
-    anno_regions = NULL,
-    window_prop = 0.3
-    ) {
-    window <- (end - start) * window_prop
-
-    methy_data <- query_methy(methy, chr, start - window, end + window) %>%
-        dplyr::bind_rows() %>%
-        dplyr::select(-"strand", -"modified") %>%
-        tibble::as_tibble()
-
-    plot_methylation_internal(
-        methy_data = methy_data,
-        start = start,
-        end = end,
-        chr = chr,
-        title = title,
-        spaghetti = TRUE,
-        sample_anno = sample_anno,
-        anno_regions = anno_regions
-    )
-}
-
-plot_feature <- function(
-    feature,
-    title = "",
-    methy,
-    sample_anno,
-    anno_regions = NULL,
-    window_prop = 0.3,
-    spaghetti = TRUE
-    ) {
-    if (spaghetti) {
-        plot_spaghetti_and_agg(
-            methy = methy,
-            anno_regions = anno_regions,
-            feature$chr,
-            feature$start,
-            feature$end,
-            title = title,
-            sample_anno = sample_anno,
-            window_prop = window_prop
-        )
-    } else {
-        plot_agg(
-            methy = methy,
-            sample_anno = sample_anno,
-            feature$chr,
-            feature$start,
-            feature$end,
-            title = title,
-            anno_regions = anno_regions,
-            window_prop = window_prop
-        )
-    }
 }

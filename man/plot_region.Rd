@@ -7,7 +7,15 @@
 \usage{
 plot_region(x, chr, start, end, ...)
 
-\S4method{plot_region}{NanoMethResult,character,numeric,numeric}(x, chr, start, end, anno_regions = NULL, spaghetti = FALSE)
+\S4method{plot_region}{NanoMethResult,character,numeric,numeric}(
+  x,
+  chr,
+  start,
+  end,
+  anno_regions = NULL,
+  spaghetti = FALSE,
+  span = NULL
+)
 }
 \arguments{
 \item{x}{the NanoMethResults object}
@@ -23,6 +31,8 @@ plot_region(x, chr, start, end, ...)
 \item{anno_regions}{the data.frame of regions to be annotated}
 
 \item{spaghetti}{whether or not individual reads should be shown.}
+
+\item{span}{the span for loess smoothing.}
 }
 \value{
 None

@@ -7,7 +7,7 @@
 \usage{
 plot_gene(x, gene, ...)
 
-\S4method{plot_gene}{NanoMethResult,character}(x, gene, anno_regions = NULL, spaghetti = FALSE)
+\S4method{plot_gene}{NanoMethResult,character}(x, gene, anno_regions = NULL, spaghetti = FALSE, span = NULL)
 }
 \arguments{
 \item{x}{the NanoMethResults object.}
@@ -19,6 +19,8 @@ plot_gene(x, gene, ...)
 \item{anno_regions}{the data.frame of regions to annotate.}
 
 \item{spaghetti}{whether or not individual reads should be shown.}
+
+\item{span}{the span for loess smoothing.}
 }
 \value{
 None

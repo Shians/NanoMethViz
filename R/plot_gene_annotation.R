@@ -1,4 +1,10 @@
 plot_gene_annotation <- function(exons_df, plot_start, plot_end) {
+    if (nrow(exons_df) == 0) {
+        p <- ggplot() + theme_void()
+        attr(p, "plot_height") <- 0
+        return(p)
+    }
+
     exons_df <- exons_df %>%
         dplyr::mutate(
             uid = factor(paste(.data$gene_id, .data$transcript_id, sep = ".")),

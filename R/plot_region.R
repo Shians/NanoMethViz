@@ -18,7 +18,7 @@ setGeneric("plot_region", function(x, chr, start, end, ...) {
 #' @param spaghetti whether or not individual reads should be shown.
 #' @param span the span for loess smoothing.
 #'
-#' @expor
+#' @export
 setMethod("plot_region",
     signature(
         x = "NanoMethResult",

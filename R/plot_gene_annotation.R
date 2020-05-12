@@ -1,9 +1,9 @@
 plot_gene_annotation <- function(exons_df, plot_start, plot_end) {
     exons_df <- exons_df %>%
-    dplyr::mutate(
-        uid = factor(paste(.data$gene_id, .data$transcript_id, sep = ".")),
-        y_offset = as.integer(.data$uid) - 1
-    )
+        dplyr::mutate(
+            uid = factor(paste(.data$gene_id, .data$transcript_id, sep = ".")),
+            y_offset = as.integer(.data$uid) - 1
+        )
 
     exons_count <- exons_df %>%
         dplyr::group_by(.data$uid, .data$y_offset) %>%
@@ -11,13 +11,25 @@ plot_gene_annotation <- function(exons_df, plot_start, plot_end) {
 
     gap <- exons_df %>%
         dplyr::inner_join(exons_count, by = c("uid", "y_offset")) %>%
-        dplyr::filter(.data$exons > 1) %>%
-        dplyr::group_by(.data$uid, .data$y_offset, .data$strand) %>%
-        dplyr::summarise(
-            gap_start = list(.data$end[-length(.data$end)]),
-            gap_end = list(.data$start[-1])
-        ) %>%
-        tidyr::unnest(cols = c(.data$gap_start, .data$gap_end))
+        dplyr::filter(.data$exons > 1)
+
+    if (nrow(gap) > 0) {
+        gap <- gap %>%
+            dplyr::group_by(.data$uid, .data$y_offset, .data$strand) %>%
+            dplyr::summarise(
+                gap_start = list(.data$end[-length(.data$end)]),
+                gap_end = list(.data$start[-1])
+            ) %>%
+            tidyr::unnest(cols = c(.data$gap_start, .data$gap_end))
+    } else {
+        gap <- tibble::tibble(
+            uid = character(),
+            y_offset = numeric(),
+            strand = character(),
+            gap_start = numeric(),
+            gap_end = numeric()
+        )
+    }
 
     .get_gaps <- function(gaps, strand = c("+", "-", "*")) {
         strand <- match.arg(strand)
@@ -143,7 +155,13 @@ plot_gene_annotation <- function(exons_df, plot_start, plot_end) {
             dplyr::between(.data$gene_middle, plot_start, plot_end)
         )
 
-    ggplot2::ggplot() +
+    if (length(exons_df$y_offset) > 0) {
+        plot_height <- 1 + max(exons_df$y_offset)
+    } else {
+        plot_height <- 0
+    }
+
+    p <- ggplot2::ggplot() +
         ggplot2::theme_void() +
         .exons(exons_df) +
         .connector_arrows(gap_pos) +
@@ -151,5 +169,9 @@ plot_gene_annotation <- function(exons_df, plot_start, plot_end) {
         .connector_lines(gap_none) +
         .gene_labels(gene_labels) +
         ggplot2::xlim(plot_start, plot_end) +
-        ggplot2::ylim(0, 1 + max(exons_df$y_offset))
+        ggplot2::ylim(0, plot_height)
+
+    attr(p, "plot_height") <- plot_height
+
+    p
 }

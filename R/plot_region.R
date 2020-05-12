@@ -127,10 +127,8 @@ setMethod("plot_region",
 
     p2 <- plot_gene_annotation(exons_anno, xlim[1], xlim[2])
 
-    n_unique <- function(x) {
-        length(unique(x))
-    }
+    anno_height <- attr(p2, "plot_height")
 
-    heights <- c(1, 0.075 * n_unique(exons_anno$transcript_id))
+    heights <- c(1, 0.075 * anno_height)
     p1 / p2 + patchwork::plot_layout(heights = heights)
 }

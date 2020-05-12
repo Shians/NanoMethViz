@@ -86,8 +86,8 @@ plot_methylation_internal <- function(
     p +
         ggplot2::geom_rug(aes(col = NULL), sides = "b") +
         ggplot2::ggtitle(title) +
-        ggplot2::ylim(0, 1) +
         ggplot2::xlab(chr) +
+        ggplot2::coord_cartesian(ylim = c(0, 1), clip = "on") +
         ggplot2::scale_x_continuous(
             breaks = c(x_min, x_max),
             labels = scales::comma(c(x_min, x_max))) +
@@ -102,20 +102,27 @@ plot_feature <- function(
     methy,
     sample_anno,
     anno_regions = NULL,
-    window_prop = 0.3,
+    window_prop = c(0.3, 0.3),
     spaghetti = TRUE,
     span = NULL
     ) {
     chr <- feature$chr
     start <- feature$start
     end <- feature$end
-    window <- (end - start) * window_prop
+    window_left <- (end - start) * window_prop[1]
+    window_right <- (end - start) * window_prop[2]
 
     methy_data <-
-        query_methy(methy, chr, start - window, end + window) %>%
+        query_methy(methy, chr, start - window_left, end + window_right) %>%
         dplyr::bind_rows() %>%
         dplyr::select(-"strand", -"modified") %>%
         tibble::as_tibble()
+
+
+    if (nrow(methy_data) == 0) {
+        warning("no methylation data in region")
+        return(ggplot() + theme_void())
+    }
 
     plot_methylation_internal(
         methy_data = methy_data,

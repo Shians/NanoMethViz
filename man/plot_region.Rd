@@ -3,11 +3,22 @@
 \name{plot_region}
 \alias{plot_region}
 \alias{plot_region,NanoMethResult,character,numeric,numeric-method}
+\alias{plot_region,NanoMethResult,factor,numeric,numeric-method}
 \title{Plot region}
 \usage{
 plot_region(x, chr, start, end, ...)
 
 \S4method{plot_region}{NanoMethResult,character,numeric,numeric}(
+  x,
+  chr,
+  start,
+  end,
+  anno_regions = NULL,
+  spaghetti = FALSE,
+  span = NULL
+)
+
+\S4method{plot_region}{NanoMethResult,factor,numeric,numeric}(
   x,
   chr,
   start,

@@ -1,0 +1,53 @@
+#' Column names for methylation data
+#'
+#' @return column names for methylation data
+#' @export
+#'
+#' @examples
+#' methy_col_names()
+methy_col_names <- function() {
+    c(
+        "sample",
+        "chr",
+        "pos",
+        "strand",
+        "modified",
+        "statistic",
+        "read_name"
+    )
+}
+
+methy_col_types <- function() {
+    readr::cols(
+        sample = readr::col_factor(),
+        chr = readr::col_factor(),
+        pos = readr::col_integer(),
+        strand = readr::col_factor(levels = c("+", "-", "*")),
+        modified = readr::col_logical(),
+        statistic = readr::col_double(),
+        read_name = readr::col_character()
+    )
+}
+
+f5c_col_types <- function() {
+    readr::cols_only(
+        chromosome = col_character(),
+        start = col_integer(),
+        read_name = col_character(),
+        log_lik_ratio = col_double(),
+        num_cpgs = col_double(),
+        sequence = col_character()
+    )
+}
+
+nanopolish_col_types <- function() {
+    readr::cols_only(
+        chromosome = readr::col_character(),
+        start = readr::col_integer(),
+        strand = readr::col_factor(levels = c("+", "-", "*")),
+        read_name = readr::col_character(),
+        log_lik_ratio = readr::col_double(),
+        num_motifs = readr::col_double(),
+        sequence = readr::col_character()
+    )
+}

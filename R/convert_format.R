@@ -1,0 +1,162 @@
+library(readr)
+
+# expand multiple motifs
+expand_motifs <- function(x) {
+    x_mult <- x[x$num_cpgs > 1, ]
+    x <- x[x$num_cpgs == 1, ]
+    x$num_cpgs <- NULL
+
+    mult_expand <- with(x_mult, {
+        start_offsets <- stringr::str_locate_all(
+            stringr::str_sub(sequence, start = 6),
+            "CG"
+        )
+        start_offsets <- lapply(
+            start_offsets,
+            function(x) {
+                x[, 1] - 1
+            }
+        )
+
+        start_offsets <- unlist(start_offsets)
+        tidyr::uncount(x_mult, num_cpgs) %>%
+            dplyr::mutate(start = start + start_offsets)
+    })
+
+    rbind(x, mult_expand) %>%
+        dplyr::select(-sequence)
+}
+
+reformat_f5c <- function(x, sample) {
+    x <- x %>%
+        expand_motifs()
+
+    x %>%
+        dplyr::transmute(
+            sample = factor(sample),
+            chr = factor(chromosome),
+            pos = as.integer(start),
+            strand = factor("*", levels = c("+", "-", "*")),
+            modified = log_lik_ratio > 0,
+            statistic = log_lik_ratio,
+            read_name = read_name
+        )
+}
+
+reformat_nanopolish <- function(x, sample) {
+    x <- x %>%
+        dplyr::rename(num_cpgs = num_motifs) %>%
+        expand_motifs()
+
+    x %>%
+        dplyr::transmute(
+            sample = factor(sample),
+            chr = factor(chromosome),
+            pos = as.integer(start),
+            strand = strand,
+            modified = log_lik_ratio > 0,
+            statistic = log_lik_ratio,
+            read_name = read_name
+        )
+}
+
+guess_methy_source <- function(methy_file) {
+    assert_that(is.readable(methy_file))
+
+    first_line <- readr::read_lines(methy_file, n_max = 1)
+
+    switch (first_line,
+            "chromosome\tstart\tend\tread_name\tlog_lik_ratio\tlog_lik_methylated\tlog_lik_unmethylated\tnum_calling_strands\tnum_cpgs\tsequence" = "f5c",
+            "chromosome\tstrand\tstart\tend\tread_name\tlog_lik_ratio\tlog_lik_methylated\tlog_lik_unmethylated\tnum_calling_strands\tnum_motifs\tsequence" = "nanopolish",
+            stop("Format not recognised.")
+    )
+}
+
+convert_methy_format <- function(
+    input_files,
+    output_file,
+    samples = fs::path_ext_remove(fs::path_file(input_files))
+    ) {
+    for (f in input_files) {
+        assert_that(is.readable(f))
+    }
+
+    assert_that(
+        is.character(output_file)
+    )
+
+    file.create(path.expand(output_file))
+    assert_that(is.writeable(output_file))
+
+    for (element in vec_zip(file = input_files, sample = samples)) {
+        message(element$file, " processing...")
+
+        methy_source <- guess_methy_source(element$file)
+
+        if (methy_source == "nanopolish") {
+            readr::read_tsv_chunked(
+                element$file,
+                col_types = nanopolish_col_types(),
+                readr::SideEffectChunkCallback$new(
+                    function(x, i) {
+                        data.table::fwrite(
+                            reformat_nanopolish(x, sample = element$sample),
+                            file = output_file,
+                            sep = "\t",
+                            append = TRUE
+                        )
+                    }
+                )
+            )
+        } else if (methy_source == "f5c") {
+            readr::read_tsv_chunked(
+                element$file,
+                col_types = f5c_col_types(),
+                readr::SideEffectChunkCallback$new(
+                    function(x, i) {
+                        data.table::fwrite(
+                            reformat_f5c(x, sample = element$sample),
+                            file = output_file,
+                            sep = "\t",
+                            append = TRUE
+                        )
+                    }
+                )
+            )
+        }
+
+    }
+}
+
+sort_methy_file <- function(methy_file) {
+    assert_that(is.readable(methy_file))
+
+    if (.Platform$OS.type == "windows") {
+        stop("sorting not yet implemented for windows.")
+    }
+
+    cmd <- glue::glue("sort -k2,3V {methy_file} -o {methy_file}")
+    message(cmd)
+    system(cmd)
+}
+
+tabix_compress <- function(x) {
+    assert_that(is.readable(x))
+
+    Rsamtools::bgzip(x, overwrite = TRUE)
+}
+
+tabix_index <- function(x) {
+    assert_that(is.readable(x))
+
+    Rsamtools::indexTabix(x, seq = 2, start = 3, end = 3)
+}
+
+convert_to_tabix <- function(x) {
+    assert_that(is.readable(x))
+
+    bgz_name <- tabix_compress(x)
+    tabix_index(bgz_name)
+
+    invisible(bgz_name)
+}

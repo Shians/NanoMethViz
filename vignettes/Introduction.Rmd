@@ -34,7 +34,7 @@ The methylation information has been modified from the output of nanopolish/f5c.
 methy <- system.file(package = "NanoMethViz", "methy_subset.tsv.bgz")
 
 # tabix is just a special gzipped tab-separated-values file
-read.table(gzfile(methy), col.names = methy_data_cols(), nrows = 6)
+read.table(gzfile(methy), col.names = methy_col_names(), nrows = 6)
 ```
 
 The exon annotation was obtained from the Mus.musculus package, and joined into a single table. It is important that the chromosomes share the same convention as that found in the methylation data.

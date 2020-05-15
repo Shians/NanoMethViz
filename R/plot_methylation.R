@@ -9,6 +9,7 @@ plot_methylation_internal <- function(
     spaghetti = FALSE,
     span = NULL
     ) {
+
     if (!is.null(anno_regions)) {
         anno_regions <- anno_regions %>%
             dplyr::filter(
@@ -106,6 +107,7 @@ plot_feature <- function(
     spaghetti = TRUE,
     span = NULL
     ) {
+
     chr <- feature$chr
     start <- feature$start
     end <- feature$end
@@ -115,7 +117,7 @@ plot_feature <- function(
     methy_data <-
         query_methy(methy, chr, start - window_left, end + window_right) %>%
         dplyr::bind_rows() %>%
-        dplyr::select(-"strand", -"modified") %>%
+        dplyr::select(-"strand") %>%
         tibble::as_tibble()
 
 

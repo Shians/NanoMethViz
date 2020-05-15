@@ -34,6 +34,7 @@ setMethod("plot_region",
         spaghetti = FALSE,
         span = NULL
         ) {
+
         .plot_region(
             x = x,
             chr = chr,
@@ -63,6 +64,7 @@ setMethod("plot_region",
         spaghetti = FALSE,
         span = NULL
         ) {
+
         chr <- as.character(chr)
         plot_region(
             x = x,
@@ -86,6 +88,7 @@ setMethod("plot_region",
     span = NULL,
     window_prop = c(0.3, 0.3)
     ) {
+
     sample_anno <- samples(x)
     exons_anno <- query_exons_region(
         exons(x),
@@ -100,7 +103,7 @@ setMethod("plot_region",
     methy_data <-
         query_methy(methy(x), chr, start - window_left, end + window_right) %>%
         dplyr::bind_rows() %>%
-        dplyr::select(-"strand", -"modified") %>%
+        dplyr::select(-"strand") %>%
         tibble::as_tibble()
 
     if (nrow(methy_data) == 0) {

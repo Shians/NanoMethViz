@@ -9,9 +9,7 @@ samples(object)
 \arguments{
 \item{object}{the object.}
 }
-\value{
-data.frame of sample annotation.
-}
 \description{
 Get sample annotation
 }
+\keyword{internal}

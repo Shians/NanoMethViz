@@ -3,11 +3,14 @@
 \docType{class}
 \name{NanoMethResult-class}
 \alias{NanoMethResult-class}
+\alias{NanoMethResult}
 \alias{methy,NanoMethResult-method}
 \alias{samples,NanoMethResult-method}
 \alias{exons,NanoMethResult-method}
 \title{Nanopore Methylation Result}
 \usage{
+NanoMethResult(methy, samples, exons = NULL)
+
 \S4method{methy}{NanoMethResult}(object)
 
 \S4method{samples}{NanoMethResult}(object)
@@ -15,28 +18,29 @@
 \S4method{exons}{NanoMethResult}(object)
 }
 \arguments{
+\item{methy}{the path to methylation database (sql or indexed tabix).}
+
+\item{samples}{the data.frame of sample annotation containg at least columns
+sample and group.}
+
+\item{exons}{(optional) the data.frame of exon information containing at least columns
+gene_id, chr, strand, start, end, transcript_id and symbol.}
+
 \item{object}{the NanoMethResult object.}
 }
 \value{
 a NanoMethResult object to be used with plotting functions
-
-path to methylation data.
-
-data.frame of sample annotation.
-
-data.frame of exon annotation.
 }
 \description{
-Nanopore Methylation Result
-
-Get methylation data
-
-Get sample annotation
-
-Get exon annotation
+A NanoMethResult object stores data used for NanoMethViz visualisation. It
+contains stores a path to the methylation data, sample information and
+optional exon information. The object is constructed using the
+NanoMethResult() constructor function described in "Usage".
 }
 \section{Functions}{
 \itemize{
+\item \code{NanoMethResult}: Constructor
+
 \item \code{methy,NanoMethResult-method}: methyation data path getter.
 
 \item \code{samples,NanoMethResult-method}: sample annotation getter.
@@ -56,6 +60,3 @@ sample and group.}
 gene_id, chr, strand, start, end, transcript_id and symbol.}
 }}
 
-\seealso{
-\code{\link[=NanoMethResult]{NanoMethResult()}}, \code{\link[=methy]{methy()}}, \code{\link[=samples]{samples()}}, \code{\link[=exons]{exons()}}.
-}

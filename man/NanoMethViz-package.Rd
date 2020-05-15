@@ -12,12 +12,16 @@ NanoMethViz is a toolkit for visualising methylation data from
 \details{
 The main plotting functions in this package are \code{\link[=plot_gene]{plot_gene()}} and
 \code{\link[=plot_region]{plot_region()}}.
+\itemize{
+\item See \code{vignette("ImportingData", package = "NanoMethViz")} for how to import data from Nanopolish and f5c.
+\item See \code{vignette("Introduction", package = "NanoMethViz")} for how to create visualisations using this package.
+}
 }
 \seealso{
 Useful links:
 \itemize{
   \item \url{https://github.com/shians/NanoMethViz}
-  \item Report bugs at \url{https://github.com/Shians/NanoMethViz}
+  \item Report bugs at \url{https://github.com/Shians/NanoMethViz/issues}
 }
 
 }

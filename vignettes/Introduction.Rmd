@@ -13,12 +13,10 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # preload to avoid loading messages
 library(NanoMethViz)
-library(readr)
 ```
 
 ```{r}
 library(NanoMethViz)
-library(readr)
 ```
 
 To generate a methylation plot we need 3 components:

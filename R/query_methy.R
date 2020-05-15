@@ -66,16 +66,7 @@ query_methy_tabix <- function(x, chr, start, end) {
     query <- GenomicRanges::GRanges(glue::glue("{chr}:{start}-{end}"))
 
     col_names <- methy_col_names()
-
-    col_types <- readr::cols(
-        "sample" = readr::col_character(),
-        "chr" = readr::col_character(),
-        "pos" = readr::col_integer(),
-        "strand" = readr::col_character(),
-        "modified" = readr::col_logical(),
-        "statistic" = readr::col_double(),
-        "read_name" = readr::col_character()
-    )
+    col_types <- methy_col_types()
 
     query_result <- Rsamtools::scanTabix(tabix_file, param = query)
 
@@ -87,7 +78,6 @@ query_methy_tabix <- function(x, chr, start, end) {
                     "chr" = character(),
                     "pos" = integer(),
                     "strand" = character(),
-                    "modified" = logical(),
                     "statistic" = numeric(),
                     "read_name" = character()
                 )
@@ -108,7 +98,6 @@ query_methy_tabix <- function(x, chr, start, end) {
                     "character",
                     "integer",
                     "character",
-                    "logical",
                     "numeric",
                     "character"
                 ),

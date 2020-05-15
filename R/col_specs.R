@@ -11,19 +11,17 @@ methy_col_names <- function() {
         "chr",
         "pos",
         "strand",
-        "modified",
         "statistic",
         "read_name"
     )
 }
 
 methy_col_types <- function() {
-    readr::cols(
+    readr::cols_only(
         sample = readr::col_factor(),
         chr = readr::col_factor(),
         pos = readr::col_integer(),
         strand = readr::col_factor(levels = c("+", "-", "*")),
-        modified = readr::col_logical(),
         statistic = readr::col_double(),
         read_name = readr::col_character()
     )

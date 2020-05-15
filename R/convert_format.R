@@ -37,7 +37,6 @@ reformat_f5c <- function(x, sample) {
             chr = factor(chromosome),
             pos = as.integer(start),
             strand = factor("*", levels = c("+", "-", "*")),
-            modified = log_lik_ratio > 0,
             statistic = log_lik_ratio,
             read_name = read_name
         )
@@ -54,7 +53,6 @@ reformat_nanopolish <- function(x, sample) {
             chr = factor(chromosome),
             pos = as.integer(start),
             strand = strand,
-            modified = log_lik_ratio > 0,
             statistic = log_lik_ratio,
             read_name = read_name
         )
@@ -72,11 +70,28 @@ guess_methy_source <- function(methy_file) {
     )
 }
 
+#' Convert methylation calls to NanoMethViz format
+#' @keywords internal
+#'
+#' @param input_files the files to convert
+#' @param output_file the output file to write results to
+#' @param samples the names of samples corresponding to each file
+#'
+#' @return invisibly returns the output file path, creates a tabix file (.bgz)
+#'   and its index (.bgz.tbi)
+#'
+#' @examples
+#' methy_calls <- system.file(package = "NanoMethViz",
+#'     c("sample1_nanopolish.tsv.gz", "sample2_nanopolish.tsv.gz"))
+#' temp_file <- tempfile()
+#'
+#' convert_methy_format(methy_calls, temp_file)
 convert_methy_format <- function(
     input_files,
     output_file,
     samples = fs::path_ext_remove(fs::path_file(input_files))
     ) {
+
     for (f in input_files) {
         assert_that(is.readable(f))
     }
@@ -89,9 +104,9 @@ convert_methy_format <- function(
     assert_that(is.writeable(output_file))
 
     for (element in vec_zip(file = input_files, sample = samples)) {
-        message(element$file, " processing...")
-
+        message(glue::glue("processing {element$file}..."))
         methy_source <- guess_methy_source(element$file)
+        message(glue::glue("guessing file is produced by {methy_source}..."))
 
         if (methy_source == "nanopolish") {
             readr::read_tsv_chunked(
@@ -124,39 +139,7 @@ convert_methy_format <- function(
                 )
             )
         }
-
-    }
-}
-
-sort_methy_file <- function(methy_file) {
-    assert_that(is.readable(methy_file))
-
-    if (.Platform$OS.type == "windows") {
-        stop("sorting not yet implemented for windows.")
     }
 
-    cmd <- glue::glue("sort -k2,3V {methy_file} -o {methy_file}")
-    message(cmd)
-    system(cmd)
-}
-
-tabix_compress <- function(x) {
-    assert_that(is.readable(x))
-
-    Rsamtools::bgzip(x, overwrite = TRUE)
-}
-
-tabix_index <- function(x) {
-    assert_that(is.readable(x))
-
-    Rsamtools::indexTabix(x, seq = 2, start = 3, end = 3)
-}
-
-convert_to_tabix <- function(x) {
-    assert_that(is.readable(x))
-
-    bgz_name <- tabix_compress(x)
-    tabix_index(bgz_name)
-
-    invisible(bgz_name)
+    invisible(output_file)
 }

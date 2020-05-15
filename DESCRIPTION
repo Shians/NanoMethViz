@@ -1,7 +1,7 @@
 Package: NanoMethViz
 Type: Package
 Title: Visualise methlation data from Oxford Nanopore sequencing
-Version: 0.1.0
+Version: 0.2.0
 Author: Authors@R: c(
     person("Shian", "Su", email = "su.s@wehi.edu.au", role = c("cre", "aut")))
 Maintainer: Shian Su <su.s@wehi.edu.au>
@@ -10,7 +10,7 @@ Description: NanoMethViz is a toolkit for visualising methylation data from
 biocViews:
     Software
 URL: https://github.com/shians/NanoMethViz
-BugReports: https://github.com/Shians/NanoMethViz
+BugReports: https://github.com/Shians/NanoMethViz/issues
 Depends:
     R (>= 3.6.0),
     methods,
@@ -20,6 +20,7 @@ Imports:
     assertthat,
     dplyr,
     e1071,
+    fs,
     GenomicRanges,
     ggthemes,
     glue,

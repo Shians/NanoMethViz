@@ -1,12 +1,15 @@
 #' Nanopore Methylation Result
 #'
+#' A NanoMethResult object stores data used for NanoMethViz visualisation. It
+#' contains stores a path to the methylation data, sample information and
+#' optional exon information. The object is constructed using the
+#' NanoMethResult() constructor function described in "Usage".
+#'
 #' @slot methy the path to methylation database (sql or indexed tabix).
 #' @slot samples the data.frame of sample annotation containg at least columns
 #'   sample and group.
 #' @slot exons the data.frame of exon information containing at least columns
 #'   gene_id, chr, strand, start, end, transcript_id and symbol.
-#'
-#' @seealso [NanoMethResult()], [methy()], [samples()], [exons()].
 #'
 #' @return a NanoMethResult object to be used with plotting functions
 #' @export
@@ -19,15 +22,14 @@ setClass(
     )
 )
 
-#' Nanopore Methylation Result Constructor
+#' @describeIn NanoMethResult-class Constructor
 #'
 #' @param methy the path to methylation database (sql or indexed tabix).
 #' @param samples the data.frame of sample annotation containg at least columns
 #'   sample and group.
-#' @param exons the data.frame of exon information containing at least columns
+#' @param exons (optional) the data.frame of exon information containing at least columns
 #'   gene_id, chr, strand, start, end, transcript_id and symbol.
 #'
-#' @return a NanoMethResult object to be used with plotting functions
 #' @export
 NanoMethResult <- function(methy, samples, exons = NULL) {
     if (is.null(exons)) {
@@ -54,21 +56,19 @@ NanoMethResult <- function(methy, samples, exons = NULL) {
 
 
 #' Get methylation data
+#' @keywords internal
 #'
 #' @param object the object.
 #'
-#' @return path to methylation data.
 #' @export
 setGeneric("methy", valueClass = "character", function(object) {
     standardGeneric("methy")
 })
 
-#' Get methylation data
+#' @describeIn NanoMethResult-class methyation data path getter.
 #'
 #' @param object the NanoMethResult object.
 #'
-#' @return path to methylation data.
-#' @describeIn NanoMethResult-class methyation data path getter.
 #' @export
 setMethod("methy", signature("NanoMethResult"), function(object)
 {
@@ -79,18 +79,17 @@ setMethod("methy", signature("NanoMethResult"), function(object)
 #'
 #' @param object the object.
 #'
-#' @return data.frame of sample annotation.
 #' @export
+#'
+#' @keywords internal
 setGeneric("samples", valueClass = "data.frame", function(object) {
     standardGeneric("samples")
 })
 
-#' Get sample annotation
+#' @describeIn NanoMethResult-class sample annotation getter.
 #'
 #' @param object the NanoMethResult object.
 #'
-#' @return data.frame of sample annotation.
-#' @describeIn NanoMethResult-class sample annotation getter.
 #' @export
 setMethod("samples", signature("NanoMethResult"), function(object)
 {
@@ -98,21 +97,19 @@ setMethod("samples", signature("NanoMethResult"), function(object)
 })
 
 #' Get exon annotation
+#' @keywords internal
 #'
 #' @param object the object.
 #'
-#' @return data.frame of exon annotation.
 #' @export
 setGeneric("exons", valueClass = "data.frame", function(object) {
     standardGeneric("exons")
 })
 
-#' Get exon annotation
+#' @describeIn NanoMethResult-class exon annotation getter.
 #'
 #' @param object the NanoMethResult object.
 #'
-#' @return data.frame of exon annotation.
-#' @describeIn NanoMethResult-class exon annotation getter.
 #' @export
 setMethod("exons", signature("NanoMethResult"), function(object)
 {

@@ -1,5 +1,8 @@
 #' @details The main plotting functions in this package are [plot_gene()] and
 #'   [plot_region()].
+#'
+#'   * See \code{vignette("ImportingData", package = "NanoMethViz")} for how to import data from Nanopolish and f5c.
+#'   * See \code{vignette("Introduction", package = "NanoMethViz")} for how to create visualisations using this package.
 #' @docType package
 #'
 #' @importFrom magrittr %>%
@@ -16,6 +19,7 @@
 #' @importFrom tibble tibble as_tibble
 #' @import patchwork
 #' @import assertthat
+#' @import fs
 #' @keywords internal
 "_PACKAGE"
 

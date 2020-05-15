@@ -1,0 +1,59 @@
+---
+title: "Importing Data"
+author: "Shian Su"
+output: html_document
+vignette: >
+  %\VignetteIndexEntry{Importing Data}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# preload to avoid loading messages
+library(NanoMethViz)
+```
+
+```{r}
+library(NanoMethViz)
+```
+
+In order to use this package, your data must be converted from the output of methylation calling software to a special tabix format. Due to the use of the Unix `sort` function, this can only currently be done on a Linux or MacOS system.
+
+We currently support output from
+
+* Nanopolish
+* f5c
+
+The conversion can be done using the `create_tabix_file()` function. We provide example data of nanopolish output within the package, we can look inside to see how the data looks coming out of nanopolish
+
+```{r}
+methy_calls <- system.file(package = "NanoMethViz",
+    c("sample1_nanopolish.tsv.gz", "sample2_nanopolish.tsv.gz"))
+
+# have a look at the first 10 rows of methy_data
+methy_calls_example <- read.table(
+    methy_calls[1], sep = "\t", header = TRUE, nrows = 6)
+
+methy_calls_example
+```
+
+We then create a temporary path to store a converted file, this will be deleted once you exit your R session. Once `create_tabix_file()` is run, it will create a tabix file along with its index. Because we have a small amount of data, we can read in a small portion of it to see how it looks, do not do this with large datasets as it decompresses all the data and will take very long to run.
+
+```{r, message=F}
+methy_tabix <- file.path(tempdir(), "methy_data.bgz")
+samples <- c("sample1", "sample2")
+
+# you should see messages whe running this yourself
+create_tabix_file(methy_calls, methy_tabix, samples)
+
+# don't do this with actual data
+# we have to use gzfile to tell R that we have a gzip compressed file
+methy_data <- read.table(
+    gzfile(methy_tabix), col.names = methy_col_names(), nrows = 6)
+
+methy_data
+```
+
+Now `methy_tabix` will be the path to a tabix object that is ready for use with NanoMethViz. Please head over to the "Introduction" vignette to see how to use this data for visualisation!

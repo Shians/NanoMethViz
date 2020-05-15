@@ -10,3 +10,7 @@ vec_zip <- function(..., .names = NULL) {
     x <- do.call(data.frame, list(..., stringsAsFactors = FALSE))
     setNames(split(x, 1:nrow(x)), .names)
 }
+
+extract_file_names <- function(x) {
+    fs::path_ext_remove(fs::path_file(x))
+}

@@ -111,6 +111,7 @@ setMethod("plot_region",
         return(ggplot() + theme_void())
     }
 
+    title <- glue::glue("{chr}:{start}-{end}")
     p1 <- with(
         exons_anno,
         plot_methylation_internal(
@@ -118,7 +119,7 @@ setMethod("plot_region",
             start = start,
             end = end,
             chr = chr,
-            title = glue::glue("{chr}:{start}-{end}"),
+            title = title,
             anno_regions = anno_regions,
             spaghetti = spaghetti,
             sample_anno = sample_anno,

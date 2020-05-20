@@ -51,16 +51,13 @@ plot_aggregate_regions <- function(x, features, groups = NULL) {
         ggplot2::ylim(c(0, 1)) +
         ggthemes::theme_tufte()
 
-    if (!is.null(group)) {
+    if (!is.null(groups)) {
         p <- p + ggplot2::stat_smooth(
                 aes(group = .data$group, colour = .data$group),
-                method = "loess",
                 na.rm = TRUE) +
             ggplot2::scale_colour_brewer(palette = "Set1")
     } else {
-        p <- p + ggplot2::stat_smooth(
-                method = "loess",
-                na.rm = TRUE)
+        p <- p + ggplot2::stat_smooth(na.rm = TRUE)
     }
 
     p +

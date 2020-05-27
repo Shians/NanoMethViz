@@ -4,7 +4,7 @@
 \alias{plot_aggregate_regions}
 \title{Plot aggregate regions}
 \usage{
-plot_aggregate_regions(x, features, groups = NULL)
+plot_aggregate_regions(x, features, groups = NULL, flank = 2000)
 }
 \arguments{
 \item{x}{the NanoMethResults object.}

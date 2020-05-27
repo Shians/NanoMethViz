@@ -7,7 +7,7 @@
 #'
 #' @return
 #' @export
-plot_aggregate_regions <- function(x, regions, groups = NULL, flank = 2000) {
+plot_aggregate_regions <- function(x, regions, groups = NULL, flank = 2000, stranded = TRUE) {
     is_df_or_granges <- function(x) {
         is.data.frame(x) || is(x, "GRanges")
     }
@@ -69,11 +69,14 @@ plot_aggregate_regions <- function(x, regions, groups = NULL, flank = 2000) {
     }
 
     kb_marker <- round(flank / 1000, 1)
+
+    labels <- c(glue::glue("-{kb_marker}kb"), "start", "end", glue::glue("+{kb_marker}kb"))
+
     p +
         ggplot2::scale_x_continuous(
             name = "Relative Position",
             breaks = c(-.25, 0, 1, 1.25),
-            labels = c(glue::glue("-{kb_marker}kb"), "TSS", "TTS", glue::glue("+{kb_marker}kb"))) +
+            labels = labels) +
         ggplot2::ylab("Average Methylation Probability")
 }
 
@@ -96,7 +99,7 @@ plot_aggregate_regions <- function(x, regions, groups = NULL, flank = 2000) {
         out[within] <- (x[within] - feature$start) / (feature$end - feature$start)
         out[upstream] <- (x[upstream] - feature$start) / flank / 4
         out[downstream] <- 1 + ((x[downstream] - feature$end) / flank / 4)
-        if (length(feature$strand) > 0 && feature$strand == "-") {
+        if (stranded && length(feature$strand) > 0 && feature$strand == "-") {
             out <- 1 - out
         }
         out

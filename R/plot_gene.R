@@ -12,20 +12,31 @@ setGeneric("plot_gene", function(x, gene, ...) {
 
 #' @rdname plot_gene
 #'
+#' @param window the size of flanking region to plot. Can be a vector of two
+#'   values for left and right window size. Values indicate proportion of gene
+#'   length.
 #' @param anno_regions the data.frame of regions to annotate.
 #' @param spaghetti whether or not individual reads should be shown.
 #' @param span the span for loess smoothing.
 #'
 #' @export
 setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
-    function(x, gene, anno_regions = NULL, spaghetti = FALSE, span = NULL) {
-        .plot_gene(x, gene, anno_regions = anno_regions, spaghetti = spaghetti, span = span)
+    function(x, gene, window = 0.3, anno_regions = NULL, spaghetti = FALSE, span = NULL) {
+        .plot_gene(
+            x,
+            gene,
+            window = window,
+            anno_regions = anno_regions,
+            spaghetti = spaghetti,
+            span = span
+        )
     }
 )
 
 .plot_gene <- function(
     x,
     gene,
+    window = 0.3,
     anno_regions = NULL,
     spaghetti = FALSE,
     span = NULL
@@ -35,6 +46,10 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
       nrow(exons(x)) > 0,
       msg = "exons(x) is empty, gene cannot be queried"
     )
+
+    if (length(window) == 1) {
+        window <- c(window, window)
+    }
 
     sample_anno <- samples(x)
     exons_anno <- query_exons_symbol(exons(x), symbol = gene)
@@ -49,6 +64,7 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
             feature,
             title = gene,
             methy = methy(x),
+            window_prop = window,
             sample_anno = sample_anno,
             anno_regions = anno_regions,
             spaghetti = spaghetti,

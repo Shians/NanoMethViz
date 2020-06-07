@@ -18,10 +18,19 @@ setGeneric("plot_gene", function(x, gene, ...) {
 #' @param anno_regions the data.frame of regions to annotate.
 #' @param spaghetti whether or not individual reads should be shown.
 #' @param span the span for loess smoothing.
+#' @param gene_anno whether or not gene annotation tracks are plotted.
 #'
 #' @export
 setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
-    function(x, gene, window = 0.3, anno_regions = NULL, spaghetti = FALSE, span = NULL) {
+    function(
+        x,
+        gene,
+        window = 0.3,
+        anno_regions = NULL,
+        spaghetti = FALSE,
+        span = NULL,
+        gene_anno = TRUE
+        ) {
         .plot_gene(
             x,
             gene,
@@ -39,7 +48,8 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
     window = 0.3,
     anno_regions = NULL,
     spaghetti = FALSE,
-    span = NULL
+    span = NULL,
+    gene_anno = TRUE
     ) {
 
     assertthat::assert_that(
@@ -72,12 +82,20 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
         )
     )
 
-    xlim <- .get_ggplot_range_x(p1)
+    if (gene_anno) {
+        # if gene annotation is needed
+        xlim <- .get_ggplot_range_x(p1)
 
-    p2 <- plot_gene_annotation(exons_anno, xlim[1], xlim[2])
+        p2 <- plot_gene_annotation(exons_anno, xlim[1], xlim[2])
 
-    n_unique <- function(x) { length(unique(x)) }
+        n_unique <- function(x) { length(unique(x)) }
 
-    heights <- c(1, 0.075 * n_unique(exons_anno$transcript_id))
-    p1 / p2 + patchwork::plot_layout(heights = heights)
+        heights <- c(1, 0.075 * n_unique(exons_anno$transcript_id))
+        p_out <- p1 / p2 + patchwork::plot_layout(heights = heights)
+    } else {
+        # if no gene annotation
+        p_out <- p1
+    }
+
+    p_out
 }

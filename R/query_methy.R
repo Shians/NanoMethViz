@@ -1,6 +1,34 @@
 #' @importFrom RSQLite dbConnect SQLite SQLITE_RO dbDisconnect dbGetQuery
 #' @importFrom Rsamtools TabixFile scanTabix
 
+#' Query methylation data
+#'
+#' @param x the path to the methylation data (tabix-bgzipped)
+#' @param chr the vector of chromosomes
+#' @param start the vector of start positions
+#' @param end the vector of end positions
+#' @param simplify whether returned results should be row-concatenated
+#'
+#' @return
+#' @export
+#'
+#' @examples
+query_methy <- function(x, chr, start, end, simplify = TRUE) {
+    if (can_open_sql(x)) {
+        out <- query_methy_sqlite(x, chr, start, end)
+    } else if (can_open_tabix(x)) {
+        out <- query_methy_tabix(x, chr, start, end)
+    } else {
+        stop("'x' is not a recognised file of type sqlite3 or tabix")
+    }
+
+    if (simplify) {
+        out <- dplyr::bind_rows(out)
+    }
+
+    out
+}
+
 can_open_sql <- function(x) {
     assertthat::is.readable(x)
     out <- TRUE
@@ -29,16 +57,6 @@ can_open_tabix <- function(x) {
     )
 
     return(out)
-}
-
-query_methy <- function(x, chr, start, end) {
-    if (can_open_sql(x)) {
-        query_methy_sqlite(x, chr, start, end)
-    } else if (can_open_tabix(x)) {
-        query_methy_tabix(x, chr, start, end)
-    } else {
-        stop("'x' is not a recognised file of type sqlite3 or tabix")
-    }
 }
 
 query_methy_sqlite <- function(x, chr, start, end) {

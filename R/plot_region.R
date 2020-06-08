@@ -101,8 +101,12 @@ setMethod("plot_region",
     window_right <- (end - start) * window_prop[2]
 
     methy_data <-
-        query_methy(methy(x), chr, start - window_left, end + window_right) %>%
-        dplyr::bind_rows() %>%
+        query_methy(
+            methy(x),
+            chr,
+            start - window_left,
+            end + window_right,
+            simplify = TRUE) %>%
         dplyr::select(-"strand") %>%
         tibble::as_tibble()
 

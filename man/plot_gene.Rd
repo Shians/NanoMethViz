@@ -7,7 +7,14 @@
 \usage{
 plot_gene(x, gene, ...)
 
-\S4method{plot_gene}{NanoMethResult,character}(x, gene, anno_regions = NULL, spaghetti = FALSE, span = NULL)
+\S4method{plot_gene}{NanoMethResult,character}(
+  x,
+  gene,
+  window = 0.3,
+  anno_regions = NULL,
+  spaghetti = FALSE,
+  span = NULL
+)
 }
 \arguments{
 \item{x}{the NanoMethResults object.}
@@ -15,6 +22,10 @@ plot_gene(x, gene, ...)
 \item{gene}{the gene symbol for the gene to plot.}
 
 \item{...}{additional arguments}
+
+\item{window}{the size of flanking region to plot. Can be a vector of two
+values for left and right window size. Values indicate proportion of gene
+length.}
 
 \item{anno_regions}{the data.frame of regions to annotate.}
 

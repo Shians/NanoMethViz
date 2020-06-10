@@ -1,5 +1,5 @@
 lollipop <- function(x, chr, start, end, binary = FALSE) {
-    methy_data <- query_methy_single(x, chr, start, end)
+    methy_data <- query_methy(x, chr, start, end)
 
     df <- methy_data %>%
         group_by(sample, pos) %>%

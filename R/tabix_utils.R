@@ -26,10 +26,15 @@ sort_methy_file <- function(x) {
     invisible(x)
 }
 
-tabix_compress <- function(x) {
+tabix_compress <- function(x, index = TRUE) {
     assert_that(is.readable(x))
 
-    Rsamtools::bgzip(x, overwrite = TRUE)
+    f <- Rsamtools::bgzip(x, overwrite = TRUE)
+    if (index) {
+        tabix_index(f)
+    }
+
+    f
 }
 
 tabix_index <- function(x) {
@@ -98,9 +103,9 @@ create_tabix_file <- function(
     sort_methy_file(temp_file)
     convert_to_tabix(temp_file)
 
-    file.rename(paste0(temp_file, ".bgz"), output_file)
-    file.rename(paste0(temp_file, ".bgz.tbi"), paste0(output_file, ".tbi"))
-    file.remove(temp_file)
+    fs::file_move(paste0(temp_file, ".bgz"), output_file)
+    fs::file_move(paste0(temp_file, ".bgz.tbi"), paste0(output_file, ".tbi"))
+    fs::file_delete(temp_file)
 
     invisible(output_file)
 }

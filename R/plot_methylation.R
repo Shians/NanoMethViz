@@ -41,9 +41,9 @@ plot_methylation_internal <- function(
                 ggplot2::annotate(
                     "rect",
                     xmin = region$start,
-                    xmax = region$end,
-                    ymin = 0,
-                    ymax = 1,
+                    xmax = region$end,,
+                    ymin = -Inf,
+                    ymax = Inf,
                     alpha = 0.2
                 )
         }

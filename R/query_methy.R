@@ -1,6 +1,3 @@
-#' @importFrom RSQLite dbConnect SQLite SQLITE_RO dbDisconnect dbGetQuery
-#' @importFrom Rsamtools TabixFile scanTabix
-
 #' Query methylation data
 #'
 #' @param x the path to the methylation data (tabix-bgzipped)
@@ -10,9 +7,11 @@
 #' @param simplify whether returned results should be row-concatenated
 #'
 #' @return
-#' @export
 #'
-#' @examples
+#' @importFrom RSQLite dbConnect SQLite SQLITE_RO dbDisconnect dbGetQuery
+#' @importFrom Rsamtools TabixFile scanTabix
+#'
+#' @export
 query_methy <- function(x, chr, start, end, simplify = TRUE) {
     if (can_open_sql(x)) {
         out <- query_methy_sqlite(x, chr, start, end)

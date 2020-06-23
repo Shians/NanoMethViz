@@ -44,27 +44,41 @@ plot_aggregate_regions <- function(x, regions, groups = NULL, flank = 2000, stra
 
     methy_data <- methy_data %>%
         dplyr::group_by(.data$group, .data$rel_pos) %>%
-        dplyr::summarise(statistic = mean(.data$statistic))
+        dplyr::summarise(statistic = mean(.data$statistic)) %>%
+        dplyr::mutate(methy_prob = e1071::sigmoid(statistic)) %>%
+        dplyr::ungroup()
 
-    p <- ggplot2::ggplot(
-            ggplot2::aes(
-                x = .data$rel_pos,
-                y = e1071::sigmoid(.data$statistic)
-            ),
-            data = methy_data
-        ) +
+    methy_data_before <- filter(methy_data, rel_pos <= 0)
+    if (nrow(methy_data_before) > 10000) {
+        methy_data_before <- dplyr::sample_n(methy_data_before, 10000)
+    }
+
+    methy_data_after <- filter(methy_data, rel_pos >= 1)
+    if (nrow(methy_data_after) > 10000) {
+        methy_data_after <- dplyr::sample_n(methy_data_after, 10000)
+    }
+
+    methy_data <- filter(methy_data, between(rel_pos, 0, 1))
+    if (nrow(methy_data) > 10000) {
+        methy_data <- dplyr::sample_n(methy_data, 10000)
+    }
+
+    p <- ggplot2::ggplot() +
         ggplot2::ylim(c(0, 1)) +
-        ggthemes::theme_tufte()
+        ggplot2::theme_minimal()
 
     if (!is.null(groups)) {
-        p <- p + ggplot2::stat_smooth(
-                aes(group = .data$group, colour = .data$group),
-                na.rm = TRUE,
-            se = FALSE) +
+        p <- p +
+            .geom_smooth(methy_data, span = 0.3, group = TRUE) +
+            .geom_smooth(methy_data_before, span = 0.35, group = TRUE) +
+            .geom_smooth(methy_data_after, span = 0.35, group = TRUE) +
             ggplot2::scale_colour_brewer(palette = "Set1") +
             ggplot2::coord_cartesian(clip = "off")
     } else {
-        p <- p + ggplot2::stat_smooth(se = FALSE, na.rm = TRUE) +
+        p <- p +
+            .geom_smooth(methy_data, span = 0.3, group = FALSE) +
+            .geom_smooth(methy_data_before, span = 0.35, group = FALSE) +
+            .geom_smooth(methy_data_after, span = 0.35, group = FALSE) +
             ggplot2::coord_cartesian(clip = "off")
     }
 
@@ -73,19 +87,18 @@ plot_aggregate_regions <- function(x, regions, groups = NULL, flank = 2000, stra
     labels <- c(glue::glue("-{kb_marker}kb"), "start", "end", glue::glue("+{kb_marker}kb"))
 
     p +
+        geom_vline(xintercept = 0, linetype = "dashed", color = "grey80") +
+        geom_vline(xintercept = 1, linetype = "dashed", color = "grey80") +
         ggplot2::scale_x_continuous(
             name = "Relative Position",
             breaks = c(-.25, 0, 1, 1.25),
+            limits = c(-0.25, 1.25),
             labels = labels) +
         ggplot2::ylab("Average Methylation Probability")
 }
 
 .split_rows <- function(x) {
     split(x, 1:nrow(x))
-}
-
-.row_map <- function(.x, .f, ...) {
-    parallel::mclapply(.split_rows(.x), .f, mc.cores = 4L, ...)
 }
 
 #' @importFrom purrr map2
@@ -105,14 +118,24 @@ plot_aggregate_regions <- function(x, regions, groups = NULL, flank = 2000, stra
         out
     }
 
-    out <- query_methy(methy, features$chr, features$start - flank, features$end + flank)
+    out <- query_methy(
+        methy,
+        features$chr,
+        features$start - flank * 1.1,
+        features$end + flank * 1.1,
+        simplify = FALSE)
+
     out <- purrr::map2(out, .split_rows(features), function(x, y) {
         if (nrow(x) == 0) {
             return(tibble::add_column(x, rel_pos = numeric()))
         }
 
         x$rel_pos <- .scale_to_feature(x$pos, y, stranded = stranded)
-        x
+
+        x %>%
+            group_by(chr, rel_pos) %>%
+            summarise(statistic = mean(statistic)) %>%
+            ungroup()
     })
 
     if (!is.null(feature_ids)) {
@@ -121,4 +144,27 @@ plot_aggregate_regions <- function(x, regions, groups = NULL, flank = 2000, stra
     }
 
     out
+}
+
+.geom_smooth <- function(data, span, group) {
+    if (group) {
+        ggplot2::stat_smooth(
+            aes(x = .data$rel_pos,
+                y = .data$methy_prob,
+                group = .data$group,
+                col = .data$group),
+            method = "loess",
+            span = span,
+            na.rm = TRUE,
+            se = FALSE,
+            data = data)
+    } else {
+        ggplot2::stat_smooth(
+            aes(x = .data$rel_pos, y = .data$methy_prob),
+            method = "loess",
+            span = span,
+            na.rm = TRUE,
+            se = FALSE,
+            data = data)
+    }
 }

@@ -80,7 +80,7 @@ convert_to_tabix <- function(x) {
 #' @examples
 #' methy_calls <- system.file(package = "NanoMethViz",
 #'     c("sample1_nanopolish.tsv.gz", "sample2_nanopolish.tsv.gz"))
-#' temp_file <- tempfile()
+#' temp_file <- paste0(tempfile(), ".tsv.bgz")
 #'
 #' create_tabix_file(methy_calls, temp_file)
 create_tabix_file <- function(

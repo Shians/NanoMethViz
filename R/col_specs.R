@@ -49,3 +49,13 @@ nanopolish_col_types <- function() {
         sequence = readr::col_character()
     )
 }
+
+megalodon_col_types <- function() {
+    readr::cols_only(
+        read_id = readr::col_character(),
+        chrm = readr::col_character(),
+        strand = readr::col_integer(),
+        pos = readr::col_integer(),
+        mod_log_prob = readr::col_double()
+    )
+}

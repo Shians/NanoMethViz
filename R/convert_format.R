@@ -58,15 +58,35 @@ reformat_nanopolish <- function(x, sample) {
         )
 }
 
+reformat_megalodon <- function(x, sample) {
+    x %>%
+        rename(
+            chr = chrm,
+            statistic = mod_log_prob,
+            read_name = read_id) %>%
+        add_column(sample = sample, .before = 1) %>%
+        mutate(
+            sample = as.factor(sample),
+            chr = factor(chr),
+            strand = case_when(
+                strand == 1 ~ "+",
+                strand == -1 ~ "-",
+                TRUE ~ "*"),
+            strand = factor(strand, levels = c("+", "-", "*"))) %>%
+        select(methy_col_names())
+}
+
 guess_methy_source <- function(methy_file) {
     assert_that(is.readable(methy_file))
 
     first_line <- readr::read_lines(methy_file, n_max = 1)
 
-    switch (first_line,
-            "chromosome\tstart\tend\tread_name\tlog_lik_ratio\tlog_lik_methylated\tlog_lik_unmethylated\tnum_calling_strands\tnum_cpgs\tsequence" = "f5c",
-            "chromosome\tstrand\tstart\tend\tread_name\tlog_lik_ratio\tlog_lik_methylated\tlog_lik_unmethylated\tnum_calling_strands\tnum_motifs\tsequence" = "nanopolish",
-            stop("Format not recognised.")
+    switch (
+        first_line,
+        "chromosome\tstart\tend\tread_name\tlog_lik_ratio\tlog_lik_methylated\tlog_lik_unmethylated\tnum_calling_strands\tnum_cpgs\tsequence" = "f5c",
+        "chromosome\tstrand\tstart\tend\tread_name\tlog_lik_ratio\tlog_lik_methylated\tlog_lik_unmethylated\tnum_calling_strands\tnum_motifs\tsequence" = "nanopolish",
+        "read_id\tchrm\tstrand\tpos\tmod_log_prob\tcan_log_prob\tmod_base\tmotif" = "megalodon",
+        stop("Format not recognised.")
     )
 }
 
@@ -108,37 +128,34 @@ convert_methy_format <- function(
         methy_source <- guess_methy_source(element$file)
         message(glue::glue("guessing file is produced by {methy_source}..."))
 
-        if (methy_source == "nanopolish") {
-            readr::read_tsv_chunked(
-                element$file,
-                col_types = nanopolish_col_types(),
-                readr::SideEffectChunkCallback$new(
-                    function(x, i) {
-                        data.table::fwrite(
-                            reformat_nanopolish(x, sample = element$sample),
-                            file = output_file,
-                            sep = "\t",
-                            append = TRUE
-                        )
-                    }
-                )
-            )
-        } else if (methy_source == "f5c") {
-            readr::read_tsv_chunked(
-                element$file,
-                col_types = f5c_col_types(),
-                readr::SideEffectChunkCallback$new(
-                    function(x, i) {
-                        data.table::fwrite(
-                            reformat_f5c(x, sample = element$sample),
-                            file = output_file,
-                            sep = "\t",
-                            append = TRUE
-                        )
-                    }
-                )
+        col_types <- switch (
+            methy_source,
+            "nanopolish" = nanopolish_col_types(),
+            "f5c" = f5c_col_types(),
+            "megalodon" = megalodon_col_types()
+        )
+
+        reformatter <- switch (
+            methy_source,
+            "nanopolish" = reformat_nanopolish,
+            "f5c" = reformat_f5c,
+            "megalodon" = reformat_megalodon
+        )
+
+        callback_f <- function(x, i) {
+            data.table::fwrite(
+                reformatter(x, sample = element$sample),
+                file = output_file,
+                sep = "\t",
+                append = TRUE
             )
         }
+
+        readr::read_tsv_chunked(
+            element$file,
+            col_types = col_types,
+            readr::SideEffectChunkCallback$new(callback_f)
+        )
     }
 
     invisible(output_file)

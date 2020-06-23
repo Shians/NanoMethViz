@@ -38,7 +38,7 @@ read.table(gzfile(methy), col.names = methy_col_names(), nrows = 6)
 The exon annotation was obtained from the Mus.musculus package, and joined into a single table. It is important that the chromosomes share the same convention as that found in the methylation data.
 
 ```{r}
-# helper function extracts exons from Mus.muculus pacakge
+# helper function extracts exons from Mus.musculus package
 exon_tibble <- get_exons_mus_musculus()
 
 head(exon_tibble)

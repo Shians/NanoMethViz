@@ -7,7 +7,15 @@
 \usage{
 plot_gene(x, gene, ...)
 
-\S4method{plot_gene}{NanoMethResult,character}(x, gene, anno_regions = NULL, spaghetti = FALSE, span = NULL)
+\S4method{plot_gene}{NanoMethResult,character}(
+  x,
+  gene,
+  window = 0.3,
+  anno_regions = NULL,
+  spaghetti = FALSE,
+  span = NULL,
+  gene_anno = TRUE
+)
 }
 \arguments{
 \item{x}{the NanoMethResults object.}
@@ -16,11 +24,17 @@ plot_gene(x, gene, ...)
 
 \item{...}{additional arguments}
 
+\item{window}{the size of flanking region to plot. Can be a vector of two
+values for left and right window size. Values indicate proportion of gene
+length.}
+
 \item{anno_regions}{the data.frame of regions to annotate.}
 
 \item{spaghetti}{whether or not individual reads should be shown.}
 
 \item{span}{the span for loess smoothing.}
+
+\item{gene_anno}{whether or not gene annotation tracks are plotted.}
 }
 \value{
 None

@@ -14,3 +14,17 @@ vec_zip <- function(..., .names = NULL) {
 extract_file_names <- function(x) {
     fs::path_ext_remove(fs::path_file(x))
 }
+
+logit <- function(p) {
+    log(p / (1-p))
+}
+
+assert_has_columns <- function(x, cols) {
+    if (!all(cols %in% colnames(x))) {
+        stop(glue::glue(
+            "columns missing from {input}: {missing_cols}",
+            input = deparse(substitute(x)),
+            missing_cols = paste(setdiff(cols, colnames(x)), collapse = ", ")
+        ))
+    }
+}

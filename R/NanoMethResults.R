@@ -45,6 +45,25 @@ NanoMethResult <- function(methy, samples, exons = NULL) {
     }
 
     assertthat::is.readable(methy)
+    assert_has_columns(samples, c("sample", "group"))
+
+    # Check in first 1000 entries that samples are in sample annotation
+    head_values <- read.table(
+        gzfile(methy),
+        col.names = methy_col_names(),
+        nrows = 1000
+    )
+    if (length(intersect(head_values$sample, samples$sample)) == 0) {
+        stop("in first 1000 entries, no sample names matched samples from annotation")
+    }
+    if (!all(head_values$sample %in% samples$sample)) {
+        warning(glue::glue(
+            "in first 1000 entires, the following samples were not in annotation: {missing_cols}",
+            missing_cols = paste(setdiff(head_values$sample, samples$sample), collapse = ", ")
+        ))
+    }
+
+    assertthat::assert_that(any(head_values$sample %in% samples$sample))
 
     methods::new(
         "NanoMethResult",
@@ -70,8 +89,7 @@ setGeneric("methy", valueClass = "character", function(object) {
 #' @param object the NanoMethResult object.
 #'
 #' @export
-setMethod("methy", signature("NanoMethResult"), function(object)
-{
+setMethod("methy", signature("NanoMethResult"), function(object) {
     object@methy
 })
 
@@ -91,8 +109,7 @@ setGeneric("samples", valueClass = "data.frame", function(object) {
 #' @param object the NanoMethResult object.
 #'
 #' @export
-setMethod("samples", signature("NanoMethResult"), function(object)
-{
+setMethod("samples", signature("NanoMethResult"), function(object) {
     object@samples
 })
 
@@ -111,7 +128,6 @@ setGeneric("exons", valueClass = "data.frame", function(object) {
 #' @param object the NanoMethResult object.
 #'
 #' @export
-setMethod("exons", signature("NanoMethResult"), function(object)
-{
+setMethod("exons", signature("NanoMethResult"), function(object) {
     object@exons
 })

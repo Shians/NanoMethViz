@@ -10,12 +10,18 @@ NanoMethViz is a toolkit for visualising methylation data from Oxford Nanopore s
 You can install NanoMethViz from GitHub with:
 
 ``` r
-remotes::install_github("shians/NanoMethViz")
+remotes::install_github("shians/NanoMethViz", build_vignettes = TRUE)
 ```
 
 ## Example
 
-An introductory example can be found in the package vignette:
+This package currently works with data from nanopolish and f5c, to import your data please see the following vignette
+
+``` r
+vignette("ImportingData", package = "NanoMethViz")
+```
+
+An introductory example for plotting can be found in the package vignette:
 
 ``` r
 vignette("Introduction", package = "NanoMethViz")

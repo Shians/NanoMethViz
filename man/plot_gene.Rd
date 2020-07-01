@@ -13,8 +13,7 @@ plot_gene(x, gene, ...)
   window = 0.3,
   anno_regions = NULL,
   spaghetti = FALSE,
-  span = NULL,
-  gene_anno = TRUE
+  span = NULL
 )
 }
 \arguments{

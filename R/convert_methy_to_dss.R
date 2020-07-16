@@ -1,0 +1,84 @@
+#' Convert methylation file to dss format
+#'
+#' Convert a file in NanoMethViz's methylation format to a collection of files
+#' in the format required by DSS::makeBSseqData()
+#'
+#' @param methy the path to the methylation tabix file.
+#' @param out_folder the folder in which to store the per sample files.
+#'
+#' @return data.frame of sample names and file paths
+#' @export
+convert_methy_to_dss <- function(
+    methy,
+    out_folder
+) {
+    assert_that(
+        fs::file_exists(methy)
+    )
+
+    if (!fs::dir_exists(out_folder)) {
+        fs::dir_create(out_folder, recurse = TRUE)
+    }
+
+    samples <- convert_methy_to_dss_cpp(
+        fs::path_expand(methy),
+        fs::path_expand(out_folder)
+    )
+
+    data.frame(
+        sample = samples,
+        file_path = path(out_folder, paste0(samples, ".txt"))
+    )
+}
+
+create_bsseq <- function(paths, samples) {
+    # read in data
+    dat <- map(paths, read_tsv)
+
+    # get unique positions
+    combine_distinct_gpos <- function(x, y) {
+        rbind(
+            select(x, chr, pos),
+            select(y, chr, pos)
+        ) %>%
+            distinct() %>%
+            arrange(chr, pos)
+    }
+
+    unique_pos_df <- reduce(
+            dat,
+            combine_distinct_gpos) %>%
+        mutate(id = paste(chr, pos))
+
+    # create methylation matrix
+    M_mat <- matrix(0, nrow = nrow(unique_pos_df), ncol = length(dat),
+                    dimnames = list(NULL, samples))
+
+    for (i in 1:length(dat)) {
+        row_inds <- with(dat[[i]], paste(chr, pos)) %>%
+            factor(levels = unique_pos_df$id)
+
+        M_mat[row_inds, i] <- dat[[i]]$X
+    }
+
+    # create coverage matrix
+    cov_mat <- matrix(0, nrow = nrow(unique_pos_df), ncol = length(dat),
+                      dimnames = list(NULL, samples))
+
+    for (i in 1:length(dat)) {
+        row_inds <- with(dat[[i]], paste(chr, pos)) %>%
+            factor(levels = unique_pos_df$id)
+
+        cov_mat[row_inds, i] <- dat[[i]]$N
+    }
+
+    # create BSseq object
+    result <- bsseq::BSseq(
+        chr = unique_pos_df$chr,
+        pos = unique_pos_df$pos,
+        M = M_mat,
+        Cov = cov_mat
+    )
+
+    result
+}

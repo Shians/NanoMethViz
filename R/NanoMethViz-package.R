@@ -20,6 +20,8 @@
 #' @import patchwork
 #' @import assertthat
 #' @import fs
+#' @import zlibbioc
+#' @useDynLib NanoMethViz
 #' @keywords internal
 "_PACKAGE"
 

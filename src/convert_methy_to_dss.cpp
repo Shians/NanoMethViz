@@ -59,7 +59,7 @@ flush_data(unordered_map<string, MethyData> const &sample_data, string const &pr
             out_file.open(out_path, ios_base::out | ios_base::app);
         } else {
             out_file.open(out_path, ios_base::out | ios_base::trunc);
-            out_file << "chr\tpos\tN\tX\n";
+            out_file << "chr\tpos\ttotal\tmethylated\n";
             file_known[sample_name] = true;
         }
 
@@ -67,8 +67,8 @@ flush_data(unordered_map<string, MethyData> const &sample_data, string const &pr
             out_file
                 << m_count.first.chr << "\t"
                 << m_count.first.pos << "\t"
-                << m_count.second.N << "\t"
-                << m_count.second.X << "\n";
+                << m_count.second.total << "\t"
+                << m_count.second.methylated << "\n";
         }
 
         out_file.close();
@@ -102,9 +102,9 @@ convert_methy_to_dss_cpp(
         }
 
         GenomicPos gpos = {e.chr, e.pos};
-        sample_data[e.sample][gpos].N++;
+        sample_data[e.sample][gpos].total++;
         if (e.stat > 0) {
-            sample_data[e.sample][gpos].X++;
+            sample_data[e.sample][gpos].methylated++;
         }
     }
 

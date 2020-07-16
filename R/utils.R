@@ -28,3 +28,8 @@ assert_has_columns <- function(x, cols) {
         ))
     }
 }
+
+timed_log <- function(...) {
+    time_stamp <- paste0("[", format(Sys.time(), "%F %X"), "] ")
+    message(time_stamp, ...)
+}

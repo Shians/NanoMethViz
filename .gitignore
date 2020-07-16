@@ -4,3 +4,6 @@
 .Ruserdata
 doc
 Meta
+
+src/*.o
+src/*.so

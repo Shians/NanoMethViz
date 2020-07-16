@@ -31,7 +31,7 @@ convert_methy_to_dss <- function(
     )
 }
 
-create_bsseq <- function(paths, samples) {
+create_bsseq_from_files <- function(paths, samples) {
     # read in data
     dat <- map(paths, read_tsv)
 
@@ -81,4 +81,13 @@ create_bsseq <- function(paths, samples) {
     )
 
     result
+}
+
+create_bsseq <- function(
+    methy,
+    out_folder = tempdir()
+) {
+    files <- convert_methy_to_dss(methy, out_folder)
+
+    create_bsseq_from_files(files$fil_path, files$sample)
 }

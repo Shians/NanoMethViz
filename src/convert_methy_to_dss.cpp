@@ -5,7 +5,7 @@ using namespace Rcpp;
 
 map<string, bool> file_known;
 
-pair<int, int> 
+pair<int, int>
 find_nth_column(
         const string &str,
         const string &delim,
@@ -27,7 +27,7 @@ find_nth_column(
     }
 }
 
-entry 
+entry
 parse_line(const string &line) {
     pair<int, int> sample_pos = find_nth_column(line, "\t", 1);
     pair<int, int> chr_pos = find_nth_column(line, "\t", 2);
@@ -43,17 +43,14 @@ parse_line(const string &line) {
     return(e);
 }
 
-void 
+void
 flush_data(unordered_map<string, MethyData> const &sample_data, string const &prefix) {
     for (auto const &s_data : sample_data) {
         string const &sample_name = s_data.first;
 
         string out_path = make_path(prefix, sample_name + ".txt");
 
-        const unsigned int length = 8192;
-        char buffer[length];
         ofstream out_file;
-        out_file.rdbuf()->pubsetbuf(buffer, length);
 
         if (file_known[sample_name]) {
             out_file.open(out_path, ios_base::out | ios_base::app);
@@ -76,20 +73,17 @@ flush_data(unordered_map<string, MethyData> const &sample_data, string const &pr
 }
 
 
-vector<string> 
+vector<string>
 convert_methy_to_dss_cpp(
     string input,
     string output_dir
 ) {
-    ifstream file(input, ios_base::in | ios_base::binary);
-    boost::iostreams::filtering_istream in;
-    in.push(boost::iostreams::gzip_decompressor());
-    in.push(file);
+    zstr::ifstream file(input, ios_base::in | ios_base::binary);
 
     unordered_map<string, MethyData> sample_data;
     std::string line;
     string current_chr = "";
-    while (std::getline(in, line)) {
+    while (getline(file, line)) {
         entry e = parse_line(line);
 
         if (e.chr != current_chr) {

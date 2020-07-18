@@ -10,8 +10,8 @@
 #include <map>
 #include <unordered_map>
 
-#include <boost/iostreams/filtering_stream.hpp>
-#include <boost/iostreams/filter/gzip.hpp>
+#include "zstr/zstr.hpp"
+
 
 struct entry {
     std::string sample;
@@ -37,7 +37,7 @@ bool operator < (GenomicPos const &a, GenomicPos const &b) {
 typedef std::map<GenomicPos, MethyCount> MethyData;
 
 // [[Rcpp::export]]
-std::vector<std::string> 
+std::vector<std::string>
 convert_methy_to_dss_cpp(
     std::string input,
     std::string output_dir

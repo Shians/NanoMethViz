@@ -43,22 +43,24 @@ create_bsseq_from_files <- function(paths, samples) {
         progress = FALSE
     )
 
+    timed_log("reading in parsed data...")
     # read in data
     dat <- purrr::map(paths, read_dss)
 
+    timed_log("constructing matrices...")
     # get unique positions
     combine_distinct_gpos <- function(x, y) {
         rbind(
             dplyr::select(x, chr, pos),
             dplyr::select(y, chr, pos)
         ) %>%
-            dplyr::distinct() %>%
-            dplyr::arrange(chr, pos)
+            dplyr::distinct()
     }
 
     unique_pos_df <- purrr::reduce(
             dat,
             combine_distinct_gpos) %>%
+        dplyr::arrange(chr, pos) %>%
         dplyr::mutate(id = paste(chr, pos))
 
     # create methylation matrix
@@ -98,7 +100,7 @@ create_bsseq_from_files <- function(paths, samples) {
         sampleNames = samples
     )
 
-    colData(result) <- DataFrame(
+    SummarizedExperiment::colData(result) <- S4Vectors::DataFrame(
         sample = samples
     )
 

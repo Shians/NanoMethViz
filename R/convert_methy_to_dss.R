@@ -1,13 +1,30 @@
-#' Convert methylation file to dss format
-#'
-#' Convert a file in NanoMethViz's methylation format to a collection of files
-#' in the format required by DSS::makeBSseqData()
+#' Create BSSeq object from methylation tabix file
 #'
 #' @param methy the path to the methylation tabix file.
-#' @param out_folder the folder in which to store the per sample files.
+#' @param out_folder the folder to store intermediate files. One file is created
+#'   for each sample and contains columns "chr", "pos", "total" and
+#'   "methylated".
 #'
-#' @return data.frame of sample names and file paths
+#' @return a BSSeq object.
 #' @export
+#'
+#' @example
+#' methy <- system.file("methy_subset.tsv.bgz", package = "NanoMethViz")
+#' bsseq <- methy_to_bsseq(methy)
+methy_to_bsseq <- function(
+    methy,
+    out_folder = tempdir()
+) {
+    timed_log("creating intermediate files...")
+    files <- convert_methy_to_dss(methy, out_folder)
+
+    timed_log("creating bsseq object...")
+    out <- create_bsseq_from_files(files$file_path, files$sample)
+    timed_log("done")
+
+    out
+}
+
 convert_methy_to_dss <- function(
     methy,
     out_folder
@@ -105,18 +122,4 @@ create_bsseq_from_files <- function(paths, samples) {
     )
 
     result
-}
-
-create_bsseq <- function(
-    methy,
-    out_folder = tempdir()
-) {
-    timed_log("creating intermediate files...")
-    files <- convert_methy_to_dss(methy, out_folder)
-
-    timed_log("creating bsseq object...")
-    out <- create_bsseq_from_files(files$file_path, files$sample)
-    timed_log("done")
-
-    out
 }

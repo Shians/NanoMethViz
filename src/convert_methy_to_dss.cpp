@@ -3,6 +3,7 @@
 using namespace std;
 using namespace Rcpp;
 
+vector<string> samples_found;
 map<string, bool> file_known;
 
 pair<int, int>
@@ -58,6 +59,7 @@ flush_data(unordered_map<string, MethyData> const &sample_data, string const &pr
             out_file.open(out_path, ios_base::out | ios_base::trunc);
             out_file << "chr\tpos\ttotal\tmethylated\n";
             file_known[sample_name] = true;
+            samples_found.push_back(sample_name);
         }
 
         for (auto const &m_count : s_data.second) {
@@ -101,6 +103,13 @@ convert_methy_to_dss_cpp(
             sample_data[e.sample][gpos].methylated++;
         }
     }
+
+    stringstream ss;
+    ss << "samples found: ";
+    for (auto const &samp : samples_found) {
+        ss << samp << " ";
+    }
+    LOG(ss.str());
 
     vector<string> files_created;
     for (auto const &x : file_known) {

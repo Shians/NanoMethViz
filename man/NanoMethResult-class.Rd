@@ -18,7 +18,7 @@ NanoMethResult(methy, samples, exons = NULL)
 \S4method{exons}{NanoMethResult}(object)
 }
 \arguments{
-\item{methy}{the path to methylation database (sql or indexed tabix).}
+\item{methy}{the path to the methylation tabix file.}
 
 \item{samples}{the data.frame of sample annotation containg at least columns
 sample and group.}
@@ -51,7 +51,7 @@ NanoMethResult() constructor function described in "Usage".
 \section{Slots}{
 
 \describe{
-\item{\code{methy}}{the path to methylation database (sql or indexed tabix).}
+\item{\code{methy}}{the path to the methylation tabix file.}
 
 \item{\code{samples}}{the data.frame of sample annotation containg at least columns
 sample and group.}

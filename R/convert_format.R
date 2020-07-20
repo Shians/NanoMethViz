@@ -111,8 +111,7 @@ convert_methy_format <- function(
     input_files,
     output_file,
     samples = fs::path_ext_remove(fs::path_file(input_files))
-    ) {
-
+) {
     for (f in input_files) {
         assert_that(is.readable(f))
     }

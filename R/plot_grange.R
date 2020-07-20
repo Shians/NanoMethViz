@@ -11,7 +11,7 @@ plot_grange <- function(
     anno_regions = NULL,
     spaghetti = FALSE,
     span = NULL
-    ) {
+) {
 
     assert_that(
         is(grange, "GRanges"),

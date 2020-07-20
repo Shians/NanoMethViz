@@ -30,7 +30,7 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
         spaghetti = FALSE,
         span = NULL,
         gene_anno = TRUE
-        ) {
+    ) {
         .plot_gene(
             x,
             gene,
@@ -50,8 +50,7 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
     spaghetti = FALSE,
     span = NULL,
     gene_anno = TRUE
-    ) {
-
+) {
     assertthat::assert_that(
       nrow(exons(x)) > 0,
       msg = "exons(x) is empty, gene cannot be queried"

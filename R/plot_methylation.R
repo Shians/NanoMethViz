@@ -8,8 +8,7 @@ plot_methylation_internal <- function(
     anno_regions = NULL,
     spaghetti = FALSE,
     span = NULL
-    ) {
-
+) {
     if (!is.null(anno_regions)) {
         anno_regions <- anno_regions %>%
             dplyr::filter(
@@ -106,8 +105,7 @@ plot_feature <- function(
     window_prop = c(0.3, 0.3),
     spaghetti = TRUE,
     span = NULL
-    ) {
-
+) {
     chr <- feature$chr
     start <- feature$start
     end <- feature$end

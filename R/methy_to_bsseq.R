@@ -8,7 +8,7 @@
 #' @return a BSSeq object.
 #' @export
 #'
-#' @example
+#' @examples
 #' methy <- system.file("methy_subset.tsv.bgz", package = "NanoMethViz")
 #' bsseq <- methy_to_bsseq(methy)
 methy_to_bsseq <- function(

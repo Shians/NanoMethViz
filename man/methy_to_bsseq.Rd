@@ -19,3 +19,7 @@ a BSSeq object.
 \description{
 Create BSSeq object from methylation tabix file
 }
+\examples{
+methy <- system.file("methy_subset.tsv.bgz", package = "NanoMethViz")
+bsseq <- methy_to_bsseq(methy)
+}

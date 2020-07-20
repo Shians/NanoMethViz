@@ -5,7 +5,7 @@
 #' optional exon information. The object is constructed using the
 #' NanoMethResult() constructor function described in "Usage".
 #'
-#' @slot methy the path to methylation database (sql or indexed tabix).
+#' @slot methy the path to the methylation tabix file.
 #' @slot samples the data.frame of sample annotation containg at least columns
 #'   sample and group.
 #' @slot exons the data.frame of exon information containing at least columns
@@ -24,7 +24,7 @@ setClass(
 
 #' @describeIn NanoMethResult-class Constructor
 #'
-#' @param methy the path to methylation database (sql or indexed tabix).
+#' @param methy the path to the methylation tabix file.
 #' @param samples the data.frame of sample annotation containg at least columns
 #'   sample and group.
 #' @param exons (optional) the data.frame of exon information containing at least columns

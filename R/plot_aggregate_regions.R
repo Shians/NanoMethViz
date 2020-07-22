@@ -14,15 +14,18 @@ plot_aggregate_regions <- function(x, regions, groups = NULL, flank = 2000, stra
 
     assert_that(is_df_or_granges(regions) || is.list(regions))
 
+    # convert GRanges to tibble
     if (is(regions, "GRanges")) {
         regions <- tibble::as_tibble(regions) %>%
             dplyr::rename(chr = "seqnames")
     }
 
+    # convert data.frame regions to single element list
     if (!is.null(dim(regions))) {
         regions <- list(regions)
     }
 
+    # query methylation data
     methy_data <- purrr::map(
         regions,
         function(features) {
@@ -42,43 +45,43 @@ plot_aggregate_regions <- function(x, regions, groups = NULL, flank = 2000, stra
     methy_data <- methy_data %>%
         dplyr::bind_rows(.id = "group")
 
-    methy_data <- methy_data %>%
+    if (!is.null(groups)) {
+        methy_data <- methy_data %>%
         dplyr::group_by(.data$group, .data$rel_pos) %>%
-        dplyr::summarise(statistic = mean(.data$statistic)) %>%
-        dplyr::mutate(methy_prob = e1071::sigmoid(statistic)) %>%
+        dplyr::summarise(methy_prob = mean(.data$methy_prob)) %>%
         dplyr::ungroup()
-
-    methy_data_before <- filter(methy_data, rel_pos <= 0)
-    if (nrow(methy_data_before) > 10000) {
-        methy_data_before <- dplyr::sample_n(methy_data_before, 10000)
+    } else {
+        methy_data <- methy_data %>%
+            dplyr::group_by(.data$rel_pos) %>%
+            dplyr::summarise(methy_prob = mean(.data$methy_prob)) %>%
+            dplyr::ungroup()
     }
 
-    methy_data_after <- filter(methy_data, rel_pos >= 1)
-    if (nrow(methy_data_after) > 10000) {
-        methy_data_after <- dplyr::sample_n(methy_data_after, 10000)
-    }
-
-    methy_data <- filter(methy_data, between(rel_pos, 0, 1))
-    if (nrow(methy_data) > 10000) {
-        methy_data <- dplyr::sample_n(methy_data, 10000)
-    }
-
+    # set up plot
     p <- ggplot2::ggplot() +
         ggplot2::ylim(c(0, 1)) +
         ggplot2::theme_minimal()
 
+    # take binned means
+    grid_size <- 2^10
+    binned_pos <- seq(-1.1/3, 1 + 1.1/3, length.out = grid_size+ 2)[2:(1 + grid_size)]
+    methy_data <- methy_data %>%
+        mutate(interval = cut(rel_pos, breaks = grid_size)) %>%
+        group_by(interval, .drop = TRUE) %>%
+        summarise(methy_prob = mean(methy_prob)) %>%
+        ungroup() %>%
+        mutate(rel_pos = binned_pos)
+
+    span <- 0.10
+
     if (!is.null(groups)) {
         p <- p +
-            .geom_smooth(methy_data, span = 0.3, group = TRUE) +
-            .geom_smooth(methy_data_before, span = 0.35, group = TRUE) +
-            .geom_smooth(methy_data_after, span = 0.35, group = TRUE) +
+            .geom_smooth(methy_data, sspan = span, group = TRUE) +
             ggplot2::scale_colour_brewer(palette = "Set1") +
             ggplot2::coord_cartesian(clip = "off")
     } else {
         p <- p +
-            .geom_smooth(methy_data, span = 0.3, group = FALSE) +
-            .geom_smooth(methy_data_before, span = 0.35, group = FALSE) +
-            .geom_smooth(methy_data_after, span = 0.35, group = FALSE) +
+            .geom_smooth(methy_data, span = span, group = FALSE) +
             ggplot2::coord_cartesian(clip = "off")
     }
 
@@ -91,8 +94,8 @@ plot_aggregate_regions <- function(x, regions, groups = NULL, flank = 2000, stra
         geom_vline(xintercept = 1, linetype = "dashed", color = "grey80") +
         ggplot2::scale_x_continuous(
             name = "Relative Position",
-            breaks = c(-.25, 0, 1, 1.25),
-            limits = c(-0.25, 1.25),
+            breaks = c(-.33, 0, 1, 1.33),
+            limits = c(-0.33, 1.33),
             labels = labels) +
         ggplot2::ylab("Average Methylation Probability")
 }
@@ -110,8 +113,8 @@ plot_aggregate_regions <- function(x, regions, groups = NULL, flank = 2000, stra
 
         out <- numeric(length(x))
         out[within] <- (x[within] - feature$start) / (feature$end - feature$start)
-        out[upstream] <- (x[upstream] - feature$start) / flank / 4
-        out[downstream] <- 1 + ((x[downstream] - feature$end) / flank / 4)
+        out[upstream] <- (x[upstream] - feature$start) / flank / 3
+        out[downstream] <- 1 + ((x[downstream] - feature$end) / flank / 3)
         if (stranded && length(feature$strand) > 0 && feature$strand == "-") {
             out <- 1 - out
         }
@@ -121,8 +124,8 @@ plot_aggregate_regions <- function(x, regions, groups = NULL, flank = 2000, stra
     out <- query_methy(
         methy,
         features$chr,
-        features$start - flank * 1.1,
-        features$end + flank * 1.1,
+        features$start - flank * 1.10,
+        features$end + flank * 1.10,
         simplify = FALSE)
 
     out <- purrr::map2(out, .split_rows(features), function(x, y) {
@@ -133,8 +136,8 @@ plot_aggregate_regions <- function(x, regions, groups = NULL, flank = 2000, stra
         x$rel_pos <- .scale_to_feature(x$pos, y, stranded = stranded)
 
         x %>%
-            group_by(chr, rel_pos) %>%
-            summarise(statistic = mean(statistic)) %>%
+            group_by(rel_pos) %>%
+            summarise(methy_prob = mean(e1071::sigmoid(statistic))) %>%
             ungroup()
     })
 

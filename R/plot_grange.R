@@ -1,7 +1,7 @@
 #' Plot GRanges
 #'
-#' @param x the NanoMethResults object
-#' @param grange the GRanges object with one entry
+#' @param x the NanoMethResult object.
+#' @param grange the GRanges object with one entry.
 #' @inheritParams plot_region
 #'
 #' @export

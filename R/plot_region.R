@@ -1,6 +1,6 @@
 #' Plot region
 #'
-#' @param x the NanoMethResults object
+#' @param x the NanoMethResult object
 #' @param chr the chromosome to plot
 #' @param start the start of the plotting region
 #' @param end the end of the plotting region

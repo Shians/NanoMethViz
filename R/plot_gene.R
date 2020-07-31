@@ -1,6 +1,6 @@
 #' Plot gene
 #'
-#' @param x the NanoMethResults object.
+#' @param x the NanoMethResult object.
 #' @param gene the gene symbol for the gene to plot.
 #' @param ... additional arguments
 #'

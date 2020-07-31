@@ -18,7 +18,7 @@ plot_gene(x, gene, ...)
 )
 }
 \arguments{
-\item{x}{the NanoMethResults object.}
+\item{x}{the NanoMethResult object.}
 
 \item{gene}{the gene symbol for the gene to plot.}
 

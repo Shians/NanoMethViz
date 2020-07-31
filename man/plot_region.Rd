@@ -29,7 +29,7 @@ plot_region(x, chr, start, end, ...)
 )
 }
 \arguments{
-\item{x}{the NanoMethResults object}
+\item{x}{the NanoMethResult object}
 
 \item{chr}{the chromosome to plot}
 

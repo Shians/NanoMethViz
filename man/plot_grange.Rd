@@ -7,9 +7,9 @@
 plot_grange(x, grange, anno_regions = NULL, spaghetti = FALSE, span = NULL)
 }
 \arguments{
-\item{x}{the NanoMethResults object}
+\item{x}{the NanoMethResult object.}
 
-\item{grange}{the GRanges object with one entry}
+\item{grange}{the GRanges object with one entry.}
 
 \item{anno_regions}{the data.frame of regions to be annotated}
 

@@ -48,6 +48,10 @@ bsseq_to_edger <- function(bsseq) {
 #' bsseq <- methy_to_bsseq(methy)
 #' log_m_ratio <- bsseq_to_methy_log_ratio(bsseq)
 bsseq_to_log_methy_ratio <- function(bsseq, prior_count = 2) {
+    if (prior_count <= 1) {
+        warning("prior_count should be > 1 to avoid division by 0")
+    }
+
     col_names <- SummarizedExperiment::colData(bsseq)$sample
     row_names <- .get_edger_row_names(bsseq)
     methylated <- .get_me_mat(bsseq)

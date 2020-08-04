@@ -49,7 +49,7 @@ bsseq_to_edger <- function(bsseq) {
 #' log_m_ratio <- bsseq_to_methy_log_ratio(bsseq)
 bsseq_to_log_methy_ratio <- function(bsseq, prior_count = 2) {
     if (prior_count <= 1) {
-        warning("prior_count should be > 1 to avoid division by 0")
+        warning("prior_count >1 is recommended")
     }
 
     col_names <- SummarizedExperiment::colData(bsseq)$sample

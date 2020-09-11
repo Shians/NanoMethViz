@@ -86,7 +86,7 @@ plot_agg_regions <- function(
             ggplot2::coord_cartesian(clip = "off")
     } else {
         p <- p +
-            .geom_smooth(methy_data, span = span, group = FALSE) +
+            .agg_geom_smooth(methy_data, span = span, group = FALSE) +
             ggplot2::coord_cartesian(clip = "off")
     }
 

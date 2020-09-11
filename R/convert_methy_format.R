@@ -1,5 +1,3 @@
-library(readr)
-
 # expand multiple motifs
 expand_motifs <- function(x) {
     x_mult <- x[x$num_cpgs > 1, ]

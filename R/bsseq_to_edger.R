@@ -46,7 +46,7 @@ bsseq_to_edger <- function(bsseq) {
 #' @examples
 #' methy <- system.file("methy_subset.tsv.bgz", package = "NanoMethViz")
 #' bsseq <- methy_to_bsseq(methy)
-#' log_m_ratio <- bsseq_to_methy_log_ratio(bsseq)
+#' log_m_ratio <- bsseq_to_log_methy_ratio(bsseq)
 bsseq_to_log_methy_ratio <- function(bsseq, prior_count = 2) {
     if (prior_count < 1) {
         warning("prior_count of 1 or higher is recommended")

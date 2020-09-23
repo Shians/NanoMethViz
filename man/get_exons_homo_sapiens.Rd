@@ -12,3 +12,7 @@ data.frame containing exons
 \description{
 Get exon annotations for homo sapiens
 }
+\examples{
+h_sapiens_exons <- get_exons_homo_sapiens()
+
+}

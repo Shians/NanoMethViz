@@ -13,7 +13,8 @@ plot_agg_regions <- function(
     regions,
     groups = NULL,
     flank = 2000,
-    stranded = TRUE
+    stranded = TRUE,
+    span = 0.05
 ) {
     is_df_or_granges <- function(x) {
         is.data.frame(x) || is(x, "GRanges")
@@ -73,11 +74,11 @@ plot_agg_regions <- function(
     grid_size <- 2^12
     binned_pos <- seq(-1.1/3, 1 + 1.1/3, length.out = grid_size+ 2)[2:(1 + grid_size)]
     methy_data <- methy_data %>%
-        mutate(interval = cut(rel_pos, breaks = grid_size)) %>%
-        group_by(interval, .drop = TRUE) %>%
-        summarise(methy_prob = mean(methy_prob)) %>%
+        mutate(interval = cut(.data$rel_pos, breaks = grid_size)) %>%
+        group_by(.data$interval, .drop = TRUE) %>%
+        summarise(methy_prob = mean(.data$methy_prob)) %>%
         ungroup() %>%
-        mutate(rel_pos = binned_pos)
+        mutate(rel_pos = .data$binned_pos)
 
     if (!is.null(groups)) {
         p <- p +
@@ -173,17 +174,17 @@ plot_agg_regions_sample_grouped <- function(
     )
 
     methy_data <- methy_data %>%
-        mutate(interval = cut(rel_pos, breaks = grid_size)) %>%
-        group_by(sample, interval) %>%
-        summarise(methy_prob = mean(methy_prob)) %>%
-        ungroup() %>%
-        left_join(binned_pos_df, by = "interval") %>%
-        mutate(rel_pos = binned_pos) %>%
-        left_join(samples(x), by = "sample")
+        dplyr::mutate(interval = cut(.data$rel_pos, breaks = grid_size)) %>%
+        dplyr::group_by(.data$sample, .data$interval) %>%
+        dplyr::summarise(methy_prob = mean(.data$methy_prob)) %>%
+        dplyr::ungroup() %>%
+        dplyr::left_join(binned_pos_df, by = "interval") %>%
+        dplyr::mutate(rel_pos = .data$binned_pos) %>%
+        dplyr::left_join(samples(x), by = "sample")
 
     p <- p +
         ggplot2::stat_smooth(
-            aes(x = .data$rel_pos, y = .data$methy_prob, group = haplotype, col = haplotype),
+            aes(x = .data$rel_pos, y = .data$methy_prob, group = .data$haplotype, col = .data$haplotype),
             method = "loess",
             span = span,
             na.rm = TRUE,
@@ -208,10 +209,9 @@ plot_agg_regions_sample_grouped <- function(
 }
 
 .split_rows <- function(x) {
-    split(x, 1:nrow(x))
+    split(x, seq_len(nrow(x)))
 }
 
-#' @importFrom purrr map2
 .get_features_with_rel_pos <- function(features, methy, flank, stranded, by_sample = FALSE, feature_ids = NULL) {
     .scale_to_feature <- function(x, feature, stranded = stranded) {
         within <- x >= feature$start & x <= feature$end
@@ -248,19 +248,19 @@ plot_agg_regions_sample_grouped <- function(
 
         if (by_sample) {
             x %>%
-                group_by(sample, rel_pos) %>%
-                summarise(methy_prob = mean(e1071::sigmoid(statistic))) %>%
-                ungroup()
+                dplyr::group_by(.data$sample, .data$rel_pos) %>%
+                dplyr::summarise(methy_prob = mean(e1071::sigmoid(.data$statistic))) %>%
+                dplyr::ungroup()
         } else {
             x %>%
-                group_by(rel_pos) %>%
-                summarise(methy_prob = mean(e1071::sigmoid(statistic))) %>%
-                ungroup()
+                dplyr::group_by(.data$rel_pos) %>%
+                dplyr::summarise(methy_prob = mean(e1071::sigmoid(.data$statistic))) %>%
+                dplyr::ungroup()
         }
     })
 
     if (!is.null(feature_ids)) {
-        assert_that(length(feature_ids) == nrow(out))
+        assertthat::assert_that(length(feature_ids) == nrow(out))
         names(out) <- feature_ids
     }
 

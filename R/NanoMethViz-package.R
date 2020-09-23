@@ -6,21 +6,22 @@
 #' @docType package
 #'
 #' @importFrom magrittr %>%
-#' @importFrom methods new .valueClassTest
+#' @importFrom methods new .valueClassTest is
 #' @importFrom rlang .data
 #' @importFrom ggplot2 aes geom_rect geom_segment geom_text ggplot theme_void
-#'   xlim ylim ggplot_build rel unit
-#' @importFrom dplyr filter group_by inner_join mutate n select summarise
+#'   xlim ylim ggplot_build rel unit geom_vline
+#' @importFrom dplyr filter group_by ungroup inner_join mutate n select summarise case_when
 #' @importFrom tidyr unnest
 #' @importFrom glue glue
 #' @importFrom assertthat assert_that is.readable is.writeable
 #' @importFrom stringr str_extract
 #' @importFrom readr cols col_character col_integer col_logical col_double
-#' @importFrom tibble tibble as_tibble
+#' @importFrom tibble tibble as_tibble add_column
 #' @import patchwork
 #' @import assertthat
 #' @import fs
 #' @import zlibbioc
+#' @import Rcpp
 #' @useDynLib NanoMethViz
 #' @keywords internal
 "_PACKAGE"

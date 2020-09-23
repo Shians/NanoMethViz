@@ -45,7 +45,7 @@ We then create a temporary path to store a converted file, this will be deleted 
 methy_tabix <- file.path(tempdir(), "methy_data.bgz")
 samples <- c("sample1", "sample2")
 
-# you should see messages whe running this yourself
+# you should see messages when running this yourself
 create_tabix_file(methy_calls, methy_tabix, samples)
 
 # don't do this with actual data

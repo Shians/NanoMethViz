@@ -1,3 +1,37 @@
+#' Load an example NanoMethResult object
+#'
+#' @return a NanoMethResults object
+#'
+#' @export
+#'
+#' @examples
+#' nmr <- load_example_nanomethresult()
+load_example_nanomethresult <- function() {
+    methy <- system.file(package = "NanoMethViz", "methy_subset.tsv.bgz")
+
+    sample <- c(
+      "B6Cast_Prom_1_bl6",
+      "B6Cast_Prom_1_cast",
+      "B6Cast_Prom_2_bl6",
+      "B6Cast_Prom_2_cast",
+      "B6Cast_Prom_3_bl6",
+      "B6Cast_Prom_3_cast"
+    )
+    group <- c(
+      "bl6",
+      "cast",
+      "bl6",
+      "cast",
+      "bl6",
+      "cast"
+    )
+    sample_anno <- data.frame(sample, group, stringsAsFactors = FALSE)
+
+    exon_tibble <- get_exons_mus_musculus()
+
+    NanoMethResult(methy, sample_anno, exon_tibble)
+}
+
 .get_ggplot_range_x <- function(x) {
     # get x-axis range from a ggplot object
     # returns c(x_min, x_max)
@@ -8,7 +42,7 @@
 # vectors
 vec_zip <- function(..., .names = NULL) {
     x <- do.call(data.frame, list(..., stringsAsFactors = FALSE))
-    setNames(split(x, 1:nrow(x)), .names)
+    stat::setNames(split(x, seq_len(nrow(x))), .names)
 }
 
 extract_file_names <- function(x) {

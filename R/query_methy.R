@@ -66,8 +66,8 @@ query_methy_sqlite <- function(x, chr, start, end) {
     )
 
     query <- glue::glue("SELECT * FROM methylation
-                         WHERE chr = '{chr}'
-                         AND pos BETWEEN {start} AND {end}")
+                        WHERE chr = '{chr}'
+                        AND pos BETWEEN {start} AND {end}")
 
     out <- RSQLite::dbGetQuery(db, query)
 

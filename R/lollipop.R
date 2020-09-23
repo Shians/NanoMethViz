@@ -1,36 +1,39 @@
+#' @importFrom stats median
 lollipop <- function(x, chr, start, end, binary = FALSE) {
     methy_data <- query_methy(x, chr, start, end)
 
+    numeric_median <- function(x) stats::median(as.numeric(x))
+
     df <- methy_data %>%
-        group_by(sample, pos) %>%
-        summarise(val = mean(e1071::sigmoid(statistic))) %>%
-        mutate(
-            pos = as.factor(scales::comma(pos, accuracy = 1)),
-            group = str_extract(sample, "bl6|cast")
+        dplyr::group_by(.data$sample, .data$pos) %>%
+        dplyr::summarise(val = mean(e1071::sigmoid(.data$statistic))) %>%
+        dplyr::mutate(
+            pos = as.factor(scales::comma(.data$pos, accuracy = 1)),
+            group = str_extract(.data$sample, "bl6|cast")
         ) %>%
-        ungroup() %>%
-        mutate(
-            group = factor(group),
-            sample = fct_reorder(sample, group, function(x) median(as.numeric(x))),
-            state = ifelse(val > 0.5, "methylated", "unmethylated")
+        dplyr::ungroup() %>%
+        dplyr::mutate(
+            group = factor(.data$group),
+            sample = forcats::fct_reorder(.data$sample, .data$group, numeric_median),
+            state = ifelse(.data$val > 0.5, "methylated", "unmethylated")
         )
 
-    p <- ggplot(df, aes(x = pos, y = sample)) +
-        geom_hline(yintercept = df$sample, size = 2) +
-        theme(
-            axis.text.x = element_blank(),
-            axis.ticks.x = element_blank(),
-            axis.title.x = element_blank())
+    p <- ggplot2::ggplot(df, aes(x = .data$pos, y = .data$sample)) +
+        ggplot2::geom_hline(yintercept = df$sample, size = 2) +
+        ggplot2::theme(
+            axis.text.x = ggplot2::element_blank(),
+            axis.ticks.x = ggplot2::element_blank(),
+            axis.title.x = ggplot2::element_blank())
 
     if (binary) {
         p <- p +
-            geom_point(aes(fill = state), pch = 21, size = 7) +
-            scale_fill_manual(values = c("black", "white"))
+            ggplot2::geom_point(aes(fill = .data$state), pch = 21, size = 7) +
+            ggplot2::scale_fill_manual(values = c("black", "white"))
 
     } else {
         p <- p +
-            geom_point(aes(fill = val), pch = 21, size = 7) +
-            scale_fill_steps(low = "white", high = "blueviolet", n.breaks = 6)
+            ggplot2::geom_point(aes(fill = .data$val), pch = 21, size = 7) +
+            ggplot2::scale_fill_steps(low = "white", high = "blueviolet", n.breaks = 6)
     }
 
     p

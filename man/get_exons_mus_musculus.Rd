@@ -12,3 +12,7 @@ data.frame containing exons
 \description{
 Get exon annotations for mus musculus
 }
+\examples{
+m_musculus_exons <- get_exons_mus_musculus()
+
+}

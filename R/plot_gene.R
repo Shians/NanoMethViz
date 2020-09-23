@@ -7,7 +7,7 @@
 #' @return None
 #' @export
 setGeneric("plot_gene", function(x, gene, ...) {
-  standardGeneric("plot_gene")
+    standardGeneric("plot_gene")
 })
 
 #' @rdname plot_gene
@@ -52,8 +52,8 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
     gene_anno = TRUE
 ) {
     assertthat::assert_that(
-      nrow(exons(x)) > 0,
-      msg = "exons(x) is empty, gene cannot be queried"
+        nrow(exons(x)) > 0,
+        msg = "exons(x) is empty, gene cannot be queried"
     )
 
     if (length(window) == 1) {
@@ -69,7 +69,7 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
     feature$end <- max(exons_anno$end)
 
     p1 <- with(exons_anno,
-         plot_feature(
+        plot_feature(
             feature,
             title = gene,
             methy = methy(x),

@@ -68,8 +68,8 @@ create_bsseq_from_files <- function(paths, samples) {
     # get unique positions
     combine_distinct_gpos <- function(x, y) {
         rbind(
-            dplyr::select(x, chr, pos),
-            dplyr::select(y, chr, pos)
+            dplyr::select(x, "chr", "pos"),
+            dplyr::select(y, "chr", "pos")
         ) %>%
             dplyr::distinct()
     }
@@ -77,8 +77,8 @@ create_bsseq_from_files <- function(paths, samples) {
     unique_pos_df <- purrr::reduce(
             dat,
             combine_distinct_gpos) %>%
-        dplyr::arrange(chr, pos) %>%
-        dplyr::mutate(id = paste(chr, pos))
+        dplyr::arrange(.data$chr, .data$pos) %>%
+        dplyr::mutate(id = paste(.data$chr, .data$pos))
 
     # create methylation matrix
     M_mat <- matrix(
@@ -87,8 +87,8 @@ create_bsseq_from_files <- function(paths, samples) {
         ncol = length(dat),
         dimnames = list(NULL, samples))
 
-    for (i in 1:length(dat)) {
-        row_inds <- with(dat[[i]], paste(chr, pos)) %>%
+    for (i in seq_along(dat)) {
+        row_inds <- paste(dat[[i]]$chr, dat[[i]]$pos) %>%
             factor(levels = unique_pos_df$id)
 
         M_mat[row_inds, i] <- dat[[i]]$methylated
@@ -101,8 +101,8 @@ create_bsseq_from_files <- function(paths, samples) {
         ncol = length(dat),
         dimnames = list(NULL, samples))
 
-    for (i in 1:length(dat)) {
-        row_inds <- with(dat[[i]], paste(chr, pos)) %>%
+    for (i in seq_along(dat)) {
+        row_inds <- paste(dat[[i]]$chr, dat[[i]]$pos) %>%
             factor(levels = unique_pos_df$id)
 
         cov_mat[row_inds, i] <- dat[[i]]$total

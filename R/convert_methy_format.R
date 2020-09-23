@@ -17,8 +17,8 @@ expand_motifs <- function(x) {
         )
 
         start_offsets <- unlist(start_offsets)
-        tidyr::uncount(x_mult, num_cpgs) %>%
-            dplyr::mutate(start = start + start_offsets)
+        tidyr::uncount(x_mult, .data$num_cpgs) %>%
+            dplyr::mutate(start = .data$start + start_offsets)
     })
 
     rbind(x, mult_expand) %>%
@@ -31,47 +31,47 @@ reformat_f5c <- function(x, sample) {
 
     x %>%
         dplyr::transmute(
-            sample = factor(sample),
-            chr = factor(chromosome),
-            pos = as.integer(start),
+            sample = factor(.data$sample),
+            chr = factor(.data$chromosome),
+            pos = as.integer(.data$start),
             strand = factor("*", levels = c("+", "-", "*")),
-            statistic = log_lik_ratio,
-            read_name = read_name
+            statistic = .data$log_lik_ratio,
+            read_name = .data$read_name
         )
 }
 
 reformat_nanopolish <- function(x, sample) {
     x <- x %>%
-        dplyr::rename(num_cpgs = num_motifs) %>%
+        dplyr::rename(num_cpgs = "num_motifs") %>%
         expand_motifs()
 
     x %>%
         dplyr::transmute(
-            sample = factor(sample),
-            chr = factor(chromosome),
-            pos = as.integer(start),
-            strand = strand,
-            statistic = log_lik_ratio,
-            read_name = read_name
+            sample = factor(.data$sample),
+            chr = factor(.data$chromosome),
+            pos = as.integer(.data$start),
+            strand = .data$strand,
+            statistic = .data$log_lik_ratio,
+            read_name = .data$read_name
         )
 }
 
 reformat_megalodon <- function(x, sample) {
     x %>%
         rename(
-            chr = chrm,
-            statistic = mod_log_prob,
-            read_name = read_id) %>%
-        add_column(sample = sample, .before = 1) %>%
+            chr = .data$chrm,
+            statistic = .data$mod_log_prob,
+            read_name = .data$read_id) %>%
+        add_column(sample = .data$sample, .before = 1) %>%
         mutate(
-            sample = as.factor(sample),
-            chr = factor(chr),
+            sample = as.factor(.data$sample),
+            chr = factor(.data$chr),
             strand = case_when(
                 strand == 1 ~ "+",
                 strand == -1 ~ "-",
                 TRUE ~ "*"),
-            strand = factor(strand, levels = c("+", "-", "*")),
-            statistic = logit(exp(statistic))) %>%
+            strand = factor(.data$strand, levels = c("+", "-", "*")),
+            statistic = logit(exp(.data$statistic))) %>%
         select(methy_col_names())
 }
 

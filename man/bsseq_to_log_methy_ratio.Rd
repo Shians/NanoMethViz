@@ -21,5 +21,5 @@ dimensionality reduction plots.
 \examples{
 methy <- system.file("methy_subset.tsv.bgz", package = "NanoMethViz")
 bsseq <- methy_to_bsseq(methy)
-log_m_ratio <- bsseq_to_methy_log_ratio(bsseq)
+log_m_ratio <- bsseq_to_log_methy_ratio(bsseq)
 }

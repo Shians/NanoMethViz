@@ -3,6 +3,11 @@
 #' @param x the NanoMethResult object.
 #' @param grange the GRanges object with one entry.
 #' @inheritParams plot_region
+#' @inherit plot_region return
+#'
+#' @examples
+#' nmr <- load_example_nanomethresult()
+#' plot_grange(nmr, GRanges("chr7:6703892-6730431"))
 #'
 #' @export
 plot_grange <- function(

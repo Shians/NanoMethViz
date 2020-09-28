@@ -6,7 +6,12 @@
 #' @param end the end of the plotting region
 #' @param ... additional arguments
 #'
-#' @return None
+#' @return a ggplot object.
+#'
+#' @examples
+#' nmr <- load_example_nanomethresult()
+#' plot_region(nmr, "chr7", 6703892, 6730431)
+#'
 #' @export
 setGeneric("plot_region", function(x, chr, start, end, ...) {
     standardGeneric("plot_region")
@@ -17,6 +22,12 @@ setGeneric("plot_region", function(x, chr, start, end, ...) {
 #' @param anno_regions the data.frame of regions to be annotated
 #' @param spaghetti whether or not individual reads should be shown.
 #' @param span the span for loess smoothing.
+#'
+#' @return a ggplot object.
+#'
+#' @examples
+#' nmr <- load_example_nanomethresult()
+#' plot_region(nmr, "chr7", 6703892, 6730431)
 #'
 #' @export
 setMethod("plot_region",

@@ -4,7 +4,12 @@
 #' @param gene the gene symbol for the gene to plot.
 #' @param ... additional arguments
 #'
-#' @return None
+#' @return a patchwork plot.
+#'
+#' @examples
+#' nmr <- load_example_nanomethresult
+#' plot_gene(nmr, "Peg3")
+#'
 #' @export
 setGeneric("plot_gene", function(x, gene, ...) {
     standardGeneric("plot_gene")
@@ -19,6 +24,12 @@ setGeneric("plot_gene", function(x, gene, ...) {
 #' @param spaghetti whether or not individual reads should be shown.
 #' @param span the span for loess smoothing.
 #' @param gene_anno whether or not gene annotation tracks are plotted.
+#'
+#' @return a patchwork plot.
+#'
+#' @examples
+#' nmr <- load_example_nanomethresult
+#' plot_gene(nmr, "Peg3")
 #'
 #' @export
 setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),

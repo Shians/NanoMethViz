@@ -6,7 +6,14 @@
 #' @param end the vector of end positions
 #' @param simplify whether returned results should be row-concatenated
 #'
-#' @return
+#' @return A table containing the data within the queried regions. If simplify
+#'   is TRUE (default) then all data is contained within one table, otherwise it
+#'   is a list of tables where each element is the data from one region.
+#'
+#'
+#' @examples
+#' nmr <- load_example_nanomethresult()
+#' query_methy(nmr, "chr7", 6703892, 6730431)
 #'
 #' @importFrom RSQLite dbConnect SQLite SQLITE_RO dbDisconnect dbGetQuery
 #' @importFrom Rsamtools TabixFile scanTabix

@@ -17,6 +17,16 @@ plot_grange(x, grange, anno_regions = NULL, spaghetti = FALSE, span = NULL)
 
 \item{span}{the span for loess smoothing.}
 }
+\value{
+a ggplot object.
+
+a ggplot object.
+}
 \description{
 Plot GRanges
+}
+\examples{
+nmr <- load_example_nanomethresult()
+plot_grange(nmr, GRanges("chr7:6703892-6730431"))
+
 }

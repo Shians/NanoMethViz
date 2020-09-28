@@ -46,8 +46,18 @@ plot_region(x, chr, start, end, ...)
 \item{span}{the span for loess smoothing.}
 }
 \value{
-None
+a ggplot object.
+
+a ggplot object.
 }
 \description{
 Plot region
+}
+\examples{
+nmr <- load_example_nanomethresult()
+plot_region(nmr, "chr7", 6703892, 6730431)
+
+nmr <- load_example_nanomethresult()
+plot_region(nmr, "chr7", 6703892, 6730431)
+
 }

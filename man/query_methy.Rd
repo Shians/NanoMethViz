@@ -18,8 +18,15 @@ query_methy(x, chr, start, end, simplify = TRUE)
 \item{simplify}{whether returned results should be row-concatenated}
 }
 \value{
-
+A table containing the data within the queried regions. If simplify
+is TRUE (default) then all data is contained within one table, otherwise it
+is a list of tables where each element is the data from one region.
 }
 \description{
 Query methylation data
+}
+\examples{
+nmr <- load_example_nanomethresult()
+query_methy(nmr, "chr7", 6703892, 6730431)
+
 }

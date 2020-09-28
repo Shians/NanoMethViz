@@ -22,7 +22,7 @@ plot_agg_regions_sample_grouped(
 \item{span}{the span for loess smoothing.}
 }
 \value{
-
+a ggplot plot object.
 }
 \description{
 Plot aggregate regions with grouped samples

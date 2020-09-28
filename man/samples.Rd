@@ -9,7 +9,14 @@ samples(object)
 \arguments{
 \item{object}{the object.}
 }
+\value{
+the sample annotation.
+}
 \description{
 Get sample annotation
+}
+\examples{
+showMethods("samples")
+
 }
 \keyword{internal}

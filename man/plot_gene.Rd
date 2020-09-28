@@ -37,8 +37,18 @@ length.}
 \item{gene_anno}{whether or not gene annotation tracks are plotted.}
 }
 \value{
-None
+a patchwork plot.
+
+a patchwork plot.
 }
 \description{
 Plot gene
+}
+\examples{
+nmr <- load_example_nanomethresult
+plot_gene(nmr, "Peg3")
+
+nmr <- load_example_nanomethresult
+plot_gene(nmr, "Peg3")
+
 }

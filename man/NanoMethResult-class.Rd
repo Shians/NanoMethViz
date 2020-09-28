@@ -30,6 +30,12 @@ gene_id, chr, strand, start, end, transcript_id and symbol.}
 }
 \value{
 a NanoMethResult object to be used with plotting functions
+
+the path to the methylation data.
+
+the sample annotation.
+
+the exon annotation.
 }
 \description{
 A NanoMethResult object stores data used for NanoMethViz visualisation. It
@@ -41,7 +47,7 @@ NanoMethResult() constructor function described in "Usage".
 \itemize{
 \item \code{NanoMethResult}: Constructor
 
-\item \code{methy,NanoMethResult-method}: methyation data path getter.
+\item \code{methy,NanoMethResult-method}: methylation data path getter.
 
 \item \code{samples,NanoMethResult-method}: sample annotation getter.
 
@@ -60,3 +66,8 @@ sample and group.}
 gene_id, chr, strand, start, end, transcript_id and symbol.}
 }}
 
+\examples{
+x <- get_example_nanomethresult()
+methy(x)
+
+}

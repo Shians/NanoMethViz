@@ -9,7 +9,14 @@ methy(object)
 \arguments{
 \item{object}{the object.}
 }
+\value{
+the path to the methylation data.
+}
 \description{
 Get methylation data
+}
+\examples{
+showMethods("methy")
+
 }
 \keyword{internal}

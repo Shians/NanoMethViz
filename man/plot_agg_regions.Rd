@@ -4,7 +4,14 @@
 \alias{plot_agg_regions}
 \title{Plot aggregate regions}
 \usage{
-plot_agg_regions(x, regions, groups = NULL, flank = 2000, stranded = TRUE)
+plot_agg_regions(
+  x,
+  regions,
+  groups = NULL,
+  flank = 2000,
+  stranded = TRUE,
+  span = 0.05
+)
 }
 \arguments{
 \item{x}{the NanoMethResult object.}
@@ -18,7 +25,7 @@ plot_agg_regions(x, regions, groups = NULL, flank = 2000, stranded = TRUE)
 \item{span}{the span for loess smoothing.}
 }
 \value{
-
+a ggplot object.
 }
 \description{
 Plot aggregate regions

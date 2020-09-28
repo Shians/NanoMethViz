@@ -79,14 +79,25 @@ NanoMethResult <- function(methy, samples, exons = NULL) {
 #'
 #' @param object the object.
 #'
+#' @return the path to the methylation data.
+#'
+#' @examples
+#' showMethods("methy")
+#'
 #' @export
 setGeneric("methy", valueClass = "character", function(object) {
     standardGeneric("methy")
 })
 
-#' @describeIn NanoMethResult-class methyation data path getter.
+#' @describeIn NanoMethResult-class methylation data path getter.
 #'
 #' @param object the NanoMethResult object.
+#'
+#' @return the path to the methylation data.
+#'
+#' @examples
+#' x <- get_example_nanomethresult()
+#' methy(x)
 #'
 #' @export
 setMethod("methy", signature("NanoMethResult"), function(object) {
@@ -96,6 +107,11 @@ setMethod("methy", signature("NanoMethResult"), function(object) {
 #' Get sample annotation
 #'
 #' @param object the object.
+#'
+#' @return the sample annotation.
+#'
+#' @examples
+#' showMethods("samples")
 #'
 #' @export
 #'
@@ -108,6 +124,8 @@ setGeneric("samples", valueClass = "data.frame", function(object) {
 #'
 #' @param object the NanoMethResult object.
 #'
+#' @return the sample annotation.
+#'
 #' @export
 setMethod("samples", signature("NanoMethResult"), function(object) {
     object@samples
@@ -118,6 +136,11 @@ setMethod("samples", signature("NanoMethResult"), function(object) {
 #'
 #' @param object the object.
 #'
+#' @return the exon annotation.
+#'
+#' @examples
+#' showMethods("exons")
+#'
 #' @export
 setGeneric("exons", valueClass = "data.frame", function(object) {
     standardGeneric("exons")
@@ -126,6 +149,8 @@ setGeneric("exons", valueClass = "data.frame", function(object) {
 #' @describeIn NanoMethResult-class exon annotation getter.
 #'
 #' @param object the NanoMethResult object.
+#'
+#' @return the exon annotation.
 #'
 #' @export
 setMethod("exons", signature("NanoMethResult"), function(object) {

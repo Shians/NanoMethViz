@@ -6,7 +6,8 @@
 #' @param flank the number of flanking bases to add to each side of each region.
 #' @param span the span for loess smoothing.
 #'
-#' @return
+#' @return a ggplot object.
+#'
 #' @export
 plot_agg_regions <- function(
     x,
@@ -113,7 +114,8 @@ plot_agg_regions <- function(
 #' @param flank the number of flanking bases to add to each side of each region.
 #' @param span the span for loess smoothing.
 #'
-#' @return
+#' @return a ggplot plot object.
+#'
 #' @export
 plot_agg_regions_sample_grouped <- function(
     x,

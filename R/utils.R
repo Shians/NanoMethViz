@@ -10,20 +10,20 @@ load_example_nanomethresult <- function() {
     methy <- system.file(package = "NanoMethViz", "methy_subset.tsv.bgz")
 
     sample <- c(
-      "B6Cast_Prom_1_bl6",
-      "B6Cast_Prom_1_cast",
-      "B6Cast_Prom_2_bl6",
-      "B6Cast_Prom_2_cast",
-      "B6Cast_Prom_3_bl6",
-      "B6Cast_Prom_3_cast"
+        "B6Cast_Prom_1_bl6",
+        "B6Cast_Prom_1_cast",
+        "B6Cast_Prom_2_bl6",
+        "B6Cast_Prom_2_cast",
+        "B6Cast_Prom_3_bl6",
+        "B6Cast_Prom_3_cast"
     )
     group <- c(
-      "bl6",
-      "cast",
-      "bl6",
-      "cast",
-      "bl6",
-      "cast"
+        "bl6",
+        "cast",
+        "bl6",
+        "cast",
+        "bl6",
+        "cast"
     )
     sample_anno <- data.frame(sample, group, stringsAsFactors = FALSE)
 

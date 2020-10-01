@@ -1,7 +1,7 @@
 Package: NanoMethViz
 Type: Package
 Title: Visualise methlation data from Oxford Nanopore sequencing
-Version: 0.99.0
+Version: 0.99.1
 Author: Authors@R: c(
     person("Shian", "Su", email = "su.s@wehi.edu.au", role = c("cre", "aut")))
 Maintainer: Shian Su <su.s@wehi.edu.au>

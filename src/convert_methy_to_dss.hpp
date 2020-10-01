@@ -21,8 +21,8 @@ struct entry {
 };
 
 struct MethyCount {
-    uint total=0;
-    uint methylated=0;
+    unsigned int total=0;
+    unsigned int methylated=0;
 };
 
 struct GenomicPos {

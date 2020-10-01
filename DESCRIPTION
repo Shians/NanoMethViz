@@ -46,6 +46,7 @@ Suggests:
     rmarkdown
 LinkingTo: Rcpp
 License: Apache License (>= 2.0)
+SystemRequirements: C++11
 VignetteBuilder: knitr
 Encoding: UTF-8
 LazyData: true

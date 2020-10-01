@@ -40,9 +40,10 @@ load_example_nanomethresult <- function() {
 
 # create a list where the nth element contains the nth values of the original
 # vectors
+#' @importFrom stats setNames
 vec_zip <- function(..., .names = NULL) {
     x <- do.call(data.frame, list(..., stringsAsFactors = FALSE))
-    stat::setNames(split(x, seq_len(nrow(x))), .names)
+    stats::setNames(split(x, seq_len(nrow(x))), .names)
 }
 
 extract_file_names <- function(x) {

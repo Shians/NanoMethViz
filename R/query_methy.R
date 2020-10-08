@@ -13,13 +13,17 @@
 #'
 #' @examples
 #' nmr <- load_example_nanomethresult()
-#' query_methy(nmr, "chr7", 6703892, 6730431)
+#' query_methy(methy(nmr), "chr7", 6703892, 6730431)
 #'
 #' @importFrom RSQLite dbConnect SQLite SQLITE_RO dbDisconnect dbGetQuery
 #' @importFrom Rsamtools TabixFile scanTabix
 #'
 #' @export
 query_methy <- function(x, chr, start, end, simplify = TRUE) {
+    if (is(x, "NanoMethResult")) {
+        x <- methy(x)
+    }
+
     if (can_open_sql(x)) {
         out <- query_methy_sqlite(x, chr, start, end)
     } else if (can_open_tabix(x)) {

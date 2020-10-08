@@ -27,6 +27,6 @@ Query methylation data
 }
 \examples{
 nmr <- load_example_nanomethresult()
-query_methy(nmr, "chr7", 6703892, 6730431)
+query_methy(methy(nmr), "chr7", 6703892, 6730431)
 
 }

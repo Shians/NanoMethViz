@@ -18,7 +18,8 @@ expand_motifs <- function(x) {
 
         start_offsets <- unlist(start_offsets)
         tidyr::uncount(x_mult, .data$num_cpgs) %>%
-            dplyr::mutate(start = .data$start + start_offsets)
+            dplyr::mutate(start = .data$start + start_offsets) %>%
+            dplyr::select(-num_cpgs)
     })
 
     rbind(x, mult_expand) %>%
@@ -27,7 +28,8 @@ expand_motifs <- function(x) {
 
 reformat_f5c <- function(x, sample) {
     x <- x %>%
-        expand_motifs()
+        expand_motifs() %>%
+        add_column(sample = sample, .before = 1)
 
     x %>%
         dplyr::transmute(
@@ -43,7 +45,8 @@ reformat_f5c <- function(x, sample) {
 reformat_nanopolish <- function(x, sample) {
     x <- x %>%
         dplyr::rename(num_cpgs = "num_motifs") %>%
-        expand_motifs()
+        expand_motifs() %>%
+        add_column(sample = sample, .before = 1)
 
     x %>%
         dplyr::transmute(
@@ -62,7 +65,7 @@ reformat_megalodon <- function(x, sample) {
             chr = .data$chrm,
             statistic = .data$mod_log_prob,
             read_name = .data$read_id) %>%
-        add_column(sample = .data$sample, .before = 1) %>%
+        add_column(sample = sample, .before = 1) %>%
         mutate(
             sample = as.factor(.data$sample),
             chr = factor(.data$chr),

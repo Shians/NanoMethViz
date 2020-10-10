@@ -7,7 +7,9 @@
 \title{NanoMethViz: Visualise methlation data from Oxford Nanopore sequencing}
 \description{
 NanoMethViz is a toolkit for visualising methylation data from 
-    Oxford Nanopore sequencing.
+    Oxford Nanopore sequencing. It can be used to explore methylation patterns
+    from reads derived from Oxford Nanopore direct DNA sequencing with
+    methylation called by callers including nanopolish, f5c and megalodon.
 }
 \details{
 The main plotting functions in this package are \code{\link[=plot_gene]{plot_gene()}} and
@@ -23,6 +25,10 @@ Useful links:
   \item \url{https://github.com/shians/NanoMethViz}
   \item Report bugs at \url{https://github.com/Shians/NanoMethViz/issues}
 }
+
+}
+\author{
+\strong{Maintainer}: Shian Su \email{su.s@wehi.edu.au}
 
 }
 \keyword{internal}

@@ -12,7 +12,9 @@
 #' @export
 get_exons_mus_musculus <- function() {
     if ("Mus.musculus" %in% utils::installed.packages()) {
-        library(Mus.musculus)
+        if (packageVersion("Mus.musculus") < "1.3.1") {
+            library(Mus.musculus)
+        }
     } else {
         stop("package 'Mus.musculus' is not installed, please install using BiocManager::install('Mus.musculus')")
     }
@@ -59,7 +61,9 @@ get_exons_mus_musculus <- function() {
 #' @export
 get_exons_homo_sapiens <- function() {
     if ("Homo.sapiens" %in% utils::installed.packages()) {
-        library(Homo.sapiens)
+        if (packageVersion("Homo.sapiens") < "1.3.1") {
+            library(Homo.sapiens)
+        }
     } else {
         stop("package 'Homo.sapiens' is not installed, please install using BiocManager::install('Homo.sapiens')")
     }

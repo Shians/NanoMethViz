@@ -101,13 +101,6 @@ guess_methy_source <- function(methy_file) {
 #'
 #' @return invisibly returns the output file path, creates a tabix file (.bgz)
 #'   and its index (.bgz.tbi)
-#'
-#' @examples
-#' methy_calls <- system.file(package = "NanoMethViz",
-#'     c("sample1_nanopolish.tsv.gz", "sample2_nanopolish.tsv.gz"))
-#' temp_file <- tempfile()
-#'
-#' convert_methy_format(methy_calls, temp_file)
 convert_methy_format <- function(
     input_files,
     output_file,

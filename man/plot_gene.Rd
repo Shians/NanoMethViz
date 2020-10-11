@@ -45,10 +45,10 @@ a patchwork plot.
 Plot gene
 }
 \examples{
-nmr <- load_example_nanomethresult
+nmr <- load_example_nanomethresult()
 plot_gene(nmr, "Peg3")
 
-nmr <- load_example_nanomethresult
+nmr <- load_example_nanomethresult()
 plot_gene(nmr, "Peg3")
 
 }

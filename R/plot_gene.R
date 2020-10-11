@@ -7,7 +7,7 @@
 #' @return a patchwork plot.
 #'
 #' @examples
-#' nmr <- load_example_nanomethresult
+#' nmr <- load_example_nanomethresult()
 #' plot_gene(nmr, "Peg3")
 #'
 #' @export
@@ -28,7 +28,7 @@ setGeneric("plot_gene", function(x, gene, ...) {
 #' @return a patchwork plot.
 #'
 #' @examples
-#' nmr <- load_example_nanomethresult
+#' nmr <- load_example_nanomethresult()
 #' plot_gene(nmr, "Peg3")
 #'
 #' @export

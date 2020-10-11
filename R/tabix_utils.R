@@ -4,14 +4,6 @@
 #' @param x the path to the methylation file to sort
 #'
 #' @return invisibly returns path of sorted file
-#'
-#' @examples
-#' methy_calls <- system.file(package = "NanoMethViz",
-#'     c("sample1_nanopolish.tsv.gz", "sample2_nanopolish.tsv.gz"))
-#' temp_file <- tempfile()
-#' convert_methy_format(methy_calls, temp_file)
-#'
-#' sort_methy_file(temp_file)
 sort_methy_file <- function(x) {
     assert_that(is.readable(x))
 
@@ -50,15 +42,6 @@ tabix_index <- function(x) {
 #' @param x the path to the sorted methylation file
 #'
 #' @return invisibly returns the path to the tabix file
-#'
-#' @examples
-#' methy_calls <- system.file(package = "NanoMethViz",
-#'     c("sample1_nanopolish.tsv.gz", "sample2_nanopolish.tsv.gz"))
-#' temp_file <- tempfile()
-#' convert_methy_format(methy_calls, temp_file)
-#' sort_methy_file(temp_file)
-#'
-#' raw_methy_to_tabix(temp_file)
 raw_methy_to_tabix <- function(x) {
     assert_that(is.readable(x))
 

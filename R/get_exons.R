@@ -8,11 +8,11 @@
 #' @importFrom readr read_tsv
 #' @importFrom tibble as_tibble
 #' @importFrom dplyr rename
-#' @importFrom utils install.packages
+#' @importFrom utils install.packages packageVersion
 #' @export
 get_exons_mus_musculus <- function() {
     if ("Mus.musculus" %in% utils::installed.packages()) {
-        if (packageVersion("Mus.musculus") < "1.3.1") {
+        if (packageVersion("Mus.musculus") < "1.4.0") {
             library(Mus.musculus)
         }
     } else {
@@ -57,11 +57,11 @@ get_exons_mus_musculus <- function() {
 #' @importFrom readr read_tsv
 #' @importFrom tibble as_tibble
 #' @importFrom dplyr rename
-#' @importFrom utils install.packages
+#' @importFrom utils install.packages packageVersion
 #' @export
 get_exons_homo_sapiens <- function() {
     if ("Homo.sapiens" %in% utils::installed.packages()) {
-        if (packageVersion("Homo.sapiens") < "1.3.1") {
+        if (packageVersion("Homo.sapiens") < "1.4.0") {
             library(Homo.sapiens)
         }
     } else {

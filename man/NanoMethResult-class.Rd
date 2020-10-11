@@ -67,7 +67,7 @@ gene_id, chr, strand, start, end, transcript_id and symbol.}
 }}
 
 \examples{
-x <- get_example_nanomethresult()
+x <- load_example_nanomethresult()
 methy(x)
 
 }

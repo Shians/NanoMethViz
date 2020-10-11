@@ -15,12 +15,4 @@ invisibly returns path of sorted file
 \description{
 Sort methylation file
 }
-\examples{
-methy_calls <- system.file(package = "NanoMethViz",
-    c("sample1_nanopolish.tsv.gz", "sample2_nanopolish.tsv.gz"))
-temp_file <- tempfile()
-convert_methy_format(methy_calls, temp_file)
-
-sort_methy_file(temp_file)
-}
 \keyword{internal}

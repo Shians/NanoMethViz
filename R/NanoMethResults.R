@@ -96,7 +96,7 @@ setGeneric("methy", valueClass = "character", function(object) {
 #' @return the path to the methylation data.
 #'
 #' @examples
-#' x <- get_example_nanomethresult()
+#' x <- load_example_nanomethresult()
 #' methy(x)
 #'
 #' @export

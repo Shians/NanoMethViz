@@ -24,11 +24,4 @@ and its index (.bgz.tbi)
 \description{
 Convert methylation calls to NanoMethViz format
 }
-\examples{
-methy_calls <- system.file(package = "NanoMethViz",
-    c("sample1_nanopolish.tsv.gz", "sample2_nanopolish.tsv.gz"))
-temp_file <- tempfile()
-
-convert_methy_format(methy_calls, temp_file)
-}
 \keyword{internal}

@@ -19,14 +19,19 @@ library(NanoMethViz)
 library(NanoMethViz)
 ```
 
-In order to use this package, your data must be converted from the output of methylation calling software to a special tabix format. Due to the use of the Unix `sort` function, this can only currently be done on a Linux or MacOS system.
+In order to use this package, your data must be converted from the output of
+methylation calling software to a special tabix format. Due to the use of the
+Unix `sort` function, this can only currently be done on a Linux or MacOS
+system.
 
 We currently support output from
 
 * Nanopolish
 * f5c
 
-The conversion can be done using the `create_tabix_file()` function. We provide example data of nanopolish output within the package, we can look inside to see how the data looks coming out of nanopolish
+The conversion can be done using the `create_tabix_file()` function. We provide
+example data of nanopolish output within the package, we can look inside to see
+how the data looks coming out of nanopolish
 
 ```{r}
 methy_calls <- system.file(package = "NanoMethViz",
@@ -39,7 +44,11 @@ methy_calls_example <- read.table(
 methy_calls_example
 ```
 
-We then create a temporary path to store a converted file, this will be deleted once you exit your R session. Once `create_tabix_file()` is run, it will create a tabix file along with its index. Because we have a small amount of data, we can read in a small portion of it to see how it looks, do not do this with large datasets as it decompresses all the data and will take very long to run.
+We then create a temporary path to store a converted file, this will be deleted
+once you exit your R session. Once `create_tabix_file()` is run, it will create
+a tabix file along with its index. Because we have a small amount of data, we
+can read in a small portion of it to see how it looks, do not do this with large
+datasets as it decompresses all the data and will take very long to run.
 
 ```{r, message=F}
 methy_tabix <- file.path(tempdir(), "methy_data.bgz")
@@ -56,4 +65,6 @@ methy_data <- read.table(
 methy_data
 ```
 
-Now `methy_tabix` will be the path to a tabix object that is ready for use with NanoMethViz. Please head over to the "Introduction" vignette to see how to use this data for visualisation!
+Now `methy_tabix` will be the path to a tabix object that is ready for use with
+NanoMethViz. Please head over to the "Introduction" vignette to see how to use
+this data for visualisation!

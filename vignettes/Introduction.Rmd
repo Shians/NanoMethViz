@@ -25,7 +25,9 @@ To generate a methylation plot we need 3 components:
 * annotation of exons
 * annotation of samples
 
-The methylation information has been modified from the output of nanopolish/f5c. It has then been compressed and indexed using `bgzip()` and `indexTabix()` from the `Rsamtools` package.
+The methylation information has been modified from the output of nanopolish/f5c.
+It has then been compressed and indexed using `bgzip()` and `indexTabix()` from
+the `Rsamtools` package.
 
 ```{r}
 # methylation data stored in tabix file
@@ -35,7 +37,9 @@ methy <- system.file(package = "NanoMethViz", "methy_subset.tsv.bgz")
 read.table(gzfile(methy), col.names = methy_col_names(), nrows = 6)
 ```
 
-The exon annotation was obtained from the Mus.musculus package, and joined into a single table. It is important that the chromosomes share the same convention as that found in the methylation data.
+The exon annotation was obtained from the Mus.musculus package, and joined into
+a single table. It is important that the chromosomes share the same convention
+as that found in the methylation data.
 
 ```{r}
 # helper function extracts exons from Mus.musculus package
@@ -44,7 +48,8 @@ exon_tibble <- get_exons_mus_musculus()
 head(exon_tibble)
 ```
 
-We will defined the sample annotation ourselves. It is important that the sample names match those found in the methylation data.
+We will defined the sample annotation ourselves. It is important that the sample
+names match those found in the methylation data.
 
 ```{r}
 sample <- c(

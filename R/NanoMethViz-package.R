@@ -5,7 +5,7 @@
 #'   * See \code{vignette("Introduction", package = "NanoMethViz")} for how to create visualisations using this package.
 #' @docType package
 #'
-#' @importFrom magrittr %>%
+#' @importFrom dplyr %>%
 #' @importFrom methods new .valueClassTest is
 #' @importFrom rlang .data
 #' @importFrom ggplot2 aes geom_rect geom_segment geom_text ggplot theme_void

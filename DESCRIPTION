@@ -17,7 +17,6 @@ BugReports: https://github.com/Shians/NanoMethViz/issues
 Depends:
     R (>= 4.0.0),
     methods,
-    magrittr,
     ggplot2
 Imports:
     assertthat,

@@ -7,3 +7,5 @@ Meta
 
 src/*.o
 src/*.so
+
+NanoMethViz.Rproj

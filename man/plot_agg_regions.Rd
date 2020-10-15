@@ -16,11 +16,16 @@ plot_agg_regions(
 \arguments{
 \item{x}{the NanoMethResult object.}
 
-\item{regions}{a table of regions or GRanges, or a list of such objects. The table of regions must contain chr, start and end columns.}
+\item{regions}{a table of regions or GRanges, or a list of such objects. The
+table of regions must contain chr, start and end columns.}
 
-\item{groups}{if 'features' is a list, a vector of characters of the same length as the list containing names for each member.}
+\item{groups}{if 'features' is a list, a vector of characters of the same
+length as the list containing names for each member.}
 
 \item{flank}{the number of flanking bases to add to each side of each region.}
+
+\item{stranded}{TRUE if negative strand features should have coordinates
+flipped to reflect features like transcription start sites.}
 
 \item{span}{the span for loess smoothing.}
 }

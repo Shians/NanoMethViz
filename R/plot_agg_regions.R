@@ -1,9 +1,13 @@
 #' Plot aggregate regions
 #'
 #' @param x the NanoMethResult object.
-#' @param regions a table of regions or GRanges, or a list of such objects. The table of regions must contain chr, start and end columns.
-#' @param groups if 'features' is a list, a vector of characters of the same length as the list containing names for each member.
+#' @param regions a table of regions or GRanges, or a list of such objects. The
+#'   table of regions must contain chr, start and end columns.
+#' @param groups if 'features' is a list, a vector of characters of the same
+#'   length as the list containing names for each member.
 #' @param flank the number of flanking bases to add to each side of each region.
+#' @param stranded TRUE if negative strand features should have coordinates
+#'   flipped to reflect features like transcription start sites.
 #' @param span the span for loess smoothing.
 #'
 #' @return a ggplot object.
@@ -109,10 +113,7 @@ plot_agg_regions <- function(
 
 #' Plot aggregate regions with grouped samples
 #'
-#' @param x the NanoMethResult object.
-#' @param regions a table of regions or GRanges.
-#' @param flank the number of flanking bases to add to each side of each region.
-#' @param span the span for loess smoothing.
+#' @inheritParams plot_agg_regions
 #'
 #' @return a ggplot plot object.
 #'

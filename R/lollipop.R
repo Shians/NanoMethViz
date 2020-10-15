@@ -1,4 +1,5 @@
 #' @importFrom stats median
+#' @importFrom forcats fct_reorder
 lollipop <- function(x, chr, start, end, binary = FALSE) {
     methy_data <- query_methy(x, chr, start, end)
 

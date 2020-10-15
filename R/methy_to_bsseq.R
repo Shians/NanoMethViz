@@ -48,6 +48,11 @@ convert_methy_to_dss <- function(
     )
 }
 
+#' @importFrom S4Vectors DataFrame
+#' @importFrom SummarizedExperiment colData
+#' @importFrom purrr map
+#' @importFrom dplyr select distinct arrange mutate
+#' @importFrom bsseq BSseq
 create_bsseq_from_files <- function(paths, samples) {
     read_dss <- purrr::partial(
         read_tsv,

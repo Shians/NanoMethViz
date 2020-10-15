@@ -19,6 +19,10 @@ Depends:
     methods,
     ggplot2
 Imports:
+    S4Vectors,
+    SummarizedExperiment,
+    bsseq,
+    forcats,
     assertthat,
     AnnotationDbi,
     Rcpp,
@@ -43,7 +47,6 @@ Imports:
     utils,
     zlibbioc
 Suggests:
-    bsseq,
     DSS,
     Mus.musculus,
     Homo.sapiens,

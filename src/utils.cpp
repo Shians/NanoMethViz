@@ -1,4 +1,4 @@
-#include "utils.hpp"
+#include "utils.h"
 
 using namespace std;
 using namespace Rcpp;

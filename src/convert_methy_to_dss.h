@@ -1,7 +1,7 @@
 #pragma once
 #include <Rcpp.h>
 
-#include "utils.hpp"
+#include "utils.h"
 
 #include <iostream>
 #include <fstream>
@@ -10,7 +10,7 @@
 #include <map>
 #include <unordered_map>
 
-#include "zstr/zstr.hpp"
+#include "zstr/zstr.h"
 
 
 struct entry {

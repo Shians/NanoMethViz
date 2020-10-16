@@ -1,4 +1,4 @@
-#include "convert_methy_to_dss.hpp"
+#include "convert_methy_to_dss.h"
 
 using namespace std;
 using namespace Rcpp;

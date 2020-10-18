@@ -8,9 +8,12 @@ sort_methy_file <- function(x) {
     assert_that(is.readable(x))
 
     if (.Platform$OS.type == "windows") {
-        methy_df <- readr::read_tsv(x)
+        methy_df <- readr::read_tsv(
+            x,
+            col_names = methy_col_names(),
+            col_types = methy_col_types())
         methy_df <- dplyr::arrange(methy_df, .data$chr, .data$pos)
-        readr::write_tsv(methy_df, x)
+        readr::write_tsv(methy_df, x, col_names = FALSE)
     } else {
         cmd <- glue::glue("sort -k2,3V {x} -o {x}")
         system(cmd)

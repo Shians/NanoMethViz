@@ -114,6 +114,7 @@ convert_methy_format <- function(
         is.character(output_file)
     )
 
+    assert_that(is.dir(fs::path_dir(output_file)))
     file.create(path.expand(output_file))
     assert_that(is.writeable(output_file))
 

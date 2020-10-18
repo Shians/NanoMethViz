@@ -13,7 +13,7 @@
 #' @importFrom dplyr filter group_by ungroup inner_join mutate n select summarise case_when
 #' @importFrom tidyr unnest
 #' @importFrom glue glue
-#' @importFrom assertthat assert_that is.readable is.writeable
+#' @importFrom assertthat assert_that is.readable is.writeable is.dir
 #' @importFrom stringr str_extract
 #' @importFrom readr cols col_character col_integer col_logical col_double
 #' @importFrom tibble tibble as_tibble add_column

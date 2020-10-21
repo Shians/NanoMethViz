@@ -21,7 +21,7 @@ To install this package, run
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 
-BiocManager::install("Glimma")
+BiocManager::install("NanoMethViz")
 ```
 
 ```{r}

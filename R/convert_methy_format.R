@@ -98,13 +98,15 @@ guess_methy_source <- function(methy_file) {
 #' @param input_files the files to convert
 #' @param output_file the output file to write results to
 #' @param samples the names of samples corresponding to each file
+#' @param verbose TRUE if progress messages are to be printed
 #'
 #' @return invisibly returns the output file path, creates a tabix file (.bgz)
 #'   and its index (.bgz.tbi)
 convert_methy_format <- function(
     input_files,
     output_file,
-    samples = fs::path_ext_remove(fs::path_file(input_files))
+    samples = fs::path_ext_remove(fs::path_file(input_files)),
+    verbose = TRUE
 ) {
     for (f in input_files) {
         assert_that(is.readable(f))
@@ -119,9 +121,13 @@ convert_methy_format <- function(
     assert_that(is.writeable(output_file))
 
     for (element in vec_zip(file = input_files, sample = samples)) {
-        message(glue::glue("processing {element$file}..."))
+        if (verbose) {
+            message(glue::glue("processing {element$file}..."))
+        }
         methy_source <- guess_methy_source(element$file)
-        message(glue::glue("guessing file is produced by {methy_source}..."))
+        if (verbose) {
+            message(glue::glue("guessing file is produced by {methy_source}..."))
+        }
 
         col_types <- switch (
             methy_source,

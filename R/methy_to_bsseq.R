@@ -4,6 +4,7 @@
 #' @param out_folder the folder to store intermediate files. One file is created
 #'   for each sample and contains columns "chr", "pos", "total" and
 #'   "methylated".
+#' @param verbose TRUE if progress messages are to be printed
 #'
 #' @return a BSSeq object.
 #' @export
@@ -13,14 +14,24 @@
 #' bsseq <- methy_to_bsseq(methy)
 methy_to_bsseq <- function(
     methy,
-    out_folder = tempdir()
+    out_folder = tempdir(),
+    verbose = TRUE
 ) {
-    timed_log("creating intermediate files...")
+    if (verbose) {
+        timed_log("creating intermediate files...")
+    }
+
     files <- convert_methy_to_dss(methy, out_folder)
 
-    timed_log("creating bsseq object...")
+    if (verbose) {
+        timed_log("creating bsseq object...")
+    }
+
     out <- create_bsseq_from_files(files$file_path, files$sample)
-    timed_log("done")
+
+    if (verbose) {
+        timed_log("done")
+    }
 
     out
 }
@@ -62,14 +73,18 @@ create_bsseq_from_files <- function(paths, samples) {
             total = col_double(),
             methylated = col_double()
         ),
-        progress = FALSE
+        verbose = TRUE
     )
 
-    timed_log("reading in parsed data...")
+    if (verbose) {
+        timed_log("reading in parsed data...")
+    }
     # read in data
     dat <- purrr::map(paths, read_dss)
 
-    timed_log("constructing matrices...")
+    if (verbose) {
+        timed_log("constructing matrices...")
+    }
     # get unique positions
     combine_distinct_gpos <- function(x, y) {
         rbind(

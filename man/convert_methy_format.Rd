@@ -7,7 +7,8 @@
 convert_methy_format(
   input_files,
   output_file,
-  samples = fs::path_ext_remove(fs::path_file(input_files))
+  samples = fs::path_ext_remove(fs::path_file(input_files)),
+  verbose = TRUE
 )
 }
 \arguments{
@@ -16,6 +17,8 @@ convert_methy_format(
 \item{output_file}{the output file to write results to}
 
 \item{samples}{the names of samples corresponding to each file}
+
+\item{verbose}{TRUE if progress messages are to be printed}
 }
 \value{
 invisibly returns the output file path, creates a tabix file (.bgz)

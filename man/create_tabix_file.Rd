@@ -7,7 +7,8 @@
 create_tabix_file(
   input_files,
   output_file,
-  samples = extract_file_names(input_files)
+  samples = extract_file_names(input_files),
+  verbose = TRUE
 )
 }
 \arguments{
@@ -16,6 +17,8 @@ create_tabix_file(
 \item{output_file}{the output file to write results to (must end in .bgz)}
 
 \item{samples}{the names of samples corresponding to each file}
+
+\item{verbose}{TRUE if progress messages are to be printed}
 }
 \value{
 invisibly returns the output file path, creates a tabix file (.bgz)

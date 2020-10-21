@@ -4,7 +4,7 @@
 \alias{methy_to_bsseq}
 \title{Create BSSeq object from methylation tabix file}
 \usage{
-methy_to_bsseq(methy, out_folder = tempdir())
+methy_to_bsseq(methy, out_folder = tempdir(), verbose = TRUE)
 }
 \arguments{
 \item{methy}{the path to the methylation tabix file.}
@@ -12,6 +12,8 @@ methy_to_bsseq(methy, out_folder = tempdir())
 \item{out_folder}{the folder to store intermediate files. One file is created
 for each sample and contains columns "chr", "pos", "total" and
 "methylated".}
+
+\item{verbose}{TRUE if progress messages are to be printed}
 }
 \value{
 a BSSeq object.

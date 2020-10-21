@@ -59,6 +59,7 @@ raw_methy_to_tabix <- function(x) {
 #' @param input_files the files to convert
 #' @param output_file the output file to write results to (must end in .bgz)
 #' @param samples the names of samples corresponding to each file
+#' @param verbose TRUE if progress messages are to be printed
 #'
 #' @return invisibly returns the output file path, creates a tabix file (.bgz)
 #'   and its index (.bgz.tbi)
@@ -73,7 +74,8 @@ raw_methy_to_tabix <- function(x) {
 create_tabix_file <- function(
     input_files,
     output_file,
-    samples = extract_file_names(input_files)
+    samples = extract_file_names(input_files),
+    verbose = TRUE
 ) {
     assert_that(
         is.character(input_files),
@@ -88,11 +90,19 @@ create_tabix_file <- function(
     }
 
     temp_file <- tempfile()
-    timed_log("creating methylation table")
-    convert_methy_format(input_files, temp_file, samples)
-    timed_log("sorting methylation table")
+    if (verbose) {
+        timed_log("creating methylation table")
+    }
+    convert_methy_format(input_files, temp_file, samples, verbose = verbose)
+
+    if (verbose) {
+        timed_log("sorting methylation table")
+    }
     sort_methy_file(temp_file)
-    timed_log("compressing methylation table to tabix with index")
+
+    if (verbose) {
+        timed_log("compressing methylation table to tabix with index")
+    }
     raw_methy_to_tabix(temp_file)
 
     fs::file_move(paste0(temp_file, ".bgz"), output_file)

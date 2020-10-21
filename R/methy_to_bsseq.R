@@ -27,7 +27,11 @@ methy_to_bsseq <- function(
         timed_log("creating bsseq object...")
     }
 
-    out <- create_bsseq_from_files(files$file_path, files$sample)
+    out <- create_bsseq_from_files(
+        files$file_path,
+        files$sample,
+        verbose = verbose
+    )
 
     if (verbose) {
         timed_log("done")
@@ -64,7 +68,7 @@ convert_methy_to_dss <- function(
 #' @importFrom purrr map
 #' @importFrom dplyr select distinct arrange mutate
 #' @importFrom bsseq BSseq
-create_bsseq_from_files <- function(paths, samples) {
+create_bsseq_from_files <- function(paths, samples, verbose = TRUE) {
     read_dss <- purrr::partial(
         read_tsv,
         col_types = cols(
@@ -72,8 +76,7 @@ create_bsseq_from_files <- function(paths, samples) {
             pos = col_double(),
             total = col_double(),
             methylated = col_double()
-        ),
-        verbose = TRUE
+        )
     )
 
     if (verbose) {

@@ -6,7 +6,7 @@ StatLm <- ggproto("StatLm", Stat,
             return(data.frame(x = NULL, y = NULL))
         }
 
-        poly_deg <- min(4, nrow(data) - 1)
+        poly_deg <- min(6, nrow(data) - 1)
         rng <- range(data$x, na.rm = TRUE)
         grid <- data.frame(x = seq(rng[1], rng[2], length = n))
 

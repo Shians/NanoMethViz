@@ -19,7 +19,7 @@ plot_methylation_internal <- function(
     }
 
     if (is.null(span)) {
-        span <- min(8000 / (end - start), 0.4)
+        span <- min(4000 / (end - start), 0.4)
     }
 
     # extract group information and convert probabilities
@@ -51,11 +51,10 @@ plot_methylation_internal <- function(
     # add spaghetti
     if (spaghetti) {
         p <- p +
-            stat_lowess(
+            stat_lm(
                 aes(y = .data$mod_prob, group = .data$read_name),
                 alpha = 0.25,
-                na.rm = TRUE,
-                span = 1
+                na.rm = TRUE
             )
     }
 

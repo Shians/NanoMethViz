@@ -51,15 +51,11 @@ plot_methylation_internal <- function(
     # add spaghetti
     if (spaghetti) {
         p <- p +
-            ggplot2::stat_smooth(
+            stat_lowess(
                 aes(y = .data$mod_prob, group = .data$read_name),
                 alpha = 0.25,
-                geom = "line",
-                method = "loess",
                 na.rm = TRUE,
-                se = FALSE,
-                span = 1,
-                formula = y ~ x
+                span = 1
             )
     }
 
@@ -69,15 +65,12 @@ plot_methylation_internal <- function(
         dplyr::summarise(mod_prob = mean(.data$mod_prob))
 
     p <- p +
-        ggplot2::stat_smooth(
-            aes(y = .data$mod_prob, fill = .data$group),
+        stat_lowess(
+            aes(y = .data$mod_prob),
             data = plot_data_smooth,
-            geom = "smooth",
-            method = "loess",
             span = span,
             na.rm = TRUE,
-            size = 3,
-            formula = y ~ x
+            size = 3
         )
 
     # add auxiliary elements and style

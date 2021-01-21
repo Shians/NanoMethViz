@@ -65,6 +65,7 @@ setMethod("plot_region",
         chr = "factor",
         start = "numeric",
         end = "numeric"),
+
     function(
         x,
         chr,
@@ -124,19 +125,16 @@ setMethod("plot_region",
     }
 
     title <- glue::glue("{chr}:{start}-{end}")
-    p1 <- with(
-        exons_anno,
-        plot_methylation_internal(
-            methy_data = methy_data,
-            start = start,
-            end = end,
-            chr = chr,
-            title = title,
-            anno_regions = anno_regions,
-            spaghetti = spaghetti,
-            sample_anno = sample_anno,
-            span = span
-        )
+    p1 <- plot_methylation_internal(
+        methy_data = methy_data,
+        start = start,
+        end = end,
+        chr = chr,
+        title = title,
+        anno_regions = anno_regions,
+        spaghetti = spaghetti,
+        sample_anno = sample_anno,
+        span = span
     )
 
     xlim <- .get_ggplot_range_x(p1)

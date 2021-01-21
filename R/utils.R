@@ -68,3 +68,11 @@ timed_log <- function(...) {
     time_stamp <- paste0("[", format(Sys.time(), "%F %X"), "] ")
     message(time_stamp, ...)
 }
+
+gene_pos_range <- function(nmr, gene) {
+    NanoMethViz::exons(nmr) %>%
+        dplyr::filter(symbol == !!gene) %>%
+        dplyr::select(start, end) %>%
+        unlist() %>%
+        range()
+}

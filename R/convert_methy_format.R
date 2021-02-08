@@ -88,7 +88,7 @@ guess_methy_source <- function(methy_file) {
         "chromosome\tstart\tend\tread_name\tlog_lik_ratio\tlog_lik_methylated\tlog_lik_unmethylated\tnum_calling_strands\tnum_cpgs\tsequence" = "f5c",
         "chromosome\tstrand\tstart\tend\tread_name\tlog_lik_ratio\tlog_lik_methylated\tlog_lik_unmethylated\tnum_calling_strands\tnum_motifs\tsequence" = "nanopolish",
         "read_id\tchrm\tstrand\tpos\tmod_log_prob\tcan_log_prob\tmod_base\tmotif" = "megalodon",
-        "read_id\tchrm\tstrand\tpos\tmod_log_prob\tcan_log_prob\tmod_base\tmod_base" = "megalodon",
+        "read_id\tchrm\tstrand\tpos\tmod_log_prob\tcan_log_prob\tmod_base" = "megalodon",
         stop("Format not recognised.")
     )
 }

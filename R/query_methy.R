@@ -39,6 +39,26 @@ query_methy <- function(x, chr, start, end, simplify = TRUE) {
     out
 }
 
+query_methy_gene <- function(x, gene, simplify = TRUE) {
+    if (!gene %in% exons(x)$symbol) {
+        stop(glue::glue("gene {gene} not found in exon annotation"))
+    }
+
+    pos_range <- gene_pos_range(x, gene)
+    chr <- exons(x) %>%
+        dplyr::filter(symbol == gene) %>%
+        dplyr::slice(1) %>%
+        dplyr::pull(chr)
+
+    query_methy(
+        x,
+        chr = chr,
+        start = pos_range[1],
+        end = pos_range[2],
+        simplify = simplify
+    )
+}
+
 can_open_sql <- function(x) {
     assertthat::is.readable(x)
     out <- TRUE

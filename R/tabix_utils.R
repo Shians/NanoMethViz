@@ -78,6 +78,7 @@ create_tabix_file <- function(
     verbose = TRUE
 ) {
     assert_that(
+        assertthat::not_empty(input_files),
         is.character(input_files),
         is.string(output_file),
         tools::file_ext(output_file) == "bgz",

@@ -19,6 +19,8 @@ Depends:
     methods,
     ggplot2
 Imports:
+    cpp11 (>= 0.2.5),
+    readr,
     S4Vectors,
     SummarizedExperiment,
     bsseq,
@@ -35,7 +37,6 @@ Imports:
     glue,
     patchwork,
     purrr,
-    readr,
     rlang,
     RSQLite,
     Rsamtools,

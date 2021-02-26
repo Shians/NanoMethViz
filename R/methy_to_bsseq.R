@@ -140,5 +140,11 @@ create_bsseq_from_files <- function(paths, samples, verbose = TRUE) {
         sampleNames = samples
     )
 
+    SummarizedExperiment::colData(result) <- S4Vectors::DataFrame(
+        sample = samples
+    )
+
+    rownames(SummarizedExperiment::colData(result)) <- samples
+
     result
 }

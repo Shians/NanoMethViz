@@ -90,6 +90,10 @@ create_tabix_file <- function(
         timed_log("WARNING: creating tabix file on windows requires at least twice as much memory as total size of methylation data")
     }
 
+    if (packageVersion("cpp11") < package_version("0.2.5")) {
+        warning("cpp11 versions < 0.2.5 may crash when reading in large tables")
+    }
+
     temp_file <- tempfile()
     if (verbose) {
         timed_log("creating methylation table")

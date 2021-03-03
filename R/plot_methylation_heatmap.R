@@ -132,9 +132,16 @@ setMethod(
     } else if (pos_style == "to_scale") {
         # plots all sites in range, evenly spaced with square geoms
         # data will overlap
-        ggplot(methy_data, aes(x = pos, y = read_group, col = mod_prob)) +
+        ggplot(methy_data, aes(y = read_group)) +
             scale_colour_gradient(low = "blue", high = "red") +
-            geom_point(alpha = 0.33, shape = 15) +
+            ggplot2::geom_errorbarh(
+                ggplot2::aes(
+                    xmin = .data$start,
+                    xmax = .data$end
+                ),
+                data = dplyr::left_join(read_data, grouping_data)
+            ) +
+            geom_point(aes(x = pos, col = mod_prob), alpha = 0.33, shape = 15) +
             facet_wrap(~group, scales = "free_y", nrow = 2) +
             theme_methy_heatmap() +
             xlab("Position")

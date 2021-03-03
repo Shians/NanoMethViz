@@ -4,7 +4,8 @@
 #' @param gene the gene symbol for the gene to plot.
 #' @param ... additional arguments
 #'
-#' @return a patchwork plot.
+#' @return a patchwork plot containing the methylation profile in the specified
+#'   region.
 #'
 #' @examples
 #' nmr <- load_example_nanomethresult()
@@ -17,7 +18,7 @@ setGeneric("plot_gene", function(x, gene, ...) {
 
 #' @rdname plot_gene
 #'
-#' @param window the size of flanking region to plot. Can be a vector of two
+#' @param window_prop the size of flanking region to plot. Can be a vector of two
 #'   values for left and right window size. Values indicate proportion of gene
 #'   length.
 #' @param anno_regions the data.frame of regions to annotate.
@@ -25,7 +26,8 @@ setGeneric("plot_gene", function(x, gene, ...) {
 #' @param span the span for loess smoothing.
 #' @param gene_anno whether or not gene annotation tracks are plotted.
 #'
-#' @return a patchwork plot.
+#' @return a patchwork plot containing the methylation profile in the specified
+#'   region.
 #'
 #' @examples
 #' nmr <- load_example_nanomethresult()
@@ -36,7 +38,7 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
     function(
         x,
         gene,
-        window = 0.3,
+        window_prop = 0.3,
         anno_regions = NULL,
         spaghetti = FALSE,
         span = NULL,
@@ -45,7 +47,7 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
         .plot_gene(
             x,
             gene,
-            window = window,
+            window_prop = window_prop,
             anno_regions = anno_regions,
             spaghetti = spaghetti,
             span = span
@@ -56,7 +58,7 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
 .plot_gene <- function(
     x,
     gene,
-    window = 0.3,
+    window_prop = 0.3,
     anno_regions = NULL,
     spaghetti = FALSE,
     span = NULL,
@@ -67,8 +69,9 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
         msg = "exons(x) is empty, gene cannot be queried"
     )
 
-    if (length(window) == 1) {
-        window <- c(window, window)
+    if (length(window_prop) == 1) {
+        # convert to two sided window_prop
+        window_prop <- c(window_prop, window_prop)
     }
 
     sample_anno <- samples(x)
@@ -84,7 +87,7 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
             feature,
             title = gene,
             methy = methy(x),
-            window_prop = window,
+            window_prop = window_prop,
             sample_anno = sample_anno,
             anno_regions = anno_regions,
             spaghetti = spaghetti,

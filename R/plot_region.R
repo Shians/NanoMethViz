@@ -6,7 +6,8 @@
 #' @param end the end of the plotting region
 #' @param ... additional arguments
 #'
-#' @return a ggplot object.
+#' @return a patchwork plot containing the methylation profile in the specified
+#'   region.
 #'
 #' @examples
 #' nmr <- load_example_nanomethresult()
@@ -23,7 +24,8 @@ setGeneric("plot_region", function(x, chr, start, end, ...) {
 #' @param spaghetti whether or not individual reads should be shown.
 #' @param span the span for loess smoothing.
 #'
-#' @return a ggplot object.
+#' @return a patchwork plot containing the methylation profile in the specified
+#'   region.
 #'
 #' @examples
 #' nmr <- load_example_nanomethresult()

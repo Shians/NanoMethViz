@@ -10,7 +10,7 @@
 #'   flipped to reflect features like transcription start sites.
 #' @param span the span for loess smoothing.
 #'
-#' @return a ggplot object.
+#' @return a ggplot object containing the aggregate methylation trend.
 #'
 #' @export
 plot_agg_regions <- function(
@@ -115,7 +115,7 @@ plot_agg_regions <- function(
 #'
 #' @inheritParams plot_agg_regions
 #'
-#' @return a ggplot plot object.
+#' @return a ggplot object containing the aggregate methylation trend.
 #'
 #' @export
 plot_agg_regions_sample_grouped <- function(

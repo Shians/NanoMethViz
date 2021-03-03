@@ -19,7 +19,7 @@ plot_methylation_internal <- function(
     }
 
     if (is.null(span)) {
-        span <- min(2000 / (end - start), 0.4)
+        span <- min(3000 / (end - start), 0.4)
     }
 
     # extract group information and convert probabilities
@@ -101,8 +101,10 @@ plot_feature <- function(
     chr <- feature$chr
     start <- feature$start
     end <- feature$end
-    window_left <- (end - start) * window_prop[1]
-    window_right <- (end - start) * window_prop[2]
+
+    feature_width <- end - start
+    window_left <- feature_width * window_prop[1]
+    window_right <- feature_width * window_prop[2]
 
     methy_data <-
         query_methy(

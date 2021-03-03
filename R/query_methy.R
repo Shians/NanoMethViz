@@ -39,12 +39,22 @@ query_methy <- function(x, chr, start, end, simplify = TRUE) {
     out
 }
 
-query_methy_gene <- function(x, gene, simplify = TRUE) {
+query_methy_gene <- function(x, gene, window_prop = 0, simplify = TRUE) {
     if (!gene %in% exons(x)$symbol) {
         stop(glue::glue("gene {gene} not found in exon annotation"))
     }
 
+    if (length(window_prop) == 1) {
+        # convert to two sided window
+        window_prop = c(window_prop, window_prop)
+    }
+
     pos_range <- gene_pos_range(x, gene)
+
+    gene_width <- pos_range[2] - pos_range[1]
+    window_left <- gene_width * window_prop[1]
+    window_right <- gene_width * window_prop[2]
+
     chr <- exons(x) %>%
         dplyr::filter(symbol == gene) %>%
         dplyr::slice(1) %>%
@@ -53,8 +63,8 @@ query_methy_gene <- function(x, gene, simplify = TRUE) {
     query_methy(
         x,
         chr = chr,
-        start = pos_range[1],
-        end = pos_range[2],
+        start = pos_range[1] - window_left,
+        end = pos_range[2] + window_right,
         simplify = simplify
     )
 }

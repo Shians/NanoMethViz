@@ -7,10 +7,24 @@ NanoMethViz is a toolkit for visualising methylation data from Oxford Nanopore s
 
 ## Installation
 
-You can install NanoMethViz from GitHub with:
+You can install NanoMethViz from Bioconductor with:
 
 ``` r
-remotes::install_github("shians/NanoMethViz", build_vignettes = TRUE)
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("NanoMethViz")
+```
+
+To install the latest developmental version, use:
+
+``` r
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install(version='devel')
+
+BiocManager::install("NanoMethViz")
 ```
 
 ## Example

@@ -50,7 +50,8 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
             window_prop = window_prop,
             anno_regions = anno_regions,
             spaghetti = spaghetti,
-            span = span
+            span = span,
+            gene_anno = gene_anno
         )
     }
 )
@@ -58,11 +59,11 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
 .plot_gene <- function(
     x,
     gene,
-    window_prop = 0.3,
-    anno_regions = NULL,
-    spaghetti = FALSE,
-    span = NULL,
-    gene_anno = TRUE
+    window_prop,
+    anno_regions,
+    spaghetti,
+    span,
+    gene_anno
 ) {
     assertthat::assert_that(
         nrow(exons(x)) > 0,

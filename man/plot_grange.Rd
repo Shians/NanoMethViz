@@ -18,9 +18,11 @@ plot_grange(x, grange, anno_regions = NULL, spaghetti = FALSE, span = NULL)
 \item{span}{the span for loess smoothing.}
 }
 \value{
-a ggplot object.
+a patchwork plot containing the methylation profile in the specified
+region.
 
-a ggplot object.
+a patchwork plot containing the methylation profile in the specified
+region.
 }
 \description{
 Plot GRanges

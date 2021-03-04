@@ -46,9 +46,11 @@ plot_region(x, chr, start, end, ...)
 \item{span}{the span for loess smoothing.}
 }
 \value{
-a ggplot object.
+a patchwork plot containing the methylation profile in the specified
+region.
 
-a ggplot object.
+a patchwork plot containing the methylation profile in the specified
+region.
 }
 \description{
 Plot region

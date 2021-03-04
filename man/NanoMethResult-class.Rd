@@ -67,6 +67,27 @@ gene_id, chr, strand, start, end, transcript_id and symbol.}
 }}
 
 \examples{
+methy <- system.file(package = "NanoMethViz", "methy_subset.tsv.bgz")
+sample <- c(
+    "B6Cast_Prom_1_bl6",
+    "B6Cast_Prom_1_cast",
+    "B6Cast_Prom_2_bl6",
+    "B6Cast_Prom_2_cast",
+    "B6Cast_Prom_3_bl6",
+    "B6Cast_Prom_3_cast"
+)
+group <- c(
+    "bl6",
+    "cast",
+    "bl6",
+    "cast",
+    "bl6",
+    "cast"
+)
+sample_anno <- data.frame(sample, group, stringsAsFactors = FALSE)
+exon_tibble <- .get_example_exons_mus_musculus()
+NanoMethResult(methy, sample_anno, exon_tibble)
+
 x <- load_example_nanomethresult()
 methy(x)
 

@@ -26,7 +26,7 @@ flipped to reflect features like transcription start sites.}
 \item{span}{the span for loess smoothing.}
 }
 \value{
-a ggplot plot object.
+a ggplot object containing the aggregate methylation trend.
 }
 \description{
 Plot aggregate regions with grouped samples

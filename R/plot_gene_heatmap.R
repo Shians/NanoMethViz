@@ -8,14 +8,14 @@
 #'
 #' @examples
 #' nmr <- load_example_nanomethresult()
-#' plot_gene(nmr, "Peg3")
+#' plot_gene_heatmap(nmr, "Peg3")
 #'
 #' @export
 setGeneric("plot_gene_heatmap", function(x, gene, ...) {
     standardGeneric("plot_gene_heatmap")
 })
 
-#' @rdname plot_gene
+#' @rdname plot_gene_heatmap
 #'
 #' @param window_prop the size of flanking region to plot. Can be a vector of two
 #'   values for left and right window size. Values indicate proportion of gene
@@ -29,7 +29,7 @@ setGeneric("plot_gene_heatmap", function(x, gene, ...) {
 #'
 #' @examples
 #' nmr <- load_example_nanomethresult()
-#' plot_gene(nmr, "Peg3")
+#' plot_gene_heatmap(nmr, "Peg3")
 #'
 #' @export
 setMethod(
@@ -39,7 +39,7 @@ setMethod(
         x,
         gene,
         window_prop = 0.3,
-        pos_style = c("compact", "to_scale")
+        pos_style = c("to_scale", "compact")
     ) {
         pos_style <- match.arg(pos_style)
 
@@ -69,7 +69,7 @@ setMethod(
     }
 
     methy_data <- query_methy_gene(
-        nmeth_results, "Peg3", window_prop = window_prop)
+        nmeth_results, gene, window_prop = window_prop)
 
     # add sample information
     methy_data <- dplyr::left_join(

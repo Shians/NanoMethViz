@@ -17,6 +17,10 @@ methy_to_bsseq <- function(
     out_folder = tempdir(),
     verbose = TRUE
 ) {
+    if (is(methy, "NanoMethResult")) {
+        methy <- NanoMethViz::methy(methy)
+    }
+
     if (verbose) {
         timed_log("creating intermediate files...")
     }

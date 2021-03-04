@@ -1,6 +1,7 @@
 # NanoMethViz
 
 <!-- badges: start -->
+[![Codecov test coverage](https://codecov.io/gh/Shians/NanoMethViz/branch/master/graph/badge.svg)](https://codecov.io/gh/Shians/NanoMethViz?branch=master)
 <!-- badges: end -->
 
 NanoMethViz is a toolkit for visualising methylation data from Oxford Nanopore sequencing.

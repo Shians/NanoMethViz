@@ -47,6 +47,43 @@ get_exons_mus_musculus <- function() {
         )
 }
 
+.get_example_exons_mus_musculus <- function() {
+    if ("Mus.musculus" %in% utils::installed.packages()) {
+        if (packageVersion("Mus.musculus") < "1.4.0") {
+            require(Mus.musculus)
+        }
+    } else {
+        stop("package 'Mus.musculus' is not installed, please install using BiocManager::install('Mus.musculus')")
+    }
+
+    genes <-  c("12189", "12190", "16210", "17263", "18616", "213742")
+    exon_data <- suppressMessages(AnnotationDbi::select(
+        Mus.musculus::Mus.musculus,
+        keys = genes,
+        keytype = "GENEID",
+        columns = c(
+            "GENEID",
+            "TXID",
+            "EXONCHROM",
+            "EXONSTRAND",
+            "EXONSTART",
+            "EXONEND",
+            "SYMBOL"
+        )
+    ))
+
+    tibble::as_tibble(exon_data) %>%
+        dplyr::rename(
+            gene_id = "GENEID",
+            chr = "EXONCHROM",
+            strand = "EXONSTRAND",
+            start = "EXONSTART",
+            end = "EXONEND",
+            transcript_id = "TXID",
+            symbol = "SYMBOL"
+        )
+}
+
 #' Get exon annotations for homo sapiens
 #'
 #' @return data.frame containing exons

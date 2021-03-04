@@ -27,7 +27,7 @@ load_example_nanomethresult <- function() {
     )
     sample_anno <- data.frame(sample, group, stringsAsFactors = FALSE)
 
-    exon_tibble <- get_exons_mus_musculus()
+    exon_tibble <- .get_example_exons_mus_musculus()
 
     NanoMethResult(methy, sample_anno, exon_tibble)
 }

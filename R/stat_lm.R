@@ -1,4 +1,4 @@
-StatLm <- ggproto("StatLm", Stat,
+StatLm <- ggplot2::ggproto("StatLm", Stat,
     required_aes = c("x", "y"),
 
     compute_group = function(data, scales, params, n = 20) {
@@ -23,7 +23,7 @@ stat_lm <- function(
     inherit.aes = TRUE, n = 50,
     ...
 ) {
-    layer(
+    ggplot2::layer(
         stat = StatLm, data = data, mapping = mapping, geom = geom,
         position = position, show.legend = show.legend, inherit.aes = inherit.aes,
         params = list(n = n, na.rm = na.rm, ...)

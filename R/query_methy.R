@@ -56,7 +56,7 @@ query_methy_gene <- function(x, gene, window_prop = 0, simplify = TRUE) {
     window_right <- gene_width * window_prop[2]
 
     chr <- exons(x) %>%
-        dplyr::filter(symbol == gene) %>%
+        dplyr::filter(.data$symbol == gene) %>%
         dplyr::slice(1) %>%
         dplyr::pull(chr)
 

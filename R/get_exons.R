@@ -47,7 +47,19 @@ get_exons_mus_musculus <- function() {
         )
 }
 
-.get_example_exons_mus_musculus <- function() {
+#' Get example exon annotations for mus musculus
+#'
+#' This is a small subset of the exons returned by
+#' \code{get_exons_mus_musculus()} for demonstrative purposes. It contains
+#' the exons for the genes Brca1, Brca2, Impact, Meg3, Peg3 and Xist.
+#'
+#' @return data.frame containing exons
+#'
+#' @examples
+#' example_exons <- get_example_exons_mus_musculus()
+#'
+#' @export
+get_example_exons_mus_musculus <- function() {
     if ("Mus.musculus" %in% utils::installed.packages()) {
         if (packageVersion("Mus.musculus") < "1.4.0") {
             require(Mus.musculus)

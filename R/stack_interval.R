@@ -1,6 +1,6 @@
 stacked_intervals <- function(reads) {
     reads$old_order <- 1:nrow(reads)
-    reads <- dplyr::arrange(reads, start)
+    reads <- dplyr::arrange(reads, .data$start)
     reads$index <- 1:nrow(reads)
     reads$group <- 1:nrow(reads)
 

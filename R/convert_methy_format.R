@@ -19,7 +19,7 @@ expand_motifs <- function(x) {
         start_offsets <- unlist(start_offsets)
         tidyr::uncount(x_mult, .data$num_cpgs) %>%
             dplyr::mutate(start = .data$start + start_offsets) %>%
-            dplyr::select(-num_cpgs)
+            dplyr::select(!"num_cpgs")
     })
 
     rbind(x, mult_expand) %>%

@@ -27,7 +27,7 @@ load_example_nanomethresult <- function() {
     )
     sample_anno <- data.frame(sample, group, stringsAsFactors = FALSE)
 
-    exon_tibble <- .get_example_exons_mus_musculus()
+    exon_tibble <- get_example_exons_mus_musculus()
 
     NanoMethResult(methy, sample_anno, exon_tibble)
 }
@@ -71,8 +71,8 @@ timed_log <- function(...) {
 
 gene_pos_range <- function(nmr, gene) {
     NanoMethViz::exons(nmr) %>%
-        dplyr::filter(symbol == !!gene) %>%
-        dplyr::select(start, end) %>%
+        dplyr::filter(.data$symbol == !!gene) %>%
+        dplyr::select("start", "end") %>%
         unlist() %>%
         range()
 }

@@ -15,7 +15,8 @@ plot_region(x, chr, start, end, ...)
   end,
   anno_regions = NULL,
   spaghetti = FALSE,
-  span = NULL
+  span = NULL,
+  window_prop = 0.3
 )
 
 \S4method{plot_region}{NanoMethResult,factor,numeric,numeric}(
@@ -25,25 +26,30 @@ plot_region(x, chr, start, end, ...)
   end,
   anno_regions = NULL,
   spaghetti = FALSE,
-  span = NULL
+  span = NULL,
+  window_prop = 0.3
 )
 }
 \arguments{
-\item{x}{the NanoMethResult object}
+\item{x}{the NanoMethResult object.}
 
-\item{chr}{the chromosome to plot}
+\item{chr}{the chromosome to plot.}
 
-\item{start}{the start of the plotting region}
+\item{start}{the start of the plotting region.}
 
-\item{end}{the end of the plotting region}
+\item{end}{the end of the plotting region.}
 
-\item{...}{additional arguments}
+\item{...}{additional arguments.}
 
-\item{anno_regions}{the data.frame of regions to be annotated}
+\item{anno_regions}{the data.frame of regions to be annotated.}
 
 \item{spaghetti}{whether or not individual reads should be shown.}
 
 \item{span}{the span for loess smoothing.}
+
+\item{window_prop}{the size of flanking region to plot. Can be a vector of two
+values for left and right window size. Values indicate proportion of gene
+length.}
 }
 \value{
 a patchwork plot containing the methylation profile in the specified

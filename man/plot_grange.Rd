@@ -11,7 +11,7 @@ plot_grange(x, grange, anno_regions = NULL, spaghetti = FALSE, span = NULL)
 
 \item{grange}{the GRanges object with one entry.}
 
-\item{anno_regions}{the data.frame of regions to be annotated}
+\item{anno_regions}{the data.frame of regions to be annotated.}
 
 \item{spaghetti}{whether or not individual reads should be shown.}
 

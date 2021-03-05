@@ -68,23 +68,22 @@ setMethod(
         window_prop <- c(window_prop, window_prop)
     }
 
-    methy_data <- query_methy_gene(
-        nmeth_results, gene, window_prop = window_prop)
+    methy_data <- query_methy_gene(x, gene, window_prop = window_prop)
 
     # add sample information
     methy_data <- dplyr::left_join(
         methy_data,
-        NanoMethViz::samples(nmeth_results),
+        NanoMethViz::samples(x),
         by = "sample"
     )
 
     read_data <- methy_data %>%
-        dplyr::group_by(read_name) %>%
-        dplyr::summarise(start = min(pos), end = max(pos))
+        dplyr::group_by(.data$read_name) %>%
+        dplyr::summarise(start = min(.data$pos), end = max(.data$pos))
 
     group_data <- methy_data %>%
-            dplyr::group_by(read_name) %>%
-            dplyr::summarise(group = unique(group))
+            dplyr::group_by(.data$read_name) %>%
+            dplyr::summarise(group = unique(.data$group))
 
     # get read starts and ends
     read_data <- dplyr::left_join(read_data, group_data, by = "read_name")
@@ -95,15 +94,15 @@ setMethod(
         x
     }
     grouping_data <- read_data %>%
-        group_by(group) %>%
-        group_modify(append_read_group) %>%
-        ungroup()
+        dplyr::group_by(.data$group) %>%
+        dplyr::group_modify(append_read_group) %>%
+        dplyr::ungroup()
 
     methy_data$mod_prob <- e1071::sigmoid(methy_data$statistic)
 
-    methy_data <- left_join(
+    methy_data <- dplyr::left_join(
         methy_data,
-        dplyr::select(grouping_data, read_name, read_group),
+        dplyr::select(grouping_data, "read_name", "read_group"),
         by = "read_name"
     )
 
@@ -111,29 +110,32 @@ setMethod(
     theme_methy_heatmap <- function() {
         ggthemes::theme_tufte() +
             ggplot2::theme(
-                axis.ticks.y = element_blank(),
-                axis.title.y = element_blank(),
-                axis.text.y = element_blank()
+                axis.ticks.y = ggplot2::element_blank(),
+                axis.title.y = ggplot2::element_blank(),
+                axis.text.y = ggplot2::element_blank()
             )
     }
 
     if (pos_style == "compact") {
         # only plots sites with measured modification, evenly spaced
-        ggplot(methy_data, aes(x = factor(pos), y = read_group, fill = mod_prob)) +
-            scale_fill_gradient(low = "blue", high = "red") +
-            geom_raster() +
-            facet_wrap(~group, scales = "free_y", nrow = 2) +
+        ggplot(methy_data,
+            aes(x = factor(.data$pos),
+                y = .data$read_group,
+                fill = .data$mod_prob)) +
+            ggplot2::scale_fill_gradient(low = "blue", high = "red") +
+            ggplot2::geom_raster() +
+            ggplot2::facet_wrap(~group, scales = "free_y", nrow = 2) +
             theme_methy_heatmap() +
             ggplot2::theme(
-                axis.ticks.x = element_blank(),
-                axis.text.x = element_blank(),
+                axis.ticks.x = ggplot2::element_blank(),
+                axis.text.x = ggplot2::element_blank(),
             ) +
-            xlab("Site")
+            ggplot2::xlab("Site")
     } else if (pos_style == "to_scale") {
         # plots all sites in range, evenly spaced with square geoms
         # data will overlap
-        ggplot(methy_data, aes(y = read_group)) +
-            scale_colour_gradient(low = "blue", high = "red") +
+        ggplot(methy_data, aes(y = .data$read_group)) +
+            ggplot2::scale_colour_gradient(low = "blue", high = "red") +
             ggplot2::geom_errorbarh(
                 ggplot2::aes(
                     xmin = .data$start,
@@ -141,9 +143,10 @@ setMethod(
                 ),
                 data = dplyr::left_join(read_data, grouping_data)
             ) +
-            geom_point(aes(x = pos, col = mod_prob), alpha = 0.33, shape = 15) +
-            facet_wrap(~group, scales = "free_y", nrow = 2) +
+            ggplot2::geom_point(
+                aes(x = .data$pos, col = .data$mod_prob), alpha = 0.33, shape = 15) +
+            ggplot2::facet_wrap(~group, scales = "free_y", nrow = 2) +
             theme_methy_heatmap() +
-            xlab("Position")
+            ggplot2::xlab("Position")
     }
 }

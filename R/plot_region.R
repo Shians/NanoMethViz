@@ -1,10 +1,10 @@
 #' Plot region
 #'
-#' @param x the NanoMethResult object
-#' @param chr the chromosome to plot
-#' @param start the start of the plotting region
-#' @param end the end of the plotting region
-#' @param ... additional arguments
+#' @param x the NanoMethResult object.
+#' @param chr the chromosome to plot.
+#' @param start the start of the plotting region.
+#' @param end the end of the plotting region.
+#' @param ... additional arguments.
 #'
 #' @return a patchwork plot containing the methylation profile in the specified
 #'   region.
@@ -20,9 +20,12 @@ setGeneric("plot_region", function(x, chr, start, end, ...) {
 
 #' @rdname plot_region
 #'
-#' @param anno_regions the data.frame of regions to be annotated
+#' @param anno_regions the data.frame of regions to be annotated.
 #' @param spaghetti whether or not individual reads should be shown.
 #' @param span the span for loess smoothing.
+#' @param window_prop the size of flanking region to plot. Can be a vector of two
+#'   values for left and right window size. Values indicate proportion of gene
+#'   length.
 #'
 #' @return a patchwork plot containing the methylation profile in the specified
 #'   region.
@@ -45,7 +48,8 @@ setMethod("plot_region",
         end,
         anno_regions = NULL,
         spaghetti = FALSE,
-        span = NULL
+        span = NULL,
+        window_prop = 0.3
     ) {
         .plot_region(
             x = x,
@@ -54,9 +58,11 @@ setMethod("plot_region",
             end = end,
             anno_regions = anno_regions,
             spaghetti = spaghetti,
-            span = span
+            span = span,
+            window_prop = window_prop
         )
-    })
+    }
+)
 
 #' @rdname plot_region
 #'
@@ -75,7 +81,8 @@ setMethod("plot_region",
         end,
         anno_regions = NULL,
         spaghetti = FALSE,
-        span = NULL
+        span = NULL,
+        window_prop = 0.3
     ) {
         chr <- as.character(chr)
         plot_region(
@@ -85,9 +92,11 @@ setMethod("plot_region",
             end = end,
             anno_regions = anno_regions,
             spaghetti = spaghetti,
-            span = span
+            span = span,
+            window_prop = window_prop
         )
-    })
+    }
+)
 
 
 .plot_region <- function(
@@ -98,7 +107,7 @@ setMethod("plot_region",
     anno_regions = NULL,
     spaghetti = FALSE,
     span = NULL,
-    window_prop = c(0.3, 0.3)
+    window_prop = 0.3
 ) {
     sample_anno <- samples(x)
     exons_anno <- query_exons_region(
@@ -108,12 +117,16 @@ setMethod("plot_region",
         end = end
     )
 
+    if (length(window_prop) == 1) {
+        window_prop <- c(window_prop, window_prop)
+    }
+
     window_left <- (end - start) * window_prop[1]
     window_right <- (end - start) * window_prop[2]
 
     methy_data <-
         query_methy(
-            methy(x),
+            x,
             chr,
             start - window_left,
             end + window_right,

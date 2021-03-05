@@ -46,6 +46,7 @@ Imports:
     tibble,
     tidyr,
     utils,
+    withr,
     zlibbioc
 Suggests:
     DSS,

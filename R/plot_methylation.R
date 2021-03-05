@@ -10,6 +10,7 @@ plot_methylation_internal <- function(
     span = NULL
 ) {
     if (!is.null(anno_regions)) {
+        # filter annotation regions to be within plotting region
         anno_regions <- anno_regions %>%
             dplyr::filter(
                 .data$chr == unique(methy_data$chr),
@@ -40,7 +41,7 @@ plot_methylation_internal <- function(
                 ggplot2::annotate(
                     "rect",
                     xmin = region$start,
-                    xmax = region$end,,
+                    xmax = region$end,
                     ymin = -Inf,
                     ymax = Inf,
                     alpha = 0.2

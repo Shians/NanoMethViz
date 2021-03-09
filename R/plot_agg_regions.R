@@ -12,6 +12,11 @@
 #'
 #' @return a ggplot object containing the aggregate methylation trend.
 #'
+#' @examples
+#' nmr <- load_example_nanomethresult()
+#'
+#' plot_agg_regions(nmr, NanoMethViz::exons(nmr))
+#'
 #' @export
 plot_agg_regions <- function(
     x,
@@ -58,6 +63,7 @@ plot_agg_regions <- function(
     methy_data <- methy_data %>%
         dplyr::bind_rows(.id = "group")
 
+    # average methylation across relative coordinates
     if (!is.null(groups)) {
         methy_data <- methy_data %>%
         dplyr::group_by(.data$group, .data$rel_pos) %>%
@@ -70,39 +76,34 @@ plot_agg_regions <- function(
             dplyr::ungroup()
     }
 
+    # take binned means
+    grid_size <- 2^12
+    binned_pos_df <- .get_grid(grid_size = 2^12, rel_pos = methy_data$rel_pos)
+
+    kb_marker <- round(flank / 1000, 1)
+    labels <- c(glue::glue("-{kb_marker}kb"), "start", "end", glue::glue("+{kb_marker}kb"))
+
+    methy_data <- methy_data %>%
+        dplyr::mutate(interval = cut(.data$rel_pos, breaks = grid_size)) %>%
+        dplyr::group_by(.data$interval, .drop = TRUE) %>%
+        dplyr::summarise(methy_prob = mean(.data$methy_prob)) %>%
+        dplyr::ungroup() %>%
+        dplyr::left_join(binned_pos_df, by = "interval")
+
     # set up plot
     p <- ggplot2::ggplot() +
         ggplot2::ylim(c(0, 1)) +
-        ggplot2::theme_minimal()
+        ggplot2::theme_minimal() +
+        .agg_geom_smooth(methy_data, span = span, group = !is.null(groups))
 
-    # take binned means
-    grid_size <- 2^12
-    binned_pos <- seq(-1.1/3, 1 + 1.1/3, length.out = grid_size+ 2)[2:(1 + grid_size)]
-    methy_data <- methy_data %>%
-        mutate(interval = cut(.data$rel_pos, breaks = grid_size)) %>%
-        group_by(.data$interval, .drop = TRUE) %>%
-        summarise(methy_prob = mean(.data$methy_prob)) %>%
-        ungroup() %>%
-        mutate(rel_pos = .data$binned_pos)
 
     if (!is.null(groups)) {
-        p <- p +
-            .agg_geom_smooth(methy_data, span = span, group = TRUE) +
-            ggplot2::scale_colour_brewer(palette = "Set1") +
-            ggplot2::coord_cartesian(clip = "off")
-    } else {
-        p <- p +
-            .agg_geom_smooth(methy_data, span = span, group = FALSE) +
-            ggplot2::coord_cartesian(clip = "off")
+        p <- p + ggplot2::scale_colour_brewer(palette = "Set1")
     }
 
-    kb_marker <- round(flank / 1000, 1)
-
-    labels <- c(glue::glue("-{kb_marker}kb"), "start", "end", glue::glue("+{kb_marker}kb"))
-
-    p +
-        geom_vline(xintercept = 0, linetype = "dashed", color = "grey80") +
-        geom_vline(xintercept = 1, linetype = "dashed", color = "grey80") +
+    p + ggplot2::coord_cartesian(clip = "off") +
+        ggplot2::geom_vline(xintercept = 0, linetype = "dashed", color = "grey80") +
+        ggplot2::geom_vline(xintercept = 1, linetype = "dashed", color = "grey80") +
         ggplot2::scale_x_continuous(
             name = "Relative Position",
             breaks = c(-.33, 0, 1, 1.33),
@@ -116,6 +117,11 @@ plot_agg_regions <- function(
 #' @inheritParams plot_agg_regions
 #'
 #' @return a ggplot object containing the aggregate methylation trend.
+#'
+#' @examples
+#' nmr <- load_example_nanomethresult()
+#'
+#' plot_agg_regions_sample_grouped(nmr, NanoMethViz::exons(nmr))
 #'
 #' @export
 plot_agg_regions_sample_grouped <- function(
@@ -157,24 +163,14 @@ plot_agg_regions_sample_grouped <- function(
     )
 
     methy_data <- methy_data %>%
-        dplyr::bind_rows()
-
-    methy_data <- methy_data %>%
+        dplyr::bind_rows() %>%
         dplyr::group_by(sample, .data$rel_pos) %>%
         dplyr::summarise(methy_prob = mean(.data$methy_prob)) %>%
         dplyr::ungroup()
 
-    # set up plot
-    p <- ggplot2::ggplot() +
-        ggplot2::ylim(c(0, 1)) +
-        ggplot2::theme_minimal()
-
     # take binned means
     grid_size <- 2^12
-    binned_pos_df <- tibble::tibble(
-        interval = levels(cut(methy_data$rel_pos, breaks = grid_size)),
-        binned_pos = seq(-1.1/3, 1 + 1.1/3, length.out = grid_size+ 2)[2:(1 + grid_size)]
-    )
+    binned_pos_df <- .get_grid(grid_size = grid_size, rel_pos = methy_data$rel_pos)
 
     methy_data <- methy_data %>%
         dplyr::mutate(interval = cut(.data$rel_pos, breaks = grid_size)) %>%
@@ -185,24 +181,30 @@ plot_agg_regions_sample_grouped <- function(
         dplyr::mutate(rel_pos = .data$binned_pos) %>%
         dplyr::left_join(samples(x), by = "sample")
 
-    p <- p +
-        ggplot2::stat_smooth(
-            aes(x = .data$rel_pos, y = .data$methy_prob, group = .data$haplotype, col = .data$haplotype),
-            method = "loess",
-            span = span,
-            na.rm = TRUE,
-            se = FALSE,
-            data = methy_data) +
-        ggplot2::scale_colour_brewer(palette = "Set1") +
-        ggplot2::coord_cartesian(clip = "off")
+    methy_data <- dplyr::left_join(methy_data, samples(x), by = c("sample", "group"))
 
     kb_marker <- round(flank / 1000, 1)
 
     labels <- c(glue::glue("-{kb_marker}kb"), "start", "end", glue::glue("+{kb_marker}kb"))
 
-    p +
-        geom_vline(xintercept = 0, linetype = "dashed", color = "grey80") +
-        geom_vline(xintercept = 1, linetype = "dashed", color = "grey80") +
+    # set up plot
+    ggplot2::ggplot() +
+        ggplot2::ylim(c(0, 1)) +
+        ggplot2::theme_minimal() +
+        # smoothed line
+        ggplot2::stat_smooth(
+            aes(x = .data$rel_pos, y = .data$methy_prob, group = .data$group, col = .data$group),
+            method = "loess",
+            formula = "y ~ x",
+            span = span,
+            na.rm = TRUE,
+            se = FALSE,
+            data = methy_data) +
+        ggplot2::scale_colour_brewer(palette = "Set1") +
+        ggplot2::coord_cartesian(clip = "off") +
+        # start and end vertical dashes
+        ggplot2::geom_vline(xintercept = 0, linetype = "dashed", color = "grey80") +
+        ggplot2::geom_vline(xintercept = 1, linetype = "dashed", color = "grey80") +
         ggplot2::scale_x_continuous(
             name = "Relative Position",
             breaks = c(-.33, 0, 1, 1.33),
@@ -273,22 +275,35 @@ plot_agg_regions_sample_grouped <- function(
 .agg_geom_smooth <- function(data, span, group) {
     if (group) {
         ggplot2::stat_smooth(
-            aes(x = .data$rel_pos,
+            aes(x = .data$binned_pos,
                 y = .data$methy_prob,
                 group = .data$group,
                 col = .data$group),
             method = "loess",
+            formula = "y ~ x",
             span = span,
             na.rm = TRUE,
             se = FALSE,
             data = data)
     } else {
         ggplot2::stat_smooth(
-            aes(x = .data$rel_pos, y = .data$methy_prob),
+            aes(x = .data$binned_pos, y = .data$methy_prob),
             method = "loess",
+            formula = "y ~ x",
             span = span,
             na.rm = TRUE,
             se = FALSE,
             data = data)
     }
+}
+
+.get_grid <- function(grid_size, rel_pos) {
+    grid_size <- 2^12
+    binned_pos <- seq(-1.1/3, 1 + 1.1/3, length.out = grid_size + 2)[-c(1, grid_size + 2)]
+    binned_intervals <- levels(cut(rel_pos, breaks = grid_size))
+
+    tibble::tibble(
+        interval = levels(cut(rel_pos, breaks = grid_size)),
+        binned_pos = seq(-1.1/3, 1 + 1.1/3, length.out = grid_size+ 2)[2:(1 + grid_size)]
+    )
 }

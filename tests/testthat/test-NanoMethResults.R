@@ -5,8 +5,13 @@ test_that("NanoMethResults getters work", {
     # test
     expect_true(is(NanoMethViz::methy(nmr), "character"))
     expect_true(fs::file_exists(NanoMethViz::methy(nmr)))
-
     expect_true(is(NanoMethViz::exons(nmr), "data.frame"))
-
     expect_true(is(NanoMethViz::samples(nmr), "data.frame"))
+
+    expect_silent(
+        NanoMethResult(
+            NanoMethViz::methy(nmr),
+            NanoMethViz::samples(nmr)
+        )
+    )
 })

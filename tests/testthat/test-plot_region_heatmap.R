@@ -1,4 +1,4 @@
-test_that("Plotting region heatmap works", {
+test_that("Plotting region methylation heatmap works", {
     # setup
     nmr <- load_example_nanomethresult()
 

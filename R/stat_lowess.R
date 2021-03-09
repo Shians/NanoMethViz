@@ -7,7 +7,6 @@ StatLowess <- ggplot2::ggproto("StatLowess", ggplot2::Stat,
         params,
         span = 2/3
     ) {
-        # browser()
         lowess_fit <- lowess(data$x, data$y, f = span)
         as.data.frame(lowess_fit)
     }

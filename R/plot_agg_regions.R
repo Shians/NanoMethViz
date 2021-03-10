@@ -2,8 +2,8 @@
 #'
 #' @param x the NanoMethResult object.
 #' @param regions a table of regions or GRanges, or a list of such objects. The
-#'   table of regions must contain chr, start and end columns.
-#' @param groups if 'features' is a list, a vector of characters of the same
+#'   table of regions must contain chr, strand, start and end columns.
+#' @param groups_feature if 'features' is a list, a vector of characters of the same
 #'   length as the list containing names for each member.
 #' @param flank the number of flanking bases to add to each side of each region.
 #' @param stranded TRUE if negative strand features should have coordinates
@@ -21,16 +21,13 @@
 plot_agg_regions <- function(
     x,
     regions,
-    groups = NULL,
+    groups_feature = NULL,
     flank = 2000,
     stranded = TRUE,
     span = 0.05
 ) {
-    is_df_or_granges <- function(x) {
-        is.data.frame(x) || is(x, "GRanges")
-    }
-
-    assert_that(is_df_or_granges(regions) || is.list(regions))
+    assert_that(.is_df_or_granges(regions) || is.list(regions))
+    .validate_regions(regions)
 
     # convert GRanges to tibble
     if (is(regions, "GRanges")) {
@@ -56,15 +53,15 @@ plot_agg_regions <- function(
         }
     )
 
-    if (!is.null(groups)) {
-        names(methy_data) <- groups
+    if (!is.null(groups_feature)) {
+        names(methy_data) <- groups_feature
     }
 
     methy_data <- methy_data %>%
         dplyr::bind_rows(.id = "group")
 
     # average methylation across relative coordinates
-    if (!is.null(groups)) {
+    if (!is.null(groups_feature)) {
         methy_data <- methy_data %>%
         dplyr::group_by(.data$group, .data$rel_pos) %>%
         dplyr::summarise(methy_prob = mean(.data$methy_prob)) %>%
@@ -94,10 +91,10 @@ plot_agg_regions <- function(
     p <- ggplot2::ggplot() +
         ggplot2::ylim(c(0, 1)) +
         ggplot2::theme_minimal() +
-        .agg_geom_smooth(methy_data, span = span, group = !is.null(groups))
+        .agg_geom_smooth(methy_data, span = span, group = !is.null(groups_feature))
 
 
-    if (!is.null(groups)) {
+    if (!is.null(groups_feature)) {
         p <- p + ggplot2::scale_colour_brewer(palette = "Set1")
     }
 
@@ -136,6 +133,7 @@ plot_agg_regions_sample_grouped <- function(
     }
 
     assert_that(is_df_or_granges(regions) || is.list(regions))
+    .validate_regions(regions)
 
     # convert GRanges to tibble
     if (is(regions, "GRanges")) {
@@ -306,4 +304,34 @@ plot_agg_regions_sample_grouped <- function(
         interval = levels(cut(rel_pos, breaks = grid_size)),
         binned_pos = seq(-1.1/3, 1 + 1.1/3, length.out = grid_size+ 2)[2:(1 + grid_size)]
     )
+}
+
+.is_df_or_granges <- function(x) {
+    is.data.frame(x) || is(x, "GRanges")
+}
+
+.validate_regions <- function(regions) {
+    required <- c("chr", "strand", "start", "end")
+    if (.is_df_or_granges(regions)) {
+        if (!.has_required_columns(regions, required)) {
+            missing <- setdiff(required, colnames(regions))
+            missing <- paste(missing, collapse = ", ")
+            stop(glue::glue("columns missing from 'regions': {missing}"))
+        }
+    } else if (is.list(regions)) {
+        invalids <- !purrr::map_lgl(
+            regions,
+            .has_required_columns,
+            required = required
+        )
+
+        if (any(invalids)) {
+            invalids_id <- paste(which(invalids), collapse = ", ")
+            stop(glue::glue("elements of 'region' do not have all required columns: {invalids_id}"))
+        }
+    }
+}
+
+.has_required_columns <- function(regions, required) {
+    all(required %in% colnames(regions))
 }

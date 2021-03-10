@@ -31,3 +31,9 @@ a ggplot object containing the aggregate methylation trend.
 \description{
 Plot aggregate regions with grouped samples
 }
+\examples{
+nmr <- load_example_nanomethresult()
+
+plot_agg_regions_sample_grouped(nmr, NanoMethViz::exons(nmr))
+
+}

@@ -7,7 +7,7 @@
 plot_agg_regions(
   x,
   regions,
-  groups = NULL,
+  groups_feature = NULL,
   flank = 2000,
   stranded = TRUE,
   span = 0.05
@@ -19,7 +19,7 @@ plot_agg_regions(
 \item{regions}{a table of regions or GRanges, or a list of such objects. The
 table of regions must contain chr, start and end columns.}
 
-\item{groups}{if 'features' is a list, a vector of characters of the same
+\item{groups_feature}{if 'features' is a list, a vector of characters of the same
 length as the list containing names for each member.}
 
 \item{flank}{the number of flanking bases to add to each side of each region.}
@@ -34,4 +34,10 @@ a ggplot object containing the aggregate methylation trend.
 }
 \description{
 Plot aggregate regions
+}
+\examples{
+nmr <- load_example_nanomethresult()
+
+plot_agg_regions(nmr, NanoMethViz::exons(nmr))
+
 }

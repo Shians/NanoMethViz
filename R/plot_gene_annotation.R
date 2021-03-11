@@ -169,10 +169,10 @@ plot_gene_annotation <- function(exons_df, plot_start, plot_end) {
 
     p <- ggplot2::ggplot() +
         ggplot2::theme_void() +
-        .exons(exons_df) +
         .connector_arrows(gap_pos) +
         .connector_arrows(gap_neg) +
         .connector_lines(gap_none) +
+        .exons(exons_df) +
         .gene_labels(gene_labels) +
         ggplot2::xlim(plot_start, plot_end) +
         ggplot2::ylim(0, plot_height)

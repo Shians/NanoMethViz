@@ -2,6 +2,8 @@ StatLm <- ggplot2::ggproto("StatLm", Stat,
     required_aes = c("x", "y"),
 
     compute_group = function(data, scales, params, n = 20) {
+        data <- data[!duplicated(data$x), ]
+
         if (nrow(data) <= 1) {
             return(data.frame(x = NULL, y = NULL))
         }
@@ -12,11 +14,11 @@ StatLm <- ggplot2::ggproto("StatLm", Stat,
 
         mod <- tryCatch(
             lm(y ~ poly(x, poly_deg), data = data),
-            warning = function(w) numeric(0)
+            error = function(e) numeric(0)
         )
 
         if (length(mod) == 0) {
-            return(data.frame(x = numeric(0), y = numeric(0)))
+            return(data.frame(x = NULL, y = NULL))
         }
 
         grid$y <- predict(mod, newdata = grid)

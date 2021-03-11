@@ -12,10 +12,10 @@ StatLm <- ggplot2::ggproto("StatLm", Stat,
 
         mod <- tryCatch(
             lm(y ~ poly(x, poly_deg), data = data),
-            warning = function(w) NA
+            warning = function(w) numeric(0)
         )
 
-        if (is.na(mod)) {
+        if (length(mod) == 0) {
             return(data.frame(x = numeric(0), y = numeric(0)))
         }
 

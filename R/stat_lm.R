@@ -10,7 +10,15 @@ StatLm <- ggplot2::ggproto("StatLm", Stat,
         rng <- range(data$x, na.rm = TRUE)
         grid <- data.frame(x = seq(rng[1], rng[2], length = n))
 
-        mod <- lm(y ~ poly(x, poly_deg), data = data)
+        mod <- tryCatch(
+            lm(y ~ poly(x, poly_deg), data = data),
+            warning = function(w) NA
+        )
+
+        if (is.na(mod)) {
+            return(data.frame(x = numeric(0), y = numeric(0)))
+        }
+
         grid$y <- predict(mod, newdata = grid)
 
         grid

@@ -19,13 +19,13 @@ setGeneric("plot_region_heatmap", function(x, chr, start, end, ...) {
 
 #' @rdname plot_region_heatmap
 #'
+#' @param window_prop the size of flanking region to plot. Can be a vector of two
+#'   values for left and right window size. Values indicate proportion of gene
+#'   length.
 #' @param pos_style the style for plotting the base positions along the x-axis.
 #'   Defaults to "to_scale", plotting (potentially) overlapping squares
 #'   along the genomic position to scale. The "compact" options plots only the
 #'   positions with measured modification.
-#' @param window_prop the size of flanking region to plot. Can be a vector of two
-#'   values for left and right window size. Values indicate proportion of gene
-#'   length.
 #'
 #' @return a ggplot plot containing the heatmap.
 #'
@@ -98,13 +98,22 @@ setMethod("plot_region_heatmap",
     chr,
     start,
     end,
+    window_prop,
     pos_style,
-    window_prop
+    xlim = NA
 ) {
     assertthat::assert_that(
         nrow(exons(x)) > 0,
         msg = "exons(x) is empty, gene cannot be queried"
     )
+
+    if (!is.na(xlims)) {
+        assertthat::assert_that(
+            is.numeric(xlims),
+            length(xlims) == 2,
+            p[1] < p[2]
+        )
+    }
 
     if (length(window_prop) == 1) {
         window_prop <- c(window_prop, window_prop)

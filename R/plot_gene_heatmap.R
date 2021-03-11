@@ -56,12 +56,21 @@ setMethod(
     x,
     gene,
     window_prop,
-    pos_style
+    pos_style,
+    xlims = NA
 ) {
     assertthat::assert_that(
         nrow(exons(x)) > 0,
         msg = "exons(x) is empty, gene cannot be queried"
     )
+
+    if (!is.na(xlims)) {
+        assertthat::assert_that(
+            is.numeric(xlims),
+            length(xlims) == 2,
+            p[1] < p[2]
+        )
+    }
 
     if (length(window_prop) == 1) {
         # convert to two sided window
@@ -118,7 +127,7 @@ setMethod(
 
     if (pos_style == "compact") {
         # only plots sites with measured modification, evenly spaced
-        ggplot(methy_data,
+        p <- ggplot(methy_data,
             aes(x = factor(.data$pos),
                 y = .data$read_group,
                 fill = .data$mod_prob)) +
@@ -134,7 +143,7 @@ setMethod(
     } else if (pos_style == "to_scale") {
         # plots all sites in range, evenly spaced with square geoms
         # data will overlap
-        ggplot(methy_data, aes(y = .data$read_group)) +
+        p <- ggplot(methy_data, aes(y = .data$read_group)) +
             ggplot2::geom_errorbarh(
                 ggplot2::aes(
                     xmin = .data$start,
@@ -151,4 +160,10 @@ setMethod(
             theme_methy_heatmap() +
             ggplot2::xlab("Position")
     }
+
+    if (!is.na(xlims)) {
+        p <- p + ggplot2::xlim(xlims[1], xlims[2])
+    }
+
+    p
 }

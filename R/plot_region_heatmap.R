@@ -164,7 +164,7 @@ setMethod("plot_region_heatmap",
     if (pos_style == "compact") {
         # only plots sites with measured modification, evenly spaced
         ggplot2::ggplot(methy_data, aes(x = factor(.data$pos), y = .data$read_group, fill = .data$mod_prob)) +
-            ggplot2::scale_fill_gradient(low = "blue", high = "red") +
+            ggplot2::scale_fill_brewer(palette = "RdYlBu") +
             ggplot2::geom_raster() +
             ggplot2::facet_wrap(~group, scales = "free_y", nrow = 2) +
             theme_methy_heatmap() +
@@ -177,7 +177,6 @@ setMethod("plot_region_heatmap",
         # plots all sites in range, evenly spaced with square geoms
         # data will overlap
         ggplot2::ggplot(methy_data, aes(y = .data$read_group)) +
-            ggplot2::scale_colour_gradient(low = "blue", high = "red") +
             ggplot2::geom_errorbarh(
                 ggplot2::aes(
                     xmin = .data$start,
@@ -189,6 +188,7 @@ setMethod("plot_region_heatmap",
                     by = c("read_name", "start", "end", "group"))
             ) +
             ggplot2::geom_point(aes(x = .data$pos, col = .data$mod_prob), alpha = 0.33, shape = 15) +
+            ggplot2::scale_colour_distiller(palette = "RdYlBu") +
             ggplot2::facet_wrap(~group, scales = "free_y", nrow = 2) +
             theme_methy_heatmap() +
             ggplot2::xlab("Position")

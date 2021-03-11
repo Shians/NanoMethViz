@@ -1,13 +1,13 @@
 stacked_intervals <- function(reads) {
-    reads$old_order <- 1:nrow(reads)
+    reads$old_order <- seq_len(nrow(reads))
     reads <- dplyr::arrange(reads, .data$start)
-    reads$index <- 1:nrow(reads)
-    reads$group <- 1:nrow(reads)
+    reads$index <- seq_len(nrow(reads))
+    reads$group <- seq_len(nrow(reads))
 
     current <- 1
     merged <- numeric()
 
-    for (i in 1:nrow(reads)) {
+    for (i in seq_len(nrow(reads))) {
         if (i == current || i %in% merged) {
             # skip if already merged
             next
@@ -38,7 +38,7 @@ stacked_intervals <- function(reads) {
                 dplyr::filter(
                     .data$start >= curr_end,
                     !.data$index %in% merged
-               )
+                )
         }
 
         # consider current read merged

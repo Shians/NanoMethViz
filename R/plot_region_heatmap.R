@@ -107,11 +107,11 @@ setMethod("plot_region_heatmap",
         msg = "exons(x) is empty, gene cannot be queried"
     )
 
-    if (!is.na(xlims)) {
+    if (!anyNA(xlim)) {
         assertthat::assert_that(
-            is.numeric(xlims),
-            length(xlims) == 2,
-            p[1] < p[2]
+            is.numeric(xlim),
+            length(xlim) == 2,
+            xlim[1] < xlim[2]
         )
     }
 
@@ -172,7 +172,7 @@ setMethod("plot_region_heatmap",
 
     if (pos_style == "compact") {
         # only plots sites with measured modification, evenly spaced
-        ggplot2::ggplot(methy_data, aes(x = factor(.data$pos), y = .data$read_group, fill = .data$mod_prob)) +
+        p <- ggplot2::ggplot(methy_data, aes(x = factor(.data$pos), y = .data$read_group, fill = .data$mod_prob)) +
             ggplot2::scale_fill_brewer(palette = "RdYlBu") +
             ggplot2::geom_raster() +
             ggplot2::facet_wrap(~group, scales = "free_y", nrow = 2) +
@@ -185,7 +185,7 @@ setMethod("plot_region_heatmap",
     } else if (pos_style == "to_scale") {
         # plots all sites in range, evenly spaced with square geoms
         # data will overlap
-        ggplot2::ggplot(methy_data, aes(y = .data$read_group)) +
+        p <- ggplot2::ggplot(methy_data, aes(y = .data$read_group)) +
             ggplot2::geom_errorbarh(
                 ggplot2::aes(
                     xmin = .data$start,
@@ -202,4 +202,10 @@ setMethod("plot_region_heatmap",
             theme_methy_heatmap() +
             ggplot2::xlab("Position")
     }
+
+    if (!anyNA(xlim)) {
+        p <- p + ggplot2::xlim(xlim[1], xlim[2])
+    }
+
+    p
 }

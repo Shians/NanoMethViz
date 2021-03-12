@@ -57,18 +57,18 @@ setMethod(
     gene,
     window_prop,
     pos_style,
-    xlims = NA
+    xlim = NA
 ) {
     assertthat::assert_that(
         nrow(exons(x)) > 0,
         msg = "exons(x) is empty, gene cannot be queried"
     )
 
-    if (!is.na(xlims)) {
+    if (!anyNA(xlim)) {
         assertthat::assert_that(
-            is.numeric(xlims),
-            length(xlims) == 2,
-            p[1] < p[2]
+            is.numeric(xlim),
+            length(xlim) == 2,
+            xlim[1] < xlim[2]
         )
     }
 
@@ -161,8 +161,8 @@ setMethod(
             ggplot2::xlab("Position")
     }
 
-    if (!is.na(xlims)) {
-        p <- p + ggplot2::xlim(xlims[1], xlims[2])
+    if (!anyNA(xlim)) {
+        p <- p + ggplot2::xlim(xlim[1], xlim[2])
     }
 
     p

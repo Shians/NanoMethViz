@@ -122,7 +122,7 @@ setMethod("plot_region_heatmap",
     window_left <- (end - start) * window_prop[1]
     window_right <- (end - start) * window_prop[2]
 
-    methy_data <- query_methy(x, chr, start, end)
+    methy_data <- query_methy(x, chr, start - window_left, end + window_right)
 
     # add sample information
     methy_data <- dplyr::left_join(

@@ -29,7 +29,7 @@ plot_agg_regions <- function(
     assert_that(.is_df_or_granges(regions) || is.list(regions))
     .validate_regions(regions)
 
-    has_names <- is.list(regions) && !is(names(regions))
+    has_names <- is.list(regions) && !is.null(names(regions))
     has_feature_groups <- !is.null(groups_feature)
     has_groups <- has_names || has_feature_groups
 

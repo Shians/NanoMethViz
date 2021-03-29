@@ -1,3 +1,9 @@
+### Version 1.1.3
+
+* Fixed group handling for list region input in `plot_agg_regions()`
+* Fixed unused window size argument in `plot_region_heatmap()`
+* Fixed error when reads overlap in name and position for internal function `StatLM()`
+
 ### Version 1.1.2
 
 * Changed example dataset exon annotations from all genomic exons to just those contained in data.

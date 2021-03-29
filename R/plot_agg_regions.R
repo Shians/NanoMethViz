@@ -29,6 +29,10 @@ plot_agg_regions <- function(
     assert_that(.is_df_or_granges(regions) || is.list(regions))
     .validate_regions(regions)
 
+    has_names <- is.list(regions) && !is(names(regions))
+    has_feature_groups <- !is.null(groups_feature)
+    has_groups <- has_names || has_feature_groups
+
     # convert GRanges to tibble
     if (is(regions, "GRanges")) {
         regions <- tibble::as_tibble(regions) %>%
@@ -53,7 +57,7 @@ plot_agg_regions <- function(
         }
     )
 
-    if (!is.null(groups_feature)) {
+    if (has_feature_groups) {
         names(methy_data) <- groups_feature
     }
 
@@ -61,7 +65,7 @@ plot_agg_regions <- function(
         dplyr::bind_rows(.id = "group")
 
     # average methylation across relative coordinates
-    if (!is.null(groups_feature)) {
+    if (has_group) {
         methy_data <- methy_data %>%
         dplyr::group_by(.data$group, .data$rel_pos) %>%
         dplyr::summarise(methy_prob = mean(.data$methy_prob)) %>%
@@ -80,12 +84,21 @@ plot_agg_regions <- function(
     kb_marker <- round(flank / 1000, 1)
     labels <- c(glue::glue("-{kb_marker}kb"), "start", "end", glue::glue("+{kb_marker}kb"))
 
-    methy_data <- methy_data %>%
-        dplyr::mutate(interval = cut(.data$rel_pos, breaks = grid_size)) %>%
-        dplyr::group_by(.data$interval, .drop = TRUE) %>%
-        dplyr::summarise(methy_prob = mean(.data$methy_prob)) %>%
-        dplyr::ungroup() %>%
-        dplyr::left_join(binned_pos_df, by = "interval")
+    if (has_group) {
+        methy_data <- methy_data %>%
+            dplyr::mutate(interval = cut(.data$rel_pos, breaks = grid_size)) %>%
+            dplyr::group_by(.data$interval, .data$group, .drop = FALSE) %>%
+            dplyr::summarise(methy_prob = mean(.data$methy_prob)) %>%
+            dplyr::ungroup() %>%
+            dplyr::left_join(binned_pos_df, by = "interval")
+    } else {
+        methy_data <- methy_data %>%
+            dplyr::mutate(interval = cut(.data$rel_pos, breaks = grid_size)) %>%
+            dplyr::group_by(.data$interval, .drop = TRUE) %>%
+            dplyr::summarise(methy_prob = mean(.data$methy_prob)) %>%
+            dplyr::ungroup() %>%
+            dplyr::left_join(binned_pos_df, by = "interval")
+    }
 
     # set up plot
     p <- ggplot2::ggplot() +
@@ -94,7 +107,7 @@ plot_agg_regions <- function(
         .agg_geom_smooth(methy_data, span = span, group = !is.null(groups_feature))
 
 
-    if (!is.null(groups_feature)) {
+    if (has_group) {
         p <- p + ggplot2::scale_colour_brewer(palette = "Set1")
     }
 

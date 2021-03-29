@@ -65,7 +65,7 @@ plot_agg_regions <- function(
         dplyr::bind_rows(.id = "group")
 
     # average methylation across relative coordinates
-    if (has_group) {
+    if (has_groups) {
         methy_data <- methy_data %>%
         dplyr::group_by(.data$group, .data$rel_pos) %>%
         dplyr::summarise(methy_prob = mean(.data$methy_prob)) %>%
@@ -84,7 +84,7 @@ plot_agg_regions <- function(
     kb_marker <- round(flank / 1000, 1)
     labels <- c(glue::glue("-{kb_marker}kb"), "start", "end", glue::glue("+{kb_marker}kb"))
 
-    if (has_group) {
+    if (has_groups) {
         methy_data <- methy_data %>%
             dplyr::mutate(interval = cut(.data$rel_pos, breaks = grid_size)) %>%
             dplyr::group_by(.data$interval, .data$group, .drop = FALSE) %>%
@@ -107,7 +107,7 @@ plot_agg_regions <- function(
         .agg_geom_smooth(methy_data, span = span, group = !is.null(groups_feature))
 
 
-    if (has_group) {
+    if (has_groups) {
         p <- p + ggplot2::scale_colour_brewer(palette = "Set1")
     }
 

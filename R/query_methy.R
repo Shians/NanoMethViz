@@ -121,6 +121,20 @@ query_methy_sqlite <- function(x, chr, start, end) {
 query_methy_tabix <- function(x, chr, start, end) {
     tabix_file <- Rsamtools::TabixFile(x)
 
+    tabix_seqs <- get_tabix_sequences(paste0(x, ".tbi"))
+    miss <- which(!chr %in% tabix_seqs)
+    miss_seqs <- unique(chr[miss])
+    if (length(miss_seqs) != 0) {
+        warning(
+            "requested sequences missing from tabix file:",
+            paste(miss_seqs, collapse = ", ")
+        )
+        chr <- chr[-miss]
+        start <- start[-miss]
+        end <- end[-miss]
+    }
+
+
     query <- GenomicRanges::GRanges(glue::glue("{chr}:{start}-{end}"))
 
     col_names <- methy_col_names()

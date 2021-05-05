@@ -9,13 +9,14 @@
 #' @param stranded TRUE if negative strand features should have coordinates
 #'   flipped to reflect features like transcription start sites.
 #' @param span the span for loess smoothing.
+#' @param palette the colour palette used for groups.
 #'
 #' @return a ggplot object containing the aggregate methylation trend.
 #'
 #' @examples
 #' nmr <- load_example_nanomethresult()
-#'
-#' plot_agg_regions(nmr, NanoMethViz::exons(nmr))
+#' gene_anno <- exons_to_genes(NanoMethViz::exons(nmr))
+#' plot_agg_regions(nmr, gene_anno)
 #'
 #' @export
 plot_agg_regions <- function(
@@ -24,27 +25,79 @@ plot_agg_regions <- function(
     groups_feature = NULL,
     flank = 2000,
     stranded = TRUE,
-    span = 0.05
+    span = 0.05,
+    palette = ggplot2::scale_colour_brewer(palette = "Set1")
 ) {
-    assert_that(.is_df_or_granges(regions) || is.list(regions))
-    .validate_regions(regions)
-
-    has_names <- is.list(regions) && !is.null(names(regions))
-    has_feature_groups <- !is.null(groups_feature)
-    has_groups <- has_names || has_feature_groups
-
-    # convert GRanges to tibble
-    if (is(regions, "GRanges")) {
-        regions <- tibble::as_tibble(regions) %>%
-            dplyr::rename(chr = "seqnames")
-    }
-
-    # convert data.frame regions to single element list
-    if (!is.null(dim(regions))) {
-        regions <- list(regions)
-    }
+    regions <- .normalise_regions(regions, groups_feature)
+    has_groups <- !is.null(names(regions))
 
     # query methylation data
+    methy_data <- .get_agg_methy_data(regions, x, flank, stranded, has_groups)
+
+    # take binned means
+    grid_size <- 2^10
+    binned_pos_df <- .get_grid(grid_size = grid_size, rel_pos = methy_data$rel_pos)
+
+    methy_data <- methy_data %>%
+        dplyr::mutate(interval = cut(.data$rel_pos, breaks = grid_size)) %>%
+        dplyr::group_by(.data$interval, .data$group, .drop = FALSE) %>%
+        dplyr::summarise(methy_prob = mean(.data$methy_prob), .groups = "drop") %>%
+        dplyr::left_join(binned_pos_df, by = "interval")
+
+    # set up plot
+    p <- ggplot2::ggplot() +
+        ggplot2::ylim(c(0, 1)) +
+        ggplot2::theme_minimal() +
+        .agg_geom_smooth(methy_data, span = span, group = !is.null(groups_feature)) +
+        palette
+
+    if (flank == 0) {
+        labels <- c("start", "end")
+        breaks = c(0, 1)
+        limits = c(0, 1)
+    } else {
+        breaks = c(-.33, 0, 1, 1.33)
+        limits = c(-0.33, 1.33)
+        kb_marker <- round(flank / 1000, 1)
+        labels <- c(glue::glue("-{kb_marker}kb"), "start", "end", glue::glue("+{kb_marker}kb"))
+        p <- p +
+            ggplot2::geom_vline(xintercept = 0, linetype = "dashed", color = "grey80") +
+            ggplot2::geom_vline(xintercept = 1, linetype = "dashed", color = "grey80")
+    }
+
+    p + ggplot2::coord_cartesian(clip = "off") +
+        ggplot2::scale_x_continuous(
+            name = "Relative Position",
+            breaks = breaks,
+            limits = limits,
+            labels = labels) +
+        ggplot2::ylab("Average Methylation Proportion")
+}
+
+#' Plot aggregate regions with grouped samples
+#'
+#' @inheritParams plot_agg_regions
+#' @param palette the colour palette used for samples.
+#'
+#' @return a ggplot object containing the aggregate methylation trend.
+#'
+#' @examples
+#' nmr <- load_example_nanomethresult()
+#' gene_anno <- exons_to_genes(NanoMethViz::exons(nmr))
+#' plot_agg_regions_sample_grouped(nmr, gene_anno)
+#'
+#' @export
+plot_agg_regions_sample_grouped <- function(
+    x,
+    regions,
+    flank = 2000,
+    stranded = TRUE,
+    span = 0.05,
+    palette = ggplot2::scale_colour_brewer(palette = "Set1")
+) {
+    regions <- .normalise_regions(regions)
+
+    # query methylation data per region group
     methy_data <- purrr::map(
         regions,
         function(features) {
@@ -56,139 +109,21 @@ plot_agg_regions <- function(
                 dplyr::bind_rows()
         }
     )
-
-    if (has_feature_groups) {
-        names(methy_data) <- groups_feature
-    }
-
     methy_data <- methy_data %>%
-        dplyr::bind_rows(.id = "group")
-
-    # average methylation across relative coordinates
-    if (has_groups) {
-        methy_data <- methy_data %>%
-        dplyr::group_by(.data$group, .data$rel_pos) %>%
-        dplyr::summarise(methy_prob = mean(.data$methy_prob)) %>%
-        dplyr::ungroup()
-    } else {
-        methy_data <- methy_data %>%
-            dplyr::group_by(.data$rel_pos) %>%
-            dplyr::summarise(methy_prob = mean(.data$methy_prob)) %>%
-            dplyr::ungroup()
-    }
+        dplyr::bind_rows()
 
     # take binned means
-    grid_size <- 2^12
-    binned_pos_df <- .get_grid(grid_size = 2^12, rel_pos = methy_data$rel_pos)
-
-    kb_marker <- round(flank / 1000, 1)
-    labels <- c(glue::glue("-{kb_marker}kb"), "start", "end", glue::glue("+{kb_marker}kb"))
-
-    if (has_groups) {
-        methy_data <- methy_data %>%
-            dplyr::mutate(interval = cut(.data$rel_pos, breaks = grid_size)) %>%
-            dplyr::group_by(.data$interval, .data$group, .drop = FALSE) %>%
-            dplyr::summarise(methy_prob = mean(.data$methy_prob)) %>%
-            dplyr::ungroup() %>%
-            dplyr::left_join(binned_pos_df, by = "interval")
-    } else {
-        methy_data <- methy_data %>%
-            dplyr::mutate(interval = cut(.data$rel_pos, breaks = grid_size)) %>%
-            dplyr::group_by(.data$interval, .drop = TRUE) %>%
-            dplyr::summarise(methy_prob = mean(.data$methy_prob)) %>%
-            dplyr::ungroup() %>%
-            dplyr::left_join(binned_pos_df, by = "interval")
-    }
-
-    # set up plot
-    p <- ggplot2::ggplot() +
-        ggplot2::ylim(c(0, 1)) +
-        ggplot2::theme_minimal() +
-        .agg_geom_smooth(methy_data, span = span, group = !is.null(groups_feature))
-
-
-    if (has_groups) {
-        p <- p + ggplot2::scale_colour_brewer(palette = "Set1")
-    }
-
-    p + ggplot2::coord_cartesian(clip = "off") +
-        ggplot2::geom_vline(xintercept = 0, linetype = "dashed", color = "grey80") +
-        ggplot2::geom_vline(xintercept = 1, linetype = "dashed", color = "grey80") +
-        ggplot2::scale_x_continuous(
-            name = "Relative Position",
-            breaks = c(-.33, 0, 1, 1.33),
-            limits = c(-0.33, 1.33),
-            labels = labels) +
-        ggplot2::ylab("Average Methylation Probability")
-}
-
-#' Plot aggregate regions with grouped samples
-#'
-#' @inheritParams plot_agg_regions
-#'
-#' @return a ggplot object containing the aggregate methylation trend.
-#'
-#' @examples
-#' nmr <- load_example_nanomethresult()
-#'
-#' plot_agg_regions_sample_grouped(nmr, NanoMethViz::exons(nmr))
-#'
-#' @export
-plot_agg_regions_sample_grouped <- function(
-    x,
-    regions,
-    flank = 2000,
-    stranded = TRUE,
-    span = 0.05
-) {
-    is_df_or_granges <- function(x) {
-        is.data.frame(x) || is(x, "GRanges")
-    }
-
-    assert_that(is_df_or_granges(regions) || is.list(regions))
-    .validate_regions(regions)
-
-    # convert GRanges to tibble
-    if (is(regions, "GRanges")) {
-        regions <- tibble::as_tibble(regions) %>%
-            dplyr::rename(chr = "seqnames")
-    }
-
-    # convert data.frame regions to single element list
-    if (!is.null(dim(regions))) {
-        regions <- list(regions)
-    }
-
-    # query methylation data
-    methy_data <- purrr::map(
-        regions,
-        function(features) {
-            .get_features_with_rel_pos(
-                    features,
-                    methy = methy(x),
-                    flank = flank,
-                    stranded = stranded,
-                    by_sample = TRUE) %>%
-                dplyr::bind_rows()
-        }
-    )
-
-    methy_data <- methy_data %>%
-        dplyr::bind_rows() %>%
-        dplyr::group_by(sample, .data$rel_pos) %>%
-        dplyr::summarise(methy_prob = mean(.data$methy_prob)) %>%
-        dplyr::ungroup()
-
-    # take binned means
-    grid_size <- 2^12
+    grid_size <- 2^10
     binned_pos_df <- .get_grid(grid_size = grid_size, rel_pos = methy_data$rel_pos)
 
+    # take binned means
     methy_data <- methy_data %>%
         dplyr::mutate(interval = cut(.data$rel_pos, breaks = grid_size)) %>%
         dplyr::group_by(.data$sample, .data$interval) %>%
-        dplyr::summarise(methy_prob = mean(.data$methy_prob)) %>%
-        dplyr::ungroup() %>%
-        dplyr::left_join(binned_pos_df, by = "interval") %>%
+        dplyr::summarise(methy_prob = mean(.data$methy_prob), .groups = "drop")
+
+    # add bin intervals
+    methy_data <- dplyr::left_join(methy_data, binned_pos_df, by = "interval") %>%
         dplyr::mutate(rel_pos = .data$binned_pos) %>%
         dplyr::left_join(samples(x), by = "sample")
 
@@ -211,7 +146,7 @@ plot_agg_regions_sample_grouped <- function(
             na.rm = TRUE,
             se = FALSE,
             data = methy_data) +
-        ggplot2::scale_colour_brewer(palette = "Set1") +
+        palette +
         ggplot2::coord_cartesian(clip = "off") +
         # start and end vertical dashes
         ggplot2::geom_vline(xintercept = 0, linetype = "dashed", color = "grey80") +
@@ -221,14 +156,15 @@ plot_agg_regions_sample_grouped <- function(
             breaks = c(-.33, 0, 1, 1.33),
             limits = c(-0.33, 1.33),
             labels = labels) +
-        ggplot2::ylab("Average Methylation Probability")
+        ggplot2::ylab("Average Methylation Proportion")
 }
 
 .split_rows <- function(x) {
     split(x, seq_len(nrow(x)))
 }
 
-.get_features_with_rel_pos <- function(features, methy, flank, stranded, by_sample = FALSE, feature_ids = NULL) {
+# get features with flanking region and relative positions
+.get_features_with_rel_pos <- function(features, methy, flank, stranded, feature_ids = NULL) {
     .scale_to_feature <- function(x, feature, stranded = stranded) {
         within <- x >= feature$start & x <= feature$end
         upstream <- x < feature$start
@@ -251,29 +187,22 @@ plot_agg_regions_sample_grouped <- function(
         features$end + flank * 1.10,
         simplify = FALSE)
 
+    # remove empty queries
     empty <- purrr::map_lgl(out, function(x) nrow(x) == 0)
     out <- out[!empty]
     features <- features[!empty, ]
 
-    out <- purrr::map2(out, .split_rows(features), function(x, y) {
-        if (nrow(x) == 0) {
-            return(tibble::add_column(x, rel_pos = numeric()))
-        }
+    out <- purrr::map2(out, .split_rows(features),
+        function(x, y) {
+            x <- x %>%
+                dplyr::group_by(.data$sample, .data$pos) %>%
+                dplyr::summarise(methy_prob = mean(.data$statistic > 0), .groups = "drop")
 
-        x$rel_pos <- .scale_to_feature(x$pos, y, stranded = stranded)
+            x$rel_pos <- .scale_to_feature(x$pos, y, stranded = stranded)
 
-        if (by_sample) {
-            x %>%
-                dplyr::group_by(.data$sample, .data$rel_pos) %>%
-                dplyr::summarise(methy_prob = mean(e1071::sigmoid(.data$statistic))) %>%
-                dplyr::ungroup()
-        } else {
-            x %>%
-                dplyr::group_by(.data$rel_pos) %>%
-                dplyr::summarise(methy_prob = mean(e1071::sigmoid(.data$statistic))) %>%
-                dplyr::ungroup()
+            x
         }
-    })
+    )
 
     if (!is.null(feature_ids)) {
         assertthat::assert_that(length(feature_ids) == nrow(out))
@@ -309,7 +238,6 @@ plot_agg_regions_sample_grouped <- function(
 }
 
 .get_grid <- function(grid_size, rel_pos) {
-    grid_size <- 2^12
     binned_pos <- seq(-1.1/3, 1 + 1.1/3, length.out = grid_size + 2)[-c(1, grid_size + 2)]
     binned_intervals <- levels(cut(rel_pos, breaks = grid_size))
 
@@ -323,7 +251,9 @@ plot_agg_regions_sample_grouped <- function(
     is.data.frame(x) || is(x, "GRanges")
 }
 
+# check that regions have required columns and are of correct class
 .validate_regions <- function(regions) {
+    assertthat::assert_that(.is_df_or_granges(regions) || is.list(regions))
     required <- c("chr", "strand", "start", "end")
     if (.is_df_or_granges(regions)) {
         if (!.has_required_columns(regions, required)) {
@@ -347,4 +277,45 @@ plot_agg_regions_sample_grouped <- function(
 
 .has_required_columns <- function(regions, required) {
     all(required %in% colnames(regions))
+}
+
+.normalise_regions <- function(regions, groups_feature = NULL) {
+    .validate_regions(regions)
+
+    # convert GRanges to tibble
+    if (is(regions, "GRanges")) {
+        regions <- tibble::as_tibble(regions) %>%
+            dplyr::rename(chr = "seqnames")
+    }
+
+    # convert data.frame regions to single element list
+    if (!is.null(dim(regions))) {
+        regions <- list(regions)
+    }
+
+    if (!is.null(groups_feature)) {
+        names(regions) <- groups_feature
+    }
+
+    regions
+}
+
+.get_agg_methy_data <- function(regions, x, flank, stranded, has_groups) {
+    methy_data <- purrr::map(
+        regions,
+        function(features) {
+            .get_features_with_rel_pos(
+                    features,
+                    methy = methy(x),
+                    flank = flank,
+                    stranded = stranded) %>%
+                dplyr::bind_rows()
+        }
+    )
+
+    methy_data <- methy_data %>%
+        dplyr::bind_rows(.id = "group")
+
+    # average methylation across relative coordinates
+    methy_data
 }

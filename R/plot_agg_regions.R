@@ -129,9 +129,19 @@ plot_agg_regions_sample_grouped <- function(
 
     methy_data <- dplyr::left_join(methy_data, samples(x), by = c("sample", "group"))
 
-    kb_marker <- round(flank / 1000, 1)
-
-    labels <- c(glue::glue("-{kb_marker}kb"), "start", "end", glue::glue("+{kb_marker}kb"))
+    if (flank == 0) {
+        labels <- c("start", "end")
+        breaks = c(0, 1)
+        limits = c(0, 1)
+    } else {
+        breaks = c(-.33, 0, 1, 1.33)
+        limits = c(-0.33, 1.33)
+        kb_marker <- round(flank / 1000, 1)
+        labels <- c(glue::glue("-{kb_marker}kb"), "start", "end", glue::glue("+{kb_marker}kb"))
+        p <- p +
+            ggplot2::geom_vline(xintercept = 0, linetype = "dashed", color = "grey80") +
+            ggplot2::geom_vline(xintercept = 1, linetype = "dashed", color = "grey80")
+    }
 
     # set up plot
     ggplot2::ggplot() +
@@ -153,8 +163,8 @@ plot_agg_regions_sample_grouped <- function(
         ggplot2::geom_vline(xintercept = 1, linetype = "dashed", color = "grey80") +
         ggplot2::scale_x_continuous(
             name = "Relative Position",
-            breaks = c(-.33, 0, 1, 1.33),
-            limits = c(-0.33, 1.33),
+            breaks = breaks,
+            limits = limits,
             labels = labels) +
         ggplot2::ylab("Average Methylation Proportion")
 }

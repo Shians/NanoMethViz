@@ -12,6 +12,6 @@
 #' exons_to_genes(NanoMethViz::exons(nmr))
 exons_to_genes <- function(x) {
     x %>%
-        dplyr::group_by(gene_id, chr, strand, symbol) %>%
-        dplyr::summarise(start = min(start), end = max(end), .groups = "drop")
+        dplyr::group_by(.data$gene_id, .data$chr, .data$strand, .data$symbol) %>%
+        dplyr::summarise(start = min(.data$start), end = max(.data$end), .groups = "drop")
 }

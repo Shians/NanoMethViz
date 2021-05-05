@@ -10,7 +10,8 @@ plot_agg_regions(
   groups_feature = NULL,
   flank = 2000,
   stranded = TRUE,
-  span = 0.05
+  span = 0.05,
+  palette = ggplot2::scale_colour_brewer(palette = "Set1")
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ length as the list containing names for each member.}
 flipped to reflect features like transcription start sites.}
 
 \item{span}{the span for loess smoothing.}
+
+\item{palette}{the colour palette used for groups.}
 }
 \value{
 a ggplot object containing the aggregate methylation trend.
@@ -37,7 +40,7 @@ Plot aggregate regions
 }
 \examples{
 nmr <- load_example_nanomethresult()
-
-plot_agg_regions(nmr, NanoMethViz::exons(nmr))
+gene_anno <- exons_to_genes(NanoMethViz::exons(nmr))
+plot_agg_regions(nmr, gene_anno)
 
 }

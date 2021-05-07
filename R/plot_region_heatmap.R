@@ -1,4 +1,4 @@
-#' Plot gene methylation heatmap
+#' Plot region methylation heatmap
 #'
 #' @param x the NanoMethResult object.
 #' @param chr the chromosome to plot.
@@ -17,7 +17,7 @@ setGeneric("plot_region_heatmap", function(x, chr, start, end, ...) {
     standardGeneric("plot_region_heatmap")
 })
 
-#' @rdname plot_gene_heatmap
+#' @rdname plot_region_heatmap
 #'
 #' @param window_prop the size of flanking region to plot. Can be a vector of two
 #'   values for left and right window size. Values indicate proportion of gene

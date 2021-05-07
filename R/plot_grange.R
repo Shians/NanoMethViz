@@ -40,15 +40,17 @@ plot_grange <- function(
     )
 }
 
-#' @rdname plot_gene_heatmap
+#' Plot GRanges heatmap
 #'
-#' @param window_prop the size of flanking region to plot. Can be a vector of two
-#'   values for left and right window size. Values indicate proportion of gene
-#'   length.
+#' @param x the NanoMethResult object.
+#' @param grange the GRanges object with one entry.
 #' @param pos_style the style for plotting the base positions along the x-axis.
 #'   Defaults to "to_scale", plotting (potentially) overlapping squares
 #'   along the genomic position to scale. The "compact" options plots only the
 #'   positions with measured modification.
+#' @param window_prop the size of flanking region to plot. Can be a vector of two
+#'   values for left and right window size. Values indicate proportion of gene
+#'   length.
 #'
 #' @return a ggplot plot containing the heatmap.
 #'

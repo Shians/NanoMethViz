@@ -7,7 +7,7 @@
 plot_agg_regions(
   x,
   regions,
-  groups_feature = NULL,
+  features_group = NULL,
   flank = 2000,
   stranded = TRUE,
   span = 0.05,
@@ -20,7 +20,7 @@ plot_agg_regions(
 \item{regions}{a table of regions or GRanges, or a list of such objects. The
 table of regions must contain chr, strand, start and end columns.}
 
-\item{groups_feature}{if 'features' is a list, a vector of characters of the same
+\item{features_group}{if 'features' is a list, a vector of characters of the same
 length as the list containing names for each member.}
 
 \item{flank}{the number of flanking bases to add to each side of each region.}

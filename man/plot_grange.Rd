@@ -4,7 +4,14 @@
 \alias{plot_grange}
 \title{Plot GRanges}
 \usage{
-plot_grange(x, grange, anno_regions = NULL, spaghetti = FALSE, span = NULL)
+plot_grange(
+  x,
+  grange,
+  anno_regions = NULL,
+  spaghetti = FALSE,
+  span = NULL,
+  window_prop = 0.3
+)
 }
 \arguments{
 \item{x}{the NanoMethResult object.}
@@ -16,6 +23,10 @@ plot_grange(x, grange, anno_regions = NULL, spaghetti = FALSE, span = NULL)
 \item{spaghetti}{whether or not individual reads should be shown.}
 
 \item{span}{the span for loess smoothing.}
+
+\item{window_prop}{the size of flanking region to plot. Can be a vector of two
+values for left and right window size. Values indicate proportion of gene
+length.}
 }
 \value{
 a patchwork plot containing the methylation profile in the specified

@@ -2,20 +2,10 @@
 % Please edit documentation in R/plot_region_heatmap.R
 \name{plot_region_heatmap}
 \alias{plot_region_heatmap}
-\alias{plot_region_heatmap,NanoMethResult,character,numeric,numeric-method}
 \alias{plot_region_heatmap,NanoMethResult,factor,numeric,numeric-method}
 \title{Plot gene methylation heatmap}
 \usage{
 plot_region_heatmap(x, chr, start, end, ...)
-
-\S4method{plot_region_heatmap}{NanoMethResult,character,numeric,numeric}(
-  x,
-  chr,
-  start,
-  end,
-  pos_style = c("to_scale", "compact"),
-  window_prop = 0.3
-)
 
 \S4method{plot_region_heatmap}{NanoMethResult,factor,numeric,numeric}(
   x,
@@ -36,28 +26,14 @@ plot_region_heatmap(x, chr, start, end, ...)
 \item{end}{the end of the plotting region.}
 
 \item{...}{additional arguments.}
-
-\item{pos_style}{the style for plotting the base positions along the x-axis.
-Defaults to "to_scale", plotting (potentially) overlapping squares
-along the genomic position to scale. The "compact" options plots only the
-positions with measured modification.}
-
-\item{window_prop}{the size of flanking region to plot. Can be a vector of two
-values for left and right window size. Values indicate proportion of gene
-length.}
 }
 \value{
 a ggplot object of the heatmap.
-
-a ggplot plot containing the heatmap.
 }
 \description{
 Plot gene methylation heatmap
 }
 \examples{
-nmr <- load_example_nanomethresult()
-plot_region_heatmap(nmr, "chr7", 6703892, 6730431)
-
 nmr <- load_example_nanomethresult()
 plot_region_heatmap(nmr, "chr7", 6703892, 6730431)
 

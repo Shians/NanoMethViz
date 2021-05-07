@@ -3,7 +3,7 @@
 #' @param x the NanoMethResult object.
 #' @param regions a table of regions or GRanges, or a list of such objects. The
 #'   table of regions must contain chr, strand, start and end columns.
-#' @param groups_feature if 'features' is a list, a vector of characters of the same
+#' @param features_group if 'features' is a list, a vector of characters of the same
 #'   length as the list containing names for each member.
 #' @param flank the number of flanking bases to add to each side of each region.
 #' @param stranded TRUE if negative strand features should have coordinates
@@ -22,13 +22,14 @@
 plot_agg_regions <- function(
     x,
     regions,
-    groups_feature = NULL,
+    features_group = NULL,
     flank = 2000,
     stranded = TRUE,
     span = 0.05,
     palette = ggplot2::scale_colour_brewer(palette = "Set1")
 ) {
-    regions <- .normalise_regions(regions, groups_feature)
+    regions <- .normalise_regions(regions, features_group)
+    regions <- .filter_tabix_chr(x, regions)
     has_groups <- !is.null(names(regions))
 
     # query methylation data
@@ -48,7 +49,7 @@ plot_agg_regions <- function(
     p <- ggplot2::ggplot() +
         ggplot2::ylim(c(0, 1)) +
         ggplot2::theme_minimal() +
-        .agg_geom_smooth(methy_data, span = span, group = !is.null(groups_feature)) +
+        .agg_geom_smooth(methy_data, span = span, group = !is.null(features_group)) +
         palette
 
     if (flank == 0) {
@@ -292,7 +293,7 @@ plot_agg_regions_sample_grouped <- function(
     all(required %in% colnames(regions))
 }
 
-.normalise_regions <- function(regions, groups_feature = NULL) {
+.normalise_regions <- function(regions, features_group = NULL) {
     .validate_regions(regions)
 
     # convert GRanges to tibble
@@ -306,8 +307,8 @@ plot_agg_regions_sample_grouped <- function(
         regions <- list(regions)
     }
 
-    if (!is.null(groups_feature)) {
-        names(regions) <- groups_feature
+    if (!is.null(features_group)) {
+        names(regions) <- features_group
     }
 
     regions
@@ -331,4 +332,27 @@ plot_agg_regions_sample_grouped <- function(
 
     # average methylation across relative coordinates
     methy_data
+}
+
+.filter_tabix_chr <- function(nmr, regions) {
+    seqs <- get_tabix_sequences(nmr)
+    res <- purrr::map(
+        regions,
+        function(x) {
+            bad_seq <- !x$chr %in% seqs
+
+            list(
+                regions = regions[!bad_seq, ],
+                bad_seqs = unique(regions$chr[bad_seq])
+            )
+        }
+    )
+
+    regions <- purrr::map(res, ~.x$regions)
+    bad_seqs <- purrr::map(res, ~.x$bad_seq)
+    bad_seqs <- unique(unlist(bad_seqs))
+    warning("requested sequences missing from tabix file:",
+            paste(bad_seqs, collapse = ", "))
+
+    regions
 }

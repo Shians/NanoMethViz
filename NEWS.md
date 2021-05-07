@@ -1,3 +1,8 @@
+### Version 1.1.4
+* Added palette argument to aggregate plots
+* Added `exons_to_genes()` function to convert exon annotation to gene annotation
+* Added `plot_granges_heatmap()` function to use GRanges for plotting heatmaps
+
 ### Version 1.1.3
 
 * Fixed group handling for list region input in `plot_agg_regions()`

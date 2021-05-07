@@ -134,13 +134,10 @@ plot_agg_regions_sample_grouped <- function(
         breaks = c(0, 1)
         limits = c(0, 1)
     } else {
-        breaks = c(-.33, 0, 1, 1.33)
-        limits = c(-0.33, 1.33)
         kb_marker <- round(flank / 1000, 1)
         labels <- c(glue::glue("-{kb_marker}kb"), "start", "end", glue::glue("+{kb_marker}kb"))
-        p <- p +
-            ggplot2::geom_vline(xintercept = 0, linetype = "dashed", color = "grey80") +
-            ggplot2::geom_vline(xintercept = 1, linetype = "dashed", color = "grey80")
+        breaks = c(-.33, 0, 1, 1.33)
+        limits = c(-0.33, 1.33)
     }
 
     # set up plot
@@ -263,8 +260,14 @@ plot_agg_regions_sample_grouped <- function(
 
 # check that regions have required columns and are of correct class
 .validate_regions <- function(regions) {
+    if (is(regions, "GRanges")) {
+        return()
+    }
+
     assertthat::assert_that(.is_df_or_granges(regions) || is.list(regions))
+
     required <- c("chr", "strand", "start", "end")
+
     if (.is_df_or_granges(regions)) {
         if (!.has_required_columns(regions, required)) {
             missing <- setdiff(required, colnames(regions))

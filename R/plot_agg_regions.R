@@ -335,14 +335,14 @@ plot_agg_regions_sample_grouped <- function(
 }
 
 .filter_tabix_chr <- function(nmr, regions) {
-    seqs <- get_tabix_sequences(nmr)
+    seqs <- get_tabix_sequences(paste0(methy(nmr), ".tbi"))
     res <- purrr::map(
         regions,
         function(x) {
             bad_seq <- !x$chr %in% seqs
 
             list(
-                regions = regions[!bad_seq, ],
+                regions = x[!bad_seq, ],
                 bad_seqs = unique(regions$chr[bad_seq])
             )
         }
@@ -351,8 +351,10 @@ plot_agg_regions_sample_grouped <- function(
     regions <- purrr::map(res, ~.x$regions)
     bad_seqs <- purrr::map(res, ~.x$bad_seq)
     bad_seqs <- unique(unlist(bad_seqs))
-    warning("requested sequences missing from tabix file:",
-            paste(bad_seqs, collapse = ", "))
+    if (length(bad_seqs) != 0) {
+        warning("requested sequences missing from tabix file:",
+                paste(bad_seqs, collapse = ", "))
+    }
 
     regions
 }

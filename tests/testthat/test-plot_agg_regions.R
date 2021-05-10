@@ -5,6 +5,8 @@ test_that("Aggregate plotting works", {
 
     # test
     expect_silent(plot_agg_regions(nmr, gene_anno))
+    expect_silent(plot_agg_regions(nmr, list(gene_anno, gene_anno)))
+    expect_silent(plot_agg_regions(nmr, list(set1=gene_anno, set2=gene_anno)))
     expect_silent(plot_agg_regions_sample_grouped(nmr, gene_anno))
 })
 

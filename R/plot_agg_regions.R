@@ -49,7 +49,7 @@ plot_agg_regions <- function(
     p <- ggplot2::ggplot() +
         ggplot2::ylim(c(0, 1)) +
         ggplot2::theme_minimal() +
-        .agg_geom_smooth(methy_data, span = span, group = !is.null(features_group)) +
+        .agg_geom_smooth(methy_data, span = span, group = has_groups) +
         palette
 
     if (flank == 0) {
@@ -305,6 +305,10 @@ plot_agg_regions_sample_grouped <- function(
     # convert data.frame regions to single element list
     if (!is.null(dim(regions))) {
         regions <- list(regions)
+    } else {
+        if (is.null(names(regions))) {
+            names(regions) <- seq_len(length(regions))
+        }
     }
 
     if (!is.null(features_group)) {

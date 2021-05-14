@@ -340,17 +340,15 @@ plot_agg_regions_sample_grouped <- function(
 
 .filter_tabix_chr <- function(nmr, regions) {
     seqs <- get_tabix_sequences(paste0(methy(nmr), ".tbi"))
-    res <- purrr::map(
-        regions,
-        function(x) {
-            bad_seq <- !x$chr %in% seqs
+    filter_bad_seqs <- function(x) {
+        bad_seq <- !x$chr %in% seqs
 
-            list(
-                regions = x[!bad_seq, ],
-                bad_seqs = unique(regions$chr[bad_seq])
-            )
-        }
-    )
+        list(
+            regions = x[!bad_seq, ],
+            bad_seqs = unique(x$chr[bad_seq])
+        )
+    }
+    res <- purrr::map(regions, filter_bad_seqs)
 
     regions <- purrr::map(res, ~.x$regions)
     bad_seqs <- purrr::map(res, ~.x$bad_seq)

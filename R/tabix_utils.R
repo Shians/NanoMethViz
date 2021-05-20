@@ -79,7 +79,7 @@ create_tabix_file <- function(
 ) {
     assert_that(
         tools::file_ext(output_file) == "bgz",
-        "output_file must end with .bgz extension."
+        msg = "output_file must end with .bgz extension."
     )
     assert_that(
         assertthat::not_empty(input_files),

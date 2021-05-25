@@ -131,7 +131,7 @@ setMethod(
             aes(x = factor(.data$pos),
                 y = .data$read_group,
                 fill = .data$mod_prob)) +
-            ggplot2::scale_fill_brewer(palette = "RdYlBu") +
+            scico::scale_colour_scico(palette = 'imola') +
             ggplot2::geom_raster() +
             ggplot2::facet_wrap(~group, scales = "free_y", nrow = 2) +
             theme_methy_heatmap() +
@@ -155,8 +155,8 @@ setMethod(
             ) +
             ggplot2::geom_point(
                 aes(x = .data$pos, col = .data$mod_prob), alpha = 0.33, shape = 15) +
-            ggplot2::scale_colour_distiller(palette = "RdYlBu") +
-            ggplot2::facet_wrap(~group, scales = "free_y", nrow = 2) +
+            scico::scale_colour_scico(palette = 'imola') +
+            ggplot2::facet_wrap(~group, scales = "free_y", nrow = 2, strip.position = "left") +
             theme_methy_heatmap() +
             ggplot2::xlab("Position")
     }

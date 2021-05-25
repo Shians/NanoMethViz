@@ -173,7 +173,7 @@ setMethod("plot_region_heatmap",
     if (pos_style == "compact") {
         # only plots sites with measured modification, evenly spaced
         p <- ggplot2::ggplot(methy_data, aes(x = factor(.data$pos), y = .data$read_group, fill = .data$mod_prob)) +
-            ggplot2::scale_fill_brewer(palette = "RdYlBu") +
+            scico::scale_colour_scico(palette = 'imola') +
             ggplot2::geom_raster() +
             ggplot2::facet_wrap(~group, scales = "free_y", nrow = 2) +
             theme_methy_heatmap() +
@@ -197,7 +197,7 @@ setMethod("plot_region_heatmap",
                     by = c("read_name", "start", "end", "group"))
             ) +
             ggplot2::geom_point(aes(x = .data$pos, col = .data$mod_prob), alpha = 0.33, shape = 15) +
-            ggplot2::scale_colour_distiller(palette = "RdYlBu") +
+            scico::scale_colour_scico(palette = 'imola') +
             ggplot2::facet_wrap(~group, scales = "free_y", nrow = 2) +
             theme_methy_heatmap() +
             ggplot2::xlab("Position")

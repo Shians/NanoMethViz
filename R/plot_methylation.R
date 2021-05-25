@@ -5,6 +5,7 @@ plot_methylation_internal <- function(
     start,
     end,
     title,
+    palette_col = ggplot2::scale_colour_brewer(palette = "Set1"),
     anno_regions = NULL,
     spaghetti = FALSE,
     span = NULL
@@ -84,8 +85,7 @@ plot_methylation_internal <- function(
         ggplot2::scale_x_continuous(
             breaks = c(x_min, x_max),
             labels = scales::comma(c(x_min, x_max))) +
-        ggplot2::scale_color_brewer(palette = "Set1") +
-        ggplot2::scale_fill_brewer(palette = "Set1") +
+        palette_col +
         ggthemes::theme_tufte()
 }
 

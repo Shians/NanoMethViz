@@ -73,6 +73,7 @@ reformat_megalodon_old <- function(x, sample) {
                 strand == 1 ~ "+",
                 strand == -1 ~ "-",
                 TRUE ~ "*"),
+            pos = as.integer(.data$pos) + 1,
             strand = factor(.data$strand, levels = c("+", "-", "*")),
             statistic = logit(exp(.data$statistic))) %>%
         select(methy_col_names())
@@ -88,6 +89,7 @@ reformat_megalodon <- function(x, sample) {
         mutate(
             sample = as.factor(.data$sample),
             chr = factor(.data$chr),
+            pos = as.integer(.data$pos) + 1,
             strand = factor(.data$strand, levels = c("+", "-", "*")),
             statistic = logit(exp(.data$statistic))) %>%
         select(methy_col_names())

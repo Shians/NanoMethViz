@@ -41,6 +41,7 @@ Imports:
     RSQLite,
     Rsamtools,
     scales,
+    scico,
     stats,
     stringr,
     tibble,

@@ -31,6 +31,7 @@ setGeneric("plot_gene_heatmap", function(x, gene, ...) {
 #' nmr <- load_example_nanomethresult()
 #' plot_gene_heatmap(nmr, "Peg3")
 #'
+#' @importFrom scico scale_colour_scico
 #' @export
 setMethod(
     "plot_gene_heatmap",

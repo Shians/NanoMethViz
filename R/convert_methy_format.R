@@ -166,7 +166,8 @@ convert_methy_format <- function(
                 reformatter(x, sample = element$sample),
                 file = output_file,
                 sep = "\t",
-                append = TRUE
+                append = TRUE,
+                scipen = 999L
             )
         }
 

@@ -69,6 +69,7 @@ NanoMethResult <- function(methy, samples, exons = NULL) {
 
     assertthat::is.readable(methy)
     assert_has_columns(samples, c("sample", "group"))
+    samples$group <- as.factor(samples$group)
 
     # Check in first 1000 entries that samples are in sample annotation
     head_values <- read.table(

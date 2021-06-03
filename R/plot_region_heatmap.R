@@ -103,11 +103,6 @@ setMethod("plot_region_heatmap",
     pos_style,
     xlim = NA
 ) {
-    assertthat::assert_that(
-        nrow(exons(x)) > 0,
-        msg = "exons(x) is empty, gene cannot be queried"
-    )
-
     if (!anyNA(xlim)) {
         assertthat::assert_that(
             is.numeric(xlim),

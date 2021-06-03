@@ -134,6 +134,9 @@ query_methy_tabix <- function(x, chr, start, end) {
         end <- end[-miss]
     }
 
+    if (length(chr) == 0) {
+        stop("no valid ranges remain, please check chromosome format matches between query and methylation file.")
+    }
 
     query <- GenomicRanges::GRanges(glue::glue("{chr}:{start}-{end}"))
 

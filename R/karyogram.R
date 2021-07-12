@@ -21,7 +21,7 @@ karyogram <- function(nmr, chr_info) {
 
         plots[[i]] <- ggplot(df, aes(x = pos, y = 1, fill = methy_prop)) +
             geom_tile() +
-            scico::scale_colour_scico(palette = 'imola') +
+            scico::scale_colour_scico(palette = 'imola', direction = -1) +
             theme_void() +
             theme(plot.margin = margin(0, 2, 0, 0)) +
             ggtitle(chr_info$chr[i]) +

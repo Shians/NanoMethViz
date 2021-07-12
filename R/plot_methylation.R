@@ -4,6 +4,7 @@ plot_methylation_internal <- function(
     chr,
     start,
     end,
+    xlim,
     title,
     palette_col = ggplot2::scale_colour_brewer(palette = "Set1"),
     anno_regions = NULL,
@@ -71,22 +72,24 @@ plot_methylation_internal <- function(
             data = plot_data_smooth,
             span = span,
             na.rm = TRUE,
-            size = 3
+            size = 2
         )
 
     # add auxiliary elements and style
     x_min <- max(min(plot_data$pos), start)
     x_max <- min(max(plot_data$pos), end)
+    breaks <- c(x_min, round((x_min + x_max) / 2), x_max)
     p +
         ggplot2::geom_rug(aes(col = NULL), sides = "b") +
         ggplot2::ggtitle(title) +
         ggplot2::xlab(chr) +
         ggplot2::coord_cartesian(ylim = c(0, 1), clip = "on") +
         ggplot2::scale_x_continuous(
-            breaks = c(x_min, x_max),
-            labels = scales::comma(c(x_min, x_max))) +
+            limits = xlim,
+            breaks = breaks,
+            labels = scales::comma(breaks)) +
         palette_col +
-        ggthemes::theme_tufte()
+        theme_minimal()
 }
 
 plot_feature <- function(
@@ -106,13 +109,14 @@ plot_feature <- function(
     feature_width <- end - start
     window_left <- feature_width * window_prop[1]
     window_right <- feature_width * window_prop[2]
+    xlim <- c(start - window_left, end + window_right)
 
     methy_data <-
         query_methy(
             methy,
             chr,
-            start - window_left,
-            end + window_right,
+            floor(start - window_left * 1.1),
+            ceiling(end + window_right * 1.1),
             simplify = TRUE) %>%
         dplyr::select(-"strand") %>%
         tibble::as_tibble()
@@ -128,6 +132,7 @@ plot_feature <- function(
         start = start,
         end = end,
         chr = chr,
+        xlim = xlim,
         title = title,
         anno_regions = anno_regions,
         spaghetti = spaghetti,

@@ -20,14 +20,19 @@ library(NanoMethViz)
 ```
 
 In order to use this package, your data must be converted from the output of
-methylation calling software to a special tabix format. Due to the use of the
-Unix `sort` function, this can only currently be done on a Linux or MacOS
-system.
+methylation calling software to a tabix indexed bgzipped format. The data needs
+to be sorted by genomic position to respect the requirements of the samtools
+[tabix](http://www.htslib.org/doc/tabix.html) indexing tool. On Linux and macOS
+systems this is done using the bash `sort` utility, which is memory efficient,
+but on Windows this is done by loading the entire table and sorting within R.
 
 We currently support output from
 
 * Nanopolish
 * f5c
+* Megalodon
+
+## Data example
 
 The conversion can be done using the `create_tabix_file()` function. We provide
 example data of nanopolish output within the package, we can look inside to see
@@ -46,9 +51,19 @@ methy_calls_example
 
 We then create a temporary path to store a converted file, this will be deleted
 once you exit your R session. Once `create_tabix_file()` is run, it will create
-a tabix file along with its index. Because we have a small amount of data, we
-can read in a small portion of it to see how it looks, do not do this with large
+a .bgz file along with its tabix index. Because we have a small amount of data,
+we can read in a small portion of it for inspection, do not do this with large
 datasets as it decompresses all the data and will take very long to run.
+
+### Megalodon Data
+
+To import data from Megalodon's modification calls, the [per-read modified
+bases](https://nanoporetech.github.io/megalodon/file_formats.html#per-read-modified-bases)
+file must be generated. This can be done by either adding `--write-mods-text`
+argument to Megalodon run or using the `megalodon_extras per_read_text
+modified_bases` utility.
+
+## Importing data
 
 ```{r, message=F}
 methy_tabix <- file.path(tempdir(), "methy_data.bgz")

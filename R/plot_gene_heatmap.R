@@ -118,7 +118,7 @@ setMethod(
 
     # heatmap theme
     theme_methy_heatmap <- function() {
-        ggthemes::theme_tufte() +
+        theme_minimal() +
             ggplot2::theme(
                 axis.ticks.y = ggplot2::element_blank(),
                 axis.title.y = ggplot2::element_blank(),
@@ -132,7 +132,7 @@ setMethod(
             aes(x = factor(.data$pos),
                 y = .data$read_group,
                 fill = .data$mod_prob)) +
-            scico::scale_colour_scico(palette = 'imola') +
+            scico::scale_colour_scico(palette = 'imola', direction = -1) +
             ggplot2::geom_raster() +
             ggplot2::facet_wrap(~group, scales = "free_y", nrow = 2) +
             theme_methy_heatmap() +
@@ -156,7 +156,7 @@ setMethod(
             ) +
             ggplot2::geom_point(
                 aes(x = .data$pos, col = .data$mod_prob), alpha = 0.33, shape = 15) +
-            scico::scale_colour_scico(palette = 'imola') +
+            scico::scale_colour_scico(palette = 'imola', direction = -1) +
             ggplot2::facet_wrap(~group, scales = "free_y", nrow = 2, strip.position = "left") +
             theme_methy_heatmap() +
             ggplot2::xlab("Position")

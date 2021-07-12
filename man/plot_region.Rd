@@ -16,7 +16,7 @@ plot_region(x, chr, start, end, ...)
   anno_regions = NULL,
   spaghetti = FALSE,
   span = NULL,
-  window_prop = 0.3
+  window_prop = 0
 )
 
 \S4method{plot_region}{NanoMethResult,factor,numeric,numeric}(
@@ -27,7 +27,7 @@ plot_region(x, chr, start, end, ...)
   anno_regions = NULL,
   spaghetti = FALSE,
   span = NULL,
-  window_prop = 0.3
+  window_prop = 0
 )
 }
 \arguments{

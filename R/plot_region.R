@@ -49,7 +49,7 @@ setMethod("plot_region",
         anno_regions = NULL,
         spaghetti = FALSE,
         span = NULL,
-        window_prop = 0.3
+        window_prop = 0
     ) {
         .plot_region(
             x = x,
@@ -82,7 +82,7 @@ setMethod("plot_region",
         anno_regions = NULL,
         spaghetti = FALSE,
         span = NULL,
-        window_prop = 0.3
+        window_prop = 0
     ) {
         chr <- as.character(chr)
         plot_region(
@@ -107,7 +107,7 @@ setMethod("plot_region",
     anno_regions = NULL,
     spaghetti = FALSE,
     span = NULL,
-    window_prop = 0.3
+    window_prop = 0
 ) {
     sample_anno <- samples(x)
     exons_anno <- query_exons_region(

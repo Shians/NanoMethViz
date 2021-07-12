@@ -5,17 +5,26 @@
 \alias{NanoMethResult-class}
 \alias{NanoMethResult}
 \alias{methy,NanoMethResult-method}
+\alias{methy<-,NanoMethResult-method}
 \alias{samples,NanoMethResult-method}
+\alias{samples<-,NanoMethResult,data.frame-method}
 \alias{exons,NanoMethResult-method}
+\alias{exons<-,NanoMethResult,data.frame-method}
 \title{Nanopore Methylation Result}
 \usage{
 NanoMethResult(methy, samples, exons = NULL)
 
 \S4method{methy}{NanoMethResult}(object)
 
+\S4method{methy}{NanoMethResult}(object) <- value
+
 \S4method{samples}{NanoMethResult}(object)
 
+\S4method{samples}{NanoMethResult,data.frame}(object) <- value
+
 \S4method{exons}{NanoMethResult}(object)
+
+\S4method{exons}{NanoMethResult,data.frame}(object) <- value
 }
 \arguments{
 \item{methy}{the path to the methylation tabix file.}
@@ -27,6 +36,8 @@ sample and group.}
 gene_id, chr, strand, start, end, transcript_id and symbol.}
 
 \item{object}{the NanoMethResult object.}
+
+\item{value}{the exon annotation.}
 }
 \value{
 a NanoMethResult object to be used with plotting functions
@@ -49,9 +60,15 @@ NanoMethResult() constructor function described in "Usage".
 
 \item \code{methy,NanoMethResult-method}: methylation data path getter.
 
+\item \code{methy<-,NanoMethResult-method}: methylation data path setter.
+
 \item \code{samples,NanoMethResult-method}: sample annotation getter.
 
+\item \code{samples<-,NanoMethResult,data.frame-method}: sample annotation setter.
+
 \item \code{exons,NanoMethResult-method}: exon annotation getter.
+
+\item \code{exons<-,NanoMethResult,data.frame-method}: exon annotation getter.
 }}
 
 \section{Slots}{
@@ -59,7 +76,7 @@ NanoMethResult() constructor function described in "Usage".
 \describe{
 \item{\code{methy}}{the path to the methylation tabix file.}
 
-\item{\code{samples}}{the data.frame of sample annotation containg at least columns
+\item{\code{samples}}{the data.frame of sample annotation containing at least columns
 sample and group.}
 
 \item{\code{exons}}{the data.frame of exon information containing at least columns

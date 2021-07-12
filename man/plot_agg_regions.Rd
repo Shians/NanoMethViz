@@ -7,7 +7,7 @@
 plot_agg_regions(
   x,
   regions,
-  features_group = NULL,
+  group_col = NULL,
   flank = 2000,
   stranded = TRUE,
   span = 0.05,
@@ -17,11 +17,11 @@ plot_agg_regions(
 \arguments{
 \item{x}{the NanoMethResult object.}
 
-\item{regions}{a table of regions or GRanges, or a list of such objects. The
-table of regions must contain chr, strand, start and end columns.}
+\item{regions}{a table of regions containing at least columns chr, strand,
+start and end. Any additiona columns can be used for grouping.}
 
-\item{features_group}{if 'features' is a list, a vector of characters of the same
-length as the list containing names for each member.}
+\item{group_col}{the column to group aggregated trends by. This column can
+be in from the regions table or samples(x).}
 
 \item{flank}{the number of flanking bases to add to each side of each region.}
 
@@ -42,5 +42,7 @@ Plot aggregate regions
 nmr <- load_example_nanomethresult()
 gene_anno <- exons_to_genes(NanoMethViz::exons(nmr))
 plot_agg_regions(nmr, gene_anno)
+plot_agg_regions(nmr, gene_anno, group_col = "sample")
+plot_agg_regions(nmr, gene_anno, group_col = "group")
 
 }

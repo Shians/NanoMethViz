@@ -6,7 +6,7 @@
 #' NanoMethResult() constructor function described in "Usage".
 #'
 #' @slot methy the path to the methylation tabix file.
-#' @slot samples the data.frame of sample annotation containg at least columns
+#' @slot samples the data.frame of sample annotation containing at least columns
 #'   sample and group.
 #' @slot exons the data.frame of exon information containing at least columns
 #'   gene_id, chr, strand, start, end, transcript_id and symbol.
@@ -68,6 +68,10 @@ NanoMethResult <- function(methy, samples, exons = NULL) {
     }
 
     assertthat::is.readable(methy)
+    assert_has_columns(
+        exons,
+        c("gene_id", "chr", "strand", "start", "end", "transcript_id", "symbol")
+    )
     assert_has_columns(samples, c("sample", "group"))
     samples$group <- as.factor(samples$group)
 
@@ -97,6 +101,7 @@ NanoMethResult <- function(methy, samples, exons = NULL) {
     )
 }
 
+# methy ----
 
 #' Get methylation data
 #' @keywords internal
@@ -111,6 +116,13 @@ NanoMethResult <- function(methy, samples, exons = NULL) {
 #' @export
 setGeneric("methy", valueClass = "character", function(object) {
     standardGeneric("methy")
+})
+
+#' Set methylation data
+#' @keywords internal
+#' @export
+setGeneric("methy<-", function(object, value) {
+    standardGeneric("methy<-")
 })
 
 #' @describeIn NanoMethResult-class methylation data path getter.
@@ -128,6 +140,21 @@ setMethod("methy", signature("NanoMethResult"), function(object) {
     object@methy
 })
 
+#' @describeIn NanoMethResult-class methylation data path setter.
+#'
+#' @param object the NanoMethResult object.
+#' @param value the path to the methylation data.
+#'
+#' @export
+setMethod("methy<-", signature("NanoMethResult"), function(object, value) {
+    assertthat::is.readable(value)
+
+    object@methy <- value
+    object
+})
+
+# sample ----
+
 #' Get sample annotation
 #'
 #' @param object the object.
@@ -144,6 +171,13 @@ setGeneric("samples", valueClass = "data.frame", function(object) {
     standardGeneric("samples")
 })
 
+#' Set sample annotation
+#' @keywords internal
+#' @export
+setGeneric("samples<-", function(object, value) {
+    standardGeneric("samples<-")
+})
+
 #' @describeIn NanoMethResult-class sample annotation getter.
 #'
 #' @param object the NanoMethResult object.
@@ -154,6 +188,22 @@ setGeneric("samples", valueClass = "data.frame", function(object) {
 setMethod("samples", signature("NanoMethResult"), function(object) {
     object@samples
 })
+
+#' @describeIn NanoMethResult-class sample annotation setter.
+#'
+#' @param object the NanoMethResult object.
+#' @param value the data.frame of sample annotation containg at least columns
+#'   sample and group.
+#'
+#' @export
+setMethod("samples<-", signature("NanoMethResult", "data.frame"), function(object, value) {
+    assert_has_columns(samples, c("sample", "group"))
+
+    object@samples <- value
+    object
+})
+
+# exons ----
 
 #' Get exon annotation
 #' @keywords internal
@@ -170,6 +220,13 @@ setGeneric("exons", valueClass = "data.frame", function(object) {
     standardGeneric("exons")
 })
 
+#' Set exon annotation
+#' @keywords internal
+#' @export
+setGeneric("exons<-", function(object, value) {
+    standardGeneric("exons<-")
+})
+
 #' @describeIn NanoMethResult-class exon annotation getter.
 #'
 #' @param object the NanoMethResult object.
@@ -179,4 +236,19 @@ setGeneric("exons", valueClass = "data.frame", function(object) {
 #' @export
 setMethod("exons", signature("NanoMethResult"), function(object) {
     object@exons
+})
+
+#' @describeIn NanoMethResult-class exon annotation getter.
+#'
+#' @param object the NanoMethResult object.
+#' @param value the exon annotation.
+#'
+#' @export
+setMethod("exons<-", signature("NanoMethResult", "data.frame"), function(object, value) {
+    assert_has_columns(
+        value,
+        c("gene_id", "chr", "strand", "start", "end", "transcript_id", "symbol")
+    )
+    object@exons <- value
+    object
 })

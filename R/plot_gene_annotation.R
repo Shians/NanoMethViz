@@ -19,7 +19,7 @@ plot_gene_annotation <- function(exons_df, plot_start, plot_end) {
         dplyr::inner_join(exons_count, by = c("uid", "y_offset")) %>%
         dplyr::filter(.data$exons > 1) %>%
         dplyr::group_by("transcript_id") %>%
-        dplyr::arrange(start) %>%
+        dplyr::arrange(.data$start) %>%
         dplyr::ungroup()
 
     if (nrow(gap) > 0) {

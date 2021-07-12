@@ -17,7 +17,7 @@ stat_lowess <- function(
     data = NULL,
     geom = "line",
     position = "identity",
-    na.rm = FALSE,
+    na.rm = TRUE,
     show.legend = NA,
     inherit.aes = TRUE,
     span = 2/3,
@@ -33,6 +33,7 @@ stat_lowess <- function(
         inherit.aes = inherit.aes,
         params = list(
             span = span,
+            na.rm = na.rm,
             ...
         )
     )

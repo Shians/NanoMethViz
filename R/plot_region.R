@@ -121,15 +121,17 @@ setMethod("plot_region",
         window_prop <- c(window_prop, window_prop)
     }
 
-    window_left <- (end - start) * window_prop[1]
-    window_right <- (end - start) * window_prop[2]
+    feature_width <- end - start
+    window_left <- feature_width * window_prop[1]
+    window_right <- feature_width * window_prop[2]
+    xlim <- round(c(start - window_left, end + window_right))
 
     methy_data <-
         query_methy(
             x,
             chr,
-            start - window_left,
-            end + window_right,
+            floor(start - window_left * 1.1),
+            ceiling(end + window_right * 1.1),
             simplify = TRUE) %>%
         dplyr::select(-"strand") %>%
         tibble::as_tibble()
@@ -145,6 +147,7 @@ setMethod("plot_region",
         start = start,
         end = end,
         chr = chr,
+        xlim = xlim,
         title = title,
         anno_regions = anno_regions,
         spaghetti = spaghetti,

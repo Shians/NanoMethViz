@@ -63,7 +63,7 @@ reformat_megalodon_old <- function(x, sample) {
     x %>%
         rename(
             chr = .data$chrm,
-            statistic = .data$mod_log_prob,
+            statistic = .data$mod_log_prob - .data$can_log_prob,
             read_name = .data$read_id) %>%
         add_column(sample = sample, .before = 1) %>%
         mutate(
@@ -74,8 +74,7 @@ reformat_megalodon_old <- function(x, sample) {
                 strand == -1 ~ "-",
                 TRUE ~ "*"),
             pos = as.integer(.data$pos) + 1,
-            strand = factor(.data$strand, levels = c("+", "-", "*")),
-            statistic = logit(exp(.data$statistic))) %>%
+            strand = factor(.data$strand, levels = c("+", "-", "*"))) %>%
         select(methy_col_names())
 }
 
@@ -83,15 +82,14 @@ reformat_megalodon <- function(x, sample) {
     x %>%
         rename(
             chr = .data$chrm,
-            statistic = .data$mod_log_prob,
+            statistic = .data$mod_log_prob - .data$can_log_prob,
             read_name = .data$read_id) %>%
         add_column(sample = sample, .before = 1) %>%
         mutate(
             sample = as.factor(.data$sample),
             chr = factor(.data$chr),
             pos = as.integer(.data$pos) + 1,
-            strand = factor(.data$strand, levels = c("+", "-", "*")),
-            statistic = logit(exp(.data$statistic))) %>%
+            strand = factor(.data$strand, levels = c("+", "-", "*"))) %>%
         select(methy_col_names())
 }
 

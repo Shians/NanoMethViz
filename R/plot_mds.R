@@ -1,0 +1,70 @@
+#' Plot MDS
+#'
+#' Plot multi-dimensional scaling plot using algorithm of limma::plotMDS(). It is recommended this be done with the
+#' log-methylation-ratio matrix.
+#'
+#' @param x the log-methylation-ratio matrix.
+#' @param top the number of top genes used to calculate pairwise distances.
+#' @param plot_dims the numeric vector of the two dimensions to be plotted.
+#' @param labels the character vector of labels for data points. By default uses column names of x, set to NULL to plot
+#'   points.
+#' @param groups the character vector of groups the data points will be coloured by.
+#'
+#' @return ggplot object of the MDS plot.
+#'
+#' @examples
+#' nmr <- load_example_nanomethresult()
+#' bss <- methy_to_bsseq(nmr)
+#' lmr <- bsseq_to_log_methy_ratio(bss)
+#' plot_mds(lmr)
+#'
+#' @importFrom limma plotMDS
+#' @export
+plot_mds <- function(x, top = 500, plot_dims = c(1, 2), labels = colnames(x), groups = NULL) {
+    if (!is.null(labels)) {
+        assertthat::assert_that(ncol(x) == length(labels))
+    }
+
+    if (!is.null(groups)) {
+        assertthat::assert_that(ncol(x) == length(groups))
+    }
+
+    mds_res <- limma::plotMDS(
+        lmr,
+        top = top,
+        plot = FALSE
+    )
+
+    var_exp1 <- round(100 * mds_res$var.explained[plot_dims[1]])
+    var_exp2 <- round(100 * mds_res$var.explained[plot_dims[2]])
+
+    plot_data <- data.frame(
+        dim1 = mds_res$eigen.vectors[, plot_dims[1]],
+        dim2 = mds_res$eigen.vectors[, plot_dims[2]]
+    )
+
+    plot_data$labels <- labels
+    plot_data$groups <- groups
+
+    xlabel <- glue::glue("Leading logFC Dim {plot_dims[1]} ({var_exp1}%)")
+    ylabel <- glue::glue("Leading logFC Dim {plot_dims[2]} ({var_exp2}%)")
+
+    if (!is.null(groups)) {
+        p <- ggplot2::ggplot(plot_data, aes(x = dim1, y = dim2, col = groups))
+    } else {
+        p <- ggplot2::ggplot(plot_data, aes(x = dim1, y = dim2))
+    }
+
+    if (!is.null(labels)) {
+        p <- p + geom_label(aes(label = labels))
+    } else {
+        p <- p + geom_point()
+
+    }
+
+    p +
+        theme_minimal() +
+        xlab(xlabel) +
+        ylab(ylabel) +
+        scale_x_continuous(expand = c(.1, .1))
+}

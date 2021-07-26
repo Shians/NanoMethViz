@@ -80,6 +80,7 @@ convert_methy_to_dss_cpp(
     string input,
     string output_dir
 ) {
+    // Input file
     zstr::ifstream file(input, ios_base::in | ios_base::binary);
 
     unordered_map<string, MethyData> sample_data;
@@ -88,21 +89,29 @@ convert_methy_to_dss_cpp(
     while (getline(file, line)) {
         entry e = parse_line(line);
 
+        // if encountering new chr
         if (e.chr != current_chr) {
+            // write out data for finished chr
+            flush_data(sample_data, output_dir);
+            sample_data.clear();
+
+            // set new chr
             current_chr = e.chr;
             stringstream ss;
             ss << "parsing " << current_chr << "...";
             LOG(ss.str());
-            flush_data(sample_data, output_dir);
-            sample_data.clear();
         }
 
+        // add entry to current table
         GenomicPos gpos = {e.chr, e.pos};
         sample_data[e.sample][gpos].total++;
         if (e.stat > 0) {
             sample_data[e.sample][gpos].methylated++;
         }
     }
+
+    // write out final chr
+    flush_data(sample_data, output_dir);
 
     stringstream ss;
     ss << "samples found: ";

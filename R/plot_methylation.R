@@ -89,7 +89,7 @@ plot_methylation_internal <- function(
             breaks = breaks,
             labels = scales::comma(breaks)) +
         palette_col +
-        theme_minimal()
+        theme_bw()
 }
 
 plot_feature <- function(

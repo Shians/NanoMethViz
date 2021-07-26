@@ -49,7 +49,7 @@ plot_agg_regions <- function(
     # set up plot
     p <- ggplot2::ggplot() +
         ggplot2::ylim(c(0, 1)) +
-        ggplot2::theme_minimal() +
+        ggplot2::theme_bw() +
         ggplot2::stat_smooth(
             ggplot2::aes_string(
                 x = "binned_pos",

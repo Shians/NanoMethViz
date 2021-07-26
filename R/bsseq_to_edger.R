@@ -1,6 +1,8 @@
 #' Convert BSseq object to edgeR methylation matrix
 #'
 #' @param bsseq the BSseq object.
+#' @param regions the regions to calculate log-methylation ratios over. If left NULL, ratios will be calculated per
+#'   site.
 #'
 #' @return a matrix compatible with the edgeR differential methylation pipeline
 #' @export
@@ -9,13 +11,13 @@
 #' methy <- system.file("methy_subset.tsv.bgz", package = "NanoMethViz")
 #' bsseq <- methy_to_bsseq(methy)
 #' edger_mat <- bsseq_to_edger(bsseq)
-bsseq_to_edger <- function(bsseq) {
+bsseq_to_edger <- function(bsseq, regions = NULL) {
     edger_col_names <- .get_edger_col_names(bsseq)
     edger_row_names <- .get_edger_row_names(bsseq)
 
     # construct matrix
-    methylated <- .get_me_mat(bsseq)
-    unmethylated <- .get_un_mat(bsseq)
+    methylated <- .get_me_mat(bsseq, regions)
+    unmethylated <- .get_un_mat(bsseq, regions)
 
     edger_mat <- matrix(
         0,
@@ -38,7 +40,8 @@ bsseq_to_edger <- function(bsseq) {
 #' dimensionality reduction plots.
 #'
 #' @param bsseq the BSseq object.
-#' @param regions the regions to calculate log-methylation ratios over. If left NULL, ratios will be calculated per site.
+#' @param regions the regions to calculate log-methylation ratios over. If left NULL, ratios will be calculated per
+#'   site.
 #' @param prior_count the prior count added to avoid taking log of 0.
 #'
 #' @return a matrix containing log-methylation-ratios.
@@ -49,6 +52,7 @@ bsseq_to_edger <- function(bsseq) {
 #' bsseq <- methy_to_bsseq(nmr)
 #' regions <- exons_to_genes(NanoMethViz::exons(nmr))
 #' log_m_ratio <- bsseq_to_log_methy_ratio(bsseq, regions)
+
 bsseq_to_log_methy_ratio <- function(bsseq, regions = NULL, prior_count = 2) {
     if (prior_count < 1) {
         warning("prior_count of 1 or higher is recommended")

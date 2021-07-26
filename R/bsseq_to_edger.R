@@ -38,24 +38,33 @@ bsseq_to_edger <- function(bsseq) {
 #' dimensionality reduction plots.
 #'
 #' @param bsseq the BSseq object.
+#' @param regions the regions to calculate log-methylation ratios over. If left NULL, ratios will be calculated per site.
 #' @param prior_count the prior count added to avoid taking log of 0.
 #'
 #' @return a matrix containing log-methylation-ratios.
 #' @export
 #'
 #' @examples
-#' methy <- system.file("methy_subset.tsv.bgz", package = "NanoMethViz")
-#' bsseq <- methy_to_bsseq(methy)
-#' log_m_ratio <- bsseq_to_log_methy_ratio(bsseq)
-bsseq_to_log_methy_ratio <- function(bsseq, prior_count = 2) {
+#' nmr <- load_example_nanomethresult()
+#' bsseq <- methy_to_bsseq(nmr)
+#' regions <- exons_to_genes(NanoMethViz::exons(nmr))
+#' log_m_ratio <- bsseq_to_log_methy_ratio(bsseq, regions)
+bsseq_to_log_methy_ratio <- function(bsseq, regions = NULL, prior_count = 2) {
     if (prior_count < 1) {
         warning("prior_count of 1 or higher is recommended")
     }
 
+    if (!is.null(regions)) {
+        assertthat::assert_that(is(regions, "data.frame"))
+        regions <- GenomicRanges::GRanges(regions)
+        row_names <- regions$gene_id
+    } else {
+        row_names <- .get_edger_row_names(bsseq)
+    }
+
     col_names <- SummarizedExperiment::colData(bsseq)$sample
-    row_names <- .get_edger_row_names(bsseq)
-    methylated <- .get_me_mat(bsseq)
-    unmethylated <- .get_un_mat(bsseq)
+    methylated <- .get_me_mat(bsseq, regions)
+    unmethylated <- .get_un_mat(bsseq, regions)
 
     log_mat <- log2(methylated + prior_count) - log2(unmethylated + prior_count)
 
@@ -64,13 +73,21 @@ bsseq_to_log_methy_ratio <- function(bsseq, prior_count = 2) {
     log_mat
 }
 
-.get_me_mat <- function(bsseq) {
-    bsseq::getBSseq(bsseq, type = "M")
+.get_me_mat <- function(bsseq, regions) {
+    if (!is.null(regions)) {
+        bsseq::getCoverage(bsseq, regions, type = "M", what = "perRegionTotal")
+    } else {
+        bsseq::getCoverage(bsseq, type = "M")
+    }
 }
 
-.get_un_mat <- function(bsseq) {
-    cov <- bsseq::getBSseq(bsseq, type = "Cov")
-    me_mat <- .get_me_mat(bsseq)
+.get_un_mat <- function(bsseq, regions) {
+    if (!is.null(regions)) {
+        cov <- bsseq::getCoverage(bsseq, regions, type = "Cov", what = "perRegionTotal")
+    } else {
+        cov <- bsseq::getCoverage(bsseq, type = "Cov")
+    }
+    me_mat <- .get_me_mat(bsseq, regions)
     cov - me_mat
 }
 

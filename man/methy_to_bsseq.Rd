@@ -22,6 +22,6 @@ a BSSeq object.
 Create BSSeq object from methylation tabix file
 }
 \examples{
-methy <- system.file("methy_subset.tsv.bgz", package = "NanoMethViz")
-bsseq <- methy_to_bsseq(methy)
+nmr <- load_example_nanomethresult()
+bsseq <- methy_to_bsseq(nmr)
 }

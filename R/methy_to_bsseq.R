@@ -10,8 +10,8 @@
 #' @export
 #'
 #' @examples
-#' methy <- system.file("methy_subset.tsv.bgz", package = "NanoMethViz")
-#' bsseq <- methy_to_bsseq(methy)
+#' nmr <- load_example_nanomethresult()
+#' bsseq <- methy_to_bsseq(nmr)
 methy_to_bsseq <- function(
     methy,
     out_folder = tempdir(),

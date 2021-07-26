@@ -4,10 +4,12 @@
 \alias{bsseq_to_log_methy_ratio}
 \title{Convert BSseq object to log-methylation-ratio matrix}
 \usage{
-bsseq_to_log_methy_ratio(bsseq, prior_count = 2)
+bsseq_to_log_methy_ratio(bsseq, regions = NULL, prior_count = 2)
 }
 \arguments{
 \item{bsseq}{the BSseq object.}
+
+\item{regions}{the regions to calculate log-methylation ratios over. If left NULL, ratios will be calculated per site.}
 
 \item{prior_count}{the prior count added to avoid taking log of 0.}
 }
@@ -19,7 +21,8 @@ Creates a log-methylation-ratio matrix from a BSseq object that is useful for
 dimensionality reduction plots.
 }
 \examples{
-methy <- system.file("methy_subset.tsv.bgz", package = "NanoMethViz")
-bsseq <- methy_to_bsseq(methy)
-log_m_ratio <- bsseq_to_log_methy_ratio(bsseq)
+nmr <- load_example_nanomethresult()
+bsseq <- methy_to_bsseq(nmr)
+regions <- exons_to_genes(NanoMethViz::exons(nmr))
+log_m_ratio <- bsseq_to_log_methy_ratio(bsseq, regions)
 }

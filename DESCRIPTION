@@ -23,6 +23,7 @@ Imports:
     readr,
     S4Vectors,
     SummarizedExperiment,
+    BiocSingular,
     bsseq,
     forcats,
     assertthat,

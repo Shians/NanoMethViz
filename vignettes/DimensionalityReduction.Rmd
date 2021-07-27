@@ -1,0 +1,65 @@
+---
+title: "Dimensionality Reduction"
+author: "Shian Su"
+output: html_document
+vignette: >
+  %\VignetteIndexEntry{Dimensionality Reduction}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r setup, include=FALSE}
+library(NanoMethViz)
+library(ggplot2)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Dimensionality reduction is used to represent high dimensional data in a more tractable form. It is commonly used in RNA-seq analysis, where each sample is characterised by tens of thousands of gene expression values, to visualise samples in a 2D plane with distances between points representing similarity and dissimilarity. For RNA-seq the data used is generally gene counts, for methylation there are generally two relevant count matrices, the count of methylated bases, and the count of unmethylated bases. The information from these two matrices can be combined by taking log-methylation ratios as done in Chen et al. 2018.
+
+## Preparing data for dimensionality reduction
+
+It is assumed that users of this package have imported the data into the gzipped tabix format as described in the "Importing Data" vignette. From there, further processing is required to create the log-methylation-ratio matrix used in dimensionality reduction. Namely we go through the BSseq format as it is easily coerced into the desired matrix and is itself useful for various other analyses.
+
+```{r}
+library(NanoMethViz)
+# import example NanoMethResult object
+nmr <- load_example_nanomethresult()
+nmr
+
+# convert to bsseq
+bss <- methy_to_bsseq(nmr)
+bss
+```
+
+We can generate the log-methylation-ratio based on individual methylation sites or computed over genes, or other feature types. Aggregating over features will generally provide more stable and robust results, here we wil use genes.
+
+```{r}
+# create gene annotation from exon annotation
+gene_anno <- exons_to_genes(NanoMethViz::exons(nmr))
+
+# create log-methylation-ratio matrix
+lmr <- bsseq_to_log_methy_ratio(bss, regions = gene_anno)
+```
+
+NanoMethViz currently provides two options, a MDS plot based on the limma implementation of MDS, and a PCA plot using BiocSingular.
+
+```{r}
+plot_mds(lmr) +
+    ggtitle("MDS Plot")
+
+plot_pca(lmr) +
+    ggtitle("PCA Plot")
+```
+
+Additional coloring and labeling options can be provided via arguments to either function. Further customisations can be done using typical ggplot2 commands.
+
+```{r}
+new_labels <- gsub("B6Cast_Prom_", "", colnames(lmr))
+new_labels <- gsub("(\\d)_(.*)", "\\2 \\1", new_labels)
+groups <- gsub(" \\d", "", new_labels)
+
+plot_mds(lmr, labels = new_labels, groups = groups) +
+    ggtitle("MDS Plot") +
+    scale_colour_brewer(palette = "Set1")
+```
+

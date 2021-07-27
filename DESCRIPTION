@@ -36,6 +36,7 @@ Imports:
     GenomicRanges,
     ggthemes,
     glue,
+    limma,
     patchwork,
     purrr,
     rlang,

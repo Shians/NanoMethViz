@@ -158,7 +158,7 @@ setMethod("plot_region_heatmap",
 
     # heatmap theme
     theme_methy_heatmap <- function() {
-        theme_bw() +
+        ggplot2::theme_bw() +
             ggplot2::theme(
                 axis.ticks.y = ggplot2::element_blank(),
                 axis.title.y = ggplot2::element_blank(),

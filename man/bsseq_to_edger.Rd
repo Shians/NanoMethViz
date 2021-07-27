@@ -4,10 +4,13 @@
 \alias{bsseq_to_edger}
 \title{Convert BSseq object to edgeR methylation matrix}
 \usage{
-bsseq_to_edger(bsseq)
+bsseq_to_edger(bsseq, regions = NULL)
 }
 \arguments{
 \item{bsseq}{the BSseq object.}
+
+\item{regions}{the regions to calculate log-methylation ratios over. If left NULL, ratios will be calculated per
+site.}
 }
 \value{
 a matrix compatible with the edgeR differential methylation pipeline

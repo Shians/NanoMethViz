@@ -9,7 +9,8 @@ bsseq_to_log_methy_ratio(bsseq, regions = NULL, prior_count = 2)
 \arguments{
 \item{bsseq}{the BSseq object.}
 
-\item{regions}{the regions to calculate log-methylation ratios over. If left NULL, ratios will be calculated per site.}
+\item{regions}{the regions to calculate log-methylation ratios over. If left NULL, ratios will be calculated per
+site.}
 
 \item{prior_count}{the prior count added to avoid taking log of 0.}
 }

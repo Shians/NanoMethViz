@@ -29,7 +29,7 @@ plot_methylation_internal <- function(
     plot_data <- methy_data %>%
         dplyr::inner_join(sample_anno, by = "sample") %>%
         dplyr::mutate(
-            mod_prob = e1071::sigmoid(.data$statistic)
+            mod_prob = as.numeric(.data$statistic >= 0)
         )
 
     # set up plot

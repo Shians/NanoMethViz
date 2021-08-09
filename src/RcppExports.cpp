@@ -5,11 +5,6 @@
 
 using namespace Rcpp;
 
-#ifdef RCPP_USE_GLOBAL_ROSTREAM
-Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
-Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
-#endif
-
 // convert_methy_to_dss_cpp
 std::vector<std::string> convert_methy_to_dss_cpp(std::string input, std::string output_dir);
 RcppExport SEXP _NanoMethViz_convert_methy_to_dss_cpp(SEXP inputSEXP, SEXP output_dirSEXP) {

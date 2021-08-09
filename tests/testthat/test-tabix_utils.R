@@ -1,4 +1,4 @@
-test_that("multiplication works", {
+test_that("Importing works", {
     # setup
     methy_calls <- system.file(package = "NanoMethViz",
         c("sample1_nanopolish.tsv.gz", "sample2_nanopolish.tsv.gz"))

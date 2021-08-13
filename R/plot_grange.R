@@ -14,6 +14,7 @@ plot_grange <- function(
     x,
     grange,
     anno_regions = NULL,
+    binary_threshold = NULL,
     spaghetti = FALSE,
     span = NULL,
     window_prop = 0.3
@@ -34,6 +35,7 @@ plot_grange <- function(
         start = start,
         end = end,
         anno_regions = anno_regions,
+        binary_threshold = binary_threshold,
         spaghetti = spaghetti,
         span = span,
         window_prop = window_prop

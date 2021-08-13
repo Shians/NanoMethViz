@@ -22,6 +22,9 @@ setGeneric("plot_gene", function(x, gene, ...) {
 #'   values for left and right window size. Values indicate proportion of gene
 #'   length.
 #' @param anno_regions the data.frame of regions to annotate.
+#' @param binary_threshold the modification probability such that calls with
+#'   modification probability above the threshold are set to 1 and probabilities
+#'   equalt to or below the threshold are set to 0.
 #' @param spaghetti whether or not individual reads should be shown.
 #' @param span the span for loess smoothing.
 #' @param gene_anno whether or not gene annotation tracks are plotted.
@@ -40,6 +43,7 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
         gene,
         window_prop = 0.3,
         anno_regions = NULL,
+        binary_threshold = NULL,
         spaghetti = FALSE,
         span = NULL,
         gene_anno = TRUE
@@ -49,6 +53,7 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
             gene,
             window_prop = window_prop,
             anno_regions = anno_regions,
+            binary_threshold = binary_threshold,
             spaghetti = spaghetti,
             span = span,
             gene_anno = gene_anno
@@ -61,6 +66,7 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
     gene,
     window_prop,
     anno_regions,
+    binary_threshold,
     spaghetti,
     span,
     gene_anno
@@ -91,6 +97,7 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
             window_prop = window_prop,
             sample_anno = sample_anno,
             anno_regions = anno_regions,
+            binary_threshold = binary_threshold,
             spaghetti = spaghetti,
             span = span
         )

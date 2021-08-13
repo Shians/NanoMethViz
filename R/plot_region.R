@@ -21,6 +21,9 @@ setGeneric("plot_region", function(x, chr, start, end, ...) {
 #' @rdname plot_region
 #'
 #' @param anno_regions the data.frame of regions to be annotated.
+#' @param binary_threshold the modification probability such that calls with
+#'   modification probability above the threshold are set to 1 and probabilities
+#'   equalt to or below the threshold are set to 0.
 #' @param spaghetti whether or not individual reads should be shown.
 #' @param span the span for loess smoothing.
 #' @param window_prop the size of flanking region to plot. Can be a vector of two
@@ -47,6 +50,7 @@ setMethod("plot_region",
         start,
         end,
         anno_regions = NULL,
+        binary_threshold = NULL,
         spaghetti = FALSE,
         span = NULL,
         window_prop = 0
@@ -57,6 +61,7 @@ setMethod("plot_region",
             start = start,
             end = end,
             anno_regions = anno_regions,
+            binary_threshold = binary_threshold,
             spaghetti = spaghetti,
             span = span,
             window_prop = window_prop
@@ -80,6 +85,7 @@ setMethod("plot_region",
         start,
         end,
         anno_regions = NULL,
+        binary_threshold = NULL,
         spaghetti = FALSE,
         span = NULL,
         window_prop = 0
@@ -91,6 +97,7 @@ setMethod("plot_region",
             start = start,
             end = end,
             anno_regions = anno_regions,
+            binary_threshold = binary_threshold,
             spaghetti = spaghetti,
             span = span,
             window_prop = window_prop
@@ -105,6 +112,7 @@ setMethod("plot_region",
     start,
     end,
     anno_regions = NULL,
+    binary_threshold = NULL,
     spaghetti = FALSE,
     span = NULL,
     window_prop = 0
@@ -150,6 +158,7 @@ setMethod("plot_region",
         xlim = xlim,
         title = title,
         anno_regions = anno_regions,
+        binary_threshold = binary_threshold,
         spaghetti = spaghetti,
         sample_anno = sample_anno,
         span = span

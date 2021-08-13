@@ -3,6 +3,9 @@
 #' @param x the NanoMethResult object.
 #' @param regions a table of regions containing at least columns chr, strand,
 #'   start and end. Any additiona columns can be used for grouping.
+#' @param binary_threshold the modification probability such that calls with
+#'   modification probability above the threshold are considered methylated, and
+#'   those with probability equal or below are considered unmethylated.
 #' @param group_col the column to group aggregated trends by. This column can
 #'   be in from the regions table or samples(x).
 #' @param flank the number of flanking bases to add to each side of each region.
@@ -24,6 +27,7 @@
 plot_agg_regions <- function(
     x,
     regions,
+    binary_threshold = 0.5,
     group_col = NULL,
     flank = 2000,
     stranded = TRUE,
@@ -41,7 +45,7 @@ plot_agg_regions <- function(
     # query methylation data
     methy_data <- .get_methy_data(x, regions, flank)
     methy_data <- .scale_methy_data(methy_data, stranded, flank)
-    methy_data <- .pos_avg(methy_data)
+    methy_data <- .pos_avg(methy_data, binary_threshold = binary_threshold)
     # unnest and annotate after position averaging to reduce data burden
     methy_data <- .unnest_anno(methy_data, NanoMethViz::samples(x))
     methy_data <- .bin_avg(methy_data, group_col = group_col)
@@ -132,12 +136,12 @@ plot_agg_regions <- function(
     methy_data
 }
 
-.pos_avg <- function(x) {
+.pos_avg <- function(x, binary_threshold = 0.5) {
     average_by_pos <- function(x) {
           x %>%
               dplyr::group_by(.data$sample, .data$chr, .data$strand, .data$rel_pos) %>%
               dplyr::summarise(
-                  methy_prop = mean(.data$statistic > 0),
+                  methy_prop = mean(e1071::sigmoid(.data$statistic) > binary_threshold),
                   .groups = "drop")
       }
 

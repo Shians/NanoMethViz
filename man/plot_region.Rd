@@ -14,6 +14,7 @@ plot_region(x, chr, start, end, ...)
   start,
   end,
   anno_regions = NULL,
+  binary_threshold = NULL,
   spaghetti = FALSE,
   span = NULL,
   window_prop = 0
@@ -25,6 +26,7 @@ plot_region(x, chr, start, end, ...)
   start,
   end,
   anno_regions = NULL,
+  binary_threshold = NULL,
   spaghetti = FALSE,
   span = NULL,
   window_prop = 0
@@ -42,6 +44,10 @@ plot_region(x, chr, start, end, ...)
 \item{...}{additional arguments.}
 
 \item{anno_regions}{the data.frame of regions to be annotated.}
+
+\item{binary_threshold}{the modification probability such that calls with
+modification probability above the threshold are set to 1 and probabilities
+equalt to or below the threshold are set to 0.}
 
 \item{spaghetti}{whether or not individual reads should be shown.}
 

@@ -7,6 +7,7 @@
 plot_agg_regions(
   x,
   regions,
+  binary_threshold = 0.5,
   group_col = NULL,
   flank = 2000,
   stranded = TRUE,
@@ -19,6 +20,10 @@ plot_agg_regions(
 
 \item{regions}{a table of regions containing at least columns chr, strand,
 start and end. Any additiona columns can be used for grouping.}
+
+\item{binary_threshold}{the modification probability such that calls with
+modification probability above the threshold are considered methylated, and
+those with probability equal or below are considered unmethylated.}
 
 \item{group_col}{the column to group aggregated trends by. This column can
 be in from the regions table or samples(x).}

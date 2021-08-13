@@ -38,16 +38,25 @@ plot_mds <- function(x, top = 500, plot_dims = c(1, 2), labels = colnames(x), gr
     var_exp1 <- round(100 * mds_res$var.explained[plot_dims[1]])
     var_exp2 <- round(100 * mds_res$var.explained[plot_dims[2]])
 
-    plot_data <- data.frame(
-        dim1 = mds_res$eigen.vectors[, plot_dims[1]],
-        dim2 = mds_res$eigen.vectors[, plot_dims[2]]
-    )
+    if ("eigen.vectors" %in% names(mds_res)) {
+        plot_data <- data.frame(
+            dim1 = mds_res$eigen.vectors[, plot_dims[1]],
+            dim2 = mds_res$eigen.vectors[, plot_dims[2]]
+        )
+        xlabel <- glue::glue("Leading logFC Dim {plot_dims[1]} ({var_exp1}%)")
+        ylabel <- glue::glue("Leading logFC Dim {plot_dims[2]} ({var_exp2}%)")
+    } else {
+        plot_data <- data.frame(
+            dim1 = mds_res$cmdscale.out[, plot_dims[1]],
+            dim2 = mds_res$cmdscale.out[, plot_dims[2]]
+        )
+        xlabel <- glue::glue("Leading logFC Dim {plot_dims[1]}")
+        ylabel <- glue::glue("Leading logFC Dim {plot_dims[2]}")
+    }
 
     plot_data$labels <- labels
     plot_data$groups <- groups
 
-    xlabel <- glue::glue("Leading logFC Dim {plot_dims[1]} ({var_exp1}%)")
-    ylabel <- glue::glue("Leading logFC Dim {plot_dims[2]} ({var_exp2}%)")
 
     if (!is.null(groups)) {
         p <- ggplot2::ggplot(plot_data, ggplot2::aes_string(x = "dim1", y = "dim2", col = "groups"))

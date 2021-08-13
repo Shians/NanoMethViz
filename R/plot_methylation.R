@@ -8,6 +8,7 @@ plot_methylation_internal <- function(
     title,
     palette_col = ggplot2::scale_colour_brewer(palette = "Set1"),
     anno_regions = NULL,
+    binary_threshold = NULL,
     spaghetti = FALSE,
     span = NULL
 ) {
@@ -26,11 +27,21 @@ plot_methylation_internal <- function(
     }
 
     # extract group information and convert probabilities
-    plot_data <- methy_data %>%
-        dplyr::inner_join(sample_anno, by = "sample") %>%
-        dplyr::mutate(
-            mod_prob = e1071::sigmoid(.data$statistic)
-        )
+    if (is.null(binary_threshold)) {
+        plot_data <- methy_data %>%
+            dplyr::inner_join(sample_anno, by = "sample") %>%
+            dplyr::mutate(
+                mod_prob = e1071::sigmoid(.data$statistic)
+            )
+    } else {
+        plot_data <- methy_data %>%
+            dplyr::inner_join(sample_anno, by = "sample") %>%
+            dplyr::mutate(
+                mod_prob = as.numeric(
+                    e1071::sigmoid(.data$statistic) > binary_threshold
+                )
+            )
+    }
 
     # set up plot
     p <- ggplot(plot_data, aes(x = .data$pos, col = .data$group))
@@ -99,7 +110,8 @@ plot_feature <- function(
     sample_anno,
     anno_regions = NULL,
     window_prop = c(0.3, 0.3),
-    spaghetti = TRUE,
+    binary_threshold = NULL,
+    spaghetti = FALSE,
     span = NULL
 ) {
     chr <- feature$chr
@@ -135,6 +147,7 @@ plot_feature <- function(
         xlim = xlim,
         title = title,
         anno_regions = anno_regions,
+        binary_threshold = binary_threshold,
         spaghetti = spaghetti,
         sample_anno = sample_anno,
         span = span

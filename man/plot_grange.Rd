@@ -8,6 +8,7 @@ plot_grange(
   x,
   grange,
   anno_regions = NULL,
+  binary_threshold = NULL,
   spaghetti = FALSE,
   span = NULL,
   window_prop = 0.3
@@ -19,6 +20,10 @@ plot_grange(
 \item{grange}{the GRanges object with one entry.}
 
 \item{anno_regions}{the data.frame of regions to be annotated.}
+
+\item{binary_threshold}{the modification probability such that calls with
+modification probability above the threshold are set to 1 and probabilities
+equalt to or below the threshold are set to 0.}
 
 \item{spaghetti}{whether or not individual reads should be shown.}
 

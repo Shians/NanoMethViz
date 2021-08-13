@@ -12,6 +12,7 @@ plot_gene(x, gene, ...)
   gene,
   window_prop = 0.3,
   anno_regions = NULL,
+  binary_threshold = NULL,
   spaghetti = FALSE,
   span = NULL,
   gene_anno = TRUE
@@ -29,6 +30,10 @@ values for left and right window size. Values indicate proportion of gene
 length.}
 
 \item{anno_regions}{the data.frame of regions to annotate.}
+
+\item{binary_threshold}{the modification probability such that calls with
+modification probability above the threshold are set to 1 and probabilities
+equalt to or below the threshold are set to 0.}
 
 \item{spaghetti}{whether or not individual reads should be shown.}
 

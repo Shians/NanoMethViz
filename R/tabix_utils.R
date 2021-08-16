@@ -11,7 +11,9 @@ sort_methy_file <- function(x) {
         methy_df <- readr::read_tsv(
             x,
             col_names = methy_col_names(),
-            col_types = methy_col_types())
+            col_types = methy_col_types(),
+            # see https://github.com/tidyverse/readr/issues/1273
+            lazy = FALSE)
         methy_df <- dplyr::arrange(methy_df, .data$chr, .data$pos)
         readr::write_tsv(methy_df, x, col_names = FALSE)
     } else {

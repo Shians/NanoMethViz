@@ -4,9 +4,10 @@
 .Ruserdata
 doc
 Meta
-
 src/*.o
 src/*.so
 src/*.dll
-
 NanoMethViz.Rproj
+.Rprofile
+renv
+renv.lock

@@ -31,7 +31,7 @@ BiocManager::install("NanoMethViz")
 
 ## Example
 
-This package currently works with data from nanopolish and f5c, to import your data please see the following vignette
+This package currently works with data from megalodon, nanopolish and f5c, to import your data please see the following vignette
 
 ``` r
 vignette("ImportingData", package = "NanoMethViz")
@@ -41,6 +41,16 @@ An introductory example for plotting can be found in the package vignette:
 
 ``` r
 vignette("Introduction", package = "NanoMethViz")
+```
+
+Other vignettes are provided for various features:
+
+``` r
+# how to use dimensionality reduction plots
+vignette("DimensionalityReduction", package = "NanoMethViz")
+
+# how to import external annotations
+vignette("ExonAnnotations", package = "NanoMethViz")
 ```
 
 An example of the visualisation for Peg3

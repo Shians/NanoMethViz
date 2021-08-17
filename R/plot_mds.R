@@ -72,7 +72,7 @@ plot_mds <- function(x, top = 500, plot_dims = c(1, 2), labels = colnames(x), gr
     }
 
     p +
-        ggplot2::theme_minimal() +
+        ggplot2::theme_bw() +
         ggplot2::xlab(xlabel) +
         ggplot2::ylab(ylabel) +
         ggplot2::scale_x_continuous(expand = c(.1, .1))

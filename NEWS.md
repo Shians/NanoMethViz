@@ -1,13 +1,17 @@
 ### Version 2.0.0
 * Major changes to `plot_agg_regions()`.
-  * Features of `plot_agg_regions()` and plot_agg_regions_sample_grouped() merged into one interface.
+  * Features of `plot_agg_regions()` and `plot_agg_regions_sample_grouped()` merged into one interface.
   * Regions now specified using single table.
 * Changed `plot_regions()` default window proportion to 0.
+* Changed default theme from `theme_bw()` to `theme_tufte()`.
 * Added Megalodon data import instructions to "Importing Data" vignette.
-* Added vignette for using external annotation.
 * Added scico palette defaults for heatmaps. These are colourblind friendly.
 * Added check for 0 length queries which would cause program to hang indefinitely.
-* Added setters for NanoMethResult attributes.
+* Added setters for NanoMethResult attributes `methy`, `samples` and `exons`.
+* Added MDS and PCA plots.
+* Added vignette for using external annotation and dimensionality reduction.
+* Added binary thresholding for `plot_gene()`, `plot_region()` and `plot_agg_regions()`.
+* Added regions argument to `bsseq_to_edger()` to calculate aggregate counts over features rather than per site.
 
 ### Version 1.1.4
 * Added palette argument to aggregate plots

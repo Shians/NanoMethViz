@@ -29,7 +29,7 @@ BiocManager::install(version='devel')
 BiocManager::install("NanoMethViz")
 ```
 
-## Example
+## Usage
 
 This package currently works with data from megalodon, nanopolish and f5c, to import your data please see the following vignette
 
@@ -53,9 +53,35 @@ vignette("DimensionalityReduction", package = "NanoMethViz")
 vignette("ExonAnnotations", package = "NanoMethViz")
 ```
 
-An example of the visualisation for Peg3
+## Examples
+
+### MDS Plot
+
+The MDS plot is used to visualise differences in the methylation profiles of
+multiple samples.
+
+![](img/mds.png)
+
+### Feature Aggregation
+
+The feature aggregation plot can average the methylation profiles across a set
+of features.
+
+![](img/agg_genes.png)
+
+### Spaghetti plot
+
+The spaghetti plot shows the smoothed methylation probabilities over a specific
+region, along with the methylation probabilities along individual long reads.
 
 ![](img/peg3_spaghetti.png)
+
+### Heatmap
+
+The heatmap shows methylation probabilities on individual sites along stacked
+reads.
+
+![](img/peg3_heatmap.png)
 
 ## License
 

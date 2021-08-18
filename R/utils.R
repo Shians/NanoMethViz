@@ -65,7 +65,7 @@ assert_has_columns <- function(x, cols) {
 }
 
 timed_log <- function(...) {
-    time_stamp <- paste0("[", format(Sys.time(), "%F %X"), "] ")
+    time_stamp <- paste0("[", format(Sys.time(), "%Y-%m-%d %H:%M:%S"), "] ")
     message(time_stamp, ...)
 }
 

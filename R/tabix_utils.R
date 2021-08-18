@@ -12,6 +12,7 @@ sort_methy_file <- function(x) {
             x,
             header = FALSE,
             col.names = methy_col_names(),
+            showProgress = FALSE,
             data.table = FALSE)
         methy_df <- dplyr::arrange(methy_df, .data$chr, .data$pos)
         readr::write_tsv(methy_df, x, col_names = FALSE)

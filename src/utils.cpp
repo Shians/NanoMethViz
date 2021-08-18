@@ -13,7 +13,7 @@ string timestamp() {
     time_t t = time(nullptr);
 
     char time_str[100];
-    strftime(time_str, sizeof(time_str), "%F %T", localtime(&t));
+    strftime(time_str, sizeof(time_str), "%Y-%m-%d %H:%M:%S", localtime(&t));
     return string(time_str);
 }
 

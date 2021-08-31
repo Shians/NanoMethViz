@@ -69,7 +69,7 @@ reformat_megalodon_old <- function(x, sample) {
         mutate(
             sample = as.factor(.data$sample),
             chr = factor(.data$chr),
-            statistic = exp(.data$statistic),
+            statistic = logit(exp(.data$statistic)),
             strand = case_when(
                 strand == 1 ~ "+",
                 strand == -1 ~ "-",

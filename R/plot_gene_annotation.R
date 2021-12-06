@@ -177,7 +177,6 @@ plot_gene_annotation <- function(exons_df, plot_start, plot_end) {
         .connector_lines(gap_none) +
         .exons(exons_df) +
         .gene_labels(gene_labels) +
-        ggplot2::xlim(plot_start, plot_end) +
         ggplot2::ylim(0, plot_height)
 
     attr(p, "plot_height") <- plot_height

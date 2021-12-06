@@ -52,6 +52,7 @@ setMethod("plot_region",
         anno_regions = NULL,
         binary_threshold = NULL,
         spaghetti = FALSE,
+        heatmap = FALSE,
         span = NULL,
         window_prop = 0
     ) {
@@ -63,6 +64,7 @@ setMethod("plot_region",
             anno_regions = anno_regions,
             binary_threshold = binary_threshold,
             spaghetti = spaghetti,
+            heatmap = heatmap,
             span = span,
             window_prop = window_prop
         )
@@ -87,6 +89,7 @@ setMethod("plot_region",
         anno_regions = NULL,
         binary_threshold = NULL,
         spaghetti = FALSE,
+        heatmap = FALSE,
         span = NULL,
         window_prop = 0
     ) {
@@ -99,23 +102,24 @@ setMethod("plot_region",
             anno_regions = anno_regions,
             binary_threshold = binary_threshold,
             spaghetti = spaghetti,
+            heatmap = heatmap,
             span = span,
             window_prop = window_prop
         )
     }
 )
 
-
 .plot_region <- function(
     x,
     chr,
     start,
     end,
-    anno_regions = NULL,
-    binary_threshold = NULL,
-    spaghetti = FALSE,
-    span = NULL,
-    window_prop = 0
+    anno_regions,
+    binary_threshold,
+    spaghetti,
+    heatmap,
+    span,
+    window_prop
 ) {
     sample_anno <- samples(x)
     exons_anno <- query_exons_region(
@@ -162,14 +166,32 @@ setMethod("plot_region",
         spaghetti = spaghetti,
         sample_anno = sample_anno,
         span = span
-    )
+    ) +
+        ggplot2::scale_x_continuous(
+            limits = xlim,
+            expand = ggplot2::expansion()
+        )
 
-    xlim <- .get_ggplot_range_x(p1)
-
-    p2 <- plot_gene_annotation(exons_anno, xlim[1], xlim[2])
+    p2 <- plot_gene_annotation(exons_anno, xlim[1], xlim[2]) +
+        ggplot2::scale_x_continuous(
+            limits = xlim,
+            expand = ggplot2::expansion()
+        )
 
     anno_height <- attr(p2, "plot_height")
 
     heights <- c(1, 0.075 * anno_height)
-    p1 / p2 + patchwork::plot_layout(heights = heights)
+    p_out <- p1 / p2 + patchwork::plot_layout(heights = heights)
+
+    if (heatmap) {
+        p_heatmap <- plot_region_heatmap(x, chr, start, end, window_prop = window_prop) +
+            ggplot2::scale_x_continuous(
+                limits = xlim,
+                expand = ggplot2::expansion()
+            )
+
+        p_out <- stack_plots(p_out, p_heatmap)
+    }
+
+    p_out
 }

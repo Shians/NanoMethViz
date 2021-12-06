@@ -100,17 +100,8 @@ setMethod("plot_region_heatmap",
     start,
     end,
     window_prop,
-    pos_style,
-    xlim = NA
+    pos_style
 ) {
-    if (!anyNA(xlim)) {
-        assertthat::assert_that(
-            is.numeric(xlim),
-            length(xlim) == 2,
-            xlim[1] < xlim[2]
-        )
-    }
-
     if (length(window_prop) == 1) {
         window_prop <- c(window_prop, window_prop)
     }
@@ -118,7 +109,10 @@ setMethod("plot_region_heatmap",
     window_left <- (end - start) * window_prop[1]
     window_right <- (end - start) * window_prop[2]
 
-    methy_data <- query_methy(x, chr, start - window_left, end + window_right)
+    plot_left <- round(start - window_left)
+    plot_right <- round(end + window_right)
+
+    methy_data <- query_methy(x, chr, plot_left, plot_right)
 
     # add sample information
     methy_data <- dplyr::left_join(
@@ -197,10 +191,6 @@ setMethod("plot_region_heatmap",
             ggplot2::facet_wrap(~group, scales = "free_y", nrow = 2) +
             theme_methy_heatmap() +
             ggplot2::xlab("Position")
-    }
-
-    if (!anyNA(xlim)) {
-        p <- p + ggplot2::xlim(xlim[1], xlim[2])
     }
 
     p

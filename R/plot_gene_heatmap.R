@@ -57,28 +57,43 @@ setMethod(
     x,
     gene,
     window_prop,
-    pos_style,
-    xlim = NA
+    pos_style
 ) {
     assertthat::assert_that(
         nrow(exons(x)) > 0,
         msg = "exons(x) is empty, gene cannot be queried"
     )
 
-    if (!anyNA(xlim)) {
-        assertthat::assert_that(
-            is.numeric(xlim),
-            length(xlim) == 2,
-            xlim[1] < xlim[2]
-        )
-    }
-
     if (length(window_prop) == 1) {
         # convert to two sided window
         window_prop <- c(window_prop, window_prop)
     }
 
-    methy_data <- query_methy_gene(x, gene, window_prop = window_prop)
+    # query_gene_methy
+    if (!gene %in% exons(x)$symbol) {
+        stop(glue::glue("gene {gene} not found in exon annotation"))
+    }
+
+    pos_range <- gene_pos_range(x, gene)
+
+    gene_width <- pos_range[2] - pos_range[1]
+    window_left <- gene_width * window_prop[1]
+    window_right <- gene_width * window_prop[2]
+
+    plot_left <- pos_range[1] - window_left
+    plot_right <- pos_range[2] + window_right
+
+    chr <- exons(x) %>%
+        dplyr::filter(.data$symbol == gene) %>%
+        dplyr::slice(1) %>%
+        dplyr::pull(chr)
+
+    methy_data <- query_methy(
+        x,
+        chr = chr,
+        start = plot_left,
+        end = plot_right
+    )
 
     # add sample information
     methy_data <- dplyr::left_join(
@@ -160,10 +175,6 @@ setMethod(
             ggplot2::facet_wrap(~group, scales = "free_y", nrow = 2, strip.position = "left") +
             theme_methy_heatmap() +
             ggplot2::xlab("Position")
-    }
-
-    if (!anyNA(xlim)) {
-        p <- p + ggplot2::xlim(xlim[1], xlim[2])
     }
 
     p

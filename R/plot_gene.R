@@ -45,6 +45,7 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
         anno_regions = NULL,
         binary_threshold = NULL,
         spaghetti = FALSE,
+        heatmap = FALSE,
         span = NULL,
         gene_anno = TRUE
     ) {
@@ -55,6 +56,7 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
             anno_regions = anno_regions,
             binary_threshold = binary_threshold,
             spaghetti = spaghetti,
+            heatmap = heatmap,
             span = span,
             gene_anno = gene_anno
         )
@@ -68,6 +70,7 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
     anno_regions,
     binary_threshold,
     spaghetti,
+    heatmap,
     span,
     gene_anno
 ) {
@@ -88,13 +91,17 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
     feature$chr <- unique(exons_anno$chr)
     feature$start <- min(exons_anno$start)
     feature$end <- max(exons_anno$end)
+    window_size <- round((feature$end - feature$start) * window_prop)
+
+    plot_left <- feature$start - window_size[1]
+    plot_right <- feature$end + window_size[2]
 
     p1 <- with(exons_anno,
         plot_feature(
             feature,
             title = gene,
             methy = methy(x),
-            window_prop = window_prop,
+            window_size = window_size,
             sample_anno = sample_anno,
             anno_regions = anno_regions,
             binary_threshold = binary_threshold,
@@ -102,12 +109,21 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
             span = span
         )
     )
+    p1 <- p1 + ggplot2::scale_x_continuous(
+            limits = c(plot_left, plot_right),
+            expand = ggplot2::expansion()
+        )
+
 
     if (gene_anno) {
         # if gene annotation is needed
         xlim <- .get_ggplot_range_x(p1)
 
-        p2 <- plot_gene_annotation(exons_anno, xlim[1], xlim[2])
+        p2 <- plot_gene_annotation(exons_anno, plot_left, plot_right) +
+            ggplot2::scale_x_continuous(
+                limits = c(plot_left, plot_right),
+                expand = ggplot2::expansion()
+            )
 
         n_unique <- function(x) { length(unique(x)) }
 
@@ -116,6 +132,19 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
     } else {
         # if no gene annotation
         p_out <- p1
+    }
+
+    if (heatmap) {
+        p_heatmap <- plot_gene_heatmap(
+            x,
+            gene,
+            window_prop
+        ) +
+            ggplot2::scale_x_continuous(
+                limits = c(plot_left, plot_right),
+                expand = ggplot2::expansion())
+
+        p_out <- stack_plots(p_out, p_heatmap)
     }
 
     p_out

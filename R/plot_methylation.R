@@ -87,18 +87,11 @@ plot_methylation_internal <- function(
         )
 
     # add auxiliary elements and style
-    x_min <- max(min(plot_data$pos), start)
-    x_max <- min(max(plot_data$pos), end)
-    breaks <- c(x_min, round((x_min + x_max) / 2), x_max)
     p +
         ggplot2::geom_rug(aes(col = NULL), sides = "b") +
         ggplot2::ggtitle(title) +
         ggplot2::xlab(chr) +
-        ggplot2::coord_cartesian(ylim = c(0, 1), clip = "on") +
-        ggplot2::scale_x_continuous(
-            limits = xlim,
-            breaks = breaks,
-            labels = scales::comma(breaks)) +
+        ggplot2::scale_y_continuous(limits = c(0, 1), expand = ggplot2::expansion()) +
         palette_col +
         ggplot2::theme_bw()
 }
@@ -109,7 +102,7 @@ plot_feature <- function(
     methy,
     sample_anno,
     anno_regions = NULL,
-    window_prop = c(0.3, 0.3),
+    window_size = c(0, 0),
     binary_threshold = NULL,
     spaghetti = FALSE,
     span = NULL
@@ -119,8 +112,8 @@ plot_feature <- function(
     end <- feature$end
 
     feature_width <- end - start
-    window_left <- feature_width * window_prop[1]
-    window_right <- feature_width * window_prop[2]
+    window_left <- window_size[1]
+    window_right <- window_size[2]
     xlim <- c(start - window_left, end + window_right)
 
     methy_data <-

@@ -52,11 +52,14 @@ setMethod("plot_region",
         end,
         anno_regions = NULL,
         binary_threshold = NULL,
+        avg_method = c("median", "mean"),
         spaghetti = FALSE,
         heatmap = FALSE,
         span = NULL,
         window_prop = 0
     ) {
+        avg_method = match.arg(avg_method)
+
         .plot_region(
             x = x,
             chr = chr,
@@ -65,6 +68,7 @@ setMethod("plot_region",
             anno_regions = anno_regions,
             binary_threshold = binary_threshold,
             spaghetti = spaghetti,
+            avg_method = avg_method,
             heatmap = heatmap,
             span = span,
             window_prop = window_prop
@@ -89,12 +93,14 @@ setMethod("plot_region",
         end,
         anno_regions = NULL,
         binary_threshold = NULL,
+        avg_method = c("median", "mean"),
         spaghetti = FALSE,
         heatmap = FALSE,
         span = NULL,
         window_prop = 0
     ) {
         chr <- as.character(chr)
+        avg_method <- match.arg(avg_method)
         plot_region(
             x = x,
             chr = chr,
@@ -102,6 +108,7 @@ setMethod("plot_region",
             end = end,
             anno_regions = anno_regions,
             binary_threshold = binary_threshold,
+            avg_method = avg_method,
             spaghetti = spaghetti,
             heatmap = heatmap,
             span = span,
@@ -117,6 +124,7 @@ setMethod("plot_region",
     end,
     anno_regions,
     binary_threshold,
+    avg_method,
     spaghetti,
     heatmap,
     span,
@@ -164,6 +172,7 @@ setMethod("plot_region",
         title = title,
         anno_regions = anno_regions,
         binary_threshold = binary_threshold,
+        avg_method = avg_method,
         spaghetti = spaghetti,
         sample_anno = sample_anno,
         span = span

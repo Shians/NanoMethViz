@@ -9,9 +9,12 @@ plot_methylation_internal <- function(
     palette_col = ggplot2::scale_colour_brewer(palette = "Set1"),
     anno_regions = NULL,
     binary_threshold = NULL,
+    avg_method = c("median", "mean"),
     spaghetti = FALSE,
     span = NULL
 ) {
+    avg_method <- match.arg(avg_method)
+
     if (!is.null(anno_regions)) {
         # filter annotation regions to be within plotting region
         anno_regions <- anno_regions %>%
@@ -72,10 +75,17 @@ plot_methylation_internal <- function(
             )
     }
 
+    # assign averaging method
+    if (avg_method == "median") {
+        avg_func <- median
+    } else if (avg_method == "mean") {
+        avg_func <- mean
+    }
+
     # add smoothed line
     plot_data_smooth <- plot_data %>%
         dplyr::group_by(.data$group, .data$pos) %>%
-        dplyr::summarise(mod_prob = mean(.data$mod_prob))
+        dplyr::summarise(mod_prob = avg_func(.data$mod_prob))
 
     p <- p +
         stat_lowess(
@@ -104,9 +114,12 @@ plot_feature <- function(
     anno_regions = NULL,
     window_size = c(0, 0),
     binary_threshold = NULL,
+    avg_method = c("median", "mean"),
     spaghetti = FALSE,
     span = NULL
 ) {
+    avg_method <- match.arg(avg_method)
+
     chr <- feature$chr
     start <- feature$start
     end <- feature$end
@@ -141,6 +154,7 @@ plot_feature <- function(
         title = title,
         anno_regions = anno_regions,
         binary_threshold = binary_threshold,
+        avg_method = avg_method,
         spaghetti = spaghetti,
         sample_anno = sample_anno,
         span = span

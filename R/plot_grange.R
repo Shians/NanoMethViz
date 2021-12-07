@@ -15,11 +15,13 @@ plot_grange <- function(
     grange,
     anno_regions = NULL,
     binary_threshold = NULL,
+    avg_method = c("median", "mean"),
     spaghetti = FALSE,
     heatmap = FALSE,
     span = NULL,
     window_prop = 0.3
 ) {
+    avg_method <- match.arg(avg_method)
 
     assert_that(
         is(grange, "GRanges"),
@@ -37,6 +39,7 @@ plot_grange <- function(
         end = end,
         anno_regions = anno_regions,
         binary_threshold = binary_threshold,
+        avg_method = avg_method,
         spaghetti = spaghetti,
         heatmap = heatmap,
         span = span,

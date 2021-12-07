@@ -104,7 +104,7 @@ plot_agg_regions <- function(
   }
 
   methy_data <- purrr::map(
-      1:nrow(regions),
+      seq_len(nrow(regions)),
       query_row_methy,
       methy = methy(x),
       regions = regions,
@@ -116,7 +116,7 @@ plot_agg_regions <- function(
 }
 
 .scale_methy_data <- function(methy_data, stranded, flank) {
-    for (i in 1:nrow(methy_data)) {
+    for (i in seq_len(nrow(methy_data))) {
         m_data <- methy_data$methy_data[[i]]$pos
         within <- m_data >= methy_data$start[i] & m_data <= methy_data$end[i]
         upstream <- m_data < methy_data$start[i]

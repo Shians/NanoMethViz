@@ -85,11 +85,11 @@ get_tabix_sequences <- function(file) {
 
     # get n_ref and skip other fields
     n_ref <- readBin(f, "integer")
-    for (i in 1:7) readBin(f, "integer")
+    for (i in seq_len(7)) readBin(f, "integer")
 
     # read sequences
     seqs <- character(n_ref)
-    for (i in 1:n_ref) {
+    for (i in seq_len(n_ref)) {
         seqs[i] <- readBin(f, "character")
     }
 

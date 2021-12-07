@@ -1,0 +1,22 @@
+citHeader("To cite the 'NanoMethViz' package please use:")
+
+bibentry(
+    bibtype = "Article",
+    doi = "10.1371/journal.pcbi.1009524",
+    author = personList(
+        as.person("Shian Su"),
+        as.person("Quentin Gouil"),
+        as.person("Marnie E. Blewitt"),
+        as.person("Dianne Cook"),
+        as.person("Peter F. Hickey"),
+        as.person("Matthew E. Ritchie")
+    ),
+    journal = "PLOS Computational Biology",
+    publisher = "Public Library of Science",
+    title = "NanoMethViz: An R/Bioconductor package for visualizing long-read methylation data",
+    year = "2021",
+    month = "10",
+    volume = "17",
+    pages = "1-9",
+    number = "10"
+)

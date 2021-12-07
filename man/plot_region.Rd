@@ -15,6 +15,7 @@ plot_region(x, chr, start, end, ...)
   end,
   anno_regions = NULL,
   binary_threshold = NULL,
+  avg_method = c("median", "mean"),
   spaghetti = FALSE,
   heatmap = FALSE,
   span = NULL,
@@ -28,6 +29,7 @@ plot_region(x, chr, start, end, ...)
   end,
   anno_regions = NULL,
   binary_threshold = NULL,
+  avg_method = c("median", "mean"),
   spaghetti = FALSE,
   heatmap = FALSE,
   span = NULL,
@@ -50,6 +52,12 @@ plot_region(x, chr, start, end, ...)
 \item{binary_threshold}{the modification probability such that calls with
 modification probability above the threshold are set to 1 and probabilities
 equalt to or below the threshold are set to 0.}
+
+\item{avg_method}{the average method for pre-smoothing at each genomic position.
+Data is pre-smoothed at each genomic position before the smoothed aggregate line
+is generated for performance reasons. The default is "median" which produces
+a smoothed line more robust to outliers, "mean" is the old default and tends
+to produce lines with values dampened towards 0.5.}
 
 \item{spaghetti}{whether or not individual reads should be shown.}
 

@@ -10,6 +10,7 @@ plot_grange(
   anno_regions = NULL,
   binary_threshold = NULL,
   spaghetti = FALSE,
+  heatmap = FALSE,
   span = NULL,
   window_prop = 0.3
 )
@@ -26,6 +27,8 @@ modification probability above the threshold are set to 1 and probabilities
 equalt to or below the threshold are set to 0.}
 
 \item{spaghetti}{whether or not individual reads should be shown.}
+
+\item{heatmap}{whether or not read-methylation heatmap should be shown.}
 
 \item{span}{the span for loess smoothing.}
 

@@ -25,6 +25,7 @@ setGeneric("plot_region", function(x, chr, start, end, ...) {
 #'   modification probability above the threshold are set to 1 and probabilities
 #'   equalt to or below the threshold are set to 0.
 #' @param spaghetti whether or not individual reads should be shown.
+#' @param heatmap whether or not read-methylation heatmap should be shown.
 #' @param span the span for loess smoothing.
 #' @param window_prop the size of flanking region to plot. Can be a vector of two
 #'   values for left and right window size. Values indicate proportion of gene

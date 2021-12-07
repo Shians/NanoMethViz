@@ -14,6 +14,7 @@ plot_gene(x, gene, ...)
   anno_regions = NULL,
   binary_threshold = NULL,
   spaghetti = FALSE,
+  heatmap = FALSE,
   span = NULL,
   gene_anno = TRUE
 )
@@ -36,6 +37,8 @@ modification probability above the threshold are set to 1 and probabilities
 equalt to or below the threshold are set to 0.}
 
 \item{spaghetti}{whether or not individual reads should be shown.}
+
+\item{heatmap}{whether or not read-methylation heatmap should be shown.}
 
 \item{span}{the span for loess smoothing.}
 

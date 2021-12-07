@@ -26,6 +26,7 @@ setGeneric("plot_gene", function(x, gene, ...) {
 #'   modification probability above the threshold are set to 1 and probabilities
 #'   equalt to or below the threshold are set to 0.
 #' @param spaghetti whether or not individual reads should be shown.
+#' @param heatmap whether or not read-methylation heatmap should be shown.
 #' @param span the span for loess smoothing.
 #' @param gene_anno whether or not gene annotation tracks are plotted.
 #'

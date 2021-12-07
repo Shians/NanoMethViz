@@ -1,3 +1,7 @@
+### Version 2.2.0
+* Added `heatmap` argument to `plot_gene()`, `plot_region()` and `plot_granges()`. This adds a read-heatmap to the plot.
+* Changed averaging method for trends in `plot_gene()`, `plot_region()` and `plot_granges()` to median. This can be changed back using the new `avg_method()` argument.
+
 ### Version 2.0.0
 * Major changes to `plot_agg_regions()`.
   * Features of `plot_agg_regions()` and `plot_agg_regions_sample_grouped()` merged into one interface.

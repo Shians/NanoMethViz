@@ -24,7 +24,7 @@ setGeneric("plot_gene", function(x, gene, ...) {
 #' @param anno_regions the data.frame of regions to annotate.
 #' @param binary_threshold the modification probability such that calls with
 #'   modification probability above the threshold are set to 1 and probabilities
-#'   equalt to or below the threshold are set to 0.
+#'   equal to or below the threshold are set to 0.
 #' @param avg_method the average method for pre-smoothing at each genomic position.
 #'   Data is pre-smoothed at each genomic position before the smoothed aggregate line
 #'   is generated for performance reasons. The default is "median" which produces

@@ -51,7 +51,7 @@ plot_region(x, chr, start, end, ...)
 
 \item{binary_threshold}{the modification probability such that calls with
 modification probability above the threshold are set to 1 and probabilities
-equalt to or below the threshold are set to 0.}
+equal to or below the threshold are set to 0.}
 
 \item{avg_method}{the average method for pre-smoothing at each genomic position.
 Data is pre-smoothed at each genomic position before the smoothed aggregate line

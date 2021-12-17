@@ -19,7 +19,7 @@
 #' @importFrom Rsamtools TabixFile scanTabix
 #'
 #' @export
-query_methy <- function(x, chr, start, end, simplify = TRUE) {
+query_methy <- function(x, chr, start, end, simplify = TRUE, force = FALSE) {
     if (is(x, "NanoMethResult")) {
         x <- methy(x)
     }
@@ -27,7 +27,7 @@ query_methy <- function(x, chr, start, end, simplify = TRUE) {
     if (can_open_sql(x)) {
         out <- query_methy_sqlite(x, chr, start, end)
     } else if (can_open_tabix(x)) {
-        out <- query_methy_tabix(x, chr, start, end)
+        out <- query_methy_tabix(x, chr, start, end, force = force)
     } else {
         stop("'x' is not a recognised file of type sqlite3 or tabix")
     }
@@ -118,7 +118,7 @@ query_methy_sqlite <- function(x, chr, start, end) {
 }
 
 #' @importFrom utils read.table
-query_methy_tabix <- function(x, chr, start, end) {
+query_methy_tabix <- function(x, chr, start, end, force) {
     tabix_file <- Rsamtools::TabixFile(x)
 
     tabix_seqs <- get_tabix_sequences(paste0(x, ".tbi"))
@@ -134,8 +134,21 @@ query_methy_tabix <- function(x, chr, start, end) {
         end <- end[-miss]
     }
 
+    empty_res <- tibble::tibble(
+        "sample" = character(),
+        "chr" = character(),
+        "pos" = integer(),
+        "strand" = character(),
+        "statistic" = numeric(),
+        "read_name" = character()
+    )
+
     if (length(chr) == 0) {
-        stop("no valid ranges remain, please check chromosome format matches between query and methylation file.")
+        if (!force) {
+            stop("no valid ranges remain, please check chromosome format matches between query and methylation file.")
+        } else {
+            return(empty_res)
+        }
     }
 
     query <- GenomicRanges::GRanges(glue::glue("{chr}:{start}-{end}"))
@@ -147,16 +160,7 @@ query_methy_tabix <- function(x, chr, start, end) {
 
     parse_tabix <- function(x) {
         if (length(x) == 0) {
-            return(
-                tibble::tibble(
-                    "sample" = character(),
-                    "chr" = character(),
-                    "pos" = integer(),
-                    "strand" = character(),
-                    "statistic" = numeric(),
-                    "read_name" = character()
-                )
-            )
+            return(empty_res)
         }
         if (length(x) == 1) {
             x <- paste0(x, "\n")

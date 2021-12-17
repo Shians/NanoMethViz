@@ -42,8 +42,12 @@ plot_agg_regions <- function(
         )
     }
 
+    # grouped regions crashes downstream operations
+    regions <- ungroup(regions)
+
     # query methylation data
     methy_data <- .get_methy_data(x, regions, flank)
+    methy_data <- .filter_empty_regions(methy_data)
     methy_data <- .scale_methy_data(methy_data, stranded, flank)
     methy_data <- .pos_avg(methy_data, binary_threshold = binary_threshold)
     # unnest and annotate after position averaging to reduce data burden
@@ -82,9 +86,13 @@ plot_agg_regions <- function(
             ggplot2::geom_vline(xintercept = 1, linetype = "dashed", color = "grey80")
     }
 
+    region_widths <- regions$end - regions$start
+    width_avg <- round(mean(region_widths))
+    width_std_dev <- round(sd(region_widths), 2)
+
     p + ggplot2::coord_cartesian(clip = "off") +
         ggplot2::scale_x_continuous(
-            name = "Relative Position",
+            name = glue::glue("Relative Position (Avg.Width = {width_avg}, Std.Dev = {width_std_dev})"),
             breaks = breaks,
             limits = limits,
             labels = labels) +
@@ -92,27 +100,33 @@ plot_agg_regions <- function(
 }
 
 .get_methy_data <- function(x, regions, flank) {
-  query_row_methy <- function(i, methy, regions, flank) {
-      # query a larger region such that smoothing doesn't
-      # misbehave around ends
-      flank <- flank * 1.1
-      query_methy(
-          methy,
-          regions$chr[i],
-          regions$start[i] - flank,
-          regions$end[i] + flank)
-  }
+    query_row_methy <- function(i, methy, regions, flank) {
+        # query a larger region such that smoothing doesn't
+        # misbehave around ends
+        flank <- flank * 1.1
+        query_methy(
+            methy,
+            regions$chr[i],
+            regions$start[i] - flank,
+            regions$end[i] + flank,
+            force = TRUE)
+    }
 
-  methy_data <- purrr::map(
-      seq_len(nrow(regions)),
-      query_row_methy,
-      methy = methy(x),
-      regions = regions,
-      flank = flank
-  )
+    methy_data <- purrr::map(
+        seq_len(nrow(regions)),
+        query_row_methy,
+        methy = methy(x),
+        regions = regions,
+        flank = flank
+    )
 
-  output <- regions %>%
-      mutate(methy_data = methy_data)
+    output <- regions %>%
+        mutate(methy_data = methy_data)
+}
+
+.filter_empty_regions <- function(methy_data) {
+    methy_data %>%
+        dplyr::filter(purrr::map_lgl(methy_data, function(x) nrow(x) != 0))
 }
 
 .scale_methy_data <- function(methy_data, stranded, flank) {
@@ -138,16 +152,16 @@ plot_agg_regions <- function(
 
 .pos_avg <- function(x, binary_threshold = 0.5) {
     average_by_pos <- function(x) {
-          x %>%
-              dplyr::group_by(.data$sample, .data$chr, .data$strand, .data$rel_pos) %>%
-              dplyr::summarise(
-                  methy_prop = mean(e1071::sigmoid(.data$statistic) > binary_threshold),
-                  .groups = "drop")
-      }
+        x %>%
+            dplyr::group_by(.data$sample, .data$chr, .data$strand, .data$rel_pos) %>%
+            dplyr::summarise(
+                methy_prop = mean(e1071::sigmoid(.data$statistic) > binary_threshold),
+                .groups = "drop")
+    }
 
-      # take feature level average
-      x <- x %>%
-          dplyr::mutate(methy_data = purrr::map(.data$methy_data, average_by_pos))
+    # take feature level average
+    x <- x %>%
+        dplyr::mutate(methy_data = purrr::map(.data$methy_data, average_by_pos))
 }
 
 .unnest_anno <- function(x, samples_anno) {

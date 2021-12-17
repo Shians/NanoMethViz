@@ -4,7 +4,7 @@
 \alias{query_methy}
 \title{Query methylation data}
 \usage{
-query_methy(x, chr, start, end, simplify = TRUE)
+query_methy(x, chr, start, end, simplify = TRUE, force = FALSE)
 }
 \arguments{
 \item{x}{the path to the methylation data (tabix-bgzipped)}

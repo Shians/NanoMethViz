@@ -2,7 +2,7 @@
 #'
 #' @param x the NanoMethResult object.
 #' @param regions a table of regions containing at least columns chr, strand,
-#'   start and end. Any additiona columns can be used for grouping.
+#'   start and end. Any additional columns can be used for grouping.
 #' @param binary_threshold the modification probability such that calls with
 #'   modification probability above the threshold are considered methylated, and
 #'   those with probability equal or below are considered unmethylated.

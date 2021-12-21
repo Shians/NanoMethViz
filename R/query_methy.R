@@ -5,6 +5,10 @@
 #' @param start the vector of start positions
 #' @param end the vector of end positions
 #' @param simplify whether returned results should be row-concatenated
+#' @param force whether to force empty output when query region 'chr' does not
+#'   appear in data. Without 'force', an empty result indicates that the
+#'   requested 'chr' appears in the data but no data overlaps with requested
+#'   region, and an invalid 'chr' will cause an error.
 #'
 #' @return A table containing the data within the queried regions. If simplify
 #'   is TRUE (default) then all data is contained within one table, otherwise it

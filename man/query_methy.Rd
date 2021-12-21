@@ -16,6 +16,11 @@ query_methy(x, chr, start, end, simplify = TRUE, force = FALSE)
 \item{end}{the vector of end positions}
 
 \item{simplify}{whether returned results should be row-concatenated}
+
+\item{force}{whether to force empty output when query region 'chr' does not
+appear in data. Without 'force', an empty result indicates that the
+requested 'chr' appears in the data but no data overlaps with requested
+region, and an invalid 'chr' will cause an error.}
 }
 \value{
 A table containing the data within the queried regions. If simplify

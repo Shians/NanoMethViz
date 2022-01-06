@@ -165,7 +165,7 @@ setMethod("plot_region_heatmap",
         p <- ggplot2::ggplot(methy_data, aes(x = factor(.data$pos), y = .data$read_group, fill = .data$mod_prob)) +
             scico::scale_colour_scico(palette = 'imola', direction = -1) +
             ggplot2::geom_raster() +
-            ggplot2::facet_wrap(~group, scales = "free_y", nrow = 2) +
+            ggplot2::facet_wrap(~group, scales = "free_y", ncol = 1) +
             theme_methy_heatmap() +
             ggplot2::theme(
                 axis.ticks.x = ggplot2::element_blank(),
@@ -188,7 +188,7 @@ setMethod("plot_region_heatmap",
             ) +
             ggplot2::geom_point(aes(x = .data$pos, col = .data$mod_prob), alpha = 0.33, shape = 15) +
             scico::scale_colour_scico(palette = 'imola', direction = -1) +
-            ggplot2::facet_wrap(~group, scales = "free_y", nrow = 2) +
+            ggplot2::facet_wrap(~group, scales = "free_y", ncol = 1) +
             theme_methy_heatmap() +
             ggplot2::xlab("Position")
     }

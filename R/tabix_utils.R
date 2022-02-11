@@ -17,7 +17,7 @@ sort_methy_file <- function(x) {
         methy_df <- dplyr::arrange(methy_df, .data$chr, .data$pos)
         readr::write_tsv(methy_df, x, col_names = FALSE)
     } else {
-        cmd <- glue::glue("sort -k2,3V {x} -o {x}")
+        cmd <- glue::glue("sort --compress-program=gzip -k2,3V {x} -o {x}")
         system(cmd)
     }
 

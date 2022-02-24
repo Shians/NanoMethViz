@@ -14,7 +14,7 @@ convert_methy_format(
 \arguments{
 \item{input_files}{the files to convert}
 
-\item{output_file}{the output file to write results to}
+\item{output_file}{the output file to write results to (must end in .bgz)}
 
 \item{samples}{the names of samples corresponding to each file}
 

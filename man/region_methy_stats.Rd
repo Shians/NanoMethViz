@@ -7,7 +7,7 @@
 region_methy_stats(nmr, regions, threshold = 0.5)
 }
 \arguments{
-\item{nmr}{the NanoMethResult object}
+\item{nmr}{the NanoMethResult object.}
 
 \item{regions}{the table of regions to query statistics for.}
 

@@ -9,7 +9,7 @@ plot_methylation_internal <- function(
     palette_col = ggplot2::scale_colour_brewer(palette = "Set1"),
     anno_regions = NULL,
     binary_threshold = NULL,
-    avg_method = c("median", "mean"),
+    avg_method = c("mean", "median"),
     spaghetti = FALSE,
     span = NULL
 ) {
@@ -114,7 +114,7 @@ plot_feature <- function(
     anno_regions = NULL,
     window_size = c(0, 0),
     binary_threshold = NULL,
-    avg_method = c("median", "mean"),
+    avg_method = c("mean", "median"),
     spaghetti = FALSE,
     span = NULL
 ) {

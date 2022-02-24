@@ -15,7 +15,7 @@ plot_grange <- function(
     grange,
     anno_regions = NULL,
     binary_threshold = NULL,
-    avg_method = c("median", "mean"),
+    avg_method = c("mean", "median"),
     spaghetti = FALSE,
     heatmap = FALSE,
     span = NULL,

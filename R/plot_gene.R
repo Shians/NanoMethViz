@@ -27,9 +27,9 @@ setGeneric("plot_gene", function(x, gene, ...) {
 #'   equal to or below the threshold are set to 0.
 #' @param avg_method the average method for pre-smoothing at each genomic position.
 #'   Data is pre-smoothed at each genomic position before the smoothed aggregate line
-#'   is generated for performance reasons. The default is "median" which produces
-#'   a smoothed line more robust to outliers, "mean" is the old default and tends
-#'   to produce lines with values dampened towards 0.5.
+#'   is generated for performance reasons. The default is "mean" which corresponds
+#'   to the average methylation fraction. The alternative "median" option is
+#'   closer to an average within the more common methylation state.
 #' @param spaghetti whether or not individual reads should be shown.
 #' @param heatmap whether or not read-methylation heatmap should be shown.
 #' @param span the span for loess smoothing.
@@ -50,7 +50,7 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
         window_prop = 0.3,
         anno_regions = NULL,
         binary_threshold = NULL,
-        avg_method = c("median", "mean"),
+        avg_method = c("mean", "median"),
         spaghetti = FALSE,
         heatmap = FALSE,
         span = NULL,

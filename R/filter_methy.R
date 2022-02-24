@@ -56,6 +56,8 @@ filter_methy <- function(nmr, output_file, ...) {
         col_types = methy_col_types()
     )
 
+    # assume filter does not change order of rows, therefore data should
+    # still be sorted after filtering
     tabix_compress(x = output_tsv, index = TRUE)
     file.remove(output_tsv)
 

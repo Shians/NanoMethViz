@@ -1,7 +1,9 @@
 ### Version 2.2.0
 * Added `heatmap` argument to `plot_gene()`, `plot_region()` and `plot_granges()`. This adds a read-heatmap to the plot.
 * Added `cluster_regions()` function to perform k-means clustering on a table of genomic regions based on methylation profile.
-* Changed averaging method for trends in `plot_gene()`, `plot_region()` and `plot_granges()` to median. This can be changed back using the new `avg_method()` argument.
+* Added median averaging method for trends in `plot_gene()`, `plot_region()` and `plot_granges()`. This can be changed using the new `avg_method` argument, default is `mean`.
+* Added `filter_methy()` function to create a filtered methylation file.
+* Added `region_methy_stats()` to obtain average methylation fractions of specific regions.
 
 ### Version 2.0.0
 * Major changes to `plot_agg_regions()`.

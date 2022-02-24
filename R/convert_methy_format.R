@@ -114,7 +114,7 @@ guess_methy_source <- function(methy_file) {
 #' @keywords internal
 #'
 #' @param input_files the files to convert
-#' @param output_file the output file to write results to
+#' @param output_file the output file to write results to (must end in .bgz)
 #' @param samples the names of samples corresponding to each file
 #' @param verbose TRUE if progress messages are to be printed
 #'

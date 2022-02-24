@@ -3,7 +3,7 @@
 #' Calculate the average methylation probability and prevalence based on
 #' specified probability threshold.
 #'
-#' @param nmr the NanoMethResult object
+#' @param nmr the NanoMethResult object.
 #' @param regions the table of regions to query statistics for.
 #' @param threshold the threshold to use for determining methylation calls
 #'   for the calculation of prevalence.

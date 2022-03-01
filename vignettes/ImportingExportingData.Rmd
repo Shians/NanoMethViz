@@ -113,8 +113,7 @@ basis or over regions.
 
 ```{r}
 gene_regions <- exons_to_genes(NanoMethViz::exons(nmr))
-dge <- bsseq_to_edger(bss, gene_regions)
+edger_mat <- bsseq_to_edger(bss, gene_regions)
 
-dge
+edger_mat
 ```
-

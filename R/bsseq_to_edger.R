@@ -13,7 +13,14 @@
 #' edger_mat <- bsseq_to_edger(bsseq)
 bsseq_to_edger <- function(bsseq, regions = NULL) {
     edger_col_names <- .get_edger_col_names(bsseq)
-    edger_row_names <- .get_edger_row_names(bsseq)
+
+    if (!is.null(regions)) {
+        assertthat::assert_that(is(regions, "data.frame"))
+        regions <- GenomicRanges::GRanges(regions)
+        edger_row_names <- regions$gene_id
+    } else {
+        edger_row_names <- .get_edger_row_names(bsseq)
+    }
 
     # construct matrix
     methylated <- .get_me_mat(bsseq, regions)
@@ -32,6 +39,24 @@ bsseq_to_edger <- function(bsseq, regions = NULL) {
     }
 
     edger_mat
+}
+
+#' Convert NanoMethResult object to edgeR methylation matrix
+#'
+#' @inheritParams methy_to_bsseq
+#' @param regions the regions to calculate log-methylation ratios over. If left
+#' NULL, ratios will be calculated per site.
+#'
+#' @return a matrix compatible with the edgeR differential methylation pipeline
+#' @export
+#'
+#' @examples
+#' nmr <- load_example_nanomethresult()
+#' edger_mat <- methy_to_edger(nmr)
+#'
+methy_to_edger <- function(methy, regions = NULL, out_folder = tempdir(), verbose = TRUE) {
+    bsseq <- methy_to_bsseq(methy = methy, out_folder = out_folder, verbose = verbose)
+    bsseq_to_edger(bsseq, regions = regions)
 }
 
 #' Convert BSseq object to log-methylation-ratio matrix

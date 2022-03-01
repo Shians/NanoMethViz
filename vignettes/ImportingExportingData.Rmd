@@ -1,9 +1,9 @@
 ---
-title: "Importing Data"
+title: "Importing/Exporting Data"
 author: "Shian Su"
 output: html_document
 vignette: >
-  %\VignetteIndexEntry{Importing Data}
+  %\VignetteIndexEntry{Importing/Exporting Data}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
@@ -31,6 +31,9 @@ We currently support output from
 * Nanopolish
 * f5c
 * Megalodon
+
+If you would like any further other formats supported please create an issue
+at https://github.com/Shians/NanoMethViz/issues.
 
 ## Data example
 
@@ -83,3 +86,35 @@ methy_data
 Now `methy_tabix` will be the path to a tabix object that is ready for use with
 NanoMethViz. Please head over to the "Introduction" vignette to see how to use
 this data for visualisation!
+
+## Exporting data
+
+The methylation data can be exported into formats appropriate for bsseq, DSS, or
+edgeR. 
+
+### bsseq and DSS
+
+Both bsseq and DSS make use of the BSSeq object, and these can be obtained from
+the NanoMethResult objects using the `methy_to_bsseq()` function.
+
+```{r, message = FALSE}
+nmr <- load_example_nanomethresult()
+bss <- methy_to_bsseq(nmr)
+
+bss
+```
+
+### edgeR
+
+edgeR can also be used to perform differential methylation analysis: https://f1000research.com/articles/6-2055.
+BSSeq objects can be converted into the appropriate format using the
+`bsseq_to_edger()` function. This can be used to count reads on a per-site
+basis or over regions.
+
+```{r}
+gene_regions <- exons_to_genes(NanoMethViz::exons(nmr))
+dge <- bsseq_to_edger(bss, gene_regions)
+
+dge
+```
+

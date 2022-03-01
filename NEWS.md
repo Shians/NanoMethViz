@@ -4,6 +4,8 @@
 * Added median averaging method for trends in `plot_gene()`, `plot_region()` and `plot_granges()`. This can be changed using the new `avg_method` argument, default is `mean`.
 * Added `filter_methy()` function to create a filtered methylation file.
 * Added `region_methy_stats()` to obtain average methylation fractions of specific regions.
+* Added `methy_to_edger()` direct conversion wrapper around `methy_to_bsseq()` and `bsseq_to_edger()`.
+* Fixed `bsseq_to_edger()` failing when regions argument was used.
 
 ### Version 2.0.0
 * Major changes to `plot_agg_regions()`.

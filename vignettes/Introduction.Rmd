@@ -13,6 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # preload to avoid loading messages
 library(NanoMethViz)
+exon_tibble <- get_exons_mus_musculus()
 ```
 
 To install this package, run
@@ -129,3 +130,8 @@ Individual long reads can be visualised using the `spaghetti` argument.
 plot_gene(nmeth_results, "Peg3", anno_regions = bsseq_dmr, spaghetti = TRUE)
 ```
 
+Alternatively the individual read information can be represented by a heatmap.
+
+```{r, warning = FALSE}
+plot_gene(nmeth_results, "Peg3", anno_regions = bsseq_dmr, heatmap = TRUE)
+```

@@ -5,6 +5,7 @@
 * Added `filter_methy()` function to create a filtered methylation file.
 * Added `region_methy_stats()` to obtain average methylation fractions of specific regions.
 * Added `methy_to_edger()` direct conversion wrapper around `methy_to_bsseq()` and `bsseq_to_edger()`.
+* Added `palette` argument to `plot_gene()`, `plot_region()` and `plot_granges()` to allow custom colour palettes.
 * Fixed `bsseq_to_edger()` failing when regions argument was used.
 * Fixed heatmaps not staying in a single column when more than 2 groups were present.
 

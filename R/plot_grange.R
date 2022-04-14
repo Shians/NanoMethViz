@@ -19,7 +19,8 @@ plot_grange <- function(
     spaghetti = FALSE,
     heatmap = FALSE,
     span = NULL,
-    window_prop = 0.3
+    window_prop = 0,
+    palette = ggplot2::scale_colour_brewer(palette = "Set1")
 ) {
     avg_method <- match.arg(avg_method)
 
@@ -43,7 +44,8 @@ plot_grange <- function(
         spaghetti = spaghetti,
         heatmap = heatmap,
         span = span,
-        window_prop = window_prop
+        window_prop = window_prop,
+        palette = palette
     )
 }
 
@@ -71,7 +73,7 @@ plot_grange_heatmap <- function(
     x,
     grange,
     pos_style = c("to_scale", "compact"),
-    window_prop = 0.3
+    window_prop = 0
 ) {
 
     assert_that(

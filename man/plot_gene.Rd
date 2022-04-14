@@ -17,7 +17,8 @@ plot_gene(x, gene, ...)
   spaghetti = FALSE,
   heatmap = FALSE,
   span = NULL,
-  gene_anno = TRUE
+  gene_anno = TRUE,
+  palette = ggplot2::scale_colour_brewer(palette = "Set1")
 )
 }
 \arguments{
@@ -50,6 +51,8 @@ closer to an average within the more common methylation state.}
 \item{span}{the span for loess smoothing.}
 
 \item{gene_anno}{whether or not gene annotation tracks are plotted.}
+
+\item{palette}{the ggplot colour palette used for groups.}
 }
 \value{
 a patchwork plot containing the methylation profile in the specified

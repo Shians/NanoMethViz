@@ -35,6 +35,7 @@ setGeneric("plot_region", function(x, chr, start, end, ...) {
 #' @param window_prop the size of flanking region to plot. Can be a vector of two
 #'   values for left and right window size. Values indicate proportion of gene
 #'   length.
+#' @param palette the ggplot colour palette used for groups.
 #'
 #' @return a patchwork plot containing the methylation profile in the specified
 #'   region.
@@ -61,7 +62,8 @@ setMethod("plot_region",
         spaghetti = FALSE,
         heatmap = FALSE,
         span = NULL,
-        window_prop = 0
+        window_prop = 0,
+        palette = ggplot2::scale_colour_brewer(palette = "Set1")
     ) {
         avg_method = match.arg(avg_method)
 
@@ -76,7 +78,8 @@ setMethod("plot_region",
             avg_method = avg_method,
             heatmap = heatmap,
             span = span,
-            window_prop = window_prop
+            window_prop = window_prop,
+            palette = palette
         )
     }
 )
@@ -102,7 +105,8 @@ setMethod("plot_region",
         spaghetti = FALSE,
         heatmap = FALSE,
         span = NULL,
-        window_prop = 0
+        window_prop = 0,
+        palette = ggplot2::scale_colour_brewer(palette = "Set1")
     ) {
         chr <- as.character(chr)
         avg_method <- match.arg(avg_method)
@@ -117,7 +121,8 @@ setMethod("plot_region",
             spaghetti = spaghetti,
             heatmap = heatmap,
             span = span,
-            window_prop = window_prop
+            window_prop = window_prop,
+            palette = palette
         )
     }
 )
@@ -133,7 +138,8 @@ setMethod("plot_region",
     spaghetti,
     heatmap,
     span,
-    window_prop
+    window_prop,
+    palette
 ) {
     sample_anno <- samples(x)
     exons_anno <- query_exons_region(
@@ -180,7 +186,8 @@ setMethod("plot_region",
         avg_method = avg_method,
         spaghetti = spaghetti,
         sample_anno = sample_anno,
-        span = span
+        span = span,
+        palette_col = palette
     ) +
         ggplot2::scale_x_continuous(
             limits = xlim,

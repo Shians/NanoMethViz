@@ -116,7 +116,8 @@ plot_feature <- function(
     binary_threshold = NULL,
     avg_method = c("mean", "median"),
     spaghetti = FALSE,
-    span = NULL
+    span = NULL,
+    palette = ggplot2::scale_colour_brewer(palette = "Set1")
 ) {
     avg_method <- match.arg(avg_method)
 
@@ -157,6 +158,7 @@ plot_feature <- function(
         avg_method = avg_method,
         spaghetti = spaghetti,
         sample_anno = sample_anno,
-        span = span
+        span = span,
+        palette_col = palette
     )
 }

@@ -35,7 +35,7 @@ flipped to reflect features like transcription start sites.}
 
 \item{span}{the span for loess smoothing.}
 
-\item{palette}{the colour palette used for groups.}
+\item{palette}{the ggplot colour palette used for groups.}
 }
 \value{
 a ggplot object containing the aggregate methylation trend.

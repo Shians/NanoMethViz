@@ -13,7 +13,8 @@ plot_grange(
   spaghetti = FALSE,
   heatmap = FALSE,
   span = NULL,
-  window_prop = 0.3
+  window_prop = 0,
+  palette = ggplot2::scale_colour_brewer(palette = "Set1")
 )
 }
 \arguments{
@@ -42,6 +43,8 @@ closer to an average within the more common methylation state.}
 \item{window_prop}{the size of flanking region to plot. Can be a vector of two
 values for left and right window size. Values indicate proportion of gene
 length.}
+
+\item{palette}{the ggplot colour palette used for groups.}
 }
 \value{
 a patchwork plot containing the methylation profile in the specified

@@ -9,8 +9,8 @@ methy_to_edger(methy, regions = NULL, out_folder = tempdir(), verbose = TRUE)
 \arguments{
 \item{methy}{the path to the methylation tabix file.}
 
-\item{regions}{the regions to calculate log-methylation ratios over. If left NULL, ratios will be calculated per
-site.}
+\item{regions}{the regions to calculate log-methylation ratios over. If left
+NULL, ratios will be calculated per site.}
 
 \item{out_folder}{the folder to store intermediate files. One file is created
 for each sample and contains columns "chr", "pos", "total" and
@@ -23,4 +23,9 @@ a matrix compatible with the edgeR differential methylation pipeline
 }
 \description{
 Convert NanoMethResult object to edgeR methylation matrix
+}
+\examples{
+nmr <- load_example_nanomethresult()
+edger_mat <- methy_to_edger(nmr)
+
 }

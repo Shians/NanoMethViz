@@ -8,7 +8,7 @@ plot_grange_heatmap(
   x,
   grange,
   pos_style = c("to_scale", "compact"),
-  window_prop = 0.3
+  window_prop = 0
 )
 }
 \arguments{

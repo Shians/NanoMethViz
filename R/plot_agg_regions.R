@@ -12,7 +12,7 @@
 #' @param stranded TRUE if negative strand features should have coordinates
 #'   flipped to reflect features like transcription start sites.
 #' @param span the span for loess smoothing.
-#' @param palette the colour palette used for groups.
+#' @param palette the ggplot colour palette used for groups.
 #'
 #' @return a ggplot object containing the aggregate methylation trend.
 #'
@@ -74,11 +74,11 @@ plot_agg_regions <- function(
 
     if (flank == 0) {
         labels <- c("start", "end")
-        breaks = c(0, 1)
-        limits = c(0, 1)
+        breaks <- c(0, 1)
+        limits <- c(0, 1)
     } else {
-        breaks = c(-.33, 0, 1, 1.33)
-        limits = c(-0.33, 1.33)
+        breaks <- c(-.33, 0, 1, 1.33)
+        limits <- c(-0.33, 1.33)
         kb_marker <- round(flank / 1000, 1)
         labels <- c(glue::glue("-{kb_marker}kb"), "start", "end", glue::glue("+{kb_marker}kb"))
         p <- p +

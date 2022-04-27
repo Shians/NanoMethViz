@@ -93,17 +93,34 @@ plot_gene_annotation <- function(exons_df, plot_start, plot_end) {
     }
 
     .connector_arrows <- function(gaps) {
-        ggplot2::geom_segment(
-            ggplot2::aes(
-                x = .data$start,
-                xend = .data$end,
-                y = .data$y_offset + 0.275,
-                yend = .data$y_offset + 0.275
+        list(
+            # first half with arrow
+            ggplot2::geom_segment(
+                ggplot2::aes(
+                    x = .data$start,
+                    xend = (.data$start + .data$end)/2,
+                    y = .data$y_offset + 0.275,
+                    yend = .data$y_offset + 0.275
+                ),
+                lineend = "butt",
+                linejoin = "mitre",
+                data = gaps,
+                arrow = grid::arrow(
+                    type = "open",
+                    length = ggplot2::unit(5, "points")
+                )
             ),
-            data = gaps,
-            arrow = grid::arrow(
-                type = "closed",
-                length = ggplot2::unit(5, "points")
+            # second half without arrow
+            ggplot2::geom_segment(
+                ggplot2::aes(
+                    x = (.data$start + .data$end)/2,
+                    xend = .data$end,
+                    y = .data$y_offset + 0.275,
+                    yend = .data$y_offset + 0.275
+                ),
+                lineend = "butt",
+                linejoin = "mitre",
+                data = gaps
             )
         )
     }

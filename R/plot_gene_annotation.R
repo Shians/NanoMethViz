@@ -88,7 +88,8 @@ plot_gene_annotation <- function(exons_df, plot_start, plot_end) {
                 ymax = .data$y_offset + 0.55
             ),
             data = exons_df,
-            fill = "#696969"
+            fill = "#696969",
+            colour = "black"
         )
     }
 

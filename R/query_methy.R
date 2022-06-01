@@ -149,7 +149,7 @@ query_methy_tabix <- function(x, chr, start, end, force) {
 
     if (length(chr) == 0) {
         if (!force) {
-            stop("no valid ranges remain, please check chromosome format matches between query and methylation file.")
+            stop("no chromosome matches between query and tabix file, please check chromosome format matches between query and methylation file.")
         } else {
             return(empty_res)
         }

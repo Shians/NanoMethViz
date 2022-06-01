@@ -35,6 +35,7 @@ setGeneric("plot_gene", function(x, gene, ...) {
 #' @param span the span for loess smoothing.
 #' @param gene_anno whether or not gene annotation tracks are plotted.
 #' @param palette the ggplot colour palette used for groups.
+#' @param line_size the size of the lines.
 #'
 #' @return a patchwork plot containing the methylation profile in the specified
 #'   region.
@@ -56,7 +57,8 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
         heatmap = FALSE,
         span = NULL,
         gene_anno = TRUE,
-        palette = ggplot2::scale_colour_brewer(palette = "Set1")
+        palette = ggplot2::scale_colour_brewer(palette = "Set1"),
+        line_size = 2
     ) {
         avg_method = match.arg(avg_method)
         .plot_gene(
@@ -70,7 +72,8 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
             heatmap = heatmap,
             span = span,
             gene_anno = gene_anno,
-            palette = palette
+            palette = palette,
+            line_size = line_size
         )
     }
 )
@@ -86,7 +89,8 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
     heatmap,
     span,
     gene_anno,
-    palette
+    palette,
+    line_size
 ) {
     assertthat::assert_that(
         nrow(exons(x)) > 0,
@@ -122,7 +126,8 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
             avg_method = avg_method,
             spaghetti = spaghetti,
             span = span,
-            palette = palette
+            palette = palette,
+            line_size = line_size
         )
     )
     p1 <- p1 + ggplot2::scale_x_continuous(

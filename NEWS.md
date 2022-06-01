@@ -1,6 +1,8 @@
 ### Version 2.4.0
-* Changed arrows in exon connectors to appear in the middle as open arrow instead of at the end as closed arrow.
+* Fixed `plot_region_heatmap()` producing the wrong plot when a factor is used for the chromosome.
 * Added black outlines to exons in annotation to distinguish contiguous segments for features like tandem repeats.
+* Added `line_size` argument to `plot_gene()`, `plot_region()` and `plot_granges()` plots for adjusting line size.
+* Changed arrows in exon connectors to appear in the middle as open arrow instead of at the end as closed arrow.
 
 ### Version 2.2.0
 * Added `heatmap` argument to `plot_gene()`, `plot_region()` and `plot_granges()`. This adds a read-heatmap to the plot.

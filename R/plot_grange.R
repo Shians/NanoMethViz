@@ -20,7 +20,8 @@ plot_grange <- function(
     heatmap = FALSE,
     span = NULL,
     window_prop = 0,
-    palette = ggplot2::scale_colour_brewer(palette = "Set1")
+    palette = ggplot2::scale_colour_brewer(palette = "Set1"),.
+    line_size = 2
 ) {
     avg_method <- match.arg(avg_method)
 
@@ -45,7 +46,8 @@ plot_grange <- function(
         heatmap = heatmap,
         span = span,
         window_prop = window_prop,
-        palette = palette
+        palette = palette,
+        line_size = line_size
     )
 }
 

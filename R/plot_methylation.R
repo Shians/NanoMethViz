@@ -11,7 +11,8 @@ plot_methylation_internal <- function(
     binary_threshold = NULL,
     avg_method = c("mean", "median"),
     spaghetti = FALSE,
-    span = NULL
+    span = NULL,
+    line_size = 2
 ) {
     avg_method <- match.arg(avg_method)
 
@@ -93,7 +94,7 @@ plot_methylation_internal <- function(
             data = plot_data_smooth,
             span = span,
             na.rm = TRUE,
-            size = 2
+            size = line_size
         )
 
     # add auxiliary elements and style
@@ -117,7 +118,8 @@ plot_feature <- function(
     avg_method = c("mean", "median"),
     spaghetti = FALSE,
     span = NULL,
-    palette = ggplot2::scale_colour_brewer(palette = "Set1")
+    palette = ggplot2::scale_colour_brewer(palette = "Set1"),
+    line_size = 2
 ) {
     avg_method <- match.arg(avg_method)
 
@@ -159,6 +161,7 @@ plot_feature <- function(
         spaghetti = spaghetti,
         sample_anno = sample_anno,
         span = span,
-        palette_col = palette
+        palette_col = palette,
+        line_size = line_size
     )
 }

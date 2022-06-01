@@ -36,6 +36,7 @@ setGeneric("plot_region", function(x, chr, start, end, ...) {
 #'   values for left and right window size. Values indicate proportion of gene
 #'   length.
 #' @param palette the ggplot colour palette used for groups.
+#' @param line_size the size of the lines.
 #'
 #' @return a patchwork plot containing the methylation profile in the specified
 #'   region.
@@ -63,7 +64,8 @@ setMethod("plot_region",
         heatmap = FALSE,
         span = NULL,
         window_prop = 0,
-        palette = ggplot2::scale_colour_brewer(palette = "Set1")
+        palette = ggplot2::scale_colour_brewer(palette = "Set1"),
+        line_size = 2
     ) {
         avg_method = match.arg(avg_method)
 
@@ -79,7 +81,8 @@ setMethod("plot_region",
             heatmap = heatmap,
             span = span,
             window_prop = window_prop,
-            palette = palette
+            palette = palette,
+            line_size = line_size
         )
     }
 )
@@ -106,7 +109,8 @@ setMethod("plot_region",
         heatmap = FALSE,
         span = NULL,
         window_prop = 0,
-        palette = ggplot2::scale_colour_brewer(palette = "Set1")
+        palette = ggplot2::scale_colour_brewer(palette = "Set1"),
+        line_size = 2
     ) {
         chr <- as.character(chr)
         avg_method <- match.arg(avg_method)
@@ -122,7 +126,8 @@ setMethod("plot_region",
             heatmap = heatmap,
             span = span,
             window_prop = window_prop,
-            palette = palette
+            palette = palette,
+            line_size = line_size
         )
     }
 )
@@ -139,7 +144,8 @@ setMethod("plot_region",
     heatmap,
     span,
     window_prop,
-    palette
+    palette,
+    line_size
 ) {
     sample_anno <- samples(x)
     exons_anno <- query_exons_region(
@@ -187,7 +193,8 @@ setMethod("plot_region",
         spaghetti = spaghetti,
         sample_anno = sample_anno,
         span = span,
-        palette_col = palette
+        palette_col = palette,
+        line_size = line_size
     ) +
         ggplot2::scale_x_continuous(
             limits = xlim,

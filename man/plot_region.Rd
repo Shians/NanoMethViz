@@ -20,7 +20,8 @@ plot_region(x, chr, start, end, ...)
   heatmap = FALSE,
   span = NULL,
   window_prop = 0,
-  palette = ggplot2::scale_colour_brewer(palette = "Set1")
+  palette = ggplot2::scale_colour_brewer(palette = "Set1"),
+  line_size = 2
 )
 
 \S4method{plot_region}{NanoMethResult,factor,numeric,numeric}(
@@ -35,7 +36,8 @@ plot_region(x, chr, start, end, ...)
   heatmap = FALSE,
   span = NULL,
   window_prop = 0,
-  palette = ggplot2::scale_colour_brewer(palette = "Set1")
+  palette = ggplot2::scale_colour_brewer(palette = "Set1"),
+  line_size = 2
 )
 }
 \arguments{
@@ -72,6 +74,8 @@ values for left and right window size. Values indicate proportion of gene
 length.}
 
 \item{palette}{the ggplot colour palette used for groups.}
+
+\item{line_size}{the size of the lines.}
 }
 \value{
 a patchwork plot containing the methylation profile in the specified

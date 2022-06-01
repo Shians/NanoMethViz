@@ -18,7 +18,8 @@ plot_gene(x, gene, ...)
   heatmap = FALSE,
   span = NULL,
   gene_anno = TRUE,
-  palette = ggplot2::scale_colour_brewer(palette = "Set1")
+  palette = ggplot2::scale_colour_brewer(palette = "Set1"),
+  line_size = 2
 )
 }
 \arguments{
@@ -53,6 +54,8 @@ closer to an average within the more common methylation state.}
 \item{gene_anno}{whether or not gene annotation tracks are plotted.}
 
 \item{palette}{the ggplot colour palette used for groups.}
+
+\item{line_size}{the size of the lines.}
 }
 \value{
 a patchwork plot containing the methylation profile in the specified

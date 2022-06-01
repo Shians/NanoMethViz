@@ -82,7 +82,7 @@ setMethod("plot_region_heatmap",
         window_prop = 0.3
     ) {
         chr <- as.character(chr)
-        plot_region(
+        .plot_region_heatmap(
             x = x,
             chr = chr,
             start = start,

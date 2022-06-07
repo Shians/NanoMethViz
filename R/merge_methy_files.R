@@ -25,7 +25,9 @@ merge_methy_files <- function(inputs, output) {
     cmd <- glue::glue("sort -k2,3V -o {temp_merged} {files_str}")
     system(cmd)
 
-    fs::file_copy(temp_merged, output)
+    fs::file_copy(temp_merged, output, overwrite = TRUE)
+    fs::file_delete(paste0(output, ".bgz.tbi"))
     NanoMethViz:::tabix_compress(output)
+    fs::file_delete(output)
 }
 

@@ -11,7 +11,7 @@ merge_methy_files <- function(inputs, output) {
 
     output <- stringr::str_remove(output, ".bgz")
 
-    temp_files <- purrr::map_chr(seq_along(inputs))
+    temp_files <- purrr::map_chr(seq_along(inputs), ~tempfile())
 
     temp_merged <- tempfile()
 

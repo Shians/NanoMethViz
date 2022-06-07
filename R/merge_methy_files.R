@@ -5,7 +5,7 @@ merge_methy_files <- function(inputs, output) {
     )
 
     assertthat::assert_that(
-        string::str_detect(output, "[.]bgz$"),
+        stringr::str_detect(output, "[.]bgz$"),
         msg = "'output' must end in .bgz"
     )
 

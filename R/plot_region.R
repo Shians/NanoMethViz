@@ -13,6 +13,7 @@
 #' nmr <- load_example_nanomethresult()
 #' plot_region(nmr, "chr7", 6703892, 6730431)
 #'
+#' @importFrom ggrastr rasterise
 #' @export
 setGeneric("plot_region", function(x, chr, start, end, ...) {
     standardGeneric("plot_region")
@@ -219,7 +220,7 @@ setMethod("plot_region",
                 expand = ggplot2::expansion()
             )
 
-        p_out <- stack_plots(p_out, p_heatmap)
+        p_out <- stack_plots(p_out, ggrastr::rasterise(p_heatmap))
     }
 
     p_out

@@ -34,6 +34,7 @@ Imports:
     e1071,
     fs,
     GenomicRanges,
+    ggrastr,
     glue,
     limma (>= 3.44.0),
     patchwork,

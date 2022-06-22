@@ -166,7 +166,7 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
                 limits = c(plot_left, plot_right),
                 expand = ggplot2::expansion())
 
-        p_out <- stack_plots(p_out, ggrastr::rasterise(p_heatmap))
+        p_out <- stack_plots(p_out, ggrastr::rasterise(p_heatmap, dpi = 300))
     }
 
     p_out

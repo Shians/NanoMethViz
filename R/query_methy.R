@@ -43,6 +43,11 @@ query_methy <- function(x, chr, start, end, simplify = TRUE, force = FALSE) {
     out
 }
 
+query_methy_df <- function(x, regions, simplify = TRUE, force = FALSE) {
+    assert_has_columns(regions, c("chr", "start", "end"))
+    query_methy(x, regions$chr, regions$start, regions$end, simplify, force)
+}
+
 query_methy_gene <- function(x, gene, window_prop = 0, simplify = TRUE) {
     if (!gene %in% exons(x)$symbol) {
         stop(glue::glue("gene {gene} not found in exon annotation"))

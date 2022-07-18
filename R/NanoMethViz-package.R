@@ -15,6 +15,7 @@
 #' @importFrom glue glue
 #' @importFrom assertthat assert_that is.readable is.writeable is.dir is.string
 #' @importFrom stringr str_extract
+#' @importFrom scales label_number cut_si
 #' @importFrom readr cols col_character col_integer col_logical col_double
 #' @importFrom tibble tibble as_tibble add_column
 #' @importFrom withr defer

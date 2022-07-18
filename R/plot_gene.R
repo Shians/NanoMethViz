@@ -133,7 +133,8 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
     )
     p1 <- p1 + ggplot2::scale_x_continuous(
             limits = c(plot_left, plot_right),
-            expand = ggplot2::expansion()
+            expand = ggplot2::expansion(),
+            labels = scales::label_number(scale_cut = scales::cut_si("b"))
         )
 
 
@@ -144,7 +145,8 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
         p2 <- plot_gene_annotation(exons_anno, plot_left, plot_right) +
             ggplot2::scale_x_continuous(
                 limits = c(plot_left, plot_right),
-                expand = ggplot2::expansion()
+                expand = ggplot2::expansion(),
+                labels = scales::label_number(scale_cut = scales::cut_si("b"))
             )
 
         n_unique <- function(x) { length(unique(x)) }
@@ -164,7 +166,8 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
         ) +
             ggplot2::scale_x_continuous(
                 limits = c(plot_left, plot_right),
-                expand = ggplot2::expansion())
+                expand = ggplot2::expansion(),
+                labels = scales::label_number(scale_cut = scales::cut_si("b")))
 
         p_out <- stack_plots(p_out, ggrastr::rasterise(p_heatmap, dpi = 300))
     }

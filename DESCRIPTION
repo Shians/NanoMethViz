@@ -42,7 +42,7 @@ Imports:
     rlang,
     RSQLite,
     Rsamtools,
-    scales,
+    scales (>= 1.2.0),
     scico,
     stats,
     stringr,

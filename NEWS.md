@@ -3,6 +3,7 @@
 * Added black outlines to exons in annotation to distinguish contiguous segments for features like tandem repeats.
 * Added `line_size` argument to `plot_gene()`, `plot_region()` and `plot_granges()` plots for adjusting line size.
 * Changed arrows in exon connectors to appear in the middle as open arrow instead of at the end as closed arrow.
+* Changed default X axis labels to be rescaled to appropriate SI-style. e.g. Kb, Mb, Gb.
 
 ### Version 2.2.0
 * Added `heatmap` argument to `plot_gene()`, `plot_region()` and `plot_granges()`. This adds a read-heatmap to the plot.

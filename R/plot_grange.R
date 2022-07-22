@@ -75,7 +75,8 @@ plot_grange_heatmap <- function(
     x,
     grange,
     pos_style = c("to_scale", "compact"),
-    window_prop = 0
+    window_prop = 0,
+    subsample = 50
 ) {
 
     assert_that(
@@ -93,6 +94,7 @@ plot_grange_heatmap <- function(
         start = start,
         end = end,
         pos_style = pos_style,
-        window_prop = window_prop
+        window_prop = window_prop,
+        subsample = subsample
     )
 }

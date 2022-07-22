@@ -24,6 +24,7 @@ setGeneric("plot_gene_heatmap", function(x, gene, ...) {
 #'   Defaults to "to_scale", plotting (potentially) overlapping squares
 #'   along the genomic position to scale. The "compact" options plots only the
 #'   positions with measured modification.
+#' @param subsample the number of read of packed read rows to subsample to.
 #'
 #' @return a ggplot plot containing the heatmap.
 #'
@@ -40,7 +41,8 @@ setMethod(
         x,
         gene,
         window_prop = 0.3,
-        pos_style = c("to_scale", "compact")
+        pos_style = c("to_scale", "compact"),
+        subsample = 50
     ) {
         pos_style <- match.arg(pos_style)
 
@@ -48,7 +50,8 @@ setMethod(
             x = x,
             gene = gene,
             window_prop = window_prop,
-            pos_style = pos_style
+            pos_style = pos_style,
+            subsample = subsample
         )
     }
 )
@@ -57,7 +60,8 @@ setMethod(
     x,
     gene,
     window_prop,
-    pos_style
+    pos_style,
+    subsample
 ) {
     assertthat::assert_that(
         nrow(exons(x)) > 0,
@@ -123,6 +127,7 @@ setMethod(
         dplyr::group_modify(append_read_group) %>%
         dplyr::ungroup()
 
+
     methy_data$mod_prob <- e1071::sigmoid(methy_data$statistic)
 
     methy_data <- dplyr::left_join(
@@ -130,6 +135,21 @@ setMethod(
         dplyr::select(grouping_data, "read_name", "read_group"),
         by = "read_name"
     )
+
+    # subsample reads down to a certain number of read groups
+    subsample_groups <- function(x, key, subsample) {
+        if (nrow(x) > subsample) {
+            x <- dplyr::sample_n(x, subsample)
+        }
+        x
+    }
+    methy_data <- methy_data %>%
+        dplyr::nest_by(group, read_group) %>%
+        dplyr::group_by(group) %>%
+        dplyr::group_modify(subsample_groups, subsample = subsample)
+    methy_data <- tidyr::unnest(methy_data, data)
+    read_data <- read_data %>%
+        dplyr::filter(read_name %in% methy_data$read_name)
 
     # heatmap theme
     theme_methy_heatmap <- function() {

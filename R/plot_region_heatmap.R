@@ -26,6 +26,7 @@ setGeneric("plot_region_heatmap", function(x, chr, start, end, ...) {
 #'   Defaults to "to_scale", plotting (potentially) overlapping squares
 #'   along the genomic position to scale. The "compact" options plots only the
 #'   positions with measured modification.
+#' @param subsample the number of read of packed read rows to subsample to.
 #'
 #' @return a ggplot plot containing the heatmap.
 #'
@@ -48,7 +49,9 @@ setMethod(
         start,
         end,
         pos_style = c("to_scale", "compact"),
-        window_prop = 0.3
+        window_prop = 0,
+        subsample = 50
+
     ) {
         pos_style <- match.arg(pos_style)
 
@@ -58,7 +61,8 @@ setMethod(
             start = start,
             end = end,
             pos_style = pos_style,
-            window_prop = window_prop
+            window_prop = window_prop,
+            subsample = subsample
         )
     }
 )
@@ -79,7 +83,8 @@ setMethod("plot_region_heatmap",
         start,
         end,
         pos_style = c("to_scale", "compact"),
-        window_prop = 0.3
+        window_prop = 0,
+        subsample = 50
     ) {
         chr <- as.character(chr)
         .plot_region_heatmap(
@@ -88,7 +93,8 @@ setMethod("plot_region_heatmap",
             start = start,
             end = end,
             pos_style = pos_style,
-            window_prop = window_prop
+            window_prop = window_prop,
+            subsample = subsample
         )
     }
 )
@@ -100,7 +106,8 @@ setMethod("plot_region_heatmap",
     start,
     end,
     window_prop,
-    pos_style
+    pos_style,
+    subsample
 ) {
     if (length(window_prop) == 1) {
         window_prop <- c(window_prop, window_prop)
@@ -150,6 +157,21 @@ setMethod("plot_region_heatmap",
         by = "read_name"
     )
 
+    # subsample reads down to a certain number of read groups
+    subsample_groups <- function(x, key, subsample) {
+        if (nrow(x) > subsample) {
+            x <- dplyr::sample_n(x, subsample)
+        }
+        x
+    }
+    methy_data <- methy_data %>%
+        dplyr::nest_by(group, read_group) %>%
+        dplyr::group_by(group) %>%
+        dplyr::group_modify(subsample_groups, subsample = subsample)
+    methy_data <- tidyr::unnest(methy_data, data)
+    read_data <- read_data %>%
+        dplyr::filter(read_name %in% methy_data$read_name)
+
     # heatmap theme
     theme_methy_heatmap <- function() {
         ggplot2::theme_bw() +
@@ -193,5 +215,10 @@ setMethod("plot_region_heatmap",
             ggplot2::xlab("Position")
     }
 
-    p
+    p +
+        ggplot2::scale_x_continuous(
+            limits = c(plot_left, plot_right),
+            expand = ggplot2::expansion(),
+            labels = scales::label_number(scale_cut = scales::cut_si("b"))
+        )
 }

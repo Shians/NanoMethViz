@@ -11,7 +11,8 @@ plot_gene_heatmap(x, gene, ...)
   x,
   gene,
   window_prop = 0.3,
-  pos_style = c("to_scale", "compact")
+  pos_style = c("to_scale", "compact"),
+  subsample = 50
 )
 }
 \arguments{
@@ -29,6 +30,8 @@ length.}
 Defaults to "to_scale", plotting (potentially) overlapping squares
 along the genomic position to scale. The "compact" options plots only the
 positions with measured modification.}
+
+\item{subsample}{the number of read of packed read rows to subsample to.}
 }
 \value{
 a ggplot object of the heatmap

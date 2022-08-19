@@ -34,10 +34,10 @@ Query a data.frame of exons for a subset.
 }
 \section{Functions}{
 \itemize{
-\item \code{query_exons_region}: Query region.
+\item \code{query_exons_region()}: Query region.
 
-\item \code{query_exons_gene_id}: Query gene ID.
+\item \code{query_exons_gene_id()}: Query gene ID.
 
-\item \code{query_exons_symbol}: Query gene symbol.
+\item \code{query_exons_symbol()}: Query gene symbol.
+
 }}
-

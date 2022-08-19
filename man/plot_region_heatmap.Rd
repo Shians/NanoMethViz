@@ -14,7 +14,8 @@ plot_region_heatmap(x, chr, start, end, ...)
   start,
   end,
   pos_style = c("to_scale", "compact"),
-  window_prop = 0.3
+  window_prop = 0,
+  subsample = 50
 )
 
 \S4method{plot_region_heatmap}{NanoMethResult,factor,numeric,numeric}(
@@ -23,7 +24,8 @@ plot_region_heatmap(x, chr, start, end, ...)
   start,
   end,
   pos_style = c("to_scale", "compact"),
-  window_prop = 0.3
+  window_prop = 0,
+  subsample = 50
 )
 }
 \arguments{
@@ -45,6 +47,8 @@ positions with measured modification.}
 \item{window_prop}{the size of flanking region to plot. Can be a vector of two
 values for left and right window size. Values indicate proportion of gene
 length.}
+
+\item{subsample}{the number of read of packed read rows to subsample to.}
 }
 \value{
 a ggplot object of the heatmap.

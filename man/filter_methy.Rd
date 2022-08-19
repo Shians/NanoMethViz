@@ -4,14 +4,15 @@
 \alias{filter_methy}
 \title{Create filtered methylation file}
 \usage{
-filter_methy(nmr, output_file, ...)
+filter_methy(x, output_file, ...)
 }
 \arguments{
-\item{nmr}{the NanoMethResult object.}
-
 \item{output_file}{the output file to write results to (must end in .bgz).}
 
-\item{...}{filtering criteria given in dplyr syntax.}
+\item{...}{filtering criteria given in dplyr syntax. Use methy_col_names()
+to get available column names.}
+
+\item{nmr}{the path to the methylation file or a NanoMethResult object.}
 }
 \value{
 invisibly returns 'output_file'
@@ -23,4 +24,5 @@ Create a filtered methylation file from an existing one.
 nmr <- load_example_nanomethresult()
 output_file <- paste0(tempfile(), ".tsv.bgz")
 filter_methy(nmr, output_file = output_file, chr == "chrX")
+filter_methy(methy(nmr), output_file = output_file, chr == "chrX")
 }

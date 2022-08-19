@@ -7,7 +7,8 @@
 query_methy(x, chr, start, end, simplify = TRUE, force = FALSE)
 }
 \arguments{
-\item{x}{the path to the methylation data (tabix-bgzipped)}
+\item{x}{the NanoMethResults object or a path to the methylation data
+(tabix-bgzipped).}
 
 \item{chr}{the vector of chromosomes}
 

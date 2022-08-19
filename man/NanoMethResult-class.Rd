@@ -56,21 +56,21 @@ NanoMethResult() constructor function described in "Usage".
 }
 \section{Functions}{
 \itemize{
-\item \code{NanoMethResult}: Constructor
+\item \code{NanoMethResult()}: Constructor
 
-\item \code{methy,NanoMethResult-method}: methylation data path getter.
+\item \code{methy(NanoMethResult)}: methylation data path getter.
 
-\item \code{methy<-,NanoMethResult-method}: methylation data path setter.
+\item \code{methy(NanoMethResult) <- value}: methylation data path setter.
 
-\item \code{samples,NanoMethResult-method}: sample annotation getter.
+\item \code{samples(NanoMethResult)}: sample annotation getter.
 
-\item \code{samples<-,NanoMethResult,data.frame-method}: sample annotation setter.
+\item \code{samples(object = NanoMethResult) <- value}: sample annotation setter.
 
-\item \code{exons,NanoMethResult-method}: exon annotation getter.
+\item \code{exons(NanoMethResult)}: exon annotation getter.
 
-\item \code{exons<-,NanoMethResult,data.frame-method}: exon annotation getter.
+\item \code{exons(object = NanoMethResult) <- value}: exon annotation getter.
+
 }}
-
 \section{Slots}{
 
 \describe{

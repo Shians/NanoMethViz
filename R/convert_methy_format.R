@@ -35,7 +35,7 @@ reformat_f5c <- function(x, sample) {
         dplyr::transmute(
             sample = factor(.data$sample),
             chr = factor(.data$chromosome),
-            pos = as.integer(.data$start),
+            pos = as.integer(.data$start) + 1,
             strand = factor("*", levels = c("+", "-", "*")),
             statistic = .data$log_lik_ratio,
             read_name = .data$read_name
@@ -52,7 +52,7 @@ reformat_nanopolish <- function(x, sample) {
         dplyr::transmute(
             sample = factor(.data$sample),
             chr = factor(.data$chromosome),
-            pos = as.integer(.data$start),
+            pos = as.integer(.data$start) + 1,
             strand = .data$strand,
             statistic = .data$log_lik_ratio,
             read_name = .data$read_name

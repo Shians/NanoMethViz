@@ -2,9 +2,10 @@
 #'
 #' Create a filtered methylation file from an existing one.
 #'
-#' @param nmr the NanoMethResult object.
+#' @param nmr the path to the methylation file or a NanoMethResult object.
 #' @param output_file the output file to write results to (must end in .bgz).
-#' @param ... filtering criteria given in dplyr syntax.
+#' @param ... filtering criteria given in dplyr syntax. Use methy_col_names()
+#'   to get available column names.
 #'
 #' @return
 #' invisibly returns 'output_file'
@@ -15,10 +16,18 @@
 #' nmr <- load_example_nanomethresult()
 #' output_file <- paste0(tempfile(), ".tsv.bgz")
 #' filter_methy(nmr, output_file = output_file, chr == "chrX")
-filter_methy <- function(nmr, output_file, ...) {
+#' filter_methy(methy(nmr), output_file = output_file, chr == "chrX")
+filter_methy <- function(x, output_file, ...) {
+    if (is(x, "NanoMethResult")) {
+        input_file <- methy(x)
+    } else {
+        input_file <- x
+    }
+
+    assertthat::assert_that(fs::file_exists(x))
     assertthat::assert_that(
-        methy(nmr) != output_file,
-        msg = "target file name must differ from methy(nmr)."
+        input_file != output_file,
+        msg = "target file name must differ from original methylation file."
     )
 
     assertthat::assert_that(
@@ -50,7 +59,7 @@ filter_methy <- function(nmr, output_file, ...) {
     }
 
     readr::read_tsv_chunked(
-        methy(nmr),
+        input_file,
         callback = readr::SideEffectChunkCallback$new(writer_fn),
         col_names = methy_col_names(),
         col_types = methy_col_types()

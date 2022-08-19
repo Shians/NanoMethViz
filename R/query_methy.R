@@ -1,6 +1,7 @@
 #' Query methylation data
 #'
-#' @param x the path to the methylation data (tabix-bgzipped)
+#' @param x the NanoMethResults object or a path to the methylation data
+#'   (tabix-bgzipped).
 #' @param chr the vector of chromosomes
 #' @param start the vector of start positions
 #' @param end the vector of end positions

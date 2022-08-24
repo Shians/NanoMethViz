@@ -187,10 +187,12 @@ setMethod(
                 ),
                 data = dplyr::left_join(
                     read_data, grouping_data,
-                    by = c("read_name", "start", "end", "group"))
+                    by = c("read_name", "start", "end", "group"),
+                alpha = 0.75
+                )
             ) +
             ggplot2::geom_point(
-                aes(x = .data$pos, col = .data$mod_prob), alpha = 0.33, shape = 15) +
+                aes(x = .data$pos, col = .data$mod_prob), alpha = 0.5, shape = 15) +
             scico::scale_colour_scico(palette = 'imola', direction = -1) +
             ggplot2::facet_wrap(~group, scales = "free_y", ncol = 1, strip.position = "left") +
             theme_methy_heatmap() +

@@ -65,10 +65,9 @@ plot_mds <- function(x, top = 500, plot_dims = c(1, 2), labels = colnames(x), gr
     }
 
     if (!is.null(labels)) {
-        p <- p + ggplot2::geom_label(aes(label = labels))
+        p <- p + ggplot2::geom_label(aes(label = labels), key_glyph = draw_key_point)
     } else {
         p <- p + ggplot2::geom_point()
-
     }
 
     p +

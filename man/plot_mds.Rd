@@ -19,10 +19,12 @@ plot_mds(
 
 \item{plot_dims}{the numeric vector of the two dimensions to be plotted.}
 
-\item{labels}{the character vector of labels for data points. By default uses column names of x, set to NULL to plot
-points.}
+\item{labels}{the character vector of labels for data points. By default uses
+column names of x, set to NULL to plot points.}
 
-\item{groups}{the character vector of groups the data points will be coloured by.}
+\item{groups}{the character vector of groups the data points will be coloured
+by. Colour palette can be adjusted using scale_colour_*() functions from
+ggplot2.}
 }
 \value{
 ggplot object of the MDS plot.

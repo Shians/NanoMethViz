@@ -6,9 +6,11 @@
 #' @param x the log-methylation-ratio matrix.
 #' @param top the number of top genes used to calculate pairwise distances.
 #' @param plot_dims the numeric vector of the two dimensions to be plotted.
-#' @param labels the character vector of labels for data points. By default uses column names of x, set to NULL to plot
-#'   points.
-#' @param groups the character vector of groups the data points will be coloured by.
+#' @param labels the character vector of labels for data points. By default uses
+#'   column names of x, set to NULL to plot points.
+#' @param groups the character vector of groups the data points will be coloured
+#'   by. Colour palette can be adjusted using scale_colour_*() functions from
+#'   ggplot2.
 #'
 #' @return ggplot object of the MDS plot.
 #'

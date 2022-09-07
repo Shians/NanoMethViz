@@ -86,8 +86,13 @@ convert_methy_to_dss_cpp(
     unordered_map<string, MethyData> sample_data;
     std::string line;
     string current_chr = "";
+    unsigned int lines = 0;
     while (getline(file, line)) {
         entry e = parse_line(line);
+        lines++;
+        if (lines % 1000 == 0) {
+            Rcpp::checkUserInterrupt();
+        }
 
         // if encountering new chr
         if (e.chr != current_chr) {

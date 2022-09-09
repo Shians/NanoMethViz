@@ -197,7 +197,7 @@ setMethod("samples", signature("NanoMethResult"), function(object) {
 #'
 #' @export
 setMethod("samples<-", signature("NanoMethResult", "data.frame"), function(object, value) {
-    assert_has_columns(samples, c("sample", "group"))
+    assert_has_columns(value, c("sample", "group"))
 
     object@samples <- value
     object

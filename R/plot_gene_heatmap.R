@@ -169,7 +169,7 @@ setMethod(
                 fill = .data$mod_prob)) +
             scico::scale_colour_scico(palette = 'imola', direction = -1) +
             ggplot2::geom_raster() +
-            ggplot2::facet_wrap(~group, scales = "free_y", ncol = 1, strip.position = "left") +
+            ggplot2::facet_wrap(~group, scales = "free_y", ncol = 1, strip.position = "right") +
             theme_methy_heatmap() +
             ggplot2::theme(
                 axis.ticks.x = ggplot2::element_blank(),
@@ -194,7 +194,7 @@ setMethod(
             ggplot2::geom_point(
                 aes(x = .data$pos, col = .data$mod_prob), alpha = 0.5, shape = 15) +
             scico::scale_colour_scico(palette = 'imola', direction = -1) +
-            ggplot2::facet_wrap(~group, scales = "free_y", ncol = 1, strip.position = "left") +
+            ggplot2::facet_wrap(~group, scales = "free_y", ncol = 1, strip.position = "right") +
             theme_methy_heatmap() +
             ggplot2::xlab("Position")
     }

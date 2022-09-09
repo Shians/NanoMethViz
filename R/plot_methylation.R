@@ -104,8 +104,7 @@ plot_methylation_internal <- function(
         ggplot2::xlab(chr) +
         ggplot2::scale_y_continuous(
             limits = c(0, 1),
-            expand = ggplot2::expansion(),
-            labels = scales::label_number(scale_cut = scales::cut_si("b"))) +
+            expand = ggplot2::expansion()) +
         palette_col +
         ggplot2::theme_bw()
 }

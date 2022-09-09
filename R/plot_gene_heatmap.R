@@ -101,8 +101,8 @@ setMethod(
 
     # add sample information
     methy_data <- dplyr::left_join(
-        methy_data,
         NanoMethViz::samples(x),
+        methy_data,
         by = "sample"
     )
 

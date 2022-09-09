@@ -123,8 +123,8 @@ setMethod("plot_region_heatmap",
 
     # add sample information
     methy_data <- dplyr::left_join(
-        methy_data,
         NanoMethViz::samples(x),
+        methy_data,
         by = "sample"
     )
 

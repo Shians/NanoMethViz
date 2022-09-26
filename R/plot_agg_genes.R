@@ -111,7 +111,7 @@ plot_agg_tes <- function(
             start = case_when(
                 strand == "+" ~ end,
                 strand == "-" ~ start,
-                TRUE ~ start)
+                TRUE ~ end)
         ) %>%
         mutate(
             start = start - flank,

@@ -14,4 +14,10 @@ test_that("NanoMethResults getters work", {
             NanoMethViz::samples(nmr)
         )
     )
+
+    expect_silent(methy(nmr) <- methy(nmr))
+    expect_error(methy(nmr) <- "invalid_path")
+    expect_silent(samples(nmr) <- samples(nmr))
+    expect_silent(exons(nmr) <- exons(nmr))
+    expect_error(exons(nmr) <- exons(nmr)[, -"strand"])
 })

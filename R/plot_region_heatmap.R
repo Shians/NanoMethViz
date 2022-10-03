@@ -211,7 +211,7 @@ setMethod("plot_region_heatmap",
             ) +
             ggplot2::geom_point(aes(x = .data$pos, col = .data$mod_prob), alpha = 0.5, shape = 15) +
             scico::scale_colour_scico(palette = 'imola', direction = -1) +
-            ggplot2::facet_wrap(~group, scales = "free_y", ncol = 1) +
+            ggplot2::facet_wrap(~group, scales = "free_y", ncol = 1, strip.position = "right") +
             theme_methy_heatmap() +
             ggplot2::xlab("Position")
     }

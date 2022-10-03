@@ -216,10 +216,5 @@ setMethod("plot_region_heatmap",
             ggplot2::xlab("Position")
     }
 
-    p +
-        ggplot2::scale_x_continuous(
-            limits = c(plot_left, plot_right),
-            expand = ggplot2::expansion(),
-            labels = scales::label_number(scale_cut = scales::cut_si("b"))
-        )
+    p
 }

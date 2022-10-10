@@ -19,6 +19,7 @@
 #' @importFrom readr cols col_character col_integer col_logical col_double
 #' @importFrom tibble tibble as_tibble add_column
 #' @importFrom withr defer
+#' @importFrom R.utils gunzip
 #' @import cpp11
 #' @import patchwork
 #' @import assertthat

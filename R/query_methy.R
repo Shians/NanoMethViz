@@ -56,7 +56,7 @@ query_methy_gene <- function(x, gene, window_prop = 0, simplify = TRUE) {
 
     if (length(window_prop) == 1) {
         # convert to two sided window
-        window_prop = c(window_prop, window_prop)
+        window_prop <- c(window_prop, window_prop)
     }
 
     pos_range <- gene_pos_range(x, gene)

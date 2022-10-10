@@ -68,7 +68,7 @@ setMethod("plot_region",
         palette = ggplot2::scale_colour_brewer(palette = "Set1"),
         line_size = 2
     ) {
-        avg_method = match.arg(avg_method)
+        avg_method <- match.arg(avg_method)
 
         .plot_region(
             x = x,

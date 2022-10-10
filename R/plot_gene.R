@@ -61,7 +61,7 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
         palette = ggplot2::scale_colour_brewer(palette = "Set1"),
         line_size = 2
     ) {
-        avg_method = match.arg(avg_method)
+        avg_method <- match.arg(avg_method)
         .plot_gene(
             x,
             gene,

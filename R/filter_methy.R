@@ -2,7 +2,7 @@
 #'
 #' Create a filtered methylation file from an existing one.
 #'
-#' @param nmr the path to the methylation file or a NanoMethResult object.
+#' @param x the path to the methylation file or a NanoMethResult object.
 #' @param output_file the output file to write results to (must end in .bgz).
 #' @param ... filtering criteria given in dplyr syntax. Use methy_col_names()
 #'   to get available column names.
@@ -24,7 +24,7 @@ filter_methy <- function(x, output_file, ...) {
         input_file <- x
     }
 
-    assertthat::assert_that(fs::file_exists(x))
+    assertthat::assert_that(fs::file_exists(input_file))
     assertthat::assert_that(
         input_file != output_file,
         msg = "target file name must differ from original methylation file."

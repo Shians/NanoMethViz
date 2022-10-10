@@ -18,6 +18,8 @@
 #' @return the table of regions given by the 'regions' argument with the column
 #'   'cluster' added.
 #'
+#' @importFrom stats quantile approxfun prcomp kmeans sd
+#' @importFrom graphics hist
 #' @export
 #'
 #' @examples
@@ -41,12 +43,12 @@ cluster_regions <- function(x, regions, centers = 2, grid_method = c("density", 
         methy_df$methy[[i]] <- if (methy_df$strand[i] == "-") {
             # re-sort by position due to flip
             methy_df$methy[[i]] %>%
-                mutate(pos = 1 - ((pos - start) / (end - start))) %>%
-                arrange(pos)
+                mutate(pos = 1 - ((.data$pos - start) / (end - start))) %>%
+                arrange(.data$pos)
         } else {
             # include * case
             methy_df$methy[[i]] %>%
-                mutate(pos = (pos - start) / (end - start))
+                mutate(pos = (.data$pos - start) / (end - start))
         }
     }
 

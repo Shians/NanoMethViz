@@ -21,6 +21,7 @@
 #' plot_mds(lmr)
 #'
 #' @importFrom limma plotMDS
+#' @importFrom ggplot2 draw_key_point
 #' @export
 plot_mds <- function(x, top = 500, plot_dims = c(1, 2), labels = colnames(x), groups = NULL) {
     if (!is.null(labels)) {
@@ -67,7 +68,7 @@ plot_mds <- function(x, top = 500, plot_dims = c(1, 2), labels = colnames(x), gr
     }
 
     if (!is.null(labels)) {
-        p <- p + ggplot2::geom_label(aes(label = labels), key_glyph = draw_key_point)
+        p <- p + ggplot2::geom_label(aes(label = labels), key_glyph = ggplot2::draw_key_point)
     } else {
         p <- p + ggplot2::geom_point()
     }

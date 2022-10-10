@@ -36,6 +36,7 @@ Imports:
     GenomicRanges,
     ggrastr,
     glue,
+    graphics,
     limma (>= 3.44.0),
     patchwork,
     purrr,

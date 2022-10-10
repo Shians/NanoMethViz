@@ -144,12 +144,12 @@ setMethod(
         x
     }
     methy_data <- methy_data %>%
-        dplyr::nest_by(group, read_group) %>%
-        dplyr::group_by(group) %>%
+        dplyr::nest_by(.data$group, .data$read_group) %>%
+        dplyr::group_by(.data$group) %>%
         dplyr::group_modify(subsample_groups, subsample = subsample)
-    methy_data <- tidyr::unnest(methy_data, data)
+    methy_data <- tidyr::unnest(methy_data, .data$data)
     read_data <- read_data %>%
-        dplyr::filter(read_name %in% methy_data$read_name)
+        dplyr::filter(.data$read_name %in% methy_data$read_name)
 
     # heatmap theme
     theme_methy_heatmap <- function() {

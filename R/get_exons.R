@@ -11,14 +11,6 @@
 #' @importFrom utils install.packages packageVersion
 #' @export
 get_exons_mus_musculus <- function() {
-    if ("Mus.musculus" %in% utils::installed.packages()) {
-        if (packageVersion("Mus.musculus") < "1.4.0") {
-            require(Mus.musculus)
-        }
-    } else {
-        stop("package 'Mus.musculus' is not installed, please install using BiocManager::install('Mus.musculus')")
-    }
-
     genes <-  AnnotationDbi::keys(Mus.musculus::Mus.musculus, "GENEID")
     exon_data <- suppressMessages(AnnotationDbi::select(
         Mus.musculus::Mus.musculus,
@@ -60,14 +52,6 @@ get_exons_mus_musculus <- function() {
 #'
 #' @export
 get_example_exons_mus_musculus <- function() {
-    if ("Mus.musculus" %in% utils::installed.packages()) {
-        if (packageVersion("Mus.musculus") < "1.4.0") {
-            require(Mus.musculus)
-        }
-    } else {
-        stop("package 'Mus.musculus' is not installed, please install using BiocManager::install('Mus.musculus')")
-    }
-
     genes <-  c("12189", "12190", "16210", "17263", "18616", "213742")
     exon_data <- suppressMessages(AnnotationDbi::select(
         Mus.musculus::Mus.musculus,
@@ -109,14 +93,6 @@ get_example_exons_mus_musculus <- function() {
 #' @importFrom utils install.packages packageVersion
 #' @export
 get_exons_homo_sapiens <- function() {
-    if ("Homo.sapiens" %in% utils::installed.packages()) {
-        if (packageVersion("Homo.sapiens") < "1.4.0") {
-            require(Homo.sapiens)
-        }
-    } else {
-        stop("package 'Homo.sapiens' is not installed, please install using BiocManager::install('Homo.sapiens')")
-    }
-
     genes <-  AnnotationDbi::keys(Homo.sapiens::Homo.sapiens, "GENEID")
     exon_data <- suppressMessages(AnnotationDbi::select(
         Homo.sapiens::Homo.sapiens,

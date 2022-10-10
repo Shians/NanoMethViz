@@ -61,6 +61,6 @@ Plot GRanges
 }
 \examples{
 nmr <- load_example_nanomethresult()
-plot_grange(nmr, GRanges("chr7:6703892-6730431"))
+plot_grange(nmr, GenomicRanges::GRanges("chr7:6703892-6730431"))
 
 }

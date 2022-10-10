@@ -7,12 +7,12 @@
 filter_methy(x, output_file, ...)
 }
 \arguments{
+\item{x}{the path to the methylation file or a NanoMethResult object.}
+
 \item{output_file}{the output file to write results to (must end in .bgz).}
 
 \item{...}{filtering criteria given in dplyr syntax. Use methy_col_names()
 to get available column names.}
-
-\item{nmr}{the path to the methylation file or a NanoMethResult object.}
 }
 \value{
 invisibly returns 'output_file'

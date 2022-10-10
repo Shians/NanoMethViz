@@ -5,6 +5,8 @@
 #'
 #' @return a ggplot object containing the aggregate methylation trend of genes.
 #'
+#' @export
+#'
 #' @examples
 #' nmr <- load_example_nanomethresult()
 #' plot_agg_genes(nmr)
@@ -55,13 +57,13 @@ plot_agg_tss <- function(
     tss_regions <- gene_regions %>%
         mutate(
             start = case_when(
-                strand == "+" ~ start,
-                strand == "-" ~ end,
-                TRUE ~ start)
+                strand == "+" ~ .data$start,
+                strand == "-" ~ .data$end,
+                TRUE ~ .data$start)
         ) %>%
         mutate(
-            start = start - flank,
-            end = start + 2*flank
+            start = .data$start - flank,
+            end = .data$start + 2*flank
         )
     kb_marker <- round(flank / 1000, 1)
     labels <- c(
@@ -109,13 +111,13 @@ plot_agg_tes <- function(
     tes_regions <- gene_regions %>%
         mutate(
             start = case_when(
-                strand == "+" ~ end,
-                strand == "-" ~ start,
-                TRUE ~ end)
+                strand == "+" ~ .data$end,
+                strand == "-" ~ .data$start,
+                TRUE ~ .data$end)
         ) %>%
         mutate(
-            start = start - flank,
-            end = start + 2*flank
+            start = .data$start - flank,
+            end = .data$start + 2*flank
         )
     kb_marker <- round(flank / 1000, 1)
     labels <- c(

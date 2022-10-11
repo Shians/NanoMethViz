@@ -15,7 +15,8 @@ filter_methy(x, output_file, ...)
 to get available column names.}
 }
 \value{
-invisibly returns 'output_file'
+invisibly returns 'output_file' if x is a file path, otherwise returns
+NanoMethResult object with methy(x) replaced with filtered value.
 }
 \description{
 Create a filtered methylation file from an existing one.

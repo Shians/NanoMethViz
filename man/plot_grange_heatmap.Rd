@@ -36,7 +36,6 @@ Plot GRanges heatmap
 }
 \examples{
 nmr <- load_example_nanomethresult()
-gr <- GenomicRanges::GRanges(data.frame(chr = "chr7", start = 6703892, end = 6730431))
-plot_grange_heatmap(nmr, gr[1, ])
+plot_grange_heatmap(nmr, GenomicRanges::GRanges("chr7:6703892-6730431"))
 
 }

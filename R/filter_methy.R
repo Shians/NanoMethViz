@@ -8,7 +8,8 @@
 #'   to get available column names.
 #'
 #' @return
-#' invisibly returns 'output_file'
+#' invisibly returns 'output_file' if x is a file path, otherwise returns
+#' NanoMethResult object with methy(x) replaced with filtered value.
 #'
 #' @export
 #'
@@ -19,8 +20,11 @@
 #' filter_methy(methy(nmr), output_file = output_file, chr == "chrX")
 filter_methy <- function(x, output_file, ...) {
     if (is(x, "NanoMethResult")) {
+        return_nmr <- TRUE
+        nmr <- x
         input_file <- methy(x)
     } else {
+        return_nmr <- FALSE
         input_file <- x
     }
 
@@ -81,5 +85,10 @@ filter_methy <- function(x, output_file, ...) {
     index_name <- paste0(output_file, ".tbi")
     message(glue::glue("results written to '{output_file}' along with index file '{index_name}'"))
 
-    invisible(output_file)
+    if (return_nmr) {
+        methy(nmr) <- output_file
+        invisible(nmr)
+    } else {
+        invisible(output_file)
+    }
 }

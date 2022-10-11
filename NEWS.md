@@ -1,8 +1,16 @@
 ### Version 2.4.0
 * Fixed `plot_region_heatmap()` producing the wrong plot when a factor is used for the chromosome.
+* Fixed nanopolish and f5c import positions being off by 1.
+* Fixed broken `samples()` setter for NanoMethResults.
+* Added `plot_agg_genes()` function as a shorthand for `plot_agg_regions(x, exons_to_genes(exons(x)))`. 
+* Added the ability to interrupt `methy_to_bsseq()` calls.
+* Added handling for NanoMethResults objects in `filter_methy()`. If NanoMethResult is used as input, then NanoMethResult is invisibly returned as output.
 * Added black outlines to exons in annotation to distinguish contiguous segments for features like tandem repeats.
 * Added `line_size` argument to `plot_gene()`, `plot_region()` and `plot_granges()` plots for adjusting line size.
 * Added `subsample` argument to heatmap plots, default 50. This reduces the number of rows shown the plot to the specified amount.
+* Changed heatmaps to no longer plot samples that are absent from sample annotations.
+* Changed heatmap labels to appear on the right rather than on top.
+* Changed heatmap alpha from 0.33 to 0.5.
 * Changed arrows in exon connectors to appear in the middle as open arrow instead of at the end as closed arrow.
 * Changed default X axis labels to be rescaled to appropriate SI-style. e.g. Kb, Mb, Gb.
 

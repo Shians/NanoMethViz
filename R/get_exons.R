@@ -1,3 +1,18 @@
+#' Get exon annotations
+#'
+#' Helper functions are provided for obtaining exon annotations from relevant
+#' TxDb packages on Bioconductor for the construction of NanoMethResults
+#' objects.
+#'
+#' @name get_exons
+#' @rdname get_exons
+#'
+#' @return tibble (data.frame) object containing exon annotation.
+#'
+#' @importFrom tibble as_tibble
+#' @importFrom dplyr rename
+NULL
+
 #' Get exon annotations for Mus musculus (mm10)
 #'
 #' @return data.frame containing exons
@@ -39,15 +54,11 @@ get_exons_mus_musculus <- function() {
         )
 }
 
-#' Get exon annotations for Mus musculus (mm10)
-#'
-#' @return data.frame containing exons
+#' @rdname get_exons
 #'
 #' @examples
 #' mm10_exons <- get_exons_mm10()
 #'
-#' @importFrom tibble as_tibble
-#' @importFrom dplyr rename
 #' @export
 get_exons_mm10 <- function() {
     package_check(
@@ -180,15 +191,11 @@ get_exons_homo_sapiens <- function() {
 
 }
 
-#' Get exon annotations for Homo sapiens (hg19)
-#'
-#' @return data.frame containing exons
+#' @rdname get_exons
 #'
 #' @examples
 #' hg19_exons <- get_exons_hg19()
 #'
-#' @importFrom tibble as_tibble
-#' @importFrom dplyr rename
 #' @export
 get_exons_hg19 <- function() {
     package_check(
@@ -234,15 +241,11 @@ get_exons_hg19 <- function() {
         )
 }
 
-#' Get exon annotations for Homo sapiens (hg38)
-#'
-#' @return data.frame containing exons
+#' @rdname get_exons
 #'
 #' @examples
 #' hg38_exons <- get_exons_hg38()
 #'
-#' @importFrom tibble as_tibble
-#' @importFrom dplyr rename
 #' @export
 get_exons_hg38 <- function() {
     package_check(

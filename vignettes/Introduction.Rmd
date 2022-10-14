@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # preload to avoid loading messages
 library(NanoMethViz)
-exon_tibble <- get_exons_mus_musculus()
+exon_tibble <- get_exons_mm10()
 ```
 
 To install this package, run
@@ -52,8 +52,8 @@ a single table. It is important that the chromosomes share the same convention
 as that found in the methylation data.
 
 ```{r}
-# helper function extracts exons from Mus.musculus package
-exon_tibble <- get_exons_mus_musculus()
+# helper function extracts exons from TxDb package
+exon_tibble <- get_exons_mm10()
 
 head(exon_tibble)
 ```

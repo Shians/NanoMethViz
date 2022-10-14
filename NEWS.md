@@ -8,6 +8,7 @@
 * Added black outlines to exons in annotation to distinguish contiguous segments for features like tandem repeats.
 * Added `line_size` argument to `plot_gene()`, `plot_region()` and `plot_granges()` plots for adjusting line size.
 * Added `subsample` argument to heatmap plots, default 50. This reduces the number of rows shown the plot to the specified amount.
+* Added `get_exons_mm10()`, `get_exons_hg19()`, and `get_exons_hg38()` as replacements for `get_exons_mus_musculus()` and `get_exons_homo_sapiens()`.
 * Changed heatmaps to no longer plot samples that are absent from sample annotations.
 * Changed heatmap labels to appear on the right rather than on top.
 * Changed heatmap alpha from 0.33 to 0.5.

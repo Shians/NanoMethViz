@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_exons.R
 \name{get_example_exons_mus_musculus}
 \alias{get_example_exons_mus_musculus}
-\title{Get example exon annotations for mus musculus}
+\title{Get example exon annotations for mus musculus (mm10)}
 \usage{
 get_example_exons_mus_musculus()
 }

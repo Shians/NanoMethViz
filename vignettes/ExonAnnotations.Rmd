@@ -46,10 +46,10 @@ head(anno)
 anno <- anno %>%
     as.data.frame() %>%
     dplyr::rename(
-        chr = seqnames,
-        symbol = gene_name
+        chr = "seqnames",
+        symbol = "gene_name"
     ) %>%
-    dplyr::select(gene_id, chr, strand, start, end, transcript_id, symbol)
+    dplyr::select("gene_id", "chr", "strand", "start", "end", "transcript_id", "symbol")
 
 head(anno)
 ```

@@ -98,9 +98,13 @@ get_tabix_sequences <- function(file) {
 }
 
 stack_plots <- function(spaghetti, heat) {
-    spaghetti[[1]] + heat + spaghetti[[2]] +
-        patchwork::plot_layout(
-            nrow = 3,
-            heights = c(spaghetti$patches$layout$heights[1], 1, spaghetti$patches$layout$heights[2])
-        )
+    if (is(spaghetti, "patchwork")) {
+        spaghetti[[1]] + heat + spaghetti[[2]] +
+            patchwork::plot_layout(
+                nrow = 3,
+                heights = c(spaghetti$patches$layout$heights[1], 1, spaghetti$patches$layout$heights[2])
+            )
+    } else {
+        spaghetti + heat + patchwork::plot_layout(nrow = 2)
+    }
 }

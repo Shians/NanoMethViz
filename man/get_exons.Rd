@@ -14,7 +14,7 @@ get_exons_hg19()
 get_exons_hg38()
 }
 \value{
-data.frame containing exons
+tibble (data.frame) object containing exon annotation.
 }
 \description{
 Helper functions are provided for obtaining exon annotations from relevant

@@ -94,7 +94,7 @@ plot_methylation_internal <- function(
             data = plot_data_smooth,
             span = span,
             na.rm = TRUE,
-            size = line_size
+            linewidth = line_size
         )
 
     # add auxiliary elements and style

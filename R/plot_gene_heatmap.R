@@ -147,7 +147,7 @@ setMethod(
         dplyr::nest_by(.data$group, .data$read_group) %>%
         dplyr::group_by(.data$group) %>%
         dplyr::group_modify(subsample_groups, subsample = subsample)
-    methy_data <- tidyr::unnest(methy_data, .data$data)
+    methy_data <- tidyr::unnest(methy_data, "data")
     read_data <- read_data %>%
         dplyr::filter(.data$read_name %in% methy_data$read_name)
 

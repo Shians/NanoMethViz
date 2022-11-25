@@ -1,9 +1,9 @@
-test_that("Plotting region works", {
+test_that("Plotting gene works", {
     # setup
     nmr <- load_example_nanomethresult()
 
     # test
-    expect_silent(p <- plot_region(nmr, "chr7", 6703892, 6730431))
+    expect_silent(p <- plot_gene(nmr, "Peg3"))
     expect_true(is(p, "ggplot"))
 
     params <- expand.grid(
@@ -14,8 +14,9 @@ test_that("Plotting region works", {
 
     for (i in 1:nrow(params)) {
         expect_silent(
-            plot_region(
-                nmr, "chr7", 6703892, 6730431,
+            plot_gene(
+                nmr,
+                "Peg3",
                 heatmap = params$heatmap[i],
                 spaghetti = params$spaghetti[i]
             )

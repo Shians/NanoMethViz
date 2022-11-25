@@ -29,7 +29,7 @@ plot_gene_annotation <- function(exons_df, plot_start, plot_end) {
                 gap_start = list(.data$end[-length(.data$end)]),
                 gap_end = list(.data$start[-1])
             ) %>%
-            tidyr::unnest(cols = c(.data$gap_start, .data$gap_end))
+            tidyr::unnest(cols = c("gap_start", "gap_end"))
     } else {
         gap <- tibble::tibble(
             uid = character(),

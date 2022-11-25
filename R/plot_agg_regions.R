@@ -59,9 +59,9 @@ plot_agg_regions <- function(
         ggplot2::ylim(c(0, 1)) +
         ggplot2::theme_bw() +
         ggplot2::stat_smooth(
-            ggplot2::aes_string(
-                x = "binned_pos",
-                y = "methy_prop",
+            ggplot2::aes(
+                x = .data$binned_pos,
+                y = .data$methy_prop,
                 group = group_col,
                 col = group_col),
             method = "loess",

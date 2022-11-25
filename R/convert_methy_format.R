@@ -62,9 +62,9 @@ reformat_nanopolish <- function(x, sample) {
 reformat_megalodon_old <- function(x, sample) {
     x %>%
         rename(
-            chr = .data$chrm,
-            statistic = .data$mod_log_prob,
-            read_name = .data$read_id) %>%
+            chr = "chrm",
+            statistic = "mod_log_prob",
+            read_name = "read_id") %>%
         add_column(sample = sample, .before = 1) %>%
         mutate(
             sample = as.factor(.data$sample),
@@ -82,9 +82,9 @@ reformat_megalodon_old <- function(x, sample) {
 reformat_megalodon <- function(x, sample) {
     x %>%
         rename(
-            chr = .data$chrm,
-            statistic = .data$mod_log_prob,
-            read_name = .data$read_id) %>%
+            chr = "chrm",
+            statistic = "mod_log_prob",
+            read_name = "read_id") %>%
         add_column(sample = sample, .before = 1) %>%
         mutate(
             sample = as.factor(.data$sample),

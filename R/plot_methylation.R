@@ -99,7 +99,7 @@ plot_methylation_internal <- function(
 
     # add auxiliary elements and style
     p +
-        ggplot2::geom_rug(aes(col = NULL), sides = "b") +
+        ggplot2::geom_rug(aes(col = NULL), sides = "b", outside = TRUE) +
         ggplot2::ggtitle(title) +
         ggplot2::xlab(chr) +
         ggplot2::scale_y_continuous(

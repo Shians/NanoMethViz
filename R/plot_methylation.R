@@ -48,7 +48,9 @@ plot_methylation_internal <- function(
     }
 
     # set up plot
-    p <- ggplot(plot_data, aes(x = .data$pos, col = .data$group))
+    # rug first so it appears on the bottom layer
+    p <- ggplot(plot_data, aes(x = .data$pos, col = .data$group)) +
+        ggplot2::geom_rug(aes(col = NULL), sides = "b")
 
     # add annotated regions
     if (!is.null(anno_regions)) {
@@ -99,7 +101,6 @@ plot_methylation_internal <- function(
 
     # add auxiliary elements and style
     p +
-        ggplot2::geom_rug(aes(col = NULL), sides = "b") +
         ggplot2::ggtitle(title) +
         ggplot2::xlab(chr) +
         ggplot2::scale_y_continuous(

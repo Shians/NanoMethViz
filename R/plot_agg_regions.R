@@ -54,16 +54,28 @@ plot_agg_regions <- function(
     methy_data <- .unnest_anno(methy_data, NanoMethViz::samples(x))
     methy_data <- .bin_avg(methy_data, group_col = group_col)
 
+    # change aes spec depending on if group_col is available
+    # hacky fix to the deprecation of aes_string which handled a NULL group_col
+    # value
+    if (!is.null(group_col)) {
+        aes_spec <- ggplot2::aes(
+                x = .data$binned_pos,
+                y = .data$methy_prop,
+                group = .data[[group_col]],
+                col = .data[[group_col]])
+    } else {
+        aes_spec <- ggplot2::aes(
+                x = .data$binned_pos,
+                y = .data$methy_prop)
+    }
+    aes_spec <-
+
     # set up plot
     p <- ggplot2::ggplot() +
         ggplot2::ylim(c(0, 1)) +
         ggplot2::theme_bw() +
         ggplot2::stat_smooth(
-            ggplot2::aes(
-                x = .data$binned_pos,
-                y = .data$methy_prop,
-                group = .data[[group_col]],
-                col = .data[[group_col]]),
+            aes_spec,
             method = "loess",
             formula = "y ~ x",
             span = span,

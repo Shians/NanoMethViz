@@ -62,8 +62,8 @@ plot_agg_regions <- function(
             ggplot2::aes(
                 x = .data$binned_pos,
                 y = .data$methy_prop,
-                group = group_col,
-                col = group_col),
+                group = .data[[group_col]],
+                col = .data[[group_col]]),
             method = "loess",
             formula = "y ~ x",
             span = span,

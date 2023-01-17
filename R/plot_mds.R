@@ -62,7 +62,7 @@ plot_mds <- function(x, top = 500, plot_dims = c(1, 2), labels = colnames(x), gr
 
 
     if (!is.null(groups)) {
-        p <- ggplot2::ggplot(plot_data, ggplot2::aes(x = .data$dim1, y = .data$dim2, col = "groups"))
+        p <- ggplot2::ggplot(plot_data, ggplot2::aes(x = .data$dim1, y = .data$dim2, col = .data$groups))
     } else {
         p <- ggplot2::ggplot(plot_data, ggplot2::aes(x = .data$dim1, y = .data$dim2))
     }

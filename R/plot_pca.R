@@ -43,7 +43,7 @@ plot_pca <- function(x, plot_dims = c(1, 2), labels = colnames(x), groups = NULL
     ylabel <- glue::glue("PCA Dim {plot_dims[2]}")
 
     if (!is.null(groups)) {
-        p <- ggplot2::ggplot(plot_data, ggplot2::aes(x = .data$dim1, y = .data$dim2, col = "groups"))
+        p <- ggplot2::ggplot(plot_data, ggplot2::aes(x = .data$dim1, y = .data$dim2, col = .data$groups))
     } else {
         p <- ggplot2::ggplot(plot_data, ggplot2::aes(x = .data$dim1, y = .data$dim2))
     }

@@ -187,9 +187,9 @@ setMethod(
                 ),
                 data = dplyr::left_join(
                     read_data, grouping_data,
-                    by = c("read_name", "start", "end", "group"),
+                    by = c("read_name", "start", "end", "group")
+                ),
                 alpha = 0.75
-                )
             ) +
             ggplot2::geom_point(
                 aes(x = .data$pos, col = .data$mod_prob), alpha = 0.5, shape = 15) +

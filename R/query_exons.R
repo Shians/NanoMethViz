@@ -30,7 +30,7 @@ query_exons_region <- function(exons, chr, start, end) {
         dplyr::select("gene_id")
 
     exons %>%
-        dplyr::inner_join(genes, by = "gene_id")
+        dplyr::inner_join(genes, by = "gene_id", multiple = "all")
 }
 
 #' @param exons the data.frame of exons.

@@ -103,7 +103,8 @@ setMethod(
     methy_data <- dplyr::left_join(
         NanoMethViz::samples(x),
         methy_data,
-        by = "sample"
+        by = "sample",
+        multiple = "all"
     )
 
     read_data <- methy_data %>%
@@ -115,7 +116,7 @@ setMethod(
             dplyr::summarise(group = unique(.data$group))
 
     # get read starts and ends
-    read_data <- dplyr::left_join(read_data, group_data, by = "read_name")
+    read_data <- dplyr::left_join(read_data, group_data, by = "read_name", multiple = "all")
 
     # get grouping indices to pack reads
     append_read_group <- function(x, k) {
@@ -133,7 +134,8 @@ setMethod(
     methy_data <- dplyr::left_join(
         methy_data,
         dplyr::select(grouping_data, "read_name", "read_group"),
-        by = "read_name"
+        by = "read_name",
+        multiple = "all"
     )
 
     # subsample reads down to a certain number of read groups
@@ -187,7 +189,8 @@ setMethod(
                 ),
                 data = dplyr::left_join(
                     read_data, grouping_data,
-                    by = c("read_name", "start", "end", "group")
+                    by = c("read_name", "start", "end", "group"),
+                    multiple = "all"
                 ),
                 alpha = 0.75
             ) +

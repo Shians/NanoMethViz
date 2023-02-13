@@ -16,7 +16,7 @@ plot_gene_annotation <- function(exons_df, plot_start, plot_end) {
         dplyr::summarise(exons = dplyr::n())
 
     gap <- exons_df %>%
-        dplyr::inner_join(exons_count, by = c("uid", "y_offset")) %>%
+        dplyr::inner_join(exons_count, by = c("uid", "y_offset"), multiple = "all") %>%
         dplyr::filter(.data$exons > 1) %>%
         dplyr::group_by("transcript_id") %>%
         dplyr::arrange(.data$start) %>%

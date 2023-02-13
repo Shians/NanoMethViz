@@ -33,13 +33,13 @@ plot_methylation_internal <- function(
     # extract group information and convert probabilities
     if (is.null(binary_threshold)) {
         plot_data <- methy_data %>%
-            dplyr::inner_join(sample_anno, by = "sample") %>%
+            dplyr::inner_join(sample_anno, by = "sample", multiple = "all") %>%
             dplyr::mutate(
                 mod_prob = e1071::sigmoid(.data$statistic)
             )
     } else {
         plot_data <- methy_data %>%
-            dplyr::inner_join(sample_anno, by = "sample") %>%
+            dplyr::inner_join(sample_anno, by = "sample", multiple = "all") %>%
             dplyr::mutate(
                 mod_prob = as.numeric(
                     e1071::sigmoid(.data$statistic) > binary_threshold

@@ -93,7 +93,7 @@ get_exons_mm10 <- function() {
         )) %>%
         dplyr::rename(GENEID = "ENTREZID")
 
-    dplyr::left_join(exon_data, symbols_data, by = "GENEID") %>%
+    dplyr::left_join(exon_data, symbols_data, by = "GENEID", multiple = "all") %>%
         tibble::as_tibble() %>%
         dplyr::rename(
             gene_id = "GENEID",
@@ -228,7 +228,7 @@ get_exons_hg19 <- function() {
         )) %>%
         dplyr::rename(GENEID = "ENTREZID")
 
-    dplyr::left_join(exon_data, symbols_data, by = "GENEID") %>%
+    dplyr::left_join(exon_data, symbols_data, by = "GENEID", multiple = "all") %>%
         tibble::as_tibble() %>%
         dplyr::rename(
             gene_id = "GENEID",
@@ -278,7 +278,7 @@ get_exons_hg38 <- function() {
         )) %>%
         dplyr::rename(GENEID = "ENTREZID")
 
-    dplyr::left_join(exon_data, symbols_data, by = "GENEID") %>%
+    dplyr::left_join(exon_data, symbols_data, by = "GENEID", multiple = "all") %>%
         tibble::as_tibble() %>%
         dplyr::rename(
             gene_id = "GENEID",

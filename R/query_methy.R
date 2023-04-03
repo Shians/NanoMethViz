@@ -49,6 +49,18 @@ query_methy_df <- function(x, regions, simplify = TRUE, force = FALSE) {
     query_methy(x, regions$chr, regions$start, regions$end, simplify, force)
 }
 
+query_methy_gr <- function(x, regions, simplify = TRUE, force = FALSE) {
+    assert_that(is(regions, "GRanges"))
+    query_methy(
+        x,
+        seqname(regions),
+        start(regions),
+        end(regions),
+        simplify,
+        force
+    )
+}
+
 query_methy_gene <- function(x, gene, window_prop = 0, simplify = TRUE) {
     if (!gene %in% exons(x)$symbol) {
         stop(glue::glue("gene {gene} not found in exon annotation"))

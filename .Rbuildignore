@@ -4,6 +4,7 @@
 ^\.Rproj\.user$
 ^LICENSE\.md$
 ^doc$
+^experimental$
 ^Meta$
 ^img$
 ^codecov\.yml$

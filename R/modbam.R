@@ -36,7 +36,7 @@ cigar_tokeniser <- function(x) {
 }
 
 get_coord_map <- function(cigar) {
-    tokens <- cigar_tokeniser(cigar)
+    tokens <- cigar_tokeniser_cpp(cigar)
     token_vec <- rep(tokens$state, times = tokens$count)
     seq_coord <- 0
     ref_coord <- 0
@@ -64,20 +64,16 @@ get_coord_map <- function(cigar) {
 }
 
 modbam_to_ref_coord <- function(seq, cigar, mod_str, mod_scores, map_pos, strand) {
-    if (!is(seq, "DNAString")) {
-        seq <- Biostrings::DNAString(seq)
-    }
-
     mod_tokens <- mod_tokeniser(mod_str, mod_scores)
     coord_map <- get_coord_map(cigar)
 
     if (strand == "-") {
-    mod_candidate_pos <- rev(Biostrings::matchPattern("G", seq))[mod_tokens$mod_pos]
+    mod_candidate_pos <- rev(get_char_pos_cpp("G", seq))[mod_tokens$mod_pos]
     } else if (strand == "+") {
-        mod_candidate_pos <- Biostrings::matchPattern("C", seq)[mod_tokens$mod_pos]
+        mod_candidate_pos <- get_char_pos_cpp("C", seq)[mod_tokens$mod_pos]
     }
 
-    rel_pos <- coord_map[start(mod_candidate_pos)]
+    rel_pos <- coord_map[mod_candidate_pos]
     genome_pos <- map_pos + rel_pos - 1
 
     tibble(
@@ -143,44 +139,3 @@ read_modbam_table <- function(x, chr, start, end, sample) {
 
     lapply(reads, parse_modbam)
 }
-
-query_methy_modbam <- function(x, chr, start, end) {
-    assertthat::assert_that(
-        is(x, "ModBamResult") ||
-        is(x, "ModBamFiles")
-    )
-    if (is(x, "ModBamResult")) {
-        x <- methy(x)
-    }
-
-    assert_readable(x$path)
-
-    x <- data.frame(
-        sample = x$sample,
-        path = x$path
-    )
-
-
-    out <- x %>%
-        dplyr::mutate(
-            mod_table = map_rows(x, function(x) {
-                read_modbam_table(
-                    x$path,
-                    chr = chr,
-                    start = start,
-                    end = end,
-                    sample = x$sample)
-            })
-        )
-
-    tables <- do.call(c, out$mod_table)
-
-    nms <- names(tables)
-    out <- list()
-    for (nm in unique(nms)) {
-        out[[nm]] <- do.call(rbind, tables[names(tables) == nm])
-    }
-
-    out
-}
-

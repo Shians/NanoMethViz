@@ -5,3 +5,11 @@ convert_methy_to_dss_cpp <- function(input, output_dir) {
     .Call('_NanoMethViz_convert_methy_to_dss_cpp', PACKAGE = 'NanoMethViz', input, output_dir)
 }
 
+get_char_pos_cpp <- function(x, c) {
+    .Call('_NanoMethViz_get_char_pos_cpp', PACKAGE = 'NanoMethViz', x, c)
+}
+
+cigar_tokeniser_cpp <- function(x) {
+    .Call('_NanoMethViz_cigar_tokeniser_cpp', PACKAGE = 'NanoMethViz', x)
+}
+

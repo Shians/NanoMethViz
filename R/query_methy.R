@@ -216,3 +216,44 @@ query_methy_tabix <- function(x, chr, start, end, force) {
         parse_tabix
     )
 }
+
+query_methy_modbam <- function(x, chr, start, end) {
+    assertthat::assert_that(
+        is(x, "ModBamResult") ||
+        is(x, "ModBamFiles")
+    )
+    if (is(x, "ModBamResult")) {
+        x <- methy(x)
+    }
+
+    assert_readable(x$path)
+
+    x <- data.frame(
+        sample = x$sample,
+        path = x$path
+    )
+
+
+    out <- x %>%
+        dplyr::mutate(
+            mod_table = map_rows(x, function(x) {
+                read_modbam_table(
+                    x$path,
+                    chr = chr,
+                    start = start,
+                    end = end,
+                    sample = x$sample)
+            })
+        )
+
+    tables <- do.call(c, out$mod_table)
+
+    nms <- names(tables)
+    out <- list()
+    for (nm in unique(nms)) {
+        out[[nm]] <- do.call(rbind, tables[names(tables) == nm])
+    }
+
+    out
+}
+

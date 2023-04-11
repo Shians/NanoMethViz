@@ -1,22 +1,3 @@
-#' Plot gene
-#'
-#' @param x the NanoMethResult object.
-#' @param gene the gene symbol for the gene to plot.
-#' @param ... additional arguments
-#'
-#' @return a patchwork plot containing the methylation profile in the specified
-#'   region.
-#'
-#' @examples
-#' nmr <- load_example_nanomethresult()
-#' plot_gene(nmr, "Peg3")
-#'
-#' @importFrom ggrastr rasterise
-#' @export
-setGeneric("plot_gene", function(x, gene, ...) {
-    standardGeneric("plot_gene")
-})
-
 #' @rdname plot_gene
 #'
 #' @param window_prop the size of flanking region to plot. Can be a vector of two

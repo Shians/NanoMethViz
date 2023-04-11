@@ -1,24 +1,3 @@
-#' Plot region
-#'
-#' @param x the NanoMethResult object.
-#' @param chr the chromosome to plot.
-#' @param start the start of the plotting region.
-#' @param end the end of the plotting region.
-#' @param ... additional arguments.
-#'
-#' @return a patchwork plot containing the methylation profile in the specified
-#'   region.
-#'
-#' @examples
-#' nmr <- load_example_nanomethresult()
-#' plot_region(nmr, "chr7", 6703892, 6730431)
-#'
-#' @importFrom ggrastr rasterise
-#' @export
-setGeneric("plot_region", function(x, chr, start, end, ...) {
-    standardGeneric("plot_region")
-})
-
 #' @rdname plot_region
 #'
 #' @param anno_regions the data.frame of regions to be annotated.

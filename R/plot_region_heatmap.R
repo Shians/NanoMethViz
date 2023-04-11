@@ -1,22 +1,3 @@
-#' Plot region methylation heatmap
-#'
-#' @param x the NanoMethResult object.
-#' @param chr the chromosome to plot.
-#' @param start the start of the plotting region.
-#' @param end the end of the plotting region.
-#' @param ... additional arguments.
-#'
-#' @return a ggplot object of the heatmap.
-#'
-#' @examples
-#' nmr <- load_example_nanomethresult()
-#' plot_region_heatmap(nmr, "chr7", 6703892, 6730431)
-#'
-#' @export
-setGeneric("plot_region_heatmap", function(x, chr, start, end, ...) {
-    standardGeneric("plot_region_heatmap")
-})
-
 #' @rdname plot_region_heatmap
 #'
 #' @param window_prop the size of flanking region to plot. Can be a vector of two

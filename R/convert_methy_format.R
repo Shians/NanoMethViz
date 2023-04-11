@@ -96,7 +96,7 @@ reformat_megalodon <- function(x, sample) {
 }
 
 guess_methy_source <- function(methy_file) {
-    assert_that(is.readable(methy_file))
+    assert_readable(methy_file)
 
     first_line <- readr::read_lines(methy_file, n_max = 1)
 
@@ -127,7 +127,7 @@ convert_methy_format <- function(
     verbose = TRUE
 ) {
     for (f in input_files) {
-        assert_that(is.readable(f))
+        assert_readable(f)
     }
 
     assert_that(

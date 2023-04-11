@@ -5,7 +5,7 @@
 #'
 #' @return invisibly returns path of sorted file
 sort_methy_file <- function(x) {
-    assert_that(is.readable(x))
+    assert_readable(x)
 
     if (.Platform$OS.type == "windows") {
         methy_df <- data.table::fread(
@@ -25,7 +25,7 @@ sort_methy_file <- function(x) {
 }
 
 tabix_compress <- function(x, index = TRUE) {
-    assert_that(is.readable(x))
+    assert_readable(x)
 
     f <- Rsamtools::bgzip(x, overwrite = TRUE)
     if (index) {
@@ -36,7 +36,7 @@ tabix_compress <- function(x, index = TRUE) {
 }
 
 tabix_index <- function(x) {
-    assert_that(is.readable(x))
+    assert_readable(x)
 
     Rsamtools::indexTabix(x, seq = 2, start = 3, end = 3)
 }
@@ -48,7 +48,7 @@ tabix_index <- function(x) {
 #'
 #' @return invisibly returns the path to the tabix file
 raw_methy_to_tabix <- function(x) {
-    assert_that(is.readable(x))
+    assert_readable(x)
 
     bgz_name <- tabix_compress(x)
     tabix_index(bgz_name)

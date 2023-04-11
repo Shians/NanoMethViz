@@ -63,14 +63,20 @@ get_coord_map <- function(cigar) {
     out
 }
 
+get_char_pos <- function(x, c) {
+    x <- Biostrings::DNAString(x)
+
+    Biostrings::start(Biostrings::matchPattern(c, x))
+}
+
 modbam_to_ref_coord <- function(seq, cigar, mod_str, mod_scores, map_pos, strand) {
     mod_tokens <- mod_tokeniser(mod_str, mod_scores)
     coord_map <- get_coord_map(cigar)
 
     if (strand == "-") {
-    mod_candidate_pos <- rev(get_char_pos_cpp("G", seq))[mod_tokens$mod_pos]
+    mod_candidate_pos <- rev(get_char_pos_cpp(seq, "G"))[mod_tokens$mod_pos]
     } else if (strand == "+") {
-        mod_candidate_pos <- get_char_pos_cpp("C", seq)[mod_tokens$mod_pos]
+        mod_candidate_pos <- get_char_pos_cpp(seq, "C")[mod_tokens$mod_pos]
     }
 
     rel_pos <- coord_map[mod_candidate_pos]

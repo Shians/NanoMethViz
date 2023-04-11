@@ -29,10 +29,12 @@ query_methy <- function(x, chr, start, end, simplify = TRUE, force = FALSE) {
         x <- methy(x)
     }
 
-    if (can_open_sql(x)) {
-        out <- query_methy_sqlite(x, chr, start, end)
+    if (is(x, "ModBamFiles") || is(x, "ModBamResult")) {
+        out <- query_methy_modbam(x, chr, start, end)
     } else if (can_open_tabix(x)) {
         out <- query_methy_tabix(x, chr, start, end, force = force)
+    } else if (can_open_sql(x)) {
+        out <- query_methy_sqlite(x, chr, start, end)
     } else {
         stop("'x' is not a recognised file of type sqlite3 or tabix")
     }
@@ -53,9 +55,9 @@ query_methy_gr <- function(x, regions, simplify = TRUE, force = FALSE) {
     assert_that(is(regions, "GRanges"))
     query_methy(
         x,
-        seqname(regions),
-        start(regions),
-        end(regions),
+        GenomicRanges::seqnames(regions),
+        GenomicRanges::start(regions),
+        GenomicRanges::end(regions),
         simplify,
         force
     )
@@ -92,7 +94,7 @@ query_methy_gene <- function(x, gene, window_prop = 0, simplify = TRUE) {
 }
 
 can_open_sql <- function(x) {
-    assertthat::is.readable(x)
+    assert_readable(x)
     out <- TRUE
 
     tryCatch(
@@ -109,7 +111,7 @@ can_open_sql <- function(x) {
 }
 
 can_open_tabix <- function(x) {
-    assertthat::is.readable(x)
+    assert_readable(x)
     out <- TRUE
 
     tryCatch(
@@ -139,6 +141,17 @@ query_methy_sqlite <- function(x, chr, start, end) {
     tibble::as_tibble(out)
 }
 
+empty_methy_query_output <- function() {
+    tibble::tibble(
+        "sample" = character(),
+        "chr" = character(),
+        "pos" = integer(),
+        "strand" = character(),
+        "statistic" = numeric(),
+        "read_name" = character()
+    )
+}
+
 #' @importFrom utils read.table
 query_methy_tabix <- function(x, chr, start, end, force) {
     tabix_file <- Rsamtools::TabixFile(x)
@@ -156,20 +169,11 @@ query_methy_tabix <- function(x, chr, start, end, force) {
         end <- end[-miss]
     }
 
-    empty_res <- tibble::tibble(
-        "sample" = character(),
-        "chr" = character(),
-        "pos" = integer(),
-        "strand" = character(),
-        "statistic" = numeric(),
-        "read_name" = character()
-    )
-
     if (length(chr) == 0) {
         if (!force) {
             stop("no chromosome matches between query and tabix file, please check chromosome format matches between query and methylation file.")
         } else {
-            return(empty_res)
+            return(empty_methy_query_output())
         }
     }
 

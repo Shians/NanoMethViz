@@ -9,7 +9,7 @@
 #' showMethods("methy")
 #'
 #' @export
-setGeneric("methy", valueClass = "character", function(object) {
+setGeneric("methy", valueClass = "ANY", function(object) {
     standardGeneric("methy")
 })
 

@@ -39,6 +39,28 @@ setMethod(
     }
 )
 
+setMethod(
+    "plot_gene_heatmap",
+    signature(x = "ModBamResult", gene = "character"),
+    function(
+        x,
+        gene,
+        window_prop = 0.3,
+        pos_style = c("to_scale", "compact"),
+        subsample = 50
+    ) {
+        pos_style <- match.arg(pos_style)
+
+        .plot_gene_heatmap(
+            x = x,
+            gene = gene,
+            window_prop = window_prop,
+            pos_style = pos_style,
+            subsample = subsample
+        )
+    }
+)
+
 .plot_gene_heatmap <- function(
     x,
     gene,

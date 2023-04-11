@@ -48,12 +48,73 @@ setMethod(
     }
 )
 
+setMethod(
+    "plot_region_heatmap",
+    signature(
+        x = "ModBamResult",
+        chr = "character",
+        start = "numeric",
+        end = "numeric"),
+
+    function(
+        x,
+        chr,
+        start,
+        end,
+        pos_style = c("to_scale", "compact"),
+        window_prop = 0,
+        subsample = 50
+
+    ) {
+        pos_style <- match.arg(pos_style)
+
+        .plot_region_heatmap(
+            x = x,
+            chr = chr,
+            start = start,
+            end = end,
+            pos_style = pos_style,
+            window_prop = window_prop,
+            subsample = subsample
+        )
+    }
+)
+
 #' @rdname plot_region_heatmap
 #'
 #' @export
 setMethod("plot_region_heatmap",
     signature(
         x = "NanoMethResult",
+        chr = "factor",
+        start = "numeric",
+        end = "numeric"),
+
+    function(
+        x,
+        chr,
+        start,
+        end,
+        pos_style = c("to_scale", "compact"),
+        window_prop = 0,
+        subsample = 50
+    ) {
+        chr <- as.character(chr)
+        .plot_region_heatmap(
+            x = x,
+            chr = chr,
+            start = start,
+            end = end,
+            pos_style = pos_style,
+            window_prop = window_prop,
+            subsample = subsample
+        )
+    }
+)
+
+setMethod("plot_region_heatmap",
+    signature(
+        x = "ModBamResult",
         chr = "factor",
         start = "numeric",
         end = "numeric"),

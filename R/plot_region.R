@@ -67,12 +67,95 @@ setMethod("plot_region",
     }
 )
 
+setMethod("plot_region",
+    signature(
+        x = "ModBamResult",
+        chr = "character",
+        start = "numeric",
+        end = "numeric"),
+    function(
+        x,
+        chr,
+        start,
+        end,
+        anno_regions = NULL,
+        binary_threshold = NULL,
+        avg_method = c("mean", "median"),
+        spaghetti = FALSE,
+        heatmap = FALSE,
+        span = NULL,
+        window_prop = 0,
+        palette = ggplot2::scale_colour_brewer(palette = "Set1"),
+        line_size = 2
+    ) {
+        avg_method <- match.arg(avg_method)
+
+        .plot_region(
+            x = x,
+            chr = chr,
+            start = start,
+            end = end,
+            anno_regions = anno_regions,
+            binary_threshold = binary_threshold,
+            spaghetti = spaghetti,
+            avg_method = avg_method,
+            heatmap = heatmap,
+            span = span,
+            window_prop = window_prop,
+            palette = palette,
+            line_size = line_size
+        )
+    }
+)
+
 #' @rdname plot_region
 #'
 #' @export
 setMethod("plot_region",
     signature(
         x = "NanoMethResult",
+        chr = "factor",
+        start = "numeric",
+        end = "numeric"),
+
+    function(
+        x,
+        chr,
+        start,
+        end,
+        anno_regions = NULL,
+        binary_threshold = NULL,
+        avg_method = c("mean", "median"),
+        spaghetti = FALSE,
+        heatmap = FALSE,
+        span = NULL,
+        window_prop = 0,
+        palette = ggplot2::scale_colour_brewer(palette = "Set1"),
+        line_size = 2
+    ) {
+        chr <- as.character(chr)
+        avg_method <- match.arg(avg_method)
+        plot_region(
+            x = x,
+            chr = chr,
+            start = start,
+            end = end,
+            anno_regions = anno_regions,
+            binary_threshold = binary_threshold,
+            avg_method = avg_method,
+            spaghetti = spaghetti,
+            heatmap = heatmap,
+            span = span,
+            window_prop = window_prop,
+            palette = palette,
+            line_size = line_size
+        )
+    }
+)
+
+setMethod("plot_region",
+    signature(
+        x = "ModBamResult",
         chr = "factor",
         start = "numeric",
         end = "numeric"),

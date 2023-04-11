@@ -60,6 +60,39 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
     }
 )
 
+setMethod("plot_gene", signature(x = "ModBamResult", gene = "character"),
+    function(
+        x,
+        gene,
+        window_prop = 0.3,
+        anno_regions = NULL,
+        binary_threshold = NULL,
+        avg_method = c("mean", "median"),
+        spaghetti = FALSE,
+        heatmap = FALSE,
+        span = NULL,
+        gene_anno = TRUE,
+        palette = ggplot2::scale_colour_brewer(palette = "Set1"),
+        line_size = 2
+    ) {
+        avg_method <- match.arg(avg_method)
+        .plot_gene(
+            x,
+            gene,
+            window_prop = window_prop,
+            anno_regions = anno_regions,
+            binary_threshold = binary_threshold,
+            avg_method = avg_method,
+            spaghetti = spaghetti,
+            heatmap = heatmap,
+            span = span,
+            gene_anno = gene_anno,
+            palette = palette,
+            line_size = line_size
+        )
+    }
+)
+
 .plot_gene <- function(
     x,
     gene,

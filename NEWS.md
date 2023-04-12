@@ -1,5 +1,6 @@
 ### Version 2.6.0
 * Changed rug plot to appear under other geoms. This helps with visibility of data when methlyation values are close to 0.
+* Added preliminary modbam file support.
 
 ### Version 2.4.0
 * Fixed `plot_region_heatmap()` producing the wrong plot when a factor is used for the chromosome.

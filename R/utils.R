@@ -108,3 +108,14 @@ stack_plots <- function(spaghetti, heat) {
         spaghetti + heat + patchwork::plot_layout(nrow = 2)
     }
 }
+
+map_rows <- function(x, .f, ...) {
+    if (!is.data.frame(x) || nrow(x) == 0) {
+        stop("'x' must be a non-empty data.frame")
+    }
+
+    # Apply the function .f to each row of x using lapply() and store the results in a list.
+    out <- lapply(seq_len(nrow(x)), function(i) .f(x[i, ], ...))
+
+    out
+}

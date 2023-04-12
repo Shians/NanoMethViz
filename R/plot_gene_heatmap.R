@@ -1,20 +1,3 @@
-#' Plot gene methylation heatmap
-#'
-#' @param x the NanoMethResult object.
-#' @param gene the gene symbol for the gene to plot.
-#' @param ... additional arguments
-#'
-#' @return a ggplot object of the heatmap
-#'
-#' @examples
-#' nmr <- load_example_nanomethresult()
-#' plot_gene_heatmap(nmr, "Peg3")
-#'
-#' @export
-setGeneric("plot_gene_heatmap", function(x, gene, ...) {
-    standardGeneric("plot_gene_heatmap")
-})
-
 #' @rdname plot_gene_heatmap
 #'
 #' @param window_prop the size of flanking region to plot. Can be a vector of two
@@ -37,6 +20,28 @@ setGeneric("plot_gene_heatmap", function(x, gene, ...) {
 setMethod(
     "plot_gene_heatmap",
     signature(x = "NanoMethResult", gene = "character"),
+    function(
+        x,
+        gene,
+        window_prop = 0.3,
+        pos_style = c("to_scale", "compact"),
+        subsample = 50
+    ) {
+        pos_style <- match.arg(pos_style)
+
+        .plot_gene_heatmap(
+            x = x,
+            gene = gene,
+            window_prop = window_prop,
+            pos_style = pos_style,
+            subsample = subsample
+        )
+    }
+)
+
+setMethod(
+    "plot_gene_heatmap",
+    signature(x = "ModBamResult", gene = "character"),
     function(
         x,
         gene,

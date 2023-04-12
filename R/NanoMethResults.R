@@ -67,7 +67,7 @@ NanoMethResult <- function(methy, samples, exons = NULL) {
         )
     }
 
-    assertthat::is.readable(methy)
+    assert_readable(methy)
     assert_has_columns(
         exons,
         c("gene_id", "chr", "strand", "start", "end", "transcript_id", "symbol")
@@ -103,28 +103,6 @@ NanoMethResult <- function(methy, samples, exons = NULL) {
 
 # methy ----
 
-#' Get methylation data
-#' @keywords internal
-#'
-#' @param object the object.
-#'
-#' @return the path to the methylation data.
-#'
-#' @examples
-#' showMethods("methy")
-#'
-#' @export
-setGeneric("methy", valueClass = "character", function(object) {
-    standardGeneric("methy")
-})
-
-#' Set methylation data
-#' @keywords internal
-#' @export
-setGeneric("methy<-", function(object, value) {
-    standardGeneric("methy<-")
-})
-
 #' @describeIn NanoMethResult-class methylation data path getter.
 #'
 #' @param object the NanoMethResult object.
@@ -147,37 +125,13 @@ setMethod("methy", signature("NanoMethResult"), function(object) {
 #'
 #' @export
 setMethod("methy<-", signature("NanoMethResult"), function(object, value) {
-    assertthat::is.readable(value)
+    assert_readable(value)
 
     object@methy <- value
     object
 })
 
 # sample ----
-
-#' Get sample annotation
-#'
-#' @param object the object.
-#'
-#' @return the sample annotation.
-#'
-#' @examples
-#' showMethods("samples")
-#'
-#' @export
-#'
-#' @keywords internal
-setGeneric("samples", valueClass = "data.frame", function(object) {
-    standardGeneric("samples")
-})
-
-#' Set sample annotation
-#' @keywords internal
-#' @export
-setGeneric("samples<-", function(object, value) {
-    standardGeneric("samples<-")
-})
-
 #' @describeIn NanoMethResult-class sample annotation getter.
 #'
 #' @param object the NanoMethResult object.
@@ -204,29 +158,6 @@ setMethod("samples<-", signature("NanoMethResult", "data.frame"), function(objec
 })
 
 # exons ----
-
-#' Get exon annotation
-#' @keywords internal
-#'
-#' @param object the object.
-#'
-#' @return the exon annotation.
-#'
-#' @examples
-#' showMethods("exons")
-#'
-#' @export
-setGeneric("exons", valueClass = "data.frame", function(object) {
-    standardGeneric("exons")
-})
-
-#' Set exon annotation
-#' @keywords internal
-#' @export
-setGeneric("exons<-", function(object, value) {
-    standardGeneric("exons<-")
-})
-
 #' @describeIn NanoMethResult-class exon annotation getter.
 #'
 #' @param object the NanoMethResult object.

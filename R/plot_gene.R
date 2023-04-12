@@ -1,22 +1,3 @@
-#' Plot gene
-#'
-#' @param x the NanoMethResult object.
-#' @param gene the gene symbol for the gene to plot.
-#' @param ... additional arguments
-#'
-#' @return a patchwork plot containing the methylation profile in the specified
-#'   region.
-#'
-#' @examples
-#' nmr <- load_example_nanomethresult()
-#' plot_gene(nmr, "Peg3")
-#'
-#' @importFrom ggrastr rasterise
-#' @export
-setGeneric("plot_gene", function(x, gene, ...) {
-    standardGeneric("plot_gene")
-})
-
 #' @rdname plot_gene
 #'
 #' @param window_prop the size of flanking region to plot. Can be a vector of two
@@ -47,6 +28,39 @@ setGeneric("plot_gene", function(x, gene, ...) {
 #'
 #' @export
 setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
+    function(
+        x,
+        gene,
+        window_prop = 0.3,
+        anno_regions = NULL,
+        binary_threshold = NULL,
+        avg_method = c("mean", "median"),
+        spaghetti = FALSE,
+        heatmap = FALSE,
+        span = NULL,
+        gene_anno = TRUE,
+        palette = ggplot2::scale_colour_brewer(palette = "Set1"),
+        line_size = 2
+    ) {
+        avg_method <- match.arg(avg_method)
+        .plot_gene(
+            x,
+            gene,
+            window_prop = window_prop,
+            anno_regions = anno_regions,
+            binary_threshold = binary_threshold,
+            avg_method = avg_method,
+            spaghetti = spaghetti,
+            heatmap = heatmap,
+            span = span,
+            gene_anno = gene_anno,
+            palette = palette,
+            line_size = line_size
+        )
+    }
+)
+
+setMethod("plot_gene", signature(x = "ModBamResult", gene = "character"),
     function(
         x,
         gene,

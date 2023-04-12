@@ -5,7 +5,7 @@
 \alias{NanoMethResult-class}
 \alias{NanoMethResult}
 \alias{methy,NanoMethResult-method}
-\alias{methy<-,NanoMethResult-method}
+\alias{methy<-,NanoMethResult,ANY-method}
 \alias{samples,NanoMethResult-method}
 \alias{samples<-,NanoMethResult,data.frame-method}
 \alias{exons,NanoMethResult-method}
@@ -16,7 +16,7 @@ NanoMethResult(methy, samples, exons = NULL)
 
 \S4method{methy}{NanoMethResult}(object)
 
-\S4method{methy}{NanoMethResult}(object) <- value
+\S4method{methy}{NanoMethResult,ANY}(object) <- value
 
 \S4method{samples}{NanoMethResult}(object)
 
@@ -60,7 +60,7 @@ NanoMethResult() constructor function described in "Usage".
 
 \item \code{methy(NanoMethResult)}: methylation data path getter.
 
-\item \code{methy(NanoMethResult) <- value}: methylation data path setter.
+\item \code{methy(object = NanoMethResult) <- value}: methylation data path setter.
 
 \item \code{samples(NanoMethResult)}: sample annotation getter.
 

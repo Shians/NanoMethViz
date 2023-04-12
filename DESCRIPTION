@@ -74,10 +74,10 @@ Suggests:
     covr
 LinkingTo: Rcpp
 License: Apache License (>= 2.0)
-SystemRequirements: C++11
+SystemRequirements: C++20
 VignetteBuilder: knitr
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Config/testthat/parallel: true
 Config/testthat/edition: 3

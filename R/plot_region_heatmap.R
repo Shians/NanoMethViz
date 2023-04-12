@@ -1,22 +1,3 @@
-#' Plot region methylation heatmap
-#'
-#' @param x the NanoMethResult object.
-#' @param chr the chromosome to plot.
-#' @param start the start of the plotting region.
-#' @param end the end of the plotting region.
-#' @param ... additional arguments.
-#'
-#' @return a ggplot object of the heatmap.
-#'
-#' @examples
-#' nmr <- load_example_nanomethresult()
-#' plot_region_heatmap(nmr, "chr7", 6703892, 6730431)
-#'
-#' @export
-setGeneric("plot_region_heatmap", function(x, chr, start, end, ...) {
-    standardGeneric("plot_region_heatmap")
-})
-
 #' @rdname plot_region_heatmap
 #'
 #' @param window_prop the size of flanking region to plot. Can be a vector of two
@@ -67,12 +48,73 @@ setMethod(
     }
 )
 
+setMethod(
+    "plot_region_heatmap",
+    signature(
+        x = "ModBamResult",
+        chr = "character",
+        start = "numeric",
+        end = "numeric"),
+
+    function(
+        x,
+        chr,
+        start,
+        end,
+        pos_style = c("to_scale", "compact"),
+        window_prop = 0,
+        subsample = 50
+
+    ) {
+        pos_style <- match.arg(pos_style)
+
+        .plot_region_heatmap(
+            x = x,
+            chr = chr,
+            start = start,
+            end = end,
+            pos_style = pos_style,
+            window_prop = window_prop,
+            subsample = subsample
+        )
+    }
+)
+
 #' @rdname plot_region_heatmap
 #'
 #' @export
 setMethod("plot_region_heatmap",
     signature(
         x = "NanoMethResult",
+        chr = "factor",
+        start = "numeric",
+        end = "numeric"),
+
+    function(
+        x,
+        chr,
+        start,
+        end,
+        pos_style = c("to_scale", "compact"),
+        window_prop = 0,
+        subsample = 50
+    ) {
+        chr <- as.character(chr)
+        .plot_region_heatmap(
+            x = x,
+            chr = chr,
+            start = start,
+            end = end,
+            pos_style = pos_style,
+            window_prop = window_prop,
+            subsample = subsample
+        )
+    }
+)
+
+setMethod("plot_region_heatmap",
+    signature(
+        x = "ModBamResult",
         chr = "factor",
         start = "numeric",
         end = "numeric"),

@@ -71,10 +71,10 @@ get_char_pos <- function(x, c) {
 
 modbam_to_ref_coord <- function(seq, cigar, mod_str, mod_scores, map_pos, strand) {
     mod_tokens <- mod_tokeniser_cpp(mod_str, mod_scores)
-    coord_map <- get_coord_map(cigar)
+    coord_map <- get_coord_map_cpp(cigar)
 
     if (strand == "-") {
-    mod_candidate_pos <- rev(get_char_pos_cpp(seq, "G"))[mod_tokens$mod_pos]
+        mod_candidate_pos <- rev(get_char_pos_cpp(seq, "G"))[mod_tokens$mod_pos]
     } else if (strand == "+") {
         mod_candidate_pos <- get_char_pos_cpp(seq, "C")[mod_tokens$mod_pos]
     }

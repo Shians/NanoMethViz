@@ -39,23 +39,53 @@ DataFrame cigar_tokeniser_cpp(CharacterVector x) {
 }
 
 // [[Rcpp::export]]
-DataFrame cigar_tokeniser_cpp2(CharacterVector x) {
-    std::istringstream sstream(Rcpp::as<std::string>(x[0]));
+IntegerVector get_coord_map_cpp(std::string cigar) {
+    // Tokenize cigar string
+    DataFrame tokens = cigar_tokeniser_cpp(cigar);
+    CharacterVector state_vec = tokens["state"];
+    IntegerVector count_vec = tokens["count"];
 
-    int num;
-    char ch;
+    // Initialize seq and ref coordinates to 0
+    int seq_coord = 0;
+    int ref_coord = 0;
 
-    std::vector<int> count;
-    std::vector<char> state;
+    size_t token_count = std::accumulate(count_vec.begin(), count_vec.end(), 0);
+    std::vector<int> seq_map;
+    seq_map.reserve(token_count);
+    std::vector<int> ref_map;
+    ref_map.reserve(token_count);
 
-    while (sstream >> num && sstream >> ch) {
-        count.push_back(num);
-        state.push_back(ch);
+    // Loop over tokens and update coordinates and maps
+    int num_tokens = state_vec.size();
+    for (int i = 0; i < num_tokens; i++) {
+        String tok = state_vec[i];
+        int count = count_vec[i];
+        if (tok == "M") {
+            for (int j = 0; j < count; j++) {
+                seq_coord++;
+                ref_coord++;
+                seq_map.push_back(seq_coord);
+                ref_map.push_back(ref_coord);
+            }
+        } else if (tok == "I" || tok == "S") {
+            for (int j = 0; j < count; j++) {
+                seq_coord++;
+                seq_map.push_back(seq_coord);
+                ref_map.push_back(NA_REAL);
+            }
+        } else if (tok == "D" || tok == "N") {
+            for (int j = 0; j < count; j++) {
+                ref_coord++;
+            }
+        }
     }
 
-    return DataFrame::create(_["state"] = state, _["count"] = count);
-}
+    IntegerVector out(ref_map.begin(), ref_map.end());
+    out.names() = seq_map;
 
+    // Set names and return result
+    return out;
+}
 
 // [[Rcpp::export]]
 DataFrame mod_tokeniser_cpp(std::string string, std::string scores) {

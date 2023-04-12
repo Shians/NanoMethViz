@@ -13,8 +13,8 @@ cigar_tokeniser_cpp <- function(x) {
     .Call('_NanoMethViz_cigar_tokeniser_cpp', PACKAGE = 'NanoMethViz', x)
 }
 
-cigar_tokeniser_cpp2 <- function(x) {
-    .Call('_NanoMethViz_cigar_tokeniser_cpp2', PACKAGE = 'NanoMethViz', x)
+get_coord_map_cpp <- function(cigar) {
+    .Call('_NanoMethViz_get_coord_map_cpp', PACKAGE = 'NanoMethViz', cigar)
 }
 
 mod_tokeniser_cpp <- function(string, scores) {

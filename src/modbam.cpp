@@ -127,6 +127,9 @@ DataFrame mod_tokeniser_cpp(std::string string, std::string scores) {
     );
 
     // Create data frame and return
-    return DataFrame::create(_["mod_pos"] = mod_pos, _["mod_prob"] = NumericVector(mod_prob.begin(), mod_prob.end()));
+    return DataFrame::create(
+        _["mod_pos"] = mod_pos,
+        _["mod_prob"] = NumericVector(mod_prob.begin(), mod_prob.end())
+    );
 }
 

@@ -1,3 +1,4 @@
+
 setClass(
     "ModBamFiles",
     contains = "data.frame"
@@ -19,6 +20,23 @@ setMethod("show", signature("ModBamFiles"), function(object) {
     print(object)
 })
 
+#' Modbam methylation results
+#'
+#' (Experimental) A ModBamResult object stores data used for NanoMethViz
+#' #'visualisation. It contains stores a path to the methylation data, sample
+#' information and optional exon information. The object is constructed using
+#' the NanoMethResult() constructor function described in "Usage".
+#'
+#' @slot methy a ModBamFiles data.frame specifying the samples and paths to bam
+#'   files.
+#' @slot samples the data.frame of sample annotation containing at least columns
+#'   sample and group.
+#' @slot exons the data.frame of exon information containing at least columns
+#'   gene_id, chr, strand, start, end, transcript_id and symbol.
+#'
+#' @return a NanoMethResult object to be used with plotting functions
+#'
+#' @export
 setClass(
     "ModBamResult",
     representation(

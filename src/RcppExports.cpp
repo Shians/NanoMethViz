@@ -45,11 +45,36 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cigar_tokeniser_cpp2
+DataFrame cigar_tokeniser_cpp2(CharacterVector x);
+RcppExport SEXP _NanoMethViz_cigar_tokeniser_cpp2(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(cigar_tokeniser_cpp2(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// mod_tokeniser_cpp
+DataFrame mod_tokeniser_cpp(std::string string, std::string scores);
+RcppExport SEXP _NanoMethViz_mod_tokeniser_cpp(SEXP stringSEXP, SEXP scoresSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type string(stringSEXP);
+    Rcpp::traits::input_parameter< std::string >::type scores(scoresSEXP);
+    rcpp_result_gen = Rcpp::wrap(mod_tokeniser_cpp(string, scores));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_NanoMethViz_convert_methy_to_dss_cpp", (DL_FUNC) &_NanoMethViz_convert_methy_to_dss_cpp, 2},
     {"_NanoMethViz_get_char_pos_cpp", (DL_FUNC) &_NanoMethViz_get_char_pos_cpp, 2},
     {"_NanoMethViz_cigar_tokeniser_cpp", (DL_FUNC) &_NanoMethViz_cigar_tokeniser_cpp, 1},
+    {"_NanoMethViz_cigar_tokeniser_cpp2", (DL_FUNC) &_NanoMethViz_cigar_tokeniser_cpp2, 1},
+    {"_NanoMethViz_mod_tokeniser_cpp", (DL_FUNC) &_NanoMethViz_mod_tokeniser_cpp, 2},
     {NULL, NULL, 0}
 };
 

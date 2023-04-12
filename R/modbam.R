@@ -70,7 +70,7 @@ get_char_pos <- function(x, c) {
 }
 
 modbam_to_ref_coord <- function(seq, cigar, mod_str, mod_scores, map_pos, strand) {
-    mod_tokens <- mod_tokeniser(mod_str, mod_scores)
+    mod_tokens <- mod_tokeniser_cpp(mod_str, mod_scores)
     coord_map <- get_coord_map(cigar)
 
     if (strand == "-") {
@@ -82,7 +82,7 @@ modbam_to_ref_coord <- function(seq, cigar, mod_str, mod_scores, map_pos, strand
     rel_pos <- coord_map[mod_candidate_pos]
     genome_pos <- map_pos + rel_pos - 1
 
-    tibble(
+    data.frame(
         pos = genome_pos,
         statistic = logit(mod_tokens$mod_prob)
     ) %>%

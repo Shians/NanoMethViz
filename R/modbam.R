@@ -25,12 +25,13 @@ mod_tokeniser <- function(string, scores) {
 }
 
 cigar_tokeniser <- function(x) {
+    non_empty_string <- function(x) { x != "" }
     state <- stringr::str_split(x, "\\d+") %>%
         unlist() %>%
-        purrr::keep(. != "")
+        purrr::keep(non_empty_string)
     count <- stringr::str_split(x, "[[:alpha:]]") %>%
         unlist() %>%
-        purrr::keep(. != "")
+        purrr::keep(non_empty_string)
 
     data.frame(state = state, count = as.numeric(count))
 }
@@ -61,12 +62,6 @@ get_coord_map <- function(cigar) {
 
     out <- setNames(ref_map, seq_map)
     out
-}
-
-get_char_pos <- function(x, c) {
-    x <- Biostrings::DNAString(x)
-
-    Biostrings::start(Biostrings::matchPattern(c, x))
 }
 
 modbam_to_ref_coord <- function(seq, cigar, mod_str, mod_scores, map_pos, strand) {
@@ -136,10 +131,10 @@ read_modbam_table <- function(x, chr, start, end, sample) {
            )
 
         out %>%
-            dplyr::select(read_name, chr, strand, modbam_stats) %>%
-            tidyr::unnest(modbam_stats) %>%
+            dplyr::select("read_name", "chr", "strand", "modbam_stats") %>%
+            tidyr::unnest("modbam_stats") %>%
             tidyr::drop_na() %>%
-            dplyr::mutate(mod_prob = sigmoid(statistic)) %>%
+            dplyr::mutate(mod_prob = sigmoid(.data$statistic)) %>%
             dplyr::mutate(sample = sample, .before = 1)
     }
 

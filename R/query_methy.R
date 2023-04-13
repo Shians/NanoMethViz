@@ -184,6 +184,15 @@ query_methy_tabix <- function(x, chr, start, end, force) {
 
     query_result <- Rsamtools::scanTabix(tabix_file, param = query)
 
+    empty_res <- tibble::tibble(
+        "sample" = character(),
+        "chr" = character(),
+        "pos" = integer(),
+        "strand" = character(),
+        "statistic" = numeric(),
+        "read_name" = character()
+    )
+
     parse_tabix <- function(x) {
         if (length(x) == 0) {
             return(empty_res)

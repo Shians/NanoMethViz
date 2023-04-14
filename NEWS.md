@@ -1,6 +1,8 @@
 ### Version 2.6.0
-* Changed rug plot to appear under other geoms. This helps with visibility of data when methlyation values are close to 0.
 * Added preliminary modbam file support.
+* Changed rug plot to appear under other geoms. This helps with visibility of data when methylation values are close to 0.
+* Changed heatmap alpha from 0.5 to 1, line width from 1.0 to 1.2 and line colour from black to darkgrey.
+* Changed x-axis limits on plots to be controlled using coord_cartesian instead of scale_x_continuous. Plots should now accurately represent data around the boundaries.
 
 ### Version 2.4.0
 * Fixed `plot_region_heatmap()` producing the wrong plot when a factor is used for the chromosome.

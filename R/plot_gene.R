@@ -19,9 +19,6 @@
 #' @param palette the ggplot colour palette used for groups.
 #' @param line_size the size of the lines.
 #'
-#' @return a patchwork plot containing the methylation profile in the specified
-#'   region.
-#'
 #' @examples
 #' nmr <- load_example_nanomethresult()
 #' plot_gene(nmr, "Peg3")
@@ -60,6 +57,7 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
     }
 )
 
+#' @describeIn plot_gene S4 method for ModBamResult
 setMethod("plot_gene", signature(x = "ModBamResult", gene = "character"),
     function(
         x,

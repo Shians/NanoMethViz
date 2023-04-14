@@ -52,9 +52,6 @@ length.}
 \value{
 a patchwork plot containing the methylation profile in the specified
 region.
-
-a patchwork plot containing the methylation profile in the specified
-region.
 }
 \description{
 Plot GRanges

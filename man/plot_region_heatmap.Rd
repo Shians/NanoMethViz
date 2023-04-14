@@ -62,7 +62,4 @@ Plot region methylation heatmap
 nmr <- load_example_nanomethresult()
 plot_region_heatmap(nmr, "chr7", 6703892, 6730431)
 
-nmr <- load_example_nanomethresult()
-plot_region_heatmap(nmr, "chr7", 6703892, 6730431)
-
 }

@@ -3,11 +3,27 @@
 \name{plot_gene}
 \alias{plot_gene}
 \alias{plot_gene,NanoMethResult,character-method}
+\alias{plot_gene,ModBamResult,character-method}
 \title{Plot gene}
 \usage{
 plot_gene(x, gene, ...)
 
 \S4method{plot_gene}{NanoMethResult,character}(
+  x,
+  gene,
+  window_prop = 0.3,
+  anno_regions = NULL,
+  binary_threshold = NULL,
+  avg_method = c("mean", "median"),
+  spaghetti = FALSE,
+  heatmap = FALSE,
+  span = NULL,
+  gene_anno = TRUE,
+  palette = ggplot2::scale_colour_brewer(palette = "Set1"),
+  line_size = 2
+)
+
+\S4method{plot_gene}{ModBamResult,character}(
   x,
   gene,
   window_prop = 0.3,
@@ -60,17 +76,16 @@ closer to an average within the more common methylation state.}
 \value{
 a patchwork plot containing the methylation profile in the specified
 region.
-
-a patchwork plot containing the methylation profile in the specified
-region.
 }
 \description{
 Plot gene
 }
-\examples{
-nmr <- load_example_nanomethresult()
-plot_gene(nmr, "Peg3")
+\section{Functions}{
+\itemize{
+\item \code{plot_gene(x = ModBamResult, gene = character)}: S4 method for ModBamResult
 
+}}
+\examples{
 nmr <- load_example_nanomethresult()
 plot_gene(nmr, "Peg3")
 

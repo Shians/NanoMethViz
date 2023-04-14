@@ -3,16 +3,74 @@
 \docType{class}
 \name{ModBamResult-class}
 \alias{ModBamResult-class}
+\alias{methy,ModBamResult-method}
+\alias{methy<-,ModBamResult,ModBamFiles-method}
+\alias{samples,ModBamResult-method}
+\alias{samples<-,ModBamResult,data.frame-method}
+\alias{exons,ModBamResult-method}
+\alias{exons<-,ModBamResult,data.frame-method}
+\alias{ModBamResult}
 \title{Modbam methylation results}
+\usage{
+\S4method{methy}{ModBamResult}(object)
+
+\S4method{methy}{ModBamResult,ModBamFiles}(object) <- value
+
+\S4method{samples}{ModBamResult}(object)
+
+\S4method{samples}{ModBamResult,data.frame}(object) <- value
+
+\S4method{exons}{ModBamResult}(object)
+
+\S4method{exons}{ModBamResult,data.frame}(object) <- value
+
+ModBamResult(methy, samples, exons = NULL)
+}
+\arguments{
+\item{object}{the ModBamResult object.}
+
+\item{value}{the exon annotation.}
+
+\item{methy}{a ModBamFiles object.}
+
+\item{samples}{the data.frame of sample annotation containing at least
+columns sample and group.}
+
+\item{exons}{(optional) the data.frame of exon information containing at
+least columns gene_id, chr, strand, start, end, transcript_id and symbol.}
+}
 \value{
 a NanoMethResult object to be used with plotting functions
+
+a ModBamFiles data.frame.
+
+the sample annotation.
+
+the exon annotation.
+
+the exon annotation.
 }
 \description{
-(Experimental) A ModBamResult object stores data used for NanoMethViz
-#'visualisation. It contains stores a path to the methylation data, sample
-information and optional exon information. The object is constructed using
-the NanoMethResult() constructor function described in "Usage".
+(Experimental) A ModBamResult object stores modbam data used for NanoMethViz
+visualisation.
 }
+\section{Functions}{
+\itemize{
+\item \code{methy(ModBamResult)}: modbam information getter.
+
+\item \code{methy(object = ModBamResult) <- value}: modbam information setter.
+
+\item \code{samples(ModBamResult)}: sample annotation getter.
+
+\item \code{samples(object = ModBamResult) <- value}: sample annotation setter.
+
+\item \code{exons(ModBamResult)}: exon annotation getter.
+
+\item \code{exons(object = ModBamResult) <- value}: exon annotation setter.
+
+\item \code{ModBamResult()}: Constructor
+
+}}
 \section{Slots}{
 
 \describe{

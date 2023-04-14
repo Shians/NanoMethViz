@@ -29,11 +29,11 @@ NanoMethResult(methy, samples, exons = NULL)
 \arguments{
 \item{methy}{the path to the methylation tabix file.}
 
-\item{samples}{the data.frame of sample annotation containg at least columns
-sample and group.}
+\item{samples}{the data.frame of sample annotation containing at least
+columns sample and group.}
 
-\item{exons}{(optional) the data.frame of exon information containing at least columns
-gene_id, chr, strand, start, end, transcript_id and symbol.}
+\item{exons}{(optional) the data.frame of exon information containing at
+least columns gene_id, chr, strand, start, end, transcript_id and symbol.}
 
 \item{object}{the NanoMethResult object.}
 
@@ -68,7 +68,7 @@ NanoMethResult() constructor function described in "Usage".
 
 \item \code{exons(NanoMethResult)}: exon annotation getter.
 
-\item \code{exons(object = NanoMethResult) <- value}: exon annotation getter.
+\item \code{exons(object = NanoMethResult) <- value}: exon annotation setter.
 
 }}
 \section{Slots}{

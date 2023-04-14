@@ -45,7 +45,4 @@ Plot gene methylation heatmap
 nmr <- load_example_nanomethresult()
 plot_gene_heatmap(nmr, "Peg3")
 
-nmr <- load_example_nanomethresult()
-plot_gene_heatmap(nmr, "Peg3")
-
 }

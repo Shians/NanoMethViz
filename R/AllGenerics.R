@@ -67,16 +67,12 @@ setGeneric("exons<-", function(object, value) {
 
 #' Plot gene
 #'
-#' @param x the NanoMethResult object.
+#' @param x the NanoMethResult or ModBamResult object.
 #' @param gene the gene symbol for the gene to plot.
 #' @param ... additional arguments
 #'
 #' @return a patchwork plot containing the methylation profile in the specified
 #'   region.
-#'
-#' @examples
-#' nmr <- load_example_nanomethresult()
-#' plot_gene(nmr, "Peg3")
 #'
 #' @importFrom ggrastr rasterise
 #' @export
@@ -86,15 +82,11 @@ setGeneric("plot_gene", function(x, gene, ...) {
 
 #' Plot gene methylation heatmap
 #'
-#' @param x the NanoMethResult object.
+#' @param x the NanoMethResult or ModBamResult object.
 #' @param gene the gene symbol for the gene to plot.
 #' @param ... additional arguments
 #'
 #' @return a ggplot object of the heatmap
-#'
-#' @examples
-#' nmr <- load_example_nanomethresult()
-#' plot_gene_heatmap(nmr, "Peg3")
 #'
 #' @export
 setGeneric("plot_gene_heatmap", function(x, gene, ...) {
@@ -103,7 +95,7 @@ setGeneric("plot_gene_heatmap", function(x, gene, ...) {
 
 #' Plot region
 #'
-#' @param x the NanoMethResult object.
+#' @param x the NanoMethResult or ModBamResult object.
 #' @param chr the chromosome to plot.
 #' @param start the start of the plotting region.
 #' @param end the end of the plotting region.
@@ -111,10 +103,6 @@ setGeneric("plot_gene_heatmap", function(x, gene, ...) {
 #'
 #' @return a patchwork plot containing the methylation profile in the specified
 #'   region.
-#'
-#' @examples
-#' nmr <- load_example_nanomethresult()
-#' plot_region(nmr, "chr7", 6703892, 6730431)
 #'
 #' @importFrom ggrastr rasterise
 #' @export
@@ -124,17 +112,13 @@ setGeneric("plot_region", function(x, chr, start, end, ...) {
 
 #' Plot region methylation heatmap
 #'
-#' @param x the NanoMethResult object.
+#' @param x the NanoMethResult or ModBamResult object.
 #' @param chr the chromosome to plot.
 #' @param start the start of the plotting region.
 #' @param end the end of the plotting region.
 #' @param ... additional arguments.
 #'
 #' @return a ggplot object of the heatmap.
-#'
-#' @examples
-#' nmr <- load_example_nanomethresult()
-#' plot_region_heatmap(nmr, "chr7", 6703892, 6730431)
 #'
 #' @export
 setGeneric("plot_region_heatmap", function(x, chr, start, end, ...) {

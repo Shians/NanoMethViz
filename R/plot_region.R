@@ -18,9 +18,6 @@
 #' @param palette the ggplot colour palette used for groups.
 #' @param line_size the size of the lines.
 #'
-#' @return a patchwork plot containing the methylation profile in the specified
-#'   region.
-#'
 #' @examples
 #' nmr <- load_example_nanomethresult()
 #' plot_region(nmr, "chr7", 6703892, 6730431)
@@ -153,6 +150,9 @@ setMethod("plot_region",
     }
 )
 
+#' @rdname plot_region
+#'
+#' @export
 setMethod("plot_region",
     signature(
         x = "ModBamResult",

@@ -48,10 +48,10 @@ setClass(
 #' @describeIn NanoMethResult-class Constructor
 #'
 #' @param methy the path to the methylation tabix file.
-#' @param samples the data.frame of sample annotation containg at least columns
-#'   sample and group.
-#' @param exons (optional) the data.frame of exon information containing at least columns
-#'   gene_id, chr, strand, start, end, transcript_id and symbol.
+#' @param samples the data.frame of sample annotation containing at least
+#'   columns sample and group.
+#' @param exons (optional) the data.frame of exon information containing at
+#'   least columns gene_id, chr, strand, start, end, transcript_id and symbol.
 #'
 #' @export
 NanoMethResult <- function(methy, samples, exons = NULL) {
@@ -146,7 +146,7 @@ setMethod("samples", signature("NanoMethResult"), function(object) {
 #' @describeIn NanoMethResult-class sample annotation setter.
 #'
 #' @param object the NanoMethResult object.
-#' @param value the data.frame of sample annotation containg at least columns
+#' @param value the data.frame of sample annotation containing at least columns
 #'   sample and group.
 #'
 #' @export
@@ -169,7 +169,7 @@ setMethod("exons", signature("NanoMethResult"), function(object) {
     object@exons
 })
 
-#' @describeIn NanoMethResult-class exon annotation getter.
+#' @describeIn NanoMethResult-class exon annotation setter.
 #'
 #' @param object the NanoMethResult object.
 #' @param value the exon annotation.

@@ -4,6 +4,7 @@
 \alias{plot_region}
 \alias{plot_region,NanoMethResult,character,numeric,numeric-method}
 \alias{plot_region,NanoMethResult,factor,numeric,numeric-method}
+\alias{plot_region,ModBamResult,factor,numeric,numeric-method}
 \title{Plot region}
 \usage{
 plot_region(x, chr, start, end, ...)
@@ -25,6 +26,22 @@ plot_region(x, chr, start, end, ...)
 )
 
 \S4method{plot_region}{NanoMethResult,factor,numeric,numeric}(
+  x,
+  chr,
+  start,
+  end,
+  anno_regions = NULL,
+  binary_threshold = NULL,
+  avg_method = c("mean", "median"),
+  spaghetti = FALSE,
+  heatmap = FALSE,
+  span = NULL,
+  window_prop = 0,
+  palette = ggplot2::scale_colour_brewer(palette = "Set1"),
+  line_size = 2
+)
+
+\S4method{plot_region}{ModBamResult,factor,numeric,numeric}(
   x,
   chr,
   start,
@@ -80,17 +97,11 @@ length.}
 \value{
 a patchwork plot containing the methylation profile in the specified
 region.
-
-a patchwork plot containing the methylation profile in the specified
-region.
 }
 \description{
 Plot region
 }
 \examples{
-nmr <- load_example_nanomethresult()
-plot_region(nmr, "chr7", 6703892, 6730431)
-
 nmr <- load_example_nanomethresult()
 plot_region(nmr, "chr7", 6703892, 6730431)
 

@@ -143,11 +143,11 @@ setMethod("plot_gene", signature(x = "ModBamResult", gene = "character"),
             line_size = line_size
         )
     )
-    p1 <- p1 + ggplot2::scale_x_continuous(
-            limits = c(plot_left, plot_right),
-            expand = ggplot2::expansion(),
-            labels = scales::label_number(scale_cut = scales::cut_si("b"))
-        )
+    p1 <- p1 + ggplot2::coord_cartesian(
+        xlim = c(plot_left, plot_right),
+        expand = FALSE
+    ) +
+        scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_si("b")))
 
 
     if (gene_anno) {
@@ -155,11 +155,11 @@ setMethod("plot_gene", signature(x = "ModBamResult", gene = "character"),
         xlim <- .get_ggplot_range_x(p1)
 
         p2 <- plot_gene_annotation(exons_anno, plot_left, plot_right) +
-            ggplot2::scale_x_continuous(
-                limits = c(plot_left, plot_right),
-                expand = ggplot2::expansion(),
-                labels = scales::label_number(scale_cut = scales::cut_si("b"))
-            )
+            ggplot2::coord_cartesian(
+                xlim = c(plot_left, plot_right),
+                expand = FALSE
+            ) +
+                scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_si("b")))
 
         n_unique <- function(x) { length(unique(x)) }
 
@@ -176,10 +176,11 @@ setMethod("plot_gene", signature(x = "ModBamResult", gene = "character"),
             gene,
             window_prop
         ) +
-            ggplot2::scale_x_continuous(
-                limits = c(plot_left, plot_right),
-                expand = ggplot2::expansion(),
-                labels = scales::label_number(scale_cut = scales::cut_si("b")))
+            ggplot2::coord_cartesian(
+                xlim = c(plot_left, plot_right),
+                expand = FALSE
+            ) +
+                scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_si("b")))
 
         p_out <- stack_plots(p_out, ggrastr::rasterise(p_heatmap, dpi = 300))
     }

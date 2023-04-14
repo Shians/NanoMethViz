@@ -64,6 +64,9 @@ setMethod("plot_region",
     }
 )
 
+#' @rdname plot_region
+#'
+#' @export
 setMethod("plot_region",
     signature(
         x = "ModBamResult",
@@ -225,7 +228,6 @@ setMethod("plot_region",
     feature_width <- end - start
     window_left <- feature_width * window_prop[1]
     window_right <- feature_width * window_prop[2]
-    xlim <- round(c(start - window_left, end + window_right))
 
     methy_data <-
         query_methy(
@@ -243,6 +245,7 @@ setMethod("plot_region",
     }
 
     title <- glue::glue("{chr}:{start}-{end}")
+    xlim <- round(c(start - window_left, end + window_right))
     p1 <- plot_methylation_internal(
         methy_data = methy_data,
         start = start,
@@ -259,18 +262,18 @@ setMethod("plot_region",
         palette_col = palette,
         line_size = line_size
     ) +
-        ggplot2::scale_x_continuous(
-            limits = xlim,
-            expand = ggplot2::expansion(),
-            labels = scales::label_number(scale_cut = scales::cut_si("b"))
-        )
+        ggplot2::coord_cartesian(
+            xlim = xlim,
+            expand = FALSE
+        ) +
+            scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_si("b")))
 
     p2 <- plot_gene_annotation(exons_anno, xlim[1], xlim[2]) +
-        ggplot2::scale_x_continuous(
-            limits = xlim,
-            expand = ggplot2::expansion(),
-            labels = scales::label_number(scale_cut = scales::cut_si("b"))
-        )
+        ggplot2::coord_cartesian(
+            xlim = xlim,
+            expand = FALSE
+        ) +
+            scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_si("b")))
 
     anno_height <- attr(p2, "plot_height")
 
@@ -279,11 +282,11 @@ setMethod("plot_region",
 
     if (heatmap) {
         p_heatmap <- plot_region_heatmap(x, chr, start, end, window_prop = window_prop) +
-            ggplot2::scale_x_continuous(
-                limits = xlim,
-                expand = ggplot2::expansion(),
-                labels = scales::label_number(scale_cut = scales::cut_si("b"))
-            )
+            ggplot2::coord_cartesian(
+                xlim = xlim,
+                expand = FALSE
+            ) +
+                scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_si("b")))
 
         p_out <- stack_plots(p_out, ggrastr::rasterise(p_heatmap, dpi = 300))
     }

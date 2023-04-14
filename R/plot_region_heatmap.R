@@ -48,6 +48,9 @@ setMethod(
     }
 )
 
+#' @rdname plot_region_heatmap
+#'
+#' @export
 setMethod(
     "plot_region_heatmap",
     signature(
@@ -216,23 +219,13 @@ setMethod("plot_region_heatmap",
     read_data <- read_data %>%
         dplyr::filter(.data$read_name %in% methy_data$read_name)
 
-    # heatmap theme
-    theme_methy_heatmap <- function() {
-        ggplot2::theme_bw() +
-            ggplot2::theme(
-                axis.ticks.y = ggplot2::element_blank(),
-                axis.title.y = ggplot2::element_blank(),
-                axis.text.y = ggplot2::element_blank()
-            )
-    }
-
     if (pos_style == "compact") {
         # only plots sites with measured modification, evenly spaced
         p <- ggplot2::ggplot(methy_data, aes(x = factor(.data$pos), y = .data$read_group, fill = .data$mod_prob)) +
-            scico::scale_colour_scico(palette = 'imola', direction = -1) +
             ggplot2::geom_raster() +
+            heatmap_fill_scale +
             ggplot2::facet_wrap(~group, scales = "free_y", ncol = 1) +
-            theme_methy_heatmap() +
+            theme_methy_heatmap +
             ggplot2::theme(
                 axis.ticks.x = ggplot2::element_blank(),
                 axis.text.x = ggplot2::element_blank(),
@@ -255,10 +248,11 @@ setMethod("plot_region_heatmap",
                 ),
                 alpha = 0.75
             ) +
-            ggplot2::geom_point(aes(x = .data$pos, col = .data$mod_prob), alpha = 0.5, shape = 15) +
-            scico::scale_colour_scico(palette = 'imola', direction = -1) +
+            ggplot2::geom_point(
+                aes(x = .data$pos, col = .data$mod_prob), alpha = 1, shape = 15) +
+            heatmap_col_scale +
             ggplot2::facet_wrap(~group, scales = "free_y", ncol = 1, strip.position = "right") +
-            theme_methy_heatmap() +
+            theme_methy_heatmap +
             ggplot2::xlab("Position")
     }
 

@@ -167,7 +167,9 @@ setMethod(
             ggplot2::theme(
                 axis.ticks.y = ggplot2::element_blank(),
                 axis.title.y = ggplot2::element_blank(),
-                axis.text.y = ggplot2::element_blank()
+                axis.text.y = ggplot2::element_blank(),
+                panel.grid.major.y = ggplot2::element_blank(),
+                panel.grid.minor.y = ggplot2::element_blank()
             )
     }
 
@@ -178,9 +180,9 @@ setMethod(
                 y = .data$read_group,
                 fill = .data$mod_prob)) +
             ggplot2::geom_raster() +
-            scico::scale_fill_scico(palette = 'imola', direction = -1) +
+            heatmap_fill_scale +
             ggplot2::facet_wrap(~group, scales = "free_y", ncol = 1, strip.position = "right") +
-            theme_methy_heatmap() +
+            theme_methy_heatmap +
             ggplot2::theme(
                 axis.ticks.x = ggplot2::element_blank(),
                 axis.text.x = ggplot2::element_blank(),
@@ -200,13 +202,15 @@ setMethod(
                     by = c("read_name", "start", "end", "group"),
                     multiple = "all"
                 ),
-                alpha = 0.75
+                alpha = 1,
+                linewidth = 1.2,
+                height = 0
             ) +
             ggplot2::geom_point(
-                aes(x = .data$pos, col = .data$mod_prob), alpha = 1, shape = 1) +
-            scico::scale_colour_scico(palette = 'imola', direction = -1) +
+                aes(x = .data$pos, col = .data$mod_prob), alpha = 1, shape = 15) +
+            heatmap_col_scale +
             ggplot2::facet_wrap(~group, scales = "free_y", ncol = 1, strip.position = "right") +
-            theme_methy_heatmap() +
+            theme_methy_heatmap +
             ggplot2::xlab("Position")
     }
 

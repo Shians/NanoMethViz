@@ -39,6 +39,9 @@ setMethod(
     }
 )
 
+#' @rdname plot_gene_heatmap
+#'
+#' @export
 setMethod(
     "plot_gene_heatmap",
     signature(x = "ModBamResult", gene = "character"),
@@ -174,8 +177,8 @@ setMethod(
             aes(x = factor(.data$pos),
                 y = .data$read_group,
                 fill = .data$mod_prob)) +
-            scico::scale_colour_scico(palette = 'imola', direction = -1) +
             ggplot2::geom_raster() +
+            scico::scale_fill_scico(palette = 'imola', direction = -1) +
             ggplot2::facet_wrap(~group, scales = "free_y", ncol = 1, strip.position = "right") +
             theme_methy_heatmap() +
             ggplot2::theme(
@@ -200,7 +203,7 @@ setMethod(
                 alpha = 0.75
             ) +
             ggplot2::geom_point(
-                aes(x = .data$pos, col = .data$mod_prob), alpha = 0.5, shape = 15) +
+                aes(x = .data$pos, col = .data$mod_prob), alpha = 1, shape = 1) +
             scico::scale_colour_scico(palette = 'imola', direction = -1) +
             ggplot2::facet_wrap(~group, scales = "free_y", ncol = 1, strip.position = "right") +
             theme_methy_heatmap() +

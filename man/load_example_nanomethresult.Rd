@@ -10,7 +10,9 @@ load_example_nanomethresult()
 a NanoMethResults object
 }
 \description{
-Load an example NanoMethResult object
+Load an example NanoMethResult object for demonstration of plotting
+functions. Run \code{load_example_nanomethresults} without the function call to
+see how the object is constructed.
 }
 \examples{
 nmr <- load_example_nanomethresult()

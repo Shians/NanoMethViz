@@ -6,17 +6,7 @@
 \usage{
 exons(object)
 }
-\arguments{
-\item{object}{the object.}
-}
-\value{
-the exon annotation.
-}
 \description{
 Get exon annotation
-}
-\examples{
-showMethods("exons")
-
 }
 \keyword{internal}

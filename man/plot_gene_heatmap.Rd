@@ -3,6 +3,7 @@
 \name{plot_gene_heatmap}
 \alias{plot_gene_heatmap}
 \alias{plot_gene_heatmap,NanoMethResult,character-method}
+\alias{plot_gene_heatmap,ModBamResult,character-method}
 \title{Plot gene methylation heatmap}
 \usage{
 plot_gene_heatmap(x, gene, ...)
@@ -14,9 +15,17 @@ plot_gene_heatmap(x, gene, ...)
   pos_style = c("to_scale", "compact"),
   subsample = 50
 )
+
+\S4method{plot_gene_heatmap}{ModBamResult,character}(
+  x,
+  gene,
+  window_prop = 0.3,
+  pos_style = c("to_scale", "compact"),
+  subsample = 50
+)
 }
 \arguments{
-\item{x}{the NanoMethResult object.}
+\item{x}{the NanoMethResult or ModBamResult object.}
 
 \item{gene}{the gene symbol for the gene to plot.}
 
@@ -39,7 +48,7 @@ a ggplot object of the heatmap
 a ggplot plot containing the heatmap.
 }
 \description{
-Plot gene methylation heatmap
+Plot the methylation heatmap of a gene symbol specified within the exon(x) slot.
 }
 \examples{
 nmr <- load_example_nanomethresult()

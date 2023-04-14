@@ -14,8 +14,8 @@ setClass(
 #' This function creates a ModBamFiles object containing information about the
 #' samples and file paths.
 #'
-#' @param samples A character vector with the names of the samples.
-#' @param paths A character vector with the file paths for the BAM files.
+#' @param samples a character vector with the names of the samples.
+#' @param paths a character vector with the file paths for the BAM files.
 #'
 #' @return A ModBamFiles object with the sample and path information.
 #'
@@ -31,6 +31,10 @@ ModBamFiles <- function(samples, paths) {
     new("ModBamFiles", x)
 }
 
+#' @docType methods
+#' @rdname ModBamFiles
+#'
+#' @param object a ModBamFiles object.
 #' @export
 setMethod("show", signature("ModBamFiles"), function(object) {
     print(glue::glue(

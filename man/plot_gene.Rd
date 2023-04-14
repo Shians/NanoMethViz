@@ -4,7 +4,7 @@
 \alias{plot_gene}
 \alias{plot_gene,NanoMethResult,character-method}
 \alias{plot_gene,ModBamResult,character-method}
-\title{Plot gene}
+\title{Plot gene methylation}
 \usage{
 plot_gene(x, gene, ...)
 
@@ -39,7 +39,7 @@ plot_gene(x, gene, ...)
 )
 }
 \arguments{
-\item{x}{the NanoMethResult object.}
+\item{x}{the NanoMethResult or ModBamResult object.}
 
 \item{gene}{the gene symbol for the gene to plot.}
 
@@ -78,7 +78,7 @@ a patchwork plot containing the methylation profile in the specified
 region.
 }
 \description{
-Plot gene
+Plot the methylation of a gene symbol specified within the exon(x) slot.
 }
 \section{Functions}{
 \itemize{

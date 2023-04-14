@@ -3,12 +3,24 @@
 \name{plot_region_heatmap}
 \alias{plot_region_heatmap}
 \alias{plot_region_heatmap,NanoMethResult,character,numeric,numeric-method}
+\alias{plot_region_heatmap,ModBamResult,character,numeric,numeric-method}
 \alias{plot_region_heatmap,NanoMethResult,factor,numeric,numeric-method}
+\alias{plot_region_heatmap,ModBamResult,factor,numeric,numeric-method}
 \title{Plot region methylation heatmap}
 \usage{
 plot_region_heatmap(x, chr, start, end, ...)
 
 \S4method{plot_region_heatmap}{NanoMethResult,character,numeric,numeric}(
+  x,
+  chr,
+  start,
+  end,
+  pos_style = c("to_scale", "compact"),
+  window_prop = 0,
+  subsample = 50
+)
+
+\S4method{plot_region_heatmap}{ModBamResult,character,numeric,numeric}(
   x,
   chr,
   start,
@@ -27,9 +39,19 @@ plot_region_heatmap(x, chr, start, end, ...)
   window_prop = 0,
   subsample = 50
 )
+
+\S4method{plot_region_heatmap}{ModBamResult,factor,numeric,numeric}(
+  x,
+  chr,
+  start,
+  end,
+  pos_style = c("to_scale", "compact"),
+  window_prop = 0,
+  subsample = 50
+)
 }
 \arguments{
-\item{x}{the NanoMethResult object.}
+\item{x}{the NanoMethResult or ModBamResult object.}
 
 \item{chr}{the chromosome to plot.}
 
@@ -56,7 +78,7 @@ a ggplot object of the heatmap.
 a ggplot plot containing the heatmap.
 }
 \description{
-Plot region methylation heatmap
+Plot the methylation heatmap of a genomic region.
 }
 \examples{
 nmr <- load_example_nanomethresult()

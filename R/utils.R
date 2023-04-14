@@ -1,5 +1,9 @@
 #' Load an example NanoMethResult object
 #'
+#' Load an example NanoMethResult object for demonstration of plotting
+#' functions. Run `load_example_nanomethresults` without the function call to
+#' see how the object is constructed.
+#'
 #' @return a NanoMethResults object
 #'
 #' @export

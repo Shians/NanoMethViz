@@ -1,10 +1,7 @@
 #' Get methylation data
 #' @keywords internal
-#'
 #' @param object the object.
-#'
 #' @return the path to the methylation data.
-#'
 #' @examples
 #' showMethods("methy")
 #'
@@ -21,17 +18,8 @@ setGeneric("methy<-", function(object, value) {
 })
 
 #' Get sample annotation
-#'
-#' @param object the object.
-#'
-#' @return the sample annotation.
-#'
-#' @examples
-#' showMethods("samples")
-#'
-#' @export
-#'
 #' @keywords internal
+#' @export
 setGeneric("samples", valueClass = "data.frame", function(object) {
     standardGeneric("samples")
 })
@@ -45,14 +33,6 @@ setGeneric("samples<-", function(object, value) {
 
 #' Get exon annotation
 #' @keywords internal
-#'
-#' @param object the object.
-#'
-#' @return the exon annotation.
-#'
-#' @examples
-#' showMethods("exons")
-#'
 #' @export
 setGeneric("exons", valueClass = "data.frame", function(object) {
     standardGeneric("exons")
@@ -65,7 +45,9 @@ setGeneric("exons<-", function(object, value) {
     standardGeneric("exons<-")
 })
 
-#' Plot gene
+#' Plot gene methylation
+#'
+#' Plot the methylation of a gene symbol specified within the exon(x) slot.
 #'
 #' @param x the NanoMethResult or ModBamResult object.
 #' @param gene the gene symbol for the gene to plot.
@@ -82,6 +64,8 @@ setGeneric("plot_gene", function(x, gene, ...) {
 
 #' Plot gene methylation heatmap
 #'
+#' Plot the methylation heatmap of a gene symbol specified within the exon(x) slot.
+#'
 #' @param x the NanoMethResult or ModBamResult object.
 #' @param gene the gene symbol for the gene to plot.
 #' @param ... additional arguments
@@ -93,7 +77,9 @@ setGeneric("plot_gene_heatmap", function(x, gene, ...) {
     standardGeneric("plot_gene_heatmap")
 })
 
-#' Plot region
+#' Plot region methylation
+#'
+#' Plot the methylation of a genomic region.
 #'
 #' @param x the NanoMethResult or ModBamResult object.
 #' @param chr the chromosome to plot.
@@ -111,6 +97,8 @@ setGeneric("plot_region", function(x, chr, start, end, ...) {
 })
 
 #' Plot region methylation heatmap
+#'
+#' Plot the methylation heatmap of a genomic region.
 #'
 #' @param x the NanoMethResult or ModBamResult object.
 #' @param chr the chromosome to plot.

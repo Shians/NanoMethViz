@@ -115,6 +115,9 @@ setMethod("plot_region_heatmap",
     }
 )
 
+#' @rdname plot_region_heatmap
+#'
+#' @export
 setMethod("plot_region_heatmap",
     signature(
         x = "ModBamResult",
@@ -246,7 +249,9 @@ setMethod("plot_region_heatmap",
                     by = c("read_name", "start", "end", "group"),
                     multiple = "all"
                 ),
-                alpha = 0.75
+                color = "darkgray",
+                linewidth = 1.2,
+                height = 0
             ) +
             ggplot2::geom_point(
                 aes(x = .data$pos, col = .data$mod_prob), alpha = 1, shape = 15) +

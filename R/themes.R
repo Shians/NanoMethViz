@@ -10,3 +10,7 @@ theme_methy_heatmap <- ggplot2::theme_bw() +
 
 heatmap_fill_scale <- scico::scale_fill_scico(palette = 'imola', direction = -1)
 heatmap_col_scale <- scico::scale_colour_scico(palette = 'imola', direction = -1)
+
+# Future releast candidate
+# heatmap_fill_scale <- scico::scale_fill_scico(palette = 'roma', direction = -1)
+# heatmap_col_scale <- scico::scale_colour_scico(palette = 'roma', direction = -1)

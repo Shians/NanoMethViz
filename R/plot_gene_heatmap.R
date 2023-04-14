@@ -161,18 +161,6 @@ setMethod(
     read_data <- read_data %>%
         dplyr::filter(.data$read_name %in% methy_data$read_name)
 
-    # heatmap theme
-    theme_methy_heatmap <- function() {
-        ggplot2::theme_bw() +
-            ggplot2::theme(
-                axis.ticks.y = ggplot2::element_blank(),
-                axis.title.y = ggplot2::element_blank(),
-                axis.text.y = ggplot2::element_blank(),
-                panel.grid.major.y = ggplot2::element_blank(),
-                panel.grid.minor.y = ggplot2::element_blank()
-            )
-    }
-
     if (pos_style == "compact") {
         # only plots sites with measured modification, evenly spaced
         p <- ggplot(methy_data,
@@ -203,6 +191,7 @@ setMethod(
                     multiple = "all"
                 ),
                 alpha = 1,
+                color = "darkgray",
                 linewidth = 1.2,
                 height = 0
             ) +

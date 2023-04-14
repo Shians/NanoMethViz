@@ -266,14 +266,14 @@ setMethod("plot_region",
             xlim = xlim,
             expand = FALSE
         ) +
-            scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_si("b")))
+            ggplot2::scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_si("b")))
 
     p2 <- plot_gene_annotation(exons_anno, xlim[1], xlim[2]) +
         ggplot2::coord_cartesian(
             xlim = xlim,
             expand = FALSE
         ) +
-            scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_si("b")))
+            ggplot2::scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_si("b")))
 
     anno_height <- attr(p2, "plot_height")
 
@@ -286,7 +286,7 @@ setMethod("plot_region",
                 xlim = xlim,
                 expand = FALSE
             ) +
-                scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_si("b")))
+                ggplot2::scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_si("b")))
 
         p_out <- stack_plots(p_out, ggrastr::rasterise(p_heatmap, dpi = 300))
     }

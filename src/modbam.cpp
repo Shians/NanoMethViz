@@ -1,8 +1,6 @@
 #include <string>
 #include <sstream>
 #include <algorithm>
-#include <ranges>
-#include <string_view>
 
 #include <Rcpp.h>
 using namespace Rcpp;

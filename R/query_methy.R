@@ -43,7 +43,8 @@ query_methy <- function(x, chr, start, end, simplify = TRUE, force = FALSE) {
         out <- dplyr::bind_rows(out)
     }
 
-    out
+    out %>%
+        dplyr::mutate(mod_prob = sigmoid(.data$statistic))
 }
 
 query_methy_df <- function(x, regions, simplify = TRUE, force = FALSE) {

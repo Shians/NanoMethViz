@@ -123,3 +123,36 @@ map_rows <- function(x, .f, ...) {
 
     out
 }
+
+neg_strand_offset <- function(x, offset) {
+    assert_has_columns(x, c("strand", "pos"))
+
+    x %>%
+        dplyr::mutate(pos = case_when(
+            strand == "-" ~ pos + offset,
+            TRUE ~ pos
+        ))
+}
+
+missingness <- function(x) {
+    mean(is.na(x))
+}
+
+mat_row_map <- function(x, f) {
+    apply(x, 1, f)
+}
+
+mat_col_map <- function(x, f) {
+    apply(x, 2, f)
+}
+
+df_to_matrix <- function(x, rownames = 1) {
+    if (!is.null(rownames)) {
+        rnames <- x[, rownames, drop = TRUE]
+        x <- x[, -rownames]
+    }
+
+    x <- as.matrix(x)
+    rownames(x) <- rnames
+    x
+}

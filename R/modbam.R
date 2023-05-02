@@ -75,7 +75,11 @@ modbam_to_ref_coord <- function(seq, cigar, mod_str, mod_scores, map_pos, strand
     }
 
     rel_pos <- coord_map[mod_candidate_pos]
-    genome_pos <- map_pos + rel_pos - 1
+    if (strand == "-") {
+        genome_pos <- map_pos + rel_pos - 2
+    } else {
+        genome_pos <- map_pos + rel_pos - 1
+    }
 
     data.frame(
         pos = genome_pos,

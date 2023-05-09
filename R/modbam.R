@@ -138,7 +138,6 @@ read_modbam_table <- function(x, chr, start, end, sample) {
             dplyr::select("read_name", "chr", "strand", "modbam_stats") %>%
             tidyr::unnest("modbam_stats") %>%
             tidyr::drop_na() %>%
-            dplyr::mutate(mod_prob = sigmoid(.data$statistic)) %>%
             dplyr::mutate(sample = sample, .before = 1)
     }
 

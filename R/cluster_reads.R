@@ -20,9 +20,9 @@ cluster_reads <- function(x, chr, start, end) {
         dplyr::filter(read_name %in% keep_reads)
 
     mod_mat <- methy_data %>%
-        select(read_name, pos, mod_prob) %>%
-        arrange(pos) %>%
-        pivot_wider(names_from = pos, values_from = mod_prob) %>%
+        dplyr::select(read_name, pos, mod_prob) %>%
+        dplyr::arrange(pos) %>%
+        tidyr::pivot_wider(names_from = pos, values_from = mod_prob) %>%
         df_to_matrix()
 
     mod_mat_filled <- mod_mat[order(rownames(mod_mat)), ]
@@ -48,10 +48,9 @@ cluster_reads <- function(x, chr, start, end) {
         )
 
     out_df %>%
-        group_by(read_name) %>%
-        summarise(mean = mean(methy_prob, na.rm = TRUE)) %>%
-        left_join(clust_df, by = "read_name") %>%
-        left_join(read_stats, by = "read_name") %>%
-        arrange(cluster_id) %>%
-        print(n = Inf)
+        dplyr::group_by(read_name) %>%
+        dplyr::summarise(mean = mean(methy_prob, na.rm = TRUE)) %>%
+        dplyr::left_join(clust_df, by = "read_name") %>%
+        dplyr::left_join(read_stats, by = "read_name") %>%
+        dplyr::arrange(cluster_id)
 }

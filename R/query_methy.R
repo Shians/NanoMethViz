@@ -39,12 +39,15 @@ query_methy <- function(x, chr, start, end, simplify = TRUE, force = FALSE) {
         stop("'x' is not a recognised file of type sqlite3 or tabix")
     }
 
+    out <- map(out, function(x) {
+        dplyr::mutate(x, mod_prob = sigmoid(.data$statistic))
+    })
+
     if (simplify) {
         out <- dplyr::bind_rows(out)
     }
 
-    out %>%
-        dplyr::mutate(mod_prob = sigmoid(.data$statistic))
+    out
 }
 
 query_methy_df <- function(x, regions, simplify = TRUE, force = FALSE) {

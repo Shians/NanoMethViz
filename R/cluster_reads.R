@@ -36,8 +36,8 @@ cluster_reads <- function(x, chr, start, end) {
         mod_mat_filled[i, is.na(mod_mat_filled[i, ])] <- mean(mod_mat_filled[i, ], na.rm = TRUE)
     }
 
-    dbsc <- hdbscan(temp_filled, minPts = 15)
-    clust_df <- data.frame(read_name = rownames(temp_filled), cluster_id = dbsc$cluster)
+    dbsc <- dbscan::hdbscan(mod_mat_filled, minPts = 15)
+    clust_df <- data.frame(read_name = rownames(mod_mat_filled), cluster_id = dbsc$cluster)
 
     out_df <- as.data.frame(mod_mat) %>%
         tibble::rownames_to_column("read_name") %>%

@@ -36,6 +36,7 @@ Imports:
     Rcpp,
     dplyr,
     data.table,
+    dbscan,
     e1071,
     fs,
     GenomicRanges,

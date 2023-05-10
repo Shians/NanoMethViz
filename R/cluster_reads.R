@@ -1,4 +1,4 @@
-cluster_reads <- function(x, chr, start, end) {
+cluster_reads <- function(x, chr, start, end, min_pts = 10) {
     methy_data <- query_methy(x, chr, start, end ) %>%
         filter(pos >= start & pos < end)
 
@@ -36,7 +36,7 @@ cluster_reads <- function(x, chr, start, end) {
         mod_mat_filled[i, is.na(mod_mat_filled[i, ])] <- mean(mod_mat_filled[i, ], na.rm = TRUE)
     }
 
-    dbsc <- dbscan::hdbscan(mod_mat_filled, minPts = 15)
+    dbsc <- dbscan::hdbscan(mod_mat_filled, minPts = min_pts)
     clust_df <- data.frame(read_name = rownames(mod_mat_filled), cluster_id = dbsc$cluster)
 
     out_df <- as.data.frame(mod_mat) %>%
@@ -52,5 +52,11 @@ cluster_reads <- function(x, chr, start, end) {
         dplyr::summarise(mean = mean(methy_prob, na.rm = TRUE)) %>%
         dplyr::left_join(clust_df, by = "read_name") %>%
         dplyr::left_join(read_stats, by = "read_name") %>%
-        dplyr::arrange(cluster_id)
+        dplyr::arrange(cluster_id) %>%
+        dplyr::mutate(
+            cluster_id = as.factor(cluster_id),
+            start = as.integer(start),
+            end = as.integer(end),
+            span = as.integer(span)
+        )
 }

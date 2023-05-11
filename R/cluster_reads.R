@@ -1,56 +1,56 @@
+#' Cluster reads based on methylation
+#'
+#' @param x a ModBamResult object.
+#' @param chr the chromosome name where to find the region.
+#' @param start the start position of the region.
+#' @param end the end position of the region.
+#' @param min_pts the minimum number of points needed to form a cluster (default = 10).
+#'
+#' @return A tibble with information about each read's cluster assignment and read statistics.
+#'
+#' @import tidyr
+#' @import dplyr
+#' @import dbscan
+#' @importFrom tibble rownames_to_column
 cluster_reads <- function(x, chr, start, end, min_pts = 10) {
-    methy_data <- query_methy(x, chr, start, end ) %>%
-        filter(pos >= start & pos < end)
+    # query data
+    methy_data <- query_methy(x, chr, start, end) %>%
+        dplyr::filter(pos >= start & pos < end)
 
-    read_stats <- methy_data %>%
-        group_by(read_name) %>%
-        summarise(
-            start = min(pos),
-            end = max(pos),
-            span = end - start,
-            strand = unique(strand)
-        ) %>%
-        arrange(strand)
+    read_stats <- get_read_stats(methy_data)
 
+    # identify the read names whose span is at least 90% the length of maximum span
+    # filter methylation data for only those reads that meet the above condition of span
     max_span <- max(read_stats$span)
-
     keep_reads <- read_stats$read_name[read_stats$span > 0.9 * max_span]
-
     methy_data <- methy_data %>%
         dplyr::filter(read_name %in% keep_reads)
 
+    # convert methylation data into a matrix with one row for each read name
     mod_mat <- methy_data %>%
         dplyr::select(read_name, pos, mod_prob) %>%
         dplyr::arrange(pos) %>%
         tidyr::pivot_wider(names_from = pos, values_from = mod_prob) %>%
         df_to_matrix()
 
+    # remove positions with high missingness (>80%) then reads with high missingness (>20%)
     mod_mat_filled <- mod_mat[order(rownames(mod_mat)), ]
-
     col_missingness <- mat_col_map(mod_mat_filled, missingness)
-    mod_mat_filled <- mod_mat_filled[, col_missingness < 0.8]
-
+    mod_mat_filled <- mod_mat_filled[, col_missingness < 0.6]
     row_missingness <- mat_row_map(mod_mat_filled, missingness)
-    mod_mat_filled <- mod_mat_filled[row_missingness < 0.2, ]
+    mod_mat_filled <- mod_mat_filled[row_missingness < 0.3, ]
+
+    # fill in missing values with mean methylation probability across that read
     for (i in 1:nrow(mod_mat_filled)) {
         mod_mat_filled[i, is.na(mod_mat_filled[i, ])] <- mean(mod_mat_filled[i, ], na.rm = TRUE)
     }
 
+    # cluster reads using HDBSCAN algorithm with specified minimum number of points
     dbsc <- dbscan::hdbscan(mod_mat_filled, minPts = min_pts)
     clust_df <- data.frame(read_name = rownames(mod_mat_filled), cluster_id = dbsc$cluster)
 
-    out_df <- as.data.frame(mod_mat) %>%
-        tibble::rownames_to_column("read_name") %>%
-        tidyr::pivot_longer(
-            cols = !dplyr::contains("read_name"),
-            names_to = "pos",
-            values_to = "methy_prob"
-        )
-
-    out_df %>%
-        dplyr::group_by(read_name) %>%
-        dplyr::summarise(mean = mean(methy_prob, na.rm = TRUE)) %>%
-        dplyr::left_join(clust_df, by = "read_name") %>%
+    # merge and process results of cluster analysis and read statistics
+    clust_df %>%
         dplyr::left_join(read_stats, by = "read_name") %>%
         dplyr::arrange(cluster_id) %>%
         dplyr::mutate(
@@ -60,3 +60,18 @@ cluster_reads <- function(x, chr, start, end, min_pts = 10) {
             span = as.integer(span)
         )
 }
+
+# summarize read statistics (start, end, strand) based on same read name
+get_read_stats <- function(methy_data) {
+    methy_data %>%
+        group_by(read_name) %>%
+        summarise(
+            start = min(pos),
+            end = max(pos),
+            mean = mean(mod_prob, na.rm = TRUE),
+            span = end - start,
+            strand = unique(strand)
+        ) %>%
+        arrange(strand)
+}
+

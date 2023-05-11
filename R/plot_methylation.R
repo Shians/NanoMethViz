@@ -4,8 +4,8 @@ plot_methylation_internal <- function(
     chr,
     start,
     end,
-    xlim,
     title,
+    group = "group",
     palette_col = ggplot2::scale_colour_brewer(palette = "Set1"),
     anno_regions = NULL,
     binary_threshold = NULL,
@@ -14,7 +14,13 @@ plot_methylation_internal <- function(
     span = NULL,
     line_size = 2
 ) {
+    # assign averaging method
     avg_method <- match.arg(avg_method)
+    if (avg_method == "median") {
+        avg_func <- median
+    } else if (avg_method == "mean") {
+        avg_func <- mean
+    }
 
     if (!is.null(anno_regions)) {
         # filter annotation regions to be within plotting region
@@ -31,25 +37,20 @@ plot_methylation_internal <- function(
     }
 
     # extract group information and convert probabilities
-    if (is.null(binary_threshold)) {
+    if (!is.null(binary_threshold)) {
         plot_data <- methy_data %>%
-            dplyr::inner_join(sample_anno, by = "sample", multiple = "all") %>%
             dplyr::mutate(
-                mod_prob = e1071::sigmoid(.data$statistic)
+                mod_prob = as.numeric(sigmoid(.data$statistic) > binary_threshold)
             )
     } else {
-        plot_data <- methy_data %>%
-            dplyr::inner_join(sample_anno, by = "sample", multiple = "all") %>%
-            dplyr::mutate(
-                mod_prob = as.numeric(
-                    e1071::sigmoid(.data$statistic) > binary_threshold
-                )
-            )
+        plot_data <- methy_data
     }
+    plot_data <- plot_data %>%
+        dplyr::inner_join(sample_anno, by = "sample", multiple = "all")
 
     # set up plot
     # rug first so it appears on the bottom layer
-    p <- ggplot(plot_data, aes(x = .data$pos, col = .data$group)) +
+    p <- ggplot(plot_data, aes(x = .data$pos, col = .data[[group]])) +
         ggplot2::geom_rug(aes(col = NULL), sides = "b")
 
     # add annotated regions
@@ -76,13 +77,6 @@ plot_methylation_internal <- function(
                 alpha = 0.25,
                 na.rm = TRUE
             )
-    }
-
-    # assign averaging method
-    if (avg_method == "median") {
-        avg_func <- median
-    } else if (avg_method == "mean") {
-        avg_func <- mean
     }
 
     # add smoothed line
@@ -156,7 +150,6 @@ plot_feature <- function(
         start = start,
         end = end,
         chr = chr,
-        xlim = xlim,
         title = title,
         anno_regions = anno_regions,
         binary_threshold = binary_threshold,

@@ -5,12 +5,14 @@ plot_methylation_internal <- function(
     start,
     end,
     title,
-    group = "group",
+    read_anno = NULL,
+    group_col = "group",
     palette_col = ggplot2::scale_colour_brewer(palette = "Set1"),
     anno_regions = NULL,
     binary_threshold = NULL,
     avg_method = c("mean", "median"),
     spaghetti = FALSE,
+    points = FALSE,
     span = NULL,
     line_size = 2
 ) {
@@ -48,9 +50,18 @@ plot_methylation_internal <- function(
     plot_data <- plot_data %>%
         dplyr::inner_join(sample_anno, by = "sample", multiple = "all")
 
+    # incorporate read annotation if available
+    if (!is.null(read_anno)) {
+        # remove any duplicate columns and use plot_data as reference
+        plot_data_names <- setdiff(names(plot_data), "read_name")
+        read_anno <- dplyr::select(read_anno, -dplyr::any_of(plot_data_names))
+        plot_data <- dplyr::left_join(plot_data, read_anno, by = "read_name") %>%
+            tidyr::drop_na()
+    }
+
     # set up plot
     # rug first so it appears on the bottom layer
-    p <- ggplot(plot_data, aes(x = .data$pos, col = .data[[group]])) +
+    p <- ggplot(plot_data, aes(x = .data$pos, col = .data[[group_col]])) +
         ggplot2::geom_rug(aes(col = NULL), sides = "b")
 
     # add annotated regions
@@ -69,6 +80,15 @@ plot_methylation_internal <- function(
         }
     }
 
+    # add points
+    if (points) {
+        p <- p +
+            geom_point(
+                aes(y = .data$mod_prob),
+                alpha = 0.75
+            )
+    }
+
     # add spaghetti
     if (spaghetti) {
         p <- p +
@@ -81,7 +101,7 @@ plot_methylation_internal <- function(
 
     # add smoothed line
     plot_data_smooth <- plot_data %>%
-        dplyr::group_by(.data$group, .data$pos) %>%
+        dplyr::group_by(.data[[group_col]], .data$pos) %>%
         dplyr::summarise(mod_prob = avg_func(.data$mod_prob))
 
     p <- p +

@@ -33,7 +33,7 @@ cluster_reads <- function(x, chr, start, end, min_pts = 10) {
         tidyr::pivot_wider(names_from = pos, values_from = mod_prob) %>%
         df_to_matrix()
 
-    # remove positions with high missingness (>80%) then reads with high missingness (>20%)
+    # remove positions with high missingness (>60%) then reads with high missingness (>30%)
     mod_mat_filled <- mod_mat[order(rownames(mod_mat)), ]
     col_missingness <- mat_col_map(mod_mat_filled, missingness)
     mod_mat_filled <- mod_mat_filled[, col_missingness < 0.6]

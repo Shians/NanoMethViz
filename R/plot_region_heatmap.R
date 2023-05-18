@@ -198,7 +198,7 @@ setMethod("plot_region_heatmap",
         dplyr::group_modify(append_read_group) %>%
         dplyr::ungroup()
 
-    methy_data$mod_prob <- e1071::sigmoid(methy_data$statistic)
+    methy_data$mod_prob <- sigmoid(methy_data$statistic)
 
     methy_data <- dplyr::left_join(
         methy_data,

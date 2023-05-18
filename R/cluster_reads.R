@@ -40,8 +40,8 @@ cluster_reads <- function(x, chr, start, end, min_pts = 10) {
         df_to_matrix()
 
     # pre-check before filtering
-    if (nrow(mod_mat_filled) < min_pts) {
-        stop(glue::glue("fewer reads available ({nrow(mod_mat_filled)} reads) than minimum cluster size 'min_pts' ({min_pts})"))
+    if (nrow(mod_mat) < min_pts) {
+        stop(glue::glue("fewer reads available ({nrow(mod_mat)} reads) than minimum cluster size 'min_pts' ({min_pts})"))
     }
 
     # remove positions with high missingness (>60%) then reads with high missingness (>30%)

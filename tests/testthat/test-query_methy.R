@@ -6,7 +6,7 @@ test_that("Querying methylation works", {
     expect_silent(methy_data1 <- query_methy(methy(nmr), "chr7", 6703892, 6730431))
     expect_equal(
         colnames(methy_data1),
-        c("sample", "chr", "pos", "strand", "statistic", "read_name")
+        c("sample", "chr", "pos", "strand", "statistic", "read_name", "mod_prob")
     )
 
     expect_silent(methy_data2 <- query_methy(nmr, "chr7", 6703892, 6730431))

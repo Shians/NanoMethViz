@@ -12,7 +12,7 @@
 #' @import dplyr
 #' @import dbscan
 #' @importFrom tibble rownames_to_column
-cluster_reads <- function(x, chr, start, end, min_pts = 10) {
+cluster_reads <- function(x, chr, start, end, min_pts = 5) {
     # query data
     methy_data <- query_methy(x, chr, start, end)
 

@@ -100,7 +100,15 @@ read_modbam_table <- function(x, chr, start, end, sample) {
 
     reads <- Rsamtools::scanBam(bam_file, param = sb_param)
 
+
     parse_modbam <- function(x) {
+        if (is.null(x$tag$ML)) {
+            mod_scores <- NULL
+        } else {
+            mod_scores <- x$tag$ML %>%
+                purrr::map_chr(~stringr::str_c(., collapse = ","))
+        }
+
         reads_df <- tibble::tibble(
             read_name = x$qname,
             chr = x$rname,
@@ -109,7 +117,7 @@ read_modbam_table <- function(x, chr, start, end, sample) {
             cigar = x$cigar,
             seq = as.character(x$seq),
             mod_string = x$tag$MM,
-            mod_scores = x$tag$ML %>% purrr::map_chr(~stringr::str_c(., collapse = ","))
+            mod_scores = mod_scores
         ) %>%
             dplyr::filter(seq != "")
 

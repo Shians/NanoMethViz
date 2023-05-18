@@ -14,7 +14,13 @@
 #' @importFrom tibble rownames_to_column
 cluster_reads <- function(x, chr, start, end, min_pts = 10) {
     # query data
-    methy_data <- query_methy(x, chr, start, end) %>%
+    methy_data <- query_methy(x, chr, start, end)
+
+    if (nrow(methy_data) == 0) {
+        stop(glue::glue("no reads containing methylation data found in specified region"))
+    }
+
+    methy_data <- methy_data %>%
         dplyr::filter(pos >= start & pos < end)
 
     read_stats <- get_read_stats(methy_data)
@@ -33,6 +39,11 @@ cluster_reads <- function(x, chr, start, end, min_pts = 10) {
         tidyr::pivot_wider(names_from = pos, values_from = mod_prob) %>%
         df_to_matrix()
 
+    # pre-check before filtering
+    if (nrow(mod_mat_filled) < min_pts) {
+        stop(glue::glue("fewer reads available ({nrow(mod_mat_filled)} reads) than minimum cluster size 'min_pts' ({min_pts})"))
+    }
+
     # remove positions with high missingness (>60%) then reads with high missingness (>30%)
     mod_mat_filled <- mod_mat[order(rownames(mod_mat)), ]
     col_missingness <- mat_col_map(mod_mat_filled, missingness)
@@ -43,6 +54,11 @@ cluster_reads <- function(x, chr, start, end, min_pts = 10) {
     # fill in missing values with mean methylation probability across that read
     for (i in 1:nrow(mod_mat_filled)) {
         mod_mat_filled[i, is.na(mod_mat_filled[i, ])] <- mean(mod_mat_filled[i, ], na.rm = TRUE)
+    }
+
+    # post-check before filtering
+    if (nrow(mod_mat_filled) < min_pts) {
+        stop(glue::glue("fewer reads available ({nrow(mod_mat_filled)} reads) than minimum cluster size 'min_pts' ({min_pts})"))
     }
 
     # cluster reads using HDBSCAN algorithm with specified minimum number of points

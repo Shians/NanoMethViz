@@ -92,6 +92,21 @@ read_modbam_table <- function(x, chr, start, end, sample) {
     bam_file <- Rsamtools::BamFile(x)
 
     query <- GenomicRanges::GRanges(glue::glue("{chr}:{start}-{end}"))
+
+    empty_res <- tibble::tibble(
+        "sample" = character(),
+        "chr" = character(),
+        "pos" = integer(),
+        "strand" = character(),
+        "statistic" = numeric(),
+        "read_name" = character(),
+        "mod_prob" = numeric()
+    )
+
+    if (length(query) == 0) {
+        return(list(empty_res))
+    }
+
     sb_param <- Rsamtools::ScanBamParam(
         what = c("qname", "rname", "strand", "pos", "cigar", "seq"),
         tag = c("MM", "ML"),
@@ -99,7 +114,6 @@ read_modbam_table <- function(x, chr, start, end, sample) {
     )
 
     reads <- Rsamtools::scanBam(bam_file, param = sb_param)
-
 
     parse_modbam <- function(x) {
         if (is.null(x$tag$ML)) {
@@ -140,7 +154,7 @@ read_modbam_table <- function(x, chr, start, end, sample) {
                         )
                     }
                 )
-           )
+            )
 
         out %>%
             dplyr::select("read_name", "chr", "strand", "modbam_stats") %>%

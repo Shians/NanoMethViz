@@ -156,3 +156,17 @@ df_to_matrix <- function(x, rownames = 1) {
     rownames(x) <- rnames
     x
 }
+
+is_coordinate <- function(x) {
+    is.numeric(x) && x == round(x) && x >= 0
+}
+
+assertthat::on_failure(is_coordinate) <- function(call, env) {
+  glue::glue("'{deparse(call$x)}' ({eval(call$x)}) is not a valid coordinate")
+}
+
+same_length <- function(...) {
+    nulls <- purrr::map_lgl(list(...), is.null)
+    lengths <- purrr::map_dbl(list(...), length)
+    !any(nulls) && all(map_lgl(lengths, ~ . == lengths[1]))
+}

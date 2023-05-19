@@ -29,6 +29,11 @@ query_methy <- function(x, chr, start, end, simplify = TRUE, force = FALSE) {
         x <- methy(x)
     }
 
+    assert_that(
+        same_length(chr, start, end),
+        msg = "inputs 'chr', 'start' and 'end' must be the same length"
+    )
+
     if (is(x, "ModBamFiles") || is(x, "ModBamResult")) {
         out <- query_methy_modbam(x, chr, start, end)
     } else if (can_open_tabix(x)) {
@@ -241,12 +246,11 @@ query_methy_modbam <- function(x, chr, start, end) {
 
     assert_readable(x$path)
 
+    # query each file
     x <- data.frame(
         sample = x$sample,
         path = x$path
     )
-
-
     out <- x %>%
         dplyr::mutate(
             mod_table = map_rows(x, function(x) {
@@ -259,9 +263,15 @@ query_methy_modbam <- function(x, chr, start, end) {
             })
         )
 
+    # reduce list nesting by one level
     tables <- do.call(c, out$mod_table)
 
+    # assign bind together tables from the same regions
     nms <- names(tables)
+
+    if (is.null(nms)) {
+        warning(glue::glue("no data found in {chr}:{start}-{end}"))
+    }
     out <- list()
     for (nm in unique(nms)) {
         out[[nm]] <- do.call(rbind, tables[names(tables) == nm])

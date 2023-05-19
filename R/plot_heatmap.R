@@ -1,4 +1,11 @@
-plot_heatmap_internal <- function(methy_data, read_data, grouping_data, pos_style = "compact", subsample) {
+plot_heatmap_internal <- function(
+        methy_data,
+        read_data,
+        grouping_data,
+        pos_style,
+        subsample,
+        group_col = "group"
+) {
     # subsample reads down to a certain number of read groups
     subsample_groups <- function(x, key, subsample) {
         if (nrow(x) > subsample) {
@@ -8,8 +15,8 @@ plot_heatmap_internal <- function(methy_data, read_data, grouping_data, pos_styl
     }
 
     methy_data <- methy_data %>%
-        dplyr::nest_by(group = .data$group, read_group = .data$read_group) %>%
-        dplyr::group_by(.data$group) %>%
+        dplyr::nest_by(group = .data[[group_col]], read_group = .data$read_group) %>%
+        dplyr::group_by(.data[[group_col]]) %>%
         dplyr::group_modify(subsample_groups, subsample = subsample)
     methy_data <- tidyr::unnest(methy_data, "data")
     read_data <- read_data %>%

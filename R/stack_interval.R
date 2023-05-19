@@ -23,7 +23,7 @@ stacked_intervals <- function(reads) {
         curr_end <- reads$end[i]
 
         # find rows for merging
-        candidates <- reads[!reads$index %in% merged & reads$start >= curr_end, ]
+        candidates <- reads[!reads$index %in% merged & reads$start > curr_end, ]
 
         # while candidates exist, merge left-most candidate into group
         while (nrow(candidates) > 0) {
@@ -35,7 +35,7 @@ stacked_intervals <- function(reads) {
             curr_end <- candidates$end[1]
 
             # find new candidates
-            candidates <- reads[!reads$index %in% merged & reads$start >= curr_end, ]
+            candidates <- reads[!reads$index %in% merged & reads$start > curr_end, ]
         }
 
         # add current read into list of merged reads

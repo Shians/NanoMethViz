@@ -1,57 +1,45 @@
 stacked_intervals <- function(reads) {
+    # record original order of reads
     reads$old_order <- seq_len(nrow(reads))
+
+    # sort by start and assign index number
     reads <- dplyr::arrange(reads, .data$start)
     reads$index <- seq_len(nrow(reads))
+
+    # set initial groups as one per read
     reads$group <- seq_len(nrow(reads))
 
-    current <- 1
+    # initialize 'merged' as an empty numeric vector
     merged <- numeric()
 
+    # loop over rows
     for (i in seq_len(nrow(reads))) {
-        if (i == current || i %in% merged) {
-            # skip if already merged
+        # skip if row is already merged
+        if (i %in% merged) {
             next
         }
 
-        # update current group end
-        curr_end <- reads$end[current]
+        # set group end to 'end' of current row
+        curr_end <- reads$end[i]
 
-        # list reads after current end
-        candidates <- reads %>%
-            dplyr::filter(
-                .data$start >= curr_end,
-                !.data$index %in% merged
-            )
+        # find rows for merging
+        candidates <- reads[!reads$index %in% merged & reads$start >= curr_end, ]
 
+        # while candidates exist, merge left-most candidate into group
         while (nrow(candidates) > 0) {
-            cand_ind <- 1
+            # merge first candidate into group
+            merged <- c(merged, candidates$index[1])
+            reads$group[candidates$index[1]] <- reads$group[i]
 
-            # merge in candidate
-            merged <- c(merged, candidates$index[cand_ind])
-            reads$group[candidates$index[cand_ind]] <- reads$group[current]
+            # update end position of current group
+            curr_end <- candidates$end[1]
 
-            # update current group end
-            curr_end <- candidates$end[cand_ind]
-
-            # update candidates
-            candidates <- candidates %>%
-                dplyr::filter(
-                    .data$start >= curr_end,
-                    !.data$index %in% merged
-                )
+            # find new candidates
+            candidates <- reads[!reads$index %in% merged & reads$start >= curr_end, ]
         }
 
-        # consider current read merged
-        merged <- c(merged, current)
-
-        current <- current + 1
-        while (current %in% merged) {
-            # skip forward if next read is already merged
-            current <- current + 1
-        }
-
-        # update end for next read group
-        curr_end <- reads$end[current]
+        # add current read into list of merged reads
+        merged <- c(merged, i)
     }
 
     reads$group <- factor(reads$group)

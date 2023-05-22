@@ -13,6 +13,13 @@
 #' @import dbscan
 #' @importFrom tibble rownames_to_column
 cluster_reads <- function(x, chr, start, end, min_pts = 5) {
+    assertthat::assert_that(
+        is(x, "ModBamResult"),
+        assertthat::is.string(chr) || (is.factor(chr) && assertthat::is.scalar(chr)),
+        assertthat::is.number(start) && assertthat::is.number(end),
+        assertthat::is.number(min_pts) && min_pts >= 1
+    )
+
     # query data
     methy_data <- query_methy(x, chr, start, end)
 

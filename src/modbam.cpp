@@ -8,14 +8,18 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 NumericVector get_char_pos_cpp(CharacterVector x, CharacterVector c) {
 
-    NumericVector out;
-    for (auto i = 0; i < x[0].size(); i++) {
-        if (x[0][i] == c[0][0]) {
-            out.push_back(i+1);
+    std::vector<int> out;
+    out.reserve(x[0].size());
+
+    int index = 1;
+    for (char ch : x[0]) {
+        if (ch == c[0][0]) {
+            out.push_back(index);
         }
+        index++;
     }
 
-    return out;
+    return Rcpp::wrap(out);
 }
 
 // [[Rcpp::export]]
@@ -25,8 +29,8 @@ DataFrame cigar_tokeniser_cpp(CharacterVector x) {
     int num;
     char ch;
 
-    NumericVector count;
-    CharacterVector state;
+    std::vector<int> count;
+    std::vector<char> state;
 
     while (sstream >> num && sstream >> ch) {
         count.push_back(num);

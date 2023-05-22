@@ -83,7 +83,7 @@ plot_methylation_internal <- function(
     # add points
     if (points) {
         p <- p +
-            geom_point(
+            ggplot2::geom_point(
                 aes(y = .data$mod_prob),
                 alpha = 0.75
             )

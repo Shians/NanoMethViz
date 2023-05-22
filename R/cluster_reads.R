@@ -28,7 +28,7 @@ cluster_reads <- function(x, chr, start, end, min_pts = 5) {
     }
 
     methy_data <- methy_data %>%
-        dplyr::filter(pos >= start & pos < end)
+        dplyr::filter(.data$pos >= .data$start & .data$pos < .data$end)
 
     read_stats <- get_read_stats(methy_data)
 
@@ -37,13 +37,13 @@ cluster_reads <- function(x, chr, start, end, min_pts = 5) {
     max_span <- max(read_stats$span)
     keep_reads <- read_stats$read_name[read_stats$span > 0.9 * max_span]
     methy_data <- methy_data %>%
-        dplyr::filter(read_name %in% keep_reads)
+        dplyr::filter(.data$read_name %in% keep_reads)
 
     # convert methylation data into a matrix with one row for each read name
     mod_mat <- methy_data %>%
-        dplyr::select(read_name, pos, mod_prob) %>%
-        dplyr::arrange(pos) %>%
-        tidyr::pivot_wider(names_from = pos, values_from = mod_prob) %>%
+        dplyr::select("read_name", "pos", "mod_prob") %>%
+        dplyr::arrange(.data$pos) %>%
+        tidyr::pivot_wider(names_from = "pos", values_from = "mod_prob") %>%
         df_to_matrix()
 
     # pre-check before filtering
@@ -75,26 +75,26 @@ cluster_reads <- function(x, chr, start, end, min_pts = 5) {
     # merge and process results of cluster analysis and read statistics
     clust_df %>%
         dplyr::left_join(read_stats, by = "read_name") %>%
-        dplyr::arrange(cluster_id) %>%
+        dplyr::arrange(.data$cluster_id) %>%
         dplyr::mutate(
-            cluster_id = as.factor(cluster_id),
-            start = as.integer(start),
-            end = as.integer(end),
-            span = as.integer(span)
+            cluster_id = as.factor(.data$cluster_id),
+            start = as.integer(.data$start),
+            end = as.integer(.data$end),
+            span = as.integer(.data$span)
         )
 }
 
 # summarize read statistics (start, end, strand) based on same read name
 get_read_stats <- function(methy_data) {
     methy_data %>%
-        group_by(read_name) %>%
+        group_by(.data$read_name) %>%
         summarise(
-            start = min(pos),
-            end = max(pos),
-            mean = mean(mod_prob, na.rm = TRUE),
-            span = end - start,
-            strand = unique(strand)
+            start = min(.data$pos),
+            end = max(.data$pos),
+            mean = mean(.data$mod_prob, na.rm = TRUE),
+            span = .data$end - .data$start,
+            strand = unique(.data$strand)
         ) %>%
-        arrange(strand)
+        arrange(.data$strand)
 }
 

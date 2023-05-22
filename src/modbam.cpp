@@ -5,12 +5,15 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+// get the position of character c occuring in string x
 // [[Rcpp::export]]
 NumericVector get_char_pos_cpp(CharacterVector x, CharacterVector c) {
 
     std::vector<int> out;
     out.reserve(x[0].size());
 
+    // for each character in x, if c matches x[i] then i+1 is added
+    // to the results as a 1-based position
     int index = 1;
     for (char ch : x[0]) {
         if (ch == c[0][0]) {
@@ -22,16 +25,18 @@ NumericVector get_char_pos_cpp(CharacterVector x, CharacterVector c) {
     return Rcpp::wrap(out);
 }
 
+// tokenise a CIGAR string into CIGAR state and counts
 // [[Rcpp::export]]
 DataFrame cigar_tokeniser_cpp(CharacterVector x) {
-    std::istringstream sstream(Rcpp::as<std::string>(x[0]));
-
-    int num;
-    char ch;
 
     std::vector<int> count;
     std::vector<char> state;
 
+    int num;
+    char ch;
+
+    // tokenise and parse the string
+    std::istringstream sstream(Rcpp::as<std::string>(x[0]));
     while (sstream >> num && sstream >> ch) {
         count.push_back(num);
         state.push_back(ch);
@@ -40,6 +45,7 @@ DataFrame cigar_tokeniser_cpp(CharacterVector x) {
     return DataFrame::create(_["state"] = state, _["count"] = count);
 }
 
+//
 // [[Rcpp::export]]
 IntegerVector get_coord_map_cpp(std::string cigar) {
     // Tokenize cigar string

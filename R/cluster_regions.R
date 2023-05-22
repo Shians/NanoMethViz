@@ -64,7 +64,9 @@ cluster_regions <- function(x, regions, centers = 2, grid_method = c("density", 
         epdf_vals <- epdf(seq(0, 1, length.out = grid_length))
 
         ecdf_vals <- cumsum(epdf_vals)/max(cumsum(epdf_vals))
-        inv_cdf <- approxfun(ecdf_vals, seq(0, 1, length.out = grid_length), rule = 2)
+        inv_cdf <- suppressWarnings(
+            approxfun(ecdf_vals, seq(0, 1, length.out = grid_length), rule = 2, ties = mean)
+        )
 
         grid <- inv_cdf(seq(0, 1, length.out = grid_length))
     }

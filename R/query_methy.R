@@ -31,7 +31,7 @@ query_methy <- function(x, chr, start, end, simplify = TRUE, force = FALSE) {
 
     assert_that(
         same_length(chr, start, end),
-        msg = "inputs 'chr', 'start' and 'end' must be the same length"
+        msg = "vectors 'chr', 'start' and 'end' must be the same length"
     )
 
     if (is(x, "ModBamFiles") || is(x, "ModBamResult")) {
@@ -64,9 +64,9 @@ query_methy_gr <- function(x, regions, simplify = TRUE, force = FALSE) {
     assert_that(is(regions, "GRanges"))
     query_methy(
         x,
-        GenomicRanges::seqnames(regions),
-        GenomicRanges::start(regions),
-        GenomicRanges::end(regions),
+        as.character(GenomicRanges::seqnames(regions)),
+        as.numeric(GenomicRanges::start(regions)),
+        as.numeric(GenomicRanges::end(regions)),
         simplify,
         force
     )
@@ -74,7 +74,7 @@ query_methy_gr <- function(x, regions, simplify = TRUE, force = FALSE) {
 
 query_methy_gene <- function(x, gene, window_prop = 0, simplify = TRUE) {
     if (!gene %in% exons(x)$symbol) {
-        stop(glue::glue("gene {gene} not found in exon annotation"))
+        stop(glue::glue("gene '{gene}' not found in NanoMethViz::exons(x)"))
     }
 
     if (length(window_prop) == 1) {
@@ -193,18 +193,9 @@ query_methy_tabix <- function(x, chr, start, end, force) {
 
     query_result <- Rsamtools::scanTabix(tabix_file, param = query)
 
-    empty_res <- tibble::tibble(
-        "sample" = character(),
-        "chr" = character(),
-        "pos" = integer(),
-        "strand" = character(),
-        "statistic" = numeric(),
-        "read_name" = character()
-    )
-
     parse_tabix <- function(x) {
         if (length(x) == 0) {
-            return(empty_res)
+            return(empty_methy_query_output())
         }
         if (length(x) == 1) {
             x <- paste0(x, "\n")

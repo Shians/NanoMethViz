@@ -28,7 +28,7 @@ cluster_reads <- function(x, chr, start, end, min_pts = 5) {
     }
 
     methy_data <- methy_data %>%
-        dplyr::filter(.data$pos >= .data$start & .data$pos < .data$end)
+        dplyr::filter(.data$pos >= start & .data$pos < end)
 
     read_stats <- get_read_stats(methy_data)
 

@@ -1,7 +1,5 @@
 plot_heatmap_internal <- function(
         methy_data,
-        read_data,
-        grouping_data,
         pos_style,
         subsample,
         group_col = "group"
@@ -14,13 +12,20 @@ plot_heatmap_internal <- function(
         x
     }
 
+
     methy_data <- methy_data %>%
         dplyr::nest_by(group = .data[[group_col]], read_group = .data$read_group) %>%
-        dplyr::group_by(.data[[group_col]]) %>%
+        dplyr::group_by(.data$group) %>%
         dplyr::group_modify(subsample_groups, subsample = subsample)
     methy_data <- tidyr::unnest(methy_data, "data")
-    read_data <- read_data %>%
-        dplyr::filter(.data$read_name %in% methy_data$read_name)
+
+    read_data <- methy_data %>%
+        dplyr::group_by(.data$read_name) %>%
+        dplyr::summarise(start = min(.data$pos), end = max(.data$pos)) %>%
+        dplyr::inner_join(
+            dplyr::select(methy_data, "read_name", "read_group", "group"),
+            by = "read_name"
+        )
 
     if (pos_style == "compact") {
         # only plots sites with measured modification, evenly spaced
@@ -50,15 +55,10 @@ plot_heatmap_internal <- function(
                     xmin = .data$start,
                     xmax = .data$end
                 ),
-                data = dplyr::left_join(
-                    read_data,
-                    grouping_data,
-                    by = c("read_name", "start", "end", "group"),
-                    multiple = "all"
-                ),
+                data = read_data,
                 alpha = 1,
                 color = "darkgray",
-                linewidth = 1.2,
+                linewidth = 0.8,
                 height = 0
             ) +
             ggplot2::geom_point(

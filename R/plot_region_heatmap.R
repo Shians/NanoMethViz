@@ -193,7 +193,7 @@ setMethod("plot_region_heatmap",
         x$read_group <- paste0(k, stacked_interval_inds(x))
         x
     }
-    grouping_data <- read_data %>%
+    read_data <- read_data %>%
         dplyr::group_by(.data$group) %>%
         dplyr::group_modify(append_read_group) %>%
         dplyr::ungroup()
@@ -202,15 +202,13 @@ setMethod("plot_region_heatmap",
 
     methy_data <- dplyr::left_join(
         methy_data,
-        dplyr::select(grouping_data, "read_name", "read_group"),
+        dplyr::select(read_data, "read_name", "read_group"),
         by = "read_name",
         multiple = "all"
     )
 
     plot_heatmap_internal(
         methy_data = methy_data,
-        read_data = read_data,
-        grouping_data = grouping_data,
         pos_style = pos_style,
         subsample = subsample
     )

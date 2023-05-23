@@ -214,12 +214,6 @@ setMethod("plot_region",
     line_size
 ) {
     sample_anno <- samples(x)
-    exons_anno <- query_exons_region(
-        exons(x),
-        chr = chr,
-        start = start,
-        end = end
-    )
 
     if (length(window_prop) == 1) {
         window_prop <- c(window_prop, window_prop)
@@ -267,18 +261,30 @@ setMethod("plot_region",
         ) +
             ggplot2::scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_si("b")))
 
-    p2 <- plot_gene_annotation(exons_anno, xlim[1], xlim[2]) +
-        ggplot2::coord_cartesian(
-            xlim = xlim,
-            expand = FALSE
-        ) +
-            ggplot2::scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_si("b")))
+    p_out <- p1
 
-    anno_height <- attr(p2, "plot_height")
+    # if exon anno exists
+    if (nrow(exons(x)) != 0) {
+        exons_anno <- query_exons_region(
+            exons(x),
+            chr = chr,
+            start = start,
+            end = end
+        )
 
-    heights <- c(1, 0.075 * anno_height)
-    p_out <- p1 / p2 + patchwork::plot_layout(heights = heights)
+        p2 <- plot_gene_annotation(exons_anno, xlim[1], xlim[2]) +
+            ggplot2::coord_cartesian(
+                xlim = xlim,
+                expand = FALSE
+            ) +
+                ggplot2::scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_si("b")))
+        anno_height <- attr(p2, "plot_height")
 
+        heights <- c(1, 0.075 * anno_height)
+        p_out <- p1 / p2 + patchwork::plot_layout(heights = heights)
+    }
+
+    # if heatmap requested
     if (heatmap) {
         p_heatmap <- plot_region_heatmap(x, chr, start, end, window_prop = window_prop) +
             ggplot2::coord_cartesian(

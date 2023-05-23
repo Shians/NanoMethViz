@@ -186,7 +186,7 @@ query_methy_tabix <- function(x, chr, start, end, force) {
         }
     }
 
-    query <- GenomicRanges::GRanges(glue::glue("{chr}:{start}-{end}"))
+    query <- make_granges(chr, start, end)
 
     col_names <- methy_col_names()
     col_types <- methy_col_types()

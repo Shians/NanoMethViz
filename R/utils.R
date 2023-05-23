@@ -170,3 +170,8 @@ same_length <- function(...) {
     lengths <- purrr::map_dbl(list(...), length)
     !any(nulls) && all(map_lgl(lengths, ~ . == lengths[1]))
 }
+
+make_granges <- function(chr, start, end) {
+    assertthat::assert_that(same_length(chr, start, end))
+    GenomicRanges::GRanges(glue::glue("{chr}:{start}-{end}"))
+}

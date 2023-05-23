@@ -18,7 +18,13 @@ plot_clustered_reads <- function(x, chr, start, end) {
         dplyr::group_by(.data$read_name) %>%
         dplyr::summarise(group = unique(.data$group))
 
-    read_data <- dplyr::left_join(read_data, group_data, by = "read_name", multiple = "all")
+    read_data <- dplyr::left_join(
+        read_data,
+        group_data,
+        by = "read_name",
+        multiple = "all",
+        suffix = c("_read", "_group")
+    )
 
     read_data <- read_data %>%
         dplyr::group_by(.data$group) %>%

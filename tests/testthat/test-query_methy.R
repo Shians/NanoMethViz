@@ -26,8 +26,8 @@ test_that("Querying methylation works", {
     expect_silent(gene_methy_data <- query_methy_gene(nmr, "Peg3"))
     expect_equal(methy_data1, gene_methy_data)
 
+    expect_warning(expect_error(query_methy(nmr, "Missing", 1, 1000)))
     expect_error(query_methy_gene(nmr, "Missing"))
-    expect_error(query_methy(nmr, "Missing", 1, 1000))
 
     regions <- data.frame(
         chr = c("chr7", "chr7"),

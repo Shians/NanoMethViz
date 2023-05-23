@@ -153,7 +153,7 @@ plot_gene_annotation <- function(exons_df, plot_start, plot_end) {
             aes(x = .data$gene_middle, y = .data$y_offset + 0.8, label = .data$symbol),
             data = gene_labels,
             hjust = "center",
-            size = ggplot2::rel(3.5)
+            size = ggplot2::rel(2.5)
         )
     }
 

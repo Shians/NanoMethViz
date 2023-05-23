@@ -4,7 +4,7 @@
 \alias{cluster_reads}
 \title{Cluster reads based on methylation}
 \usage{
-cluster_reads(x, chr, start, end, min_pts = 10)
+cluster_reads(x, chr, start, end, min_pts = 5)
 }
 \arguments{
 \item{x}{a ModBamResult object.}

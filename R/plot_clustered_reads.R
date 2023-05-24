@@ -31,7 +31,11 @@ plot_clustered_reads <- function(x, chr, start, end, min_pts = 5) {
         dplyr::group_modify(append_read_group) %>%
         dplyr::ungroup()
 
-    methy_data <- dplyr::inner_join(methy_data, read_data)
+    methy_data <- dplyr::inner_join(
+        methy_data,
+        read_data,
+        by = dplyr::join_by("read_name", "group")
+    )
 
     p1 <- plot_methylation_internal(
         methy_data,
@@ -47,8 +51,14 @@ plot_clustered_reads <- function(x, chr, start, end, min_pts = 5) {
         ggplot2::coord_cartesian(xlim = c(start, end), expand = FALSE) +
         ggplot2::scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_si("b")))
 
+    heatmap_data <- dplyr::inner_join(
+        methy_data,
+        cluster_res,
+        by = dplyr::join_by("read_name", "strand", "start", "end")
+    )
+
     p2 <- plot_heatmap_internal(
-        methy_data = dplyr::inner_join(methy_data, cluster_res),
+        methy_data = heatmap_data,
         pos_style = "to_scale",
         subsample = 30,
         group_col = "cluster_id"

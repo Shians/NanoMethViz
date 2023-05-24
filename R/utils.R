@@ -45,7 +45,8 @@ load_example_modbamresult <- function() {
         samples = tibble::tibble(
             sample = "sample1",
             group = "group1"
-        )
+        ),
+        exons = get_example_exons_mus_musculus()
     )
 }
 
@@ -186,9 +187,9 @@ same_length <- function(...) {
 
 make_granges <- function(chr, start, end) {
     assertthat::assert_that(same_length(chr, start, end))
-    GenomicRanges::GRanges(glue::glue("{chr}:{start}-{end}"))
-}
-
-filter_reads <- function(reads, start, end, span, coverage) {
-
+    assertthat::assert_that(all(start < end))
+    GenomicRanges::GRanges(
+        seqnames = chr,
+        ranges = IRanges::IRanges(start, end)
+    )
 }

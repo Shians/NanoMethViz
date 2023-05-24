@@ -53,7 +53,7 @@ plot_clustered_reads <- function(x, chr, start, end) {
         subsample = 30,
         group_col = "cluster_id"
     ) +
-        ggplot2::coord_cartesian(xlim = xlim, expand = FALSE) +
+        ggplot2::coord_cartesian(xlim = c(start, end), expand = FALSE) +
         ggplot2::scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_si("b")))
 
     p1 / p2

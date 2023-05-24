@@ -14,5 +14,6 @@ test_that("cluster_reads assertions", {
 
     # Successful assertion test
     expect_no_error(cluster_reads(x, chr, start, end, min_pts))
-    plot_clustered_reads(x, chr, start, end)
+    expect_silent(plot_clustered_reads(x, chr, start, end))
+    expect_error(plot_clustered_reads(x, chr, start, end, min_pts = 1))
 })

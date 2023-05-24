@@ -48,7 +48,6 @@ Imports:
     purrr,
     rlang,
     R.utils,
-    RSQLite,
     Rsamtools,
     scales (>= 1.2.0),
     scico,

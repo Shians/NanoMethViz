@@ -20,7 +20,6 @@
 #' nmr <- load_example_nanomethresult()
 #' query_methy(methy(nmr), "chr7", 6703892, 6730431)
 #'
-#' @importFrom RSQLite dbConnect SQLite SQLITE_RO dbDisconnect dbGetQuery
 #' @importFrom Rsamtools TabixFile scanTabix
 #'
 #' @export
@@ -38,10 +37,8 @@ query_methy <- function(x, chr, start, end, simplify = TRUE, force = FALSE) {
         out <- query_methy_modbam(x, chr, start, end)
     } else if (can_open_tabix(x)) {
         out <- query_methy_tabix(x, chr, start, end, force = force)
-    } else if (can_open_sql(x)) {
-        out <- query_methy_sqlite(x, chr, start, end)
     } else {
-        stop("'x' is not a recognised file of type sqlite3 or tabix")
+        stop("'x' is not a recognised file type")
     }
 
     out <- map(out, function(x) {
@@ -102,23 +99,6 @@ query_methy_gene <- function(x, gene, window_prop = 0, simplify = TRUE) {
     )
 }
 
-can_open_sql <- function(x) {
-    assert_readable(x)
-    out <- TRUE
-
-    tryCatch(
-        RSQLite::dbConnect(
-            x,
-            drv = RSQLite::SQLite(),
-            flags = RSQLite::SQLITE_RO
-        ),
-        warning = function(x) { out <<- FALSE },
-        error = function(x) { out <<- FALSE }
-    )
-
-    return(out)
-}
-
 can_open_tabix <- function(x) {
     assert_readable(x)
     out <- TRUE
@@ -130,24 +110,6 @@ can_open_tabix <- function(x) {
     )
 
     return(out)
-}
-
-query_methy_sqlite <- function(x, chr, start, end) {
-    db <- RSQLite::dbConnect(
-        x,
-        drv = RSQLite::SQLite(),
-        flags = RSQLite::SQLITE_RO
-    )
-
-    query <- glue::glue("SELECT * FROM methylation
-                        WHERE chr = '{chr}'
-                        AND pos BETWEEN {start} AND {end}")
-
-    out <- RSQLite::dbGetQuery(db, query)
-
-    RSQLite::dbDisconnect(db)
-
-    tibble::as_tibble(out)
 }
 
 empty_methy_query_output <- function() {

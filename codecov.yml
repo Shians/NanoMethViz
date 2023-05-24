@@ -16,3 +16,5 @@ coverage:
 ignore:
  - "src"
  - "R/get_exons.R"
+ - "R/lollipop.R"
+ - "R/merge_methy_files.R"

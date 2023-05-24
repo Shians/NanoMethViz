@@ -1,4 +1,4 @@
-test_that("NanoMethResults getters work", {
+test_that("NanoMethResults getters and setters work", {
     # setup
     nmr <- load_example_nanomethresult()
 

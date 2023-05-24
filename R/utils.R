@@ -36,6 +36,19 @@ load_example_nanomethresult <- function() {
     NanoMethResult(methy, sample_anno, exon_tibble)
 }
 
+load_example_modbamresult <- function() {
+    ModBamResult(
+        methy = ModBamFiles(
+            paths = system.file(package = "NanoMethViz", "peg3.bam"),
+            samples = "sample1"
+        ),
+        samples = tibble::tibble(
+            sample = "sample1",
+            group = "group1"
+        )
+    )
+}
+
 .get_ggplot_range_x <- function(x) {
     # get x-axis range from a ggplot object
     # returns c(x_min, x_max)
@@ -174,4 +187,8 @@ same_length <- function(...) {
 make_granges <- function(chr, start, end) {
     assertthat::assert_that(same_length(chr, start, end))
     GenomicRanges::GRanges(glue::glue("{chr}:{start}-{end}"))
+}
+
+filter_reads <- function(reads, start, end, span, coverage) {
+
 }

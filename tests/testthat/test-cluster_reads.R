@@ -1,14 +1,5 @@
 test_that("cluster_reads assertions", {
-    x <- ModBamResult(
-        methy = ModBamFiles(
-            paths = system.file(package = "NanoMethViz", "peg3.bam"),
-            samples = "sample1"
-        ),
-        samples = tibble::tibble(
-            sample = "sample1",
-            group = "group1"
-        )
-    )
+    x <- load_example_modbamresult()
     chr <- "chr7"
     start <- 6713892
     end <- 6720421

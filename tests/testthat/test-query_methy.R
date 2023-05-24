@@ -1,16 +1,7 @@
 test_that("Querying methylation works", {
     # setup
     nmr <- load_example_nanomethresult()
-    mbr <- ModBamResult(
-        methy = ModBamFiles(
-            paths = system.file(package = "NanoMethViz", "peg3.bam"),
-            samples = "sample1"
-        ),
-        samples = tibble::tibble(
-            sample = "sample1",
-            group = "group1"
-        )
-    )
+    mbr <- load_example_modbamresult()
 
     # test
     expect_silent(methy_data1 <- query_methy(methy(nmr), "chr7", 6703892, 6730431))

@@ -1,4 +1,4 @@
-plot_clustered_reads <- function(x, chr, start, end, min_pts = 5) {
+plot_clustered_reads <- function(x, chr, start, end, min_pts = 5, title = glue::glue("{chr}:{start}-{end}")) {
     methy_data <- query_methy(x, chr, start, end) %>%
         dplyr::filter(.data$pos > start & .data$pos < end) %>%
         dplyr::inner_join(samples(x), by = "sample")
@@ -45,7 +45,7 @@ plot_clustered_reads <- function(x, chr, start, end, min_pts = 5) {
         start = start,
         end = end,
         group_col = "cluster_id",
-        title = "title",
+        title = title,
         points = TRUE
     ) +
         ggplot2::coord_cartesian(xlim = c(start, end), expand = FALSE) +
@@ -63,8 +63,9 @@ plot_clustered_reads <- function(x, chr, start, end, min_pts = 5) {
         subsample = 30,
         group_col = "cluster_id"
     ) +
-        ggplot2::coord_cartesian(xlim = c(start, end), expand = FALSE) +
-        ggplot2::scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_si("b")))
+        ggplot2::coord_cartesian(xlim = c(start, end), expand = TRUE) +
+        ggplot2::scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_si("b")), expand = ggplot2::expansion(0, 0))
+
 
     p1 / p2
 }

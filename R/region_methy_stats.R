@@ -17,6 +17,8 @@
 #' gene_anno <- exons_to_genes(NanoMethViz::exons(nmr))
 #' region_methy_stats(nmr, gene_anno)
 region_methy_stats <- function(nmr, regions, threshold = 0.5) {
+
+    # calculate methylation statistics for each region using
     methy_stats <- purrr::map_df(
         1:nrow(regions),
         get_region_methy_stats,
@@ -29,19 +31,19 @@ region_methy_stats <- function(nmr, regions, threshold = 0.5) {
 }
 
 get_region_methy_stats <- function(index, nmr, regions, threshold) {
-    methy <- query_methy(
-        nmr,
-        regions$chr[index],
-        regions$start[index],
-        regions$end[index],
-        force = TRUE
-    )
 
+    # query methylation data for the region
+    chr <- regions$chr[index]
+    start <- regions$start[index]
+    end <- regions$end[index]
+    methy <- query_methy(nmr, chr, start, end, force = TRUE)
+
+    # calculate methylation statistics if methylation data is available
     if (nrow(methy) != 0) {
         methy %>%
             summarise(
-                mean_methy_prob = mean(e1071::sigmoid(.data$statistic)),
-                prevalence = mean(e1071::sigmoid(.data$statistic) > threshold)
+                mean_methy_prob = mean(sigmoid(.data$statistic)),
+                prevalence = mean(sigmoid(.data$statistic) > threshold)
             )
     } else {
         tibble(mean_methy_prob = NA_real_, prevalence = NA_real_)

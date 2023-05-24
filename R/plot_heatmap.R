@@ -39,11 +39,9 @@ plot_heatmap_internal <- function(
         ) +
             ggplot2::geom_raster() +
             heatmap_fill_scale +
-            ggplot2::facet_wrap(~group, scales = "free_y", ncol = 1, strip.position = "right") +
-            theme_methy_heatmap +
             ggplot2::theme(
                 axis.ticks.x = ggplot2::element_blank(),
-                axis.text.x = ggplot2::element_blank(),
+                axis.text.x = ggplot2::element_blank()
             ) +
             ggplot2::xlab("Site")
     } else if (pos_style == "to_scale") {
@@ -51,23 +49,18 @@ plot_heatmap_internal <- function(
         # data will overlap
         p <- ggplot2::ggplot(methy_data, aes(y = .data$read_group)) +
             ggplot2::geom_errorbarh(
-                ggplot2::aes(
-                    xmin = .data$start,
-                    xmax = .data$end
-                ),
+                ggplot2::aes(xmin = .data$start, xmax = .data$end),
                 data = read_data,
                 alpha = 1,
                 color = "darkgray",
                 linewidth = 0.8,
                 height = 0
             ) +
-            ggplot2::geom_point(
-                aes(x = .data$pos, col = .data$mod_prob), alpha = 1, shape = 15) +
+            ggplot2::geom_point(aes(x = .data$pos, col = .data$mod_prob), alpha = 1, shape = 15) +
             heatmap_col_scale +
-            ggplot2::facet_wrap(~group, scales = "free_y", ncol = 1, strip.position = "right") +
-            theme_methy_heatmap +
             ggplot2::xlab("Position")
     }
 
-    p
+    p + ggplot2::facet_wrap(~group, scales = "free_y", ncol = 1, strip.position = "right") +
+        theme_methy_heatmap
 }

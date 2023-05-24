@@ -3,7 +3,7 @@ test_that("ModBamResults getters and setters work", {
     mbr <- load_example_modbamresult()
 
     # test
-    expect_s3_class(NanoMethViz::methy(mbr), "ModBamFiles")
+    expect_s4_class(NanoMethViz::methy(mbr), "ModBamFiles")
     expect_s3_class(NanoMethViz::exons(mbr), "data.frame")
     expect_s3_class(NanoMethViz::samples(mbr), "data.frame")
 

@@ -1,9 +1,9 @@
-plot_clustered_reads <- function(x, chr, start, end) {
+plot_clustered_reads <- function(x, chr, start, end, min_pts = 5) {
     methy_data <- query_methy(x, chr, start, end) %>%
         dplyr::filter(.data$pos > start & .data$pos < end) %>%
         dplyr::inner_join(samples(x), by = "sample")
 
-    cluster_res <- cluster_reads(x, chr, start, end)
+    cluster_res <- cluster_reads(x, chr, start, end, min_pts = min_pts)
 
     append_read_group <- function(x, k) {
         x$read_group <- paste0(k, stacked_interval_inds(x))

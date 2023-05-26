@@ -43,6 +43,7 @@ Imports:
     ggrastr,
     glue,
     graphics,
+    IRanges,
     limma (>= 3.44.0),
     patchwork,
     purrr,

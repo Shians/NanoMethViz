@@ -22,6 +22,7 @@ setClass(
 #' @export
 ModBamFiles <- function(samples, paths) {
     assert_readable(paths)
+    assert_has_index(paths)
 
     x <- data.frame(
         sample = samples,

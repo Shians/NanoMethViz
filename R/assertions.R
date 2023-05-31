@@ -12,3 +12,18 @@ assert_readable <- function(x) {
         }
     }
 }
+
+#' @importFrom purrr map_lgl
+assert_has_index <- function(x) {
+    has_index <- purrr::map_lgl(paste0(x, ".bai"), fs::file_exists)
+
+    if (any(!has_index)) {
+        no_index <- x[!has_index]
+        if (length(no_index) == 1) {
+            stop(glue::glue("files '{no_index}' does not have bam index"))
+        } else {
+            no_index <- paste(glue::glue("'{no_index}'"), collapse = ", ")
+            stop(glue::glue("files {no_index} do not have bam index"))
+        }
+    }
+}

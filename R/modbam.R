@@ -30,6 +30,53 @@ modbam_to_ref_coord <- function(seq, cigar, mod_str, mod_scores, map_pos, strand
         tidyr::drop_na()
 }
 
+parse_modbam <- function(x, sample) {
+    if (is.null(x$tag$ML)) {
+        mod_scores <- NULL
+    } else {
+        mod_scores <- x$tag$ML %>%
+            purrr::map_chr(~stringr::str_c(., collapse = ","))
+    }
+
+    reads_df <- tibble::tibble(
+        chr = x$rname,
+        strand = x$strand,
+        map_pos = x$pos,
+        cigar = x$cigar,
+        seq = as.character(x$seq),
+        mod_string = x$tag$MM,
+        mod_scores = mod_scores,
+        read_name = x$qname
+    ) %>%
+        dplyr::filter(seq != "")
+
+    if (nrow(reads_df) == 0) {
+        return(NULL)
+    }
+
+    out <- reads_df %>%
+        mutate(
+            modbam_stats = map_rows(
+                reads_df,
+                function(x) {
+                    modbam_to_ref_coord(
+                        x$seq,
+                        x$cigar,
+                        x$mod_string,
+                        x$mod_scores,
+                        x$map_pos,
+                        x$strand
+                    )
+                }
+            )
+        )
+
+    out %>%
+        dplyr::select("read_name", "chr", "strand", "modbam_stats") %>%
+        tidyr::unnest("modbam_stats") %>%
+        tidyr::drop_na() %>%
+        dplyr::mutate(sample = sample, .before = 1)
+}
 
 read_modbam_table <- function(x, chr, start, end, sample) {
     bam_file <- Rsamtools::BamFile(x)
@@ -48,53 +95,5 @@ read_modbam_table <- function(x, chr, start, end, sample) {
 
     reads <- Rsamtools::scanBam(bam_file, param = sb_param)
 
-    parse_modbam <- function(x) {
-        if (is.null(x$tag$ML)) {
-            mod_scores <- NULL
-        } else {
-            mod_scores <- x$tag$ML %>%
-                purrr::map_chr(~stringr::str_c(., collapse = ","))
-        }
-
-        reads_df <- tibble::tibble(
-            read_name = x$qname,
-            chr = x$rname,
-            strand = x$strand,
-            map_pos = x$pos,
-            cigar = x$cigar,
-            seq = as.character(x$seq),
-            mod_string = x$tag$MM,
-            mod_scores = mod_scores
-        ) %>%
-            dplyr::filter(seq != "")
-
-        if (nrow(reads_df) == 0) {
-            return(NULL)
-        }
-
-        out <- reads_df %>%
-            mutate(
-                modbam_stats = map_rows(
-                    reads_df,
-                    function(x) {
-                        modbam_to_ref_coord(
-                            x$seq,
-                            x$cigar,
-                            x$mod_string,
-                            x$mod_scores,
-                            x$map_pos,
-                            x$strand
-                        )
-                    }
-                )
-            )
-
-        out %>%
-            dplyr::select("read_name", "chr", "strand", "modbam_stats") %>%
-            tidyr::unnest("modbam_stats") %>%
-            tidyr::drop_na() %>%
-            dplyr::mutate(sample = sample, .before = 1)
-    }
-
-    lapply(reads, parse_modbam)
+    lapply(reads, parse_modbam, sample = sample)
 }

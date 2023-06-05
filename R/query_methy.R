@@ -10,6 +10,9 @@
 #'   appear in data. Without 'force', an empty result indicates that the
 #'   requested 'chr' appears in the data but no data overlaps with requested
 #'   region, and an invalid 'chr' will cause an error.
+#' @param truncate when querying from ModBamFiles, whether or not to truncate
+#'   returned results to only those within the specified region. Otherwise
+#'   methylation data for entire reads overlapping the region will be returned.
 #'
 #' @return A table containing the data within the queried regions. If simplify
 #'   is TRUE (default) then all data is contained within one table, otherwise it
@@ -23,7 +26,7 @@
 #' @importFrom Rsamtools TabixFile scanTabix
 #'
 #' @export
-query_methy <- function(x, chr, start, end, simplify = TRUE, force = FALSE) {
+query_methy <- function(x, chr, start, end, simplify = TRUE, force = FALSE, truncate = TRUE) {
     if (is(x, "NanoMethResult")) {
         x <- methy(x)
     }
@@ -47,6 +50,11 @@ query_methy <- function(x, chr, start, end, simplify = TRUE, force = FALSE) {
 
     if (simplify) {
         out <- dplyr::bind_rows(out)
+    }
+
+    if (truncate) {
+        out <- out %>%
+            dplyr::filter(pos >= start, pos <= end)
     }
 
     out

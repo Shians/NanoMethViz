@@ -8,7 +8,7 @@ assert_readable <- function(x) {
             stop(glue::glue("Path '{unreadables}' does not exist"))
         } else {
             unreadables <- paste(glue::glue("'{unreadables}'"), collapse = ", ")
-            stop(glue::glue("Paths {unreadables} do not exist"))
+            stop(glue::glue("paths {unreadables} do not exist"))
         }
     }
 }
@@ -20,10 +20,10 @@ assert_has_index <- function(x) {
     if (any(!has_index)) {
         no_index <- x[!has_index]
         if (length(no_index) == 1) {
-            stop(glue::glue("files '{no_index}' does not have bam index"))
+            stop(glue::glue("files '{no_index}' does not have bam index, this can be fixed by running `samtools index` in the command line."))
         } else {
             no_index <- paste(glue::glue("'{no_index}'"), collapse = ", ")
-            stop(glue::glue("files {no_index} do not have bam index"))
+            stop(glue::glue("files {no_index} do not have bam index, this can be fixed by running `samtools index` in the command line."))
         }
     }
 }

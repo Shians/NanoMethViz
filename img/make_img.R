@@ -2,6 +2,7 @@ library(NanoMethViz)
 library(bsseq)
 library(stringr)
 
+nmr <- load_example_nanomethresult()
 bss <- nmr %>% methy_to_bsseq()
 samples <- colData(bss)$sample %>%
     str_replace(".*_(\\d)_(bl6|cast)$", "\\2 \\1")

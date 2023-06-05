@@ -4,7 +4,15 @@
 \alias{query_methy}
 \title{Query methylation data}
 \usage{
-query_methy(x, chr, start, end, simplify = TRUE, force = FALSE)
+query_methy(
+  x,
+  chr,
+  start,
+  end,
+  simplify = TRUE,
+  force = FALSE,
+  truncate = TRUE
+)
 }
 \arguments{
 \item{x}{the NanoMethResults object or a path to the methylation data
@@ -22,6 +30,10 @@ query_methy(x, chr, start, end, simplify = TRUE, force = FALSE)
 appear in data. Without 'force', an empty result indicates that the
 requested 'chr' appears in the data but no data overlaps with requested
 region, and an invalid 'chr' will cause an error.}
+
+\item{truncate}{when querying from ModBamFiles, whether or not to truncate
+returned results to only those within the specified region. Otherwise
+methylation data for entire reads overlapping the region will be returned.}
 }
 \value{
 A table containing the data within the queried regions. If simplify

@@ -19,4 +19,20 @@ test_that("ModBamResults getters and setters work", {
     expect_silent(samples(mbr) <- samples(mbr))
     expect_silent(exons(mbr) <- exons(mbr))
     expect_error(exons(mbr) <- exons(mbr)[, -"strand"])
+
+    expect_error(
+        ModBamFiles(
+            paths = system.file(package = "NanoMethViz", "missing.bam"),
+            samples = "sample1"
+        ),
+        regex = "Path .+ does not exist"
+    )
+
+    expect_error(
+        ModBamFiles(
+            paths = system.file(package = "NanoMethViz", "no_index.bam"),
+            samples = "sample1"
+        ),
+        regex = ".+ does not have bam index"
+    )
 })

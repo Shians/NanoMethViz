@@ -40,7 +40,8 @@ modbam_to_tabix <- function(x, out_file) {
     }
 
 
-    for (i in 1:nrow(bam_info)) {
+    n_files <- nrow(bam_info)
+    for (i in seq_len(n_files)) {
         path <- bam_info$path[i]
         sample <- bam_info$sample[i]
         bam_file <- Rsamtools::BamFile(path, yieldSize = 500)
@@ -48,7 +49,7 @@ modbam_to_tabix <- function(x, out_file) {
         total <- sum(Rsamtools::idxstatsBam(path)[, c("mapped", "unmapped")])
         fname <- fs::path_file(path)
         cli::cli_progress_bar(
-            glue::glue("Converting {fname}"),
+            glue::glue("Converting (file {i}/{n_files}): {fname}"),
             total = total,
             format_done = paste0(
                 "{.alert-success Data converted: ", fname, " {.timestamp {cli::pb_elapsed}}}"),

@@ -18,7 +18,7 @@ get_read_entropy <- function(bam_path, sample = fs::path_file(bam_path)) {
             pos = reads$pos,
             width = Biostrings::width(reads$seq),
             center = as.integer(pos + width/2),
-            cg_count = purrr::map_int(as.character(reads$seq), count_cg),
+            cg_count = purrr::map_int(as.character(reads$seq), count_cg_cpp),
             crossings = purrr::map_int(reads$tag$ML, count_crossings),
             entropy = crossings / cg_count
         )

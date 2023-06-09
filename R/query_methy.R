@@ -48,13 +48,21 @@ query_methy <- function(x, chr, start, end, simplify = TRUE, force = FALSE, trun
         dplyr::mutate(x, mod_prob = sigmoid(.data$statistic))
     })
 
-    if (simplify) {
-        out <- dplyr::bind_rows(out)
+    if (truncate) {
+        pos_list <- purrr::map2(start, end, ~c(start = .x, end = .y))
+
+        truncate_fn <- function(x, pos_range) {
+            x %>%
+                dplyr::filter(
+                    .data$pos >= pos_range["start"],
+                    .data$pos <= pos_range["end"]
+                )
+        }
+        out <- purrr::map2(out, pos_list, truncate_fn)
     }
 
-    if (truncate) {
-        out <- out %>%
-            dplyr::filter(pos >= start, pos <= end)
+    if (simplify) {
+        out <- dplyr::bind_rows(out)
     }
 
     out

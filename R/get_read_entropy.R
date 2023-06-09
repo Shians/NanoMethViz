@@ -45,7 +45,7 @@ get_read_entropy <- function(bam_path, sample = fs::path_file(bam_path)) {
         reads <- read_chunk(bam_file)
         df_list[[i]] <- parse_chunk(reads, sample)
         i <- i + 1
-        cli::cli_progress_update(length(reads[[1]][[1]]))
+        cli::cli_progress_update(length(reads[[1]]))
     }
     close(bam_file)
 

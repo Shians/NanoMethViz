@@ -26,6 +26,7 @@ Depends:
 Imports:
     cpp11 (>= 0.2.5),
     readr,
+    cli,
     S4Vectors,
     SummarizedExperiment,
     BiocSingular,

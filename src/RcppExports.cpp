@@ -22,6 +22,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// count_cg_cpp
+int count_cg_cpp(std::string str);
+RcppExport SEXP _NanoMethViz_count_cg_cpp(SEXP strSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type str(strSEXP);
+    rcpp_result_gen = Rcpp::wrap(count_cg_cpp(str));
+    return rcpp_result_gen;
+END_RCPP
+}
 // get_char_pos_cpp
 NumericVector get_char_pos_cpp(CharacterVector x, CharacterVector c);
 RcppExport SEXP _NanoMethViz_get_char_pos_cpp(SEXP xSEXP, SEXP cSEXP) {
@@ -71,6 +82,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_NanoMethViz_convert_methy_to_dss_cpp", (DL_FUNC) &_NanoMethViz_convert_methy_to_dss_cpp, 2},
+    {"_NanoMethViz_count_cg_cpp", (DL_FUNC) &_NanoMethViz_count_cg_cpp, 1},
     {"_NanoMethViz_get_char_pos_cpp", (DL_FUNC) &_NanoMethViz_get_char_pos_cpp, 2},
     {"_NanoMethViz_cigar_tokeniser_cpp", (DL_FUNC) &_NanoMethViz_cigar_tokeniser_cpp, 1},
     {"_NanoMethViz_get_coord_map_cpp", (DL_FUNC) &_NanoMethViz_get_coord_map_cpp, 1},

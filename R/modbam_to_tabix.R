@@ -29,40 +29,41 @@ modbam_to_tabix <- function(x, out_file) {
 
     bam_info <- inner_join(samples(x), methy(x), by = join_by(sample))
 
-    sb_param <- Rsamtools::ScanBamParam(
-        what = c("qname", "rname", "strand", "pos", "cigar", "seq"),
-        tag = c("MM", "ML")
-    )
+    sb_param <- modbam_param()
 
     if (fs::file_exists(out_file)) {
         cli::cli_progress_step(paste0("Output file exists, overwriting ", out_file))
         fs::file_delete(out_file)
     }
 
+    parse_and_select <- function(x) {
+        parse_modbam(x[[1]], sample) %>%
+            select("sample", "chr", "pos", "strand", "statistic", "read_name")
+    }
+
+    total <- get_bam_total_reads(path)
+    fname <- fs::path_file(path)
+    cli::cli_progress_bar(
+        glue::glue("Converting file {i}/{n_files}: {fname}"),
+        total = total,
+        format_done = paste0(
+            "{.alert-success Data converted: ", fname, " {.timestamp {cli::pb_elapsed}}}"),
+        format_failed = paste0(
+            "{.alert-danger Data conversion failed: ", fname, " {.timestamp {cli::pb_elapsed}}}"),
+        clear = FALSE
+    )
 
     n_files <- nrow(bam_info)
     for (i in seq_len(n_files)) {
         path <- bam_info$path[i]
         sample <- bam_info$sample[i]
-        bam_file <- Rsamtools::BamFile(path, yieldSize = 500)
+        bam_file <- Rsamtools::BamFile(path, yieldSize = 15000)
 
-        total <- sum(Rsamtools::idxstatsBam(path)[, c("mapped", "unmapped")])
-        fname <- fs::path_file(path)
-        cli::cli_progress_bar(
-            glue::glue("Converting (file {i}/{n_files}): {fname}"),
-            total = total,
-            format_done = paste0(
-                "{.alert-success Data converted: ", fname, " {.timestamp {cli::pb_elapsed}}}"),
-            format_failed = paste0(
-                "{.alert-danger Data conversion failed: ", fname, " {.timestamp {cli::pb_elapsed}}}"),
-            clear = FALSE
-        )
-
+        progress_bar_conversion(path, i, n_files)
         open(bam_file)
         while (Rsamtools::isIncomplete(bam_file)) {
             reads <- Rsamtools::scanBam(bam_file, param = sb_param)
-            data <- parse_modbam(reads[[1]], sample) %>%
-                select("sample", "chr", "pos", "strand", "statistic", "read_name")
+            data <- parse_and_select(reads)
 
             readr::write_tsv(data, out_file, append = TRUE, progress = FALSE)
             cli::cli_progress_update(length(reads[[1]][[1]]))

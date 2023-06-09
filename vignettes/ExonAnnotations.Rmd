@@ -22,7 +22,7 @@ library(dplyr)
 
 # Importing Annotations
 
-This package comes with helper functions that import exon annotations from the Bioconductor packages `Homo.sapiens` and `Mus.musculus`. The functions `get_exons_homo_sapiens()` and `get_exons_mus_musculus()` simply take data from the respective packages, and reorganise the columns such that we have seven columns
+This package comes with helper functions that import exon annotations from the Bioconductor packages `Homo.sapiens` and `Mus.musculus`. The functions `get_exons_hg19()` and `get_exons_mm19()` simply take data from the respective packages, and reorganise the columns such that we have seven columns
 
 -   gene_id
 -   chr

@@ -1,5 +1,14 @@
 # get modification probability values and reference-based coordinates
 modbam_to_ref_coord <- function(seq, cigar, mod_str, mod_scores, map_pos, strand) {
+    # Check inputs
+    assert_that(assertthat::is.string(seq))
+    assert_that(assertthat::is.string(cigar))
+    assert_that(assertthat::is.string(mod_str))
+    assert_that(assertthat::is.string(mod_scores))
+    assert_that(is.numeric(map_pos))
+    assert_that(is.factor(strand))
+    assert_that(strand %in% c("+", "-"), msg = "Strand must be '+' or '-'")
+
     # tokenise the cigar string into a data.frame
     mod_tokens <- mod_tokeniser_cpp(mod_str, mod_scores)
 

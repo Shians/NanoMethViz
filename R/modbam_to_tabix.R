@@ -26,8 +26,9 @@
 #'
 #' @export
 modbam_to_tabix <- function(x, out_file) {
+    assertthat::assert_that(is(x, "ModBamResult"))
 
-    bam_info <- inner_join(samples(x), methy(x), by = join_by(sample))
+    bam_info <- dplyr::inner_join(samples(x), methy(x), by = dplyr::join_by(sample))
 
     sb_param <- modbam_param()
 
@@ -59,7 +60,16 @@ modbam_to_tabix <- function(x, out_file) {
         sample <- bam_info$sample[i]
         bam_file <- Rsamtools::BamFile(path, yieldSize = 15000)
 
-        progress_bar_conversion(path, i, n_files)
+        cli::cli_progress_bar(
+            glue::glue("Converting file {i}/{n_files}: {fname}"),
+            total = total,
+            format_done = paste0(
+                "{.alert-success Data converted: ", fname, " {.timestamp {cli::pb_elapsed}}}"),
+            format_failed = paste0(
+                "{.alert-danger Data conversion failed: ", fname, " {.timestamp {cli::pb_elapsed}}}"),
+            clear = FALSE
+        )
+
         open(bam_file)
         while (Rsamtools::isIncomplete(bam_file)) {
             reads <- Rsamtools::scanBam(bam_file, param = sb_param)

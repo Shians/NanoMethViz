@@ -44,16 +44,6 @@ modbam_to_tabix <- function(x, out_file) {
 
     total <- get_bam_total_reads(path)
     fname <- fs::path_file(path)
-    cli::cli_progress_bar(
-        glue::glue("Converting file {i}/{n_files}: {fname}"),
-        total = total,
-        format_done = paste0(
-            "{.alert-success Data converted: ", fname, " {.timestamp {cli::pb_elapsed}}}"),
-        format_failed = paste0(
-            "{.alert-danger Data conversion failed: ", fname, " {.timestamp {cli::pb_elapsed}}}"),
-        clear = FALSE
-    )
-
     n_files <- nrow(bam_info)
     for (i in seq_len(n_files)) {
         path <- bam_info$path[i]

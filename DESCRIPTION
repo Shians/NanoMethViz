@@ -12,6 +12,7 @@ Description: NanoMethViz is a toolkit for visualising methylation data from
     aggregated over experimental groups and across classes of genomic features.
 biocViews:
     Software,
+    LongRead,
     Visualization,
     DifferentialMethylation,
     DNAMethylation,

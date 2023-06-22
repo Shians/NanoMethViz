@@ -5,10 +5,6 @@ get_read_entropy <- function(bam_path, sample = fs::path_file(bam_path)) {
         return(crossings)
     }
 
-    read_chunk <- function(bam_file) {
-        Rsamtools::scanBam(bam_file, param = modbam_param())[[1]]
-    }
-
     parse_chunk <- function(reads, sample) {
         reads <- reads[!is.null(reads$seq)]
         tibble::tibble(
@@ -42,7 +38,7 @@ get_read_entropy <- function(bam_path, sample = fs::path_file(bam_path)) {
     df_list <- list()
     open(bam_file)
     while (Rsamtools::isIncomplete(bam_file)) {
-        reads <- read_chunk(bam_file)
+        reads <- read_bam(bam_file)[[1]]
         df_list[[i]] <- parse_chunk(reads, sample)
         i <- i + 1
         cli::cli_progress_update(length(reads[[1]]))

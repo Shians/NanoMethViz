@@ -198,10 +198,3 @@ make_granges <- function(chr, start, end) {
 get_bam_total_reads <- function(path) {
     sum(Rsamtools::idxstatsBam(path)[, c("mapped", "unmapped")])
 }
-
-modbam_param <- function() {
-    Rsamtools::ScanBamParam(
-        what = c("qname", "rname", "strand", "pos", "cigar", "seq"),
-        tag = c("MM", "ML")
-    )
-}

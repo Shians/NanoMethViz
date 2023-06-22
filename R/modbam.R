@@ -87,6 +87,49 @@ parse_modbam <- function(x, sample) {
         dplyr::mutate(sample = sample, .before = 1)
 }
 
+read_bam <- function(bam_file, query = NULL) {
+    modbam_param <- function(query = NULL) {
+        if (!is.null(query)) {
+            Rsamtools::ScanBamParam(
+                flag = Rsamtools::scanBamFlag(isUnmappedQuery = FALSE),
+                what = c("qname", "rname", "strand", "pos", "cigar", "seq"),
+                tag = c("MM", "ML"),
+                which = query
+            )
+        } else {
+            Rsamtools::ScanBamParam(
+                flag = Rsamtools::scanBamFlag(isUnmappedQuery = FALSE),
+                what = c("qname", "rname", "strand", "pos", "cigar", "seq"),
+                tag = c("MM", "ML"),
+                which = rlang::missing_arg()
+            )
+        }
+    }
+
+    filter_modbam <- function(x) {
+        tag <- x$tag
+        x$tag <- NULL
+
+        missing <- map_lgl(tag$ML, ~length(.) == 0) |
+            map_lgl(x$rname, is.na) |
+            map_lgl(x$strand, is.na) |
+            map_lgl(x$pos, is.na) |
+            map_lgl(x$cigar, is.na)
+
+        x <- map(x, ~.[!missing])
+        tag <- map(tag, ~.[!missing])
+
+        x$tag <- tag
+        x
+    }
+
+    Rsamtools::scanBam(
+        bam_file,
+        param = modbam_param(query = query)
+    ) %>%
+        map(filter_modbam)
+}
+
 read_modbam_table <- function(x, chr, start, end, sample) {
     bam_file <- Rsamtools::BamFile(x)
 
@@ -96,13 +139,7 @@ read_modbam_table <- function(x, chr, start, end, sample) {
         return(list(empty_methy_query_output()))
     }
 
-    sb_param <- Rsamtools::ScanBamParam(
-        what = c("qname", "rname", "strand", "pos", "cigar", "seq"),
-        tag = c("MM", "ML"),
-        which = query
-    )
-
-    reads <- Rsamtools::scanBam(bam_file, param = sb_param)
+    reads <- read_bam(bam_file, query = query)
 
     lapply(reads, parse_modbam, sample = sample)
 }

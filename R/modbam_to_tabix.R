@@ -30,8 +30,6 @@ modbam_to_tabix <- function(x, out_file) {
 
     bam_info <- dplyr::inner_join(samples(x), methy(x), by = dplyr::join_by(sample))
 
-    sb_param <- modbam_param()
-
     if (fs::file_exists(out_file)) {
         cli::cli_progress_step(paste0("Output file exists, overwriting ", out_file))
         fs::file_delete(out_file)
@@ -62,7 +60,7 @@ modbam_to_tabix <- function(x, out_file) {
 
         open(bam_file)
         while (Rsamtools::isIncomplete(bam_file)) {
-            reads <- Rsamtools::scanBam(bam_file, param = sb_param)
+            reads <- read_modbam(bam_file)
             data <- parse_and_select(reads)
 
             readr::write_tsv(data, out_file, append = TRUE, progress = FALSE)

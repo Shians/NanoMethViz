@@ -106,6 +106,58 @@ get_exons_mm10 <- function() {
         )
 }
 
+#' @rdname get_exons
+#' 
+#' @examples
+#' grcm39_exons <- get_exons_grcm39()
+#' 
+#' @export
+get_exons_grcm39 <- function() {
+    package_check(
+        c("TxDb.Mmusculus.UCSC.mm39.refGene", "org.Mm.eg.db"),
+        c("3.10.0", "3.15.0")
+    )
+
+    txdb <- TxDb.Mmusculus.UCSC.mm39.refGene::TxDb.Mmusculus.UCSC.mm39.refGene
+
+    genes <-  AnnotationDbi::keys(txdb, "GENEID")
+    exon_data <- suppressMessages(AnnotationDbi::select(
+        txdb,
+        keys = genes,
+        keytype = "GENEID",
+        columns = c(
+            "GENEID",
+            "TXID",
+            "EXONCHROM",
+            "EXONSTRAND",
+            "EXONSTART",
+            "EXONEND"
+        )
+    ))
+
+    symbols_data <- suppressMessages(AnnotationDbi::select(
+            org.Mm.eg.db::org.Mm.eg.db,
+            keys = genes,
+            keytype = "ENTREZID",
+            columns = c(
+                "SYMBOL"
+            )
+        )) %>%
+        dplyr::rename(GENEID = "ENTREZID")
+
+    dplyr::left_join(exon_data, symbols_data, by = "GENEID", multiple = "all") %>%
+        tibble::as_tibble() %>%
+        dplyr::rename(
+            gene_id = "GENEID",
+            chr = "EXONCHROM",
+            strand = "EXONSTRAND",
+            start = "EXONSTART",
+            end = "EXONEND",
+            transcript_id = "TXID",
+            symbol = "SYMBOL"
+        )
+}
+
 #' Get example exon annotations for mus musculus (mm10)
 #'
 #' This is a small subset of the exons returned by

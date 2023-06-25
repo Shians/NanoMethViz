@@ -3,11 +3,14 @@
 \name{get_exons}
 \alias{get_exons}
 \alias{get_exons_mm10}
+\alias{get_exons_grcm39}
 \alias{get_exons_hg19}
 \alias{get_exons_hg38}
 \title{Get exon annotations}
 \usage{
 get_exons_mm10()
+
+get_exons_grcm39()
 
 get_exons_hg19()
 
@@ -23,6 +26,8 @@ objects.
 }
 \examples{
 mm10_exons <- get_exons_mm10()
+
+grcm39_exons <- get_exons_grcm39()
 
 hg19_exons <- get_exons_hg19()
 

@@ -100,8 +100,7 @@ read_bam <- function(bam_file, query = NULL) {
             Rsamtools::ScanBamParam(
                 flag = Rsamtools::scanBamFlag(isUnmappedQuery = FALSE),
                 what = c("qname", "rname", "strand", "pos", "cigar", "seq"),
-                tag = c("MM", "ML"),
-                which = rlang::missing_arg()
+                tag = c("MM", "ML")
             )
         }
     }

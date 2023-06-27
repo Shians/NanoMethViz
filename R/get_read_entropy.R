@@ -1,3 +1,4 @@
+#' @importFrom Biostrings width
 get_read_entropy <- function(bam_path, sample = fs::path_file(bam_path)) {
     # helper functions ----
     count_crossings <- function(numbers) {
@@ -13,10 +14,10 @@ get_read_entropy <- function(bam_path, sample = fs::path_file(bam_path)) {
             chr = factor(reads$rname),
             pos = reads$pos,
             width = Biostrings::width(reads$seq),
-            center = as.integer(pos + width/2),
+            center = as.integer(.data$pos + .data$width/2),
             cg_count = purrr::map_int(as.character(reads$seq), count_cg_cpp),
             crossings = purrr::map_int(reads$tag$ML, count_crossings),
-            entropy = crossings / cg_count
+            entropy = .data$crossings / .data$cg_count
         )
     }
 

@@ -24,7 +24,7 @@ out_file <- tempfile()
 mbr <- ModBamResult(
     methy = ModBamFiles(
         samples = "sample1",
-        paths = "inst/peg3.bam"
+        paths = system.file("peg3.bam", package = "NanoMethViz")
     ),
     samples = data.frame(
         sample = "sample1",

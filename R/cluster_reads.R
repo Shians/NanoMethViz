@@ -74,7 +74,7 @@ cluster_reads <- function(x, chr, start, end, min_pts = 5) {
 
     # merge and process results of cluster analysis and read statistics
     clust_df %>%
-        dplyr::left_join(read_stats, by = "read_name") %>%
+        dplyr::inner_join(read_stats, by = "read_name") %>%
         dplyr::arrange(.data$cluster_id) %>%
         dplyr::mutate(
             cluster_id = as.factor(.data$cluster_id),

@@ -14,7 +14,7 @@
 #' mbr <- ModBamResult(
 #'     methy = ModBamFiles(
 #'         samples = "sample1",
-#'         paths = "inst/peg3.bam"
+#'         paths = system.file("peg3.bam", package = "NanoMethViz")
 #'     ),
 #'     samples = data.frame(
 #'         sample = "sample1",
@@ -35,19 +35,19 @@ modbam_to_tabix <- function(x, out_file) {
         fs::file_delete(out_file)
     }
 
-    parse_and_select <- function(x) {
+    parse_read_chunk <- function(x) {
         parse_modbam(x[[1]], sample) %>%
             select("sample", "chr", "pos", "strand", "statistic", "read_name")
     }
 
-    total <- get_bam_total_reads(path)
-    fname <- fs::path_file(path)
     n_files <- nrow(bam_info)
     for (i in seq_len(n_files)) {
         path <- bam_info$path[i]
         sample <- bam_info$sample[i]
         bam_file <- Rsamtools::BamFile(path, yieldSize = 15000)
 
+        total <- get_bam_total_reads(path)
+        fname <- fs::path_file(path)
         cli::cli_progress_bar(
             glue::glue("Converting file {i}/{n_files}: {fname}"),
             total = total,
@@ -60,8 +60,8 @@ modbam_to_tabix <- function(x, out_file) {
 
         open(bam_file)
         while (Rsamtools::isIncomplete(bam_file)) {
-            reads <- read_modbam(bam_file)
-            data <- parse_and_select(reads)
+            reads <- read_bam(bam_file)
+            data <- parse_read_chunk(reads)
 
             readr::write_tsv(data, out_file, append = TRUE, progress = FALSE)
             cli::cli_progress_update(length(reads[[1]][[1]]))

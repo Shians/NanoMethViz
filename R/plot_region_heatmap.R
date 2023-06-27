@@ -170,7 +170,7 @@ setMethod("plot_region_heatmap",
     methy_data <- query_methy(x, chr, plot_left, plot_right)
 
     # add sample information
-    methy_data <- dplyr::left_join(
+    methy_data <- dplyr::inner_join(
         NanoMethViz::samples(x),
         methy_data,
         by = "sample",
@@ -186,7 +186,7 @@ setMethod("plot_region_heatmap",
             dplyr::summarise(group = unique(.data$group))
 
     # get read starts and ends
-    read_data <- dplyr::left_join(read_data, group_data, by = "read_name", multiple = "all")
+    read_data <- dplyr::inner_join(read_data, group_data, by = "read_name", multiple = "all")
 
     # get grouping indices to pack reads
     append_read_group <- function(x, k) {
@@ -200,7 +200,7 @@ setMethod("plot_region_heatmap",
 
     methy_data$mod_prob <- sigmoid(methy_data$statistic)
 
-    methy_data <- dplyr::left_join(
+    methy_data <- dplyr::inner_join(
         methy_data,
         dplyr::select(read_data, "read_name", "read_group"),
         by = "read_name",

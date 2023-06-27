@@ -180,7 +180,7 @@ plot_agg_regions <- function(
     x %>%
         dplyr::select(!dplyr::any_of(c("chr", "strand", "start", "end"))) %>%
         tidyr::unnest("methy_data") %>%
-        dplyr::left_join(samples_anno, by = "sample", multiple = "all")
+        dplyr::inner_join(samples_anno, by = "sample", multiple = "all")
 }
 
 .bin_avg <- function(x, group_col, grid_size = 2^10) {
@@ -194,7 +194,7 @@ plot_agg_regions <- function(
 
     x %>%
         dplyr::mutate(interval = cut(.data$rel_pos, breaks = binned_pos)) %>%
-        dplyr::left_join(binned_pos_df, by = "interval", multiple = "all") %>%
+        dplyr::inner_join(binned_pos_df, by = "interval", multiple = "all") %>%
         dplyr::group_by(dplyr::across(dplyr::all_of(group_col)), binned_pos) %>%
         dplyr::summarise(methy_prop = mean(.data$methy_prop), .groups = "drop")
 }

@@ -18,7 +18,7 @@ plot_clustered_reads <- function(x, chr, start, end, min_pts = 5, title = glue::
         dplyr::group_by(.data$read_name) %>%
         dplyr::summarise(group = unique(.data$group))
 
-    read_data <- dplyr::left_join(
+    read_data <- dplyr::inner_join(
         read_data,
         group_data,
         by = "read_name",

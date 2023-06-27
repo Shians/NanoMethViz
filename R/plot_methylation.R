@@ -55,7 +55,7 @@ plot_methylation_internal <- function(
         # remove any duplicate columns and use plot_data as reference
         plot_data_names <- setdiff(names(plot_data), "read_name")
         read_anno <- dplyr::select(read_anno, -dplyr::any_of(plot_data_names))
-        plot_data <- dplyr::left_join(plot_data, read_anno, by = "read_name") %>%
+        plot_data <- dplyr::inner_join(plot_data, read_anno, by = "read_name") %>%
             tidyr::drop_na()
     }
 

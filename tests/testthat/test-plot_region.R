@@ -22,6 +22,9 @@ test_that("Plotting region works", {
         expect_silent(p4 <- plot_region(x, factor("chr7"), 6703892, 6730431, heatmap = TRUE))
         expect_s3_class(p4, "ggplot")
 
+        expect_silent(p5 <- plot_region(nmr, "chr7", 6703892, 6730431, heatmap = TRUE, heatmap_subsample = 5))
+        expect_s3_class(p5, "ggplot")
+
         for (i in 1:nrow(params)) {
             expect_silent(
                 p <- plot_region(

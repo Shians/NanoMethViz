@@ -1,23 +1,6 @@
 #' @rdname plot_gene
 #'
-#' @param window_prop the size of flanking region to plot. Can be a vector of two
-#'   values for left and right window size. Values indicate proportion of gene
-#'   length.
-#' @param anno_regions the data.frame of regions to annotate.
-#' @param binary_threshold the modification probability such that calls with
-#'   modification probability above the threshold are set to 1 and probabilities
-#'   equal to or below the threshold are set to 0.
-#' @param avg_method the average method for pre-smoothing at each genomic position.
-#'   Data is pre-smoothed at each genomic position before the smoothed aggregate line
-#'   is generated for performance reasons. The default is "mean" which corresponds
-#'   to the average methylation fraction. The alternative "median" option is
-#'   closer to an average within the more common methylation state.
-#' @param spaghetti whether or not individual reads should be shown.
-#' @param heatmap whether or not read-methylation heatmap should be shown.
-#' @param span the span for loess smoothing.
-#' @param gene_anno whether or not gene annotation tracks are plotted.
-#' @param palette the ggplot colour palette used for groups.
-#' @param line_size the size of the lines.
+#' @inheritParams plot_region
 #'
 #' @examples
 #' nmr <- load_example_nanomethresult()
@@ -34,6 +17,7 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
         avg_method = c("mean", "median"),
         spaghetti = FALSE,
         heatmap = FALSE,
+        heatmap_subsample = 50,
         span = NULL,
         gene_anno = TRUE,
         palette = ggplot2::scale_colour_brewer(palette = "Set1"),
@@ -49,6 +33,7 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
             avg_method = avg_method,
             spaghetti = spaghetti,
             heatmap = heatmap,
+            heatmap_subsample = heatmap_subsample,
             span = span,
             gene_anno = gene_anno,
             palette = palette,
@@ -68,6 +53,7 @@ setMethod("plot_gene", signature(x = "ModBamResult", gene = "character"),
         avg_method = c("mean", "median"),
         spaghetti = FALSE,
         heatmap = FALSE,
+        heatmap_subsample = 50,
         span = NULL,
         gene_anno = TRUE,
         palette = ggplot2::scale_colour_brewer(palette = "Set1"),
@@ -83,6 +69,7 @@ setMethod("plot_gene", signature(x = "ModBamResult", gene = "character"),
             avg_method = avg_method,
             spaghetti = spaghetti,
             heatmap = heatmap,
+            heatmap_subsample = heatmap_subsample,
             span = span,
             gene_anno = gene_anno,
             palette = palette,
@@ -100,6 +87,7 @@ setMethod("plot_gene", signature(x = "ModBamResult", gene = "character"),
     avg_method,
     spaghetti,
     heatmap,
+    heatmap_subsample,
     span,
     gene_anno,
     palette,
@@ -174,7 +162,8 @@ setMethod("plot_gene", signature(x = "ModBamResult", gene = "character"),
         p_heatmap <- plot_gene_heatmap(
             x,
             gene,
-            window_prop
+            window_prop,
+            subsample = heatmap_subsample,
         ) +
             ggplot2::coord_cartesian(
                 xlim = c(plot_left, plot_right),

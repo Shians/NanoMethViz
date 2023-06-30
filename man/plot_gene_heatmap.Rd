@@ -29,8 +29,6 @@ plot_gene_heatmap(x, gene, ...)
 
 \item{gene}{the gene symbol for the gene to plot.}
 
-\item{...}{additional arguments}
-
 \item{window_prop}{the size of flanking region to plot. Can be a vector of two
 values for left and right window size. Values indicate proportion of gene
 length.}

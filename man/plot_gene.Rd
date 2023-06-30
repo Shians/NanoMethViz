@@ -17,6 +17,7 @@ plot_gene(x, gene, ...)
   avg_method = c("mean", "median"),
   spaghetti = FALSE,
   heatmap = FALSE,
+  heatmap_subsample = 50,
   span = NULL,
   gene_anno = TRUE,
   palette = ggplot2::scale_colour_brewer(palette = "Set1"),
@@ -32,6 +33,7 @@ plot_gene(x, gene, ...)
   avg_method = c("mean", "median"),
   spaghetti = FALSE,
   heatmap = FALSE,
+  heatmap_subsample = 50,
   span = NULL,
   gene_anno = TRUE,
   palette = ggplot2::scale_colour_brewer(palette = "Set1"),
@@ -43,13 +45,11 @@ plot_gene(x, gene, ...)
 
 \item{gene}{the gene symbol for the gene to plot.}
 
-\item{...}{additional arguments}
-
 \item{window_prop}{the size of flanking region to plot. Can be a vector of two
 values for left and right window size. Values indicate proportion of gene
 length.}
 
-\item{anno_regions}{the data.frame of regions to annotate.}
+\item{anno_regions}{the data.frame of regions to be annotated.}
 
 \item{binary_threshold}{the modification probability such that calls with
 modification probability above the threshold are set to 1 and probabilities
@@ -65,9 +65,9 @@ closer to an average within the more common methylation state.}
 
 \item{heatmap}{whether or not read-methylation heatmap should be shown.}
 
-\item{span}{the span for loess smoothing.}
+\item{heatmap_subsample}{how many packed rows of reads to subsample to.}
 
-\item{gene_anno}{whether or not gene annotation tracks are plotted.}
+\item{span}{the span for loess smoothing.}
 
 \item{palette}{the ggplot colour palette used for groups.}
 

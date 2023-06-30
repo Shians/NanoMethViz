@@ -20,7 +20,7 @@ plot_region(x, chr, start, end, ...)
   avg_method = c("mean", "median"),
   spaghetti = FALSE,
   heatmap = FALSE,
-  heatmap_subsample = 30,
+  heatmap_subsample = 50,
   span = NULL,
   window_prop = 0,
   palette = ggplot2::scale_colour_brewer(palette = "Set1"),
@@ -37,7 +37,7 @@ plot_region(x, chr, start, end, ...)
   avg_method = c("mean", "median"),
   spaghetti = FALSE,
   heatmap = FALSE,
-  heatmap_subsample = 30,
+  heatmap_subsample = 50,
   span = NULL,
   window_prop = 0,
   palette = ggplot2::scale_colour_brewer(palette = "Set1"),
@@ -54,7 +54,7 @@ plot_region(x, chr, start, end, ...)
   avg_method = c("mean", "median"),
   spaghetti = FALSE,
   heatmap = FALSE,
-  heatmap_subsample = 30,
+  heatmap_subsample = 50,
   span = NULL,
   window_prop = 0,
   palette = ggplot2::scale_colour_brewer(palette = "Set1"),
@@ -71,7 +71,7 @@ plot_region(x, chr, start, end, ...)
   avg_method = c("mean", "median"),
   spaghetti = FALSE,
   heatmap = FALSE,
-  heatmap_subsample = 30,
+  heatmap_subsample = 50,
   span = NULL,
   window_prop = 0,
   palette = ggplot2::scale_colour_brewer(palette = "Set1"),
@@ -86,8 +86,6 @@ plot_region(x, chr, start, end, ...)
 \item{start}{the start of the plotting region.}
 
 \item{end}{the end of the plotting region.}
-
-\item{...}{additional arguments.}
 
 \item{anno_regions}{the data.frame of regions to be annotated.}
 
@@ -104,6 +102,8 @@ closer to an average within the more common methylation state.}
 \item{spaghetti}{whether or not individual reads should be shown.}
 
 \item{heatmap}{whether or not read-methylation heatmap should be shown.}
+
+\item{heatmap_subsample}{how many packed rows of reads to subsample to.}
 
 \item{span}{the span for loess smoothing.}
 

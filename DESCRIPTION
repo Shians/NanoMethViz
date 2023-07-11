@@ -1,7 +1,7 @@
 Package: NanoMethViz
 Type: Package
 Title: Visualise methlation data from Oxford Nanopore sequencing
-Version: 2.5.7
+Version: 2.5.8
 Authors@R: c(
     person("Shian", "Su", email = "su.s@wehi.edu.au", role = c("cre", "aut")))
 Description: NanoMethViz is a toolkit for visualising methylation data from 
@@ -74,7 +74,7 @@ Suggests:
     covr
 LinkingTo: Rcpp
 License: Apache License (>= 2.0)
-SystemRequirements: C++20
+SystemRequirements: C++17
 VignetteBuilder: knitr
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

@@ -10,6 +10,9 @@ modbam_to_tabix(x, out_file, mod_code = "m")
 \item{x}{the \code{ModBamResult} object.}
 
 \item{out_file}{the path of the output tabix.}
+
+\item{mod_code}{the modification code to use, defaults to 'm' for 5mC
+methylation.}
 }
 \value{
 invisibly returns the name of the created tabix file.
@@ -18,6 +21,11 @@ invisibly returns the name of the created tabix file.
 The \code{modbam_to_tabix} function takes a ModBamResult object and
 converts it into a tabix file format, which is efficient for indexing and
 querying large datasets.
+}
+\details{
+The possible tags for mod_code can be found at
+\url{https://samtools.github.io/hts-specs/SAMtags.pdf} under the
+'Base modifications' section.
 }
 \examples{
 out_file <- tempfile()

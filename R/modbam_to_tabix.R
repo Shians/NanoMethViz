@@ -6,6 +6,13 @@
 #'
 #' @param x the `ModBamResult` object.
 #' @param out_file the path of the output tabix.
+#' @param mod_code the modification code to use, defaults to 'm' for 5mC
+#'  methylation.
+#' 
+#' @details 
+#' The possible tags for mod_code can be found at
+#'  \url{https://samtools.github.io/hts-specs/SAMtags.pdf} under the
+#'  'Base modifications' section.
 #'
 #' @return invisibly returns the name of the created tabix file.
 #'

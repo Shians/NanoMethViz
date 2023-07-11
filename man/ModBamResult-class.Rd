@@ -44,6 +44,9 @@ columns sample and group.}
 
 \item{exons}{(optional) the data.frame of exon information containing at
 least columns gene_id, chr, strand, start, end, transcript_id and symbol.}
+
+\item{mod_code}{a character with the mod code of interest. Defaults to "m"
+for 5mC. See details for other options.}
 }
 \value{
 a NanoMethResult object to be used with plotting functions
@@ -59,6 +62,11 @@ the mod code.
 \description{
 (Experimental) A ModBamResult object stores modbam data used for NanoMethViz
 visualisation.
+}
+\details{
+The possible tags for mod_code can be found at
+\url{https://samtools.github.io/hts-specs/SAMtags.pdf} under the
+'Base modifications' section.
 }
 \section{Functions}{
 \itemize{
@@ -92,5 +100,7 @@ sample and group.}
 
 \item{\code{exons}}{the data.frame of exon information containing at least columns
 gene_id, chr, strand, start, end, transcript_id and symbol.}
+
+\item{\code{mod_code}}{the modification code of interest.}
 }}
 

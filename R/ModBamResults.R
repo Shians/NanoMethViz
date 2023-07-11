@@ -16,7 +16,7 @@ setClass(
 #'
 #' @param samples a character vector with the names of the samples.
 #' @param paths a character vector with the file paths for the BAM files.
-#'
+#' 
 #' @return A ModBamFiles object with the sample and path information.
 #'
 #' @export
@@ -56,6 +56,7 @@ setMethod("show", signature("ModBamFiles"), function(object) {
 #'   sample and group.
 #' @slot exons the data.frame of exon information containing at least columns
 #'   gene_id, chr, strand, start, end, transcript_id and symbol.
+#' @slot mod_code the modification code of interest.
 #'
 #' @return a NanoMethResult object to be used with plotting functions
 #'
@@ -201,7 +202,14 @@ setMethod(
 #'   columns sample and group.
 #' @param exons (optional) the data.frame of exon information containing at
 #'   least columns gene_id, chr, strand, start, end, transcript_id and symbol.
+#' @param mod_code a character with the mod code of interest. Defaults to "m"
+#'  for 5mC. See details for other options.
 #'
+#' @details
+#' The possible tags for mod_code can be found at 
+#' \url{https://samtools.github.io/hts-specs/SAMtags.pdf} under the 
+#' 'Base modifications' section.
+#' 
 #' @export
 ModBamResult <- function(methy, samples, exons = NULL, mod_code = "m") {
     if (is.null(exons)) {

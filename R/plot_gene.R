@@ -92,7 +92,8 @@ setMethod("plot_gene", signature(x = "ModBamResult", gene = "character"),
     span,
     gene_anno,
     palette,
-    line_size
+    line_size,
+    ylim = c(0, 1)
 ) {
     assertthat::assert_that(
         nrow(exons(x)) > 0,
@@ -129,7 +130,8 @@ setMethod("plot_gene", signature(x = "ModBamResult", gene = "character"),
             spaghetti = spaghetti,
             span = span,
             palette = palette,
-            line_size = line_size
+            line_size = line_size,
+            ylim = ylim
         )
     )
     p1 <- p1 + ggplot2::coord_cartesian(
@@ -164,7 +166,7 @@ setMethod("plot_gene", signature(x = "ModBamResult", gene = "character"),
             x,
             gene,
             window_prop,
-            subsample = heatmap_subsample,
+            subsample = heatmap_subsample
         ) +
             ggplot2::coord_cartesian(
                 xlim = c(plot_left, plot_right),

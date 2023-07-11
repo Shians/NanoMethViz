@@ -250,7 +250,7 @@ setMethod("plot_region",
 
     title <- glue::glue("{chr}:{start}-{end}")
     xlim <- round(c(start - window_left, end + window_right))
-    p1 <- plot_methylation_internal(
+    p1 <- plot_methylation_data(
         methy_data = methy_data,
         start = start,
         end = end,

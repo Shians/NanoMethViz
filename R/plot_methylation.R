@@ -1,4 +1,4 @@
-plot_methylation_internal <- function(
+plot_methylation_data <- function(
     methy_data,
     sample_anno,
     chr,
@@ -14,15 +14,16 @@ plot_methylation_internal <- function(
     spaghetti = FALSE,
     points = FALSE,
     span = NULL,
-    line_size = 2
+    line_size = 2,
+    ylim = ylim
 ) {
     # assign averaging method
     avg_method <- match.arg(avg_method)
-    if (avg_method == "median") {
-        avg_func <- median
-    } else if (avg_method == "mean") {
-        avg_func <- mean
-    }
+    avg_func <- switch(
+        avg_method,
+        mean = mean,
+        median = median
+    )
 
     if (!is.null(anno_regions)) {
         # filter annotation regions to be within plotting region
@@ -34,19 +35,19 @@ plot_methylation_internal <- function(
             )
     }
 
+    # assign default span, roughly equal to 3000 bp with a maximum of 0.4
     if (is.null(span)) {
         span <- min(3000 / (end - start), 0.4)
     }
 
     # extract group information and convert probabilities
+    plot_data <- methy_data
     if (!is.null(binary_threshold)) {
-        plot_data <- methy_data %>%
-            dplyr::mutate(
-                mod_prob = as.numeric(sigmoid(.data$statistic) > binary_threshold)
-            )
-    } else {
-        plot_data <- methy_data
+        # if binary threshold is provided, convert probabilities to binary values
+        plot_data$mod_prob <- methy_data %>%
+            as.numeric(sigmoid(methy_data$statistic) > binary_threshold)
     }
+
     plot_data <- plot_data %>%
         dplyr::inner_join(sample_anno, by = "sample", multiple = "all")
 
@@ -114,16 +115,18 @@ plot_methylation_internal <- function(
         )
 
     # add auxiliary elements and style
+    if (ylim != "auto") {
+        p <- p + ggplot2::ylim(ylim)
+    }
     p +
         ggplot2::ggtitle(title) +
         ggplot2::xlab(chr) +
-        ggplot2::scale_y_continuous(
-            limits = c(0, 1),
-            expand = ggplot2::expansion()) +
         palette_col +
         ggplot2::theme_bw()
 }
 
+# wrapper function for plotting a single feature
+# responsible for setting up the query and calling plot_methylation_data
 plot_feature <- function(
     feature,
     title = "",
@@ -136,7 +139,8 @@ plot_feature <- function(
     spaghetti = FALSE,
     span = NULL,
     palette = ggplot2::scale_colour_brewer(palette = "Set1"),
-    line_size = 2
+    line_size = 2,
+    ylim = c(0, 1)
 ) {
     avg_method <- match.arg(avg_method)
 
@@ -165,7 +169,7 @@ plot_feature <- function(
         return(ggplot() + theme_void())
     }
 
-    plot_methylation_internal(
+    plot_methylation_data(
         methy_data = methy_data,
         start = start,
         end = end,
@@ -178,6 +182,7 @@ plot_feature <- function(
         sample_anno = sample_anno,
         span = span,
         palette_col = palette,
-        line_size = line_size
+        line_size = line_size,
+        ylim = ylim
     )
 }

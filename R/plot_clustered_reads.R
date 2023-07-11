@@ -37,7 +37,7 @@ plot_clustered_reads <- function(x, chr, start, end, min_pts = 5, title = glue::
         by = dplyr::join_by("read_name", "group")
     )
 
-    p1 <- plot_methylation_internal(
+    p1 <- plot_methylation_data(
         methy_data,
         sample_anno = samples(x),
         read_anno = cluster_res,

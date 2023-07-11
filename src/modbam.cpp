@@ -496,6 +496,11 @@ parse_bam_list_cpp(
     std::vector<DataFrame> output_list;
 
     for (size_t i = 0; i < seq.size(); ++i) {
+        // check for R interrupt every 100 reads
+        if (i % 100 == 0) {
+            Rcpp::checkUserInterrupt();
+        }
+
         DataFrame output = parse_bam_cpp(
             seq[i],
             cigar[i],

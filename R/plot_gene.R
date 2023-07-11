@@ -1,6 +1,7 @@
 #' @rdname plot_gene
 #'
 #' @inheritParams plot_region
+#' @param gene_anno whether to show gene annotation.
 #'
 #' @examples
 #' nmr <- load_example_nanomethresult()
@@ -119,7 +120,7 @@ setMethod("plot_gene", signature(x = "ModBamResult", gene = "character"),
         plot_feature(
             feature,
             title = gene,
-            methy = methy(x),
+            methy = x,
             window_size = window_size,
             sample_anno = sample_anno,
             anno_regions = anno_regions,

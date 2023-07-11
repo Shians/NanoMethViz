@@ -45,12 +45,27 @@ setGeneric("exons<-", function(object, value) {
     standardGeneric("exons<-")
 })
 
+#' Get mod code
+#' @keywords internal
+#' @export
+setGeneric("mod_code", valueClass = "character", function(object) {
+    standardGeneric("mod_code")
+})
+
+#' Set mod code
+#' @keywords internal
+#' @export
+setGeneric("mod_code<-", function(object, value) {
+    standardGeneric("mod_code<-")
+})
+
 #' Plot gene methylation
 #'
 #' Plot the methylation of a gene symbol specified within the exon(x) slot.
 #'
 #' @param x the NanoMethResult or ModBamResult object.
 #' @param gene the gene symbol for the gene to plot.
+#' @param ... additional arguments.
 #'
 #' @return a patchwork plot containing the methylation profile in the specified
 #'   region.
@@ -67,6 +82,7 @@ setGeneric("plot_gene", function(x, gene, ...) {
 #'
 #' @param x the NanoMethResult or ModBamResult object.
 #' @param gene the gene symbol for the gene to plot.
+#' @param ... additional arguments.
 #'
 #' @return a ggplot object of the heatmap
 #'
@@ -83,6 +99,7 @@ setGeneric("plot_gene_heatmap", function(x, gene, ...) {
 #' @param chr the chromosome to plot.
 #' @param start the start of the plotting region.
 #' @param end the end of the plotting region.
+#' @param ... additional arguments.
 #'
 #' @return a patchwork plot containing the methylation profile in the specified
 #'   region.
@@ -101,6 +118,7 @@ setGeneric("plot_region", function(x, chr, start, end, ...) {
 #' @param chr the chromosome to plot.
 #' @param start the start of the plotting region.
 #' @param end the end of the plotting region.
+#' @param ... additional arguments.
 #'
 #' @return a ggplot object of the heatmap.
 #'

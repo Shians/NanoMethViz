@@ -65,7 +65,8 @@ setClass(
     representation(
         methy = "ModBamFiles",
         samples = "data.frame",
-        exons = "data.frame"
+        exons = "data.frame",
+        mod_code = "character"
     )
 )
 
@@ -150,14 +151,45 @@ setMethod(
 #' @param object the ModBamResult object.
 #' @param value the exon annotation.
 #'
-#' @return the exon annotation.
-#'
 #' @export
 setMethod(
     "exons<-",
     signature(object = "ModBamResult", value = "data.frame"),
     definition = function(object, value) {
         object@exons <- value
+        object
+    }
+)
+
+#' @describeIn ModBamResult-class mod code getter.
+#'
+#' @param object the ModBamResult object.
+#'
+#' @return the mod code.
+#'
+#' @export
+setMethod(
+    "mod_code",
+    signature(object = "ModBamResult"),
+    definition = function(object) {
+        object@mod_code
+    }
+)
+
+#' @describeIn ModBamResult-class mod code setter.
+#'
+#' @param object the ModBamResult object.
+#' @param value the mod code.
+#'
+#' @export
+setMethod(
+    "mod_code<-",
+    signature(object = "ModBamResult", value = "character"),
+    definition = function(object, value) {
+        # value is a string of length 1 and a single character
+        value <- as.character(value)
+        assertthat::assert_that(nchar(value) == 1)
+        object@mod_code <- value
         object
     }
 )
@@ -171,7 +203,7 @@ setMethod(
 #'   least columns gene_id, chr, strand, start, end, transcript_id and symbol.
 #'
 #' @export
-ModBamResult <- function(methy, samples, exons = NULL) {
+ModBamResult <- function(methy, samples, exons = NULL, mod_code = "m") {
     if (is.null(exons)) {
         exons <- tibble::tibble(
             gene_id = character(),
@@ -191,10 +223,14 @@ ModBamResult <- function(methy, samples, exons = NULL) {
     assert_has_columns(samples, c("sample", "group"))
     samples$group <- as.factor(samples$group)
 
+    mod_code <- as.character(mod_code)
+    assertthat::assert_that(nchar(mod_code) == 1)
+
     methods::new(
         "ModBamResult",
         methy = methy,
         samples = tibble::as_tibble(samples),
-        exons = tibble::as_tibble(exons)
+        exons = tibble::as_tibble(exons),
+        mod_code = mod_code
     )
 }

@@ -31,13 +31,17 @@ query_methy <- function(x, chr, start, end, simplify = TRUE, force = FALSE, trun
         x <- methy(x)
     }
 
+    if (is(x, "ModBamResult")) {
+        mod_code <- mod_code(x)
+    }
+
     assert_that(
         same_length(chr, start, end),
         msg = "vectors 'chr', 'start' and 'end' must be the same length"
     )
 
-    if (is(x, "ModBamFiles") || is(x, "ModBamResult")) {
-        out <- query_methy_modbam(x, chr, start, end)
+    if (is(x, "ModBamResult")) {
+        out <- query_methy_modbam(x, chr, start, end, mod_code)
     } else if (can_open_tabix(x)) {
         out <- query_methy_tabix(x, chr, start, end, force = force)
     } else {
@@ -204,7 +208,7 @@ query_methy_tabix <- function(x, chr, start, end, force) {
     )
 }
 
-query_methy_modbam <- function(x, chr, start, end) {
+query_methy_modbam <- function(x, chr, start, end, mod_code) {
     assertthat::assert_that(
         is(x, "ModBamResult") ||
         is(x, "ModBamFiles")
@@ -228,7 +232,8 @@ query_methy_modbam <- function(x, chr, start, end) {
                     chr = chr,
                     start = start,
                     end = end,
-                    sample = x$sample)
+                    sample = x$sample,
+                    mod_code = mod_code)
             })
         )
 

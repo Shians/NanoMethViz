@@ -6,7 +6,6 @@ modbam_to_ref_coord <- function(seq, cigar, mod_str, mod_scores, map_pos, strand
     assert_that(assertthat::is.string(mod_str))
     assert_that(assertthat::is.string(mod_scores))
     assert_that(is.numeric(map_pos))
-    assert_that(is.factor(strand))
     assert_that(strand %in% c("+", "-"), msg = "Strand must be '+' or '-'")
 
     # tokenise the cigar string into a data.frame
@@ -24,6 +23,7 @@ modbam_to_ref_coord <- function(seq, cigar, mod_str, mod_scores, map_pos, strand
 
     # calculate the relative position
     rel_pos <- coord_map[mod_candidate_pos]
+    names(rel_pos) <- NULL
 
     # add the mapping position offset to the relative position
     if (strand == "-") {
@@ -39,7 +39,20 @@ modbam_to_ref_coord <- function(seq, cigar, mod_str, mod_scores, map_pos, strand
         tidyr::drop_na()
 }
 
-parse_modbam <- function(x, sample) {
+parse_bam_list <- function(seq, cigar, mod_str, mod_scores, map_pos, strand, mod_code) {
+    # Check inputs
+    assert_that(is.character(seq))
+    assert_that(is.character(cigar))
+    assert_that(is.character(mod_str))
+    assert_that(is.character(mod_scores))
+    assert_that(is.numeric(map_pos))
+    assert_that(all(strand %in% c("+", "-")), msg = "Strand must be '+' or '-'")
+    assert_that(is.character(mod_code) && nchar(mod_code) == 1)
+
+    parse_bam_list_cpp(seq, cigar, mod_str, mod_scores, map_pos, as.character(strand), mod_code)
+}
+
+parse_modbam <- function(x, sample, mod_code) {
     if (is.null(x$tag$ML)) {
         mod_scores <- NULL
     } else {
@@ -65,19 +78,16 @@ parse_modbam <- function(x, sample) {
 
     out <- reads_df %>%
         mutate(
-            modbam_stats = map_rows(
-                reads_df,
-                function(x) {
-                    modbam_to_ref_coord(
-                        x$seq,
-                        x$cigar,
-                        x$mod_string,
-                        x$mod_scores,
-                        x$map_pos,
-                        x$strand
-                    )
-                }
+            modbam_stats = parse_bam_list(
+                seq,
+                cigar,
+                mod_string,
+                mod_scores,
+                map_pos,
+                as.character(strand),
+                mod_code
             )
+
         )
 
     out %>%
@@ -129,7 +139,7 @@ read_bam <- function(bam_file, query = NULL) {
         map(filter_modbam)
 }
 
-read_modbam_table <- function(x, chr, start, end, sample) {
+read_modbam_table <- function(x, chr, start, end, sample, mod_code) {
     bam_file <- Rsamtools::BamFile(x)
 
     query <- make_granges(chr, start, end)
@@ -140,5 +150,5 @@ read_modbam_table <- function(x, chr, start, end, sample) {
 
     reads <- read_bam(bam_file, query = query)
 
-    lapply(reads, parse_modbam, sample = sample)
+    lapply(reads, parse_modbam, sample = sample, mod_code = mod_code)
 }

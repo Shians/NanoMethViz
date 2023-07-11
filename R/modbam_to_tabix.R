@@ -25,7 +25,7 @@
 #' modbam_to_tabix(mbr, out_file)
 #'
 #' @export
-modbam_to_tabix <- function(x, out_file) {
+modbam_to_tabix <- function(x, out_file, mod_code = "m") {
     assertthat::assert_that(is(x, "ModBamResult"))
 
     bam_info <- dplyr::inner_join(samples(x), methy(x), by = dplyr::join_by(sample))
@@ -36,7 +36,7 @@ modbam_to_tabix <- function(x, out_file) {
     }
 
     parse_read_chunk <- function(x) {
-        parse_modbam(x[[1]], sample) %>%
+        parse_modbam(x[[1]], sample, mod_code = mod_code) %>%
             select("sample", "chr", "pos", "strand", "statistic", "read_name")
     }
 

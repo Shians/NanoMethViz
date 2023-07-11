@@ -87,6 +87,8 @@ plot_region(x, chr, start, end, ...)
 
 \item{end}{the end of the plotting region.}
 
+\item{...}{additional arguments.}
+
 \item{anno_regions}{the data.frame of regions to be annotated.}
 
 \item{binary_threshold}{the modification probability such that calls with

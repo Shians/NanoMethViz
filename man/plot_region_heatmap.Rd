@@ -59,6 +59,8 @@ plot_region_heatmap(x, chr, start, end, ...)
 
 \item{end}{the end of the plotting region.}
 
+\item{...}{additional arguments.}
+
 \item{pos_style}{the style for plotting the base positions along the x-axis.
 Defaults to "to_scale", plotting (potentially) overlapping squares
 along the genomic position to scale. The "compact" options plots only the

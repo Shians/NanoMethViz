@@ -9,6 +9,8 @@
 \alias{samples<-,ModBamResult,data.frame-method}
 \alias{exons,ModBamResult-method}
 \alias{exons<-,ModBamResult,data.frame-method}
+\alias{mod_code,ModBamResult-method}
+\alias{mod_code<-,ModBamResult,character-method}
 \alias{ModBamResult}
 \title{Modbam methylation results}
 \usage{
@@ -24,12 +26,16 @@
 
 \S4method{exons}{ModBamResult,data.frame}(object) <- value
 
-ModBamResult(methy, samples, exons = NULL)
+\S4method{mod_code}{ModBamResult}(object)
+
+\S4method{mod_code}{ModBamResult,character}(object) <- value
+
+ModBamResult(methy, samples, exons = NULL, mod_code = "m")
 }
 \arguments{
 \item{object}{the ModBamResult object.}
 
-\item{value}{the exon annotation.}
+\item{value}{the mod code.}
 
 \item{methy}{a ModBamFiles object.}
 
@@ -48,7 +54,7 @@ the sample annotation.
 
 the exon annotation.
 
-the exon annotation.
+the mod code.
 }
 \description{
 (Experimental) A ModBamResult object stores modbam data used for NanoMethViz
@@ -67,6 +73,10 @@ visualisation.
 \item \code{exons(ModBamResult)}: exon annotation getter.
 
 \item \code{exons(object = ModBamResult) <- value}: exon annotation setter.
+
+\item \code{mod_code(ModBamResult)}: mod code getter.
+
+\item \code{mod_code(object = ModBamResult) <- value}: mod code setter.
 
 \item \code{ModBamResult()}: Constructor
 

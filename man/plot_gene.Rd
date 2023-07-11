@@ -45,6 +45,8 @@ plot_gene(x, gene, ...)
 
 \item{gene}{the gene symbol for the gene to plot.}
 
+\item{...}{additional arguments.}
+
 \item{window_prop}{the size of flanking region to plot. Can be a vector of two
 values for left and right window size. Values indicate proportion of gene
 length.}
@@ -68,6 +70,8 @@ closer to an average within the more common methylation state.}
 \item{heatmap_subsample}{how many packed rows of reads to subsample to.}
 
 \item{span}{the span for loess smoothing.}
+
+\item{gene_anno}{whether to show gene annotation.}
 
 \item{palette}{the ggplot colour palette used for groups.}
 

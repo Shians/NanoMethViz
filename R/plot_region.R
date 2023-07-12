@@ -18,6 +18,8 @@
 #'   length.
 #' @param palette the ggplot colour palette used for groups.
 #' @param line_size the size of the lines.
+#' @param mod_scale the scale range for modification probabilities. Default c(0, 1), set to "auto" for automatic
+#'   limits.
 #'
 #' @examples
 #' nmr <- load_example_nanomethresult()
@@ -44,7 +46,8 @@ setMethod("plot_region",
         span = NULL,
         window_prop = 0,
         palette = ggplot2::scale_colour_brewer(palette = "Set1"),
-        line_size = 2
+        line_size = 2,
+        mod_scale = c(0, 1)
     ) {
         avg_method <- match.arg(avg_method)
 
@@ -90,7 +93,8 @@ setMethod("plot_region",
         span = NULL,
         window_prop = 0,
         palette = ggplot2::scale_colour_brewer(palette = "Set1"),
-        line_size = 2
+        line_size = 2,
+        mod_scale = c(0, 1)
     ) {
         avg_method <- match.arg(avg_method)
 
@@ -137,7 +141,8 @@ setMethod("plot_region",
         span = NULL,
         window_prop = 0,
         palette = ggplot2::scale_colour_brewer(palette = "Set1"),
-        line_size = 2
+        line_size = 2,
+        mod_scale = c(0, 1)
     ) {
         chr <- as.character(chr)
         avg_method <- match.arg(avg_method)
@@ -155,7 +160,8 @@ setMethod("plot_region",
             span = span,
             window_prop = window_prop,
             palette = palette,
-            line_size = line_size
+            line_size = line_size,
+            mod_scale = mod_scale
         )
     }
 )
@@ -184,7 +190,8 @@ setMethod("plot_region",
         span = NULL,
         window_prop = 0,
         palette = ggplot2::scale_colour_brewer(palette = "Set1"),
-        line_size = 2
+        line_size = 2,
+        mod_scale = c(0, 1)
     ) {
         chr <- as.character(chr)
         avg_method <- match.arg(avg_method)
@@ -202,7 +209,8 @@ setMethod("plot_region",
             span = span,
             window_prop = window_prop,
             palette = palette,
-            line_size = line_size
+            line_size = line_size,
+            mod_scale = mod_scale
         )
     }
 )
@@ -221,7 +229,8 @@ setMethod("plot_region",
     span,
     window_prop,
     palette,
-    line_size
+    line_size,
+    mod_scale
 ) {
     sample_anno <- samples(x)
 
@@ -263,13 +272,13 @@ setMethod("plot_region",
         sample_anno = sample_anno,
         span = span,
         palette_col = palette,
-        line_size = line_size
+        line_size = line_size,
+        mod_scale = mod_scale
     ) +
         ggplot2::coord_cartesian(
             xlim = xlim,
             expand = FALSE
-        ) +
-            ggplot2::scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_si("b")))
+        )
 
     p_out <- p1
 
@@ -300,8 +309,8 @@ setMethod("plot_region",
             ggplot2::coord_cartesian(
                 xlim = xlim,
                 expand = FALSE
-            ) +
-                ggplot2::scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_si("b")))
+            )
+
 
         p_out <- stack_plots(p_out, ggrastr::rasterise(p_heatmap, dpi = 300))
     }

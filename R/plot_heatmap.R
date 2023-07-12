@@ -1,4 +1,4 @@
-plot_heatmap_internal <- function(
+plot_methy_data_heatmap <- function(
         methy_data,
         pos_style,
         subsample,
@@ -62,5 +62,9 @@ plot_heatmap_internal <- function(
     }
 
     p + ggplot2::facet_wrap(~group, scales = "free_y", ncol = 1, strip.position = "right") +
+        ggplot2::scale_x_continuous(
+            labels = scales::label_number(scale_cut = scales::cut_si("b")),
+            expand = ggplot2::expansion(0, 0)
+        ) +
         theme_methy_heatmap
 }

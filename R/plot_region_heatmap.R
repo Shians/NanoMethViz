@@ -207,7 +207,7 @@ setMethod("plot_region_heatmap",
         multiple = "all"
     )
 
-    plot_heatmap_internal(
+    plot_methy_data_heatmap(
         methy_data = methy_data,
         pos_style = pos_style,
         subsample = subsample

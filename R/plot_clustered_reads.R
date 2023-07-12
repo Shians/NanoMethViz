@@ -48,8 +48,7 @@ plot_clustered_reads <- function(x, chr, start, end, min_pts = 5, title = glue::
         title = title,
         points = TRUE
     ) +
-        ggplot2::coord_cartesian(xlim = c(start, end), expand = FALSE) +
-        ggplot2::scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_si("b")))
+        ggplot2::coord_cartesian(xlim = c(start, end), expand = FALSE)
 
     heatmap_data <- dplyr::inner_join(
         methy_data,
@@ -57,14 +56,13 @@ plot_clustered_reads <- function(x, chr, start, end, min_pts = 5, title = glue::
         by = dplyr::join_by("read_name", "strand", "start", "end")
     )
 
-    p2 <- plot_heatmap_internal(
+    p2 <- plot_methy_data_heatmap(
         methy_data = heatmap_data,
         pos_style = "to_scale",
         subsample = 30,
         group_col = "cluster_id"
     ) +
-        ggplot2::coord_cartesian(xlim = c(start, end), expand = TRUE) +
-        ggplot2::scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_si("b")), expand = ggplot2::expansion(0, 0))
+        ggplot2::coord_cartesian(xlim = c(start, end), expand = TRUE)
 
 
     p1 / p2

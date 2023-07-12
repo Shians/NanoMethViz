@@ -8,8 +8,8 @@
 #' @param out_file the path of the output tabix.
 #' @param mod_code the modification code to use, defaults to 'm' for 5mC
 #'  methylation.
-#' 
-#' @details 
+#'
+#' @details
 #' The possible tags for mod_code can be found at
 #'  \url{https://samtools.github.io/hts-specs/SAMtags.pdf} under the
 #'  'Base modifications' section.
@@ -68,10 +68,12 @@ modbam_to_tabix <- function(x, out_file, mod_code = "m") {
         open(bam_file)
         while (Rsamtools::isIncomplete(bam_file)) {
             reads <- read_bam(bam_file)
-            data <- parse_read_chunk(reads)
-
-            readr::write_tsv(data, out_file, append = TRUE, progress = FALSE)
-            cli::cli_progress_update(length(reads[[1]][[1]]))
+            if (!is.null(reads[[1]])) {
+                # parse if valid data exists
+                data <- parse_read_chunk(reads)
+                readr::write_tsv(data, out_file, append = TRUE, progress = FALSE)
+                cli::cli_progress_update(length(reads[[1]][[1]]))
+            }
         }
         close(bam_file)
     }

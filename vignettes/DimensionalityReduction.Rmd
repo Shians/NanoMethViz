@@ -12,6 +12,9 @@ vignette: >
 library(NanoMethViz)
 library(ggplot2)
 knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(fig.width = 7)
+knitr::opts_chunk$set(fig.height = 5)
+knitr::opts_chunk$set(dpi = 72)
 ```
 
 Dimensionality reduction is used to represent high dimensional data in a more tractable form. It is commonly used in RNA-seq analysis, where each sample is characterised by tens of thousands of gene expression values, to visualise samples in a 2D plane with distances between points representing similarity and dissimilarity. For RNA-seq the data used is generally gene counts, for methylation there are generally two relevant count matrices, the count of methylated bases, and the count of unmethylated bases. The information from these two matrices can be combined by taking log-methylation ratios as done in Chen et al. 2018.

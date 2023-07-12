@@ -15,7 +15,7 @@ plot_methylation_data <- function(
     points = FALSE,
     span = NULL,
     line_size = 2,
-    ylim = ylim
+    mod_scale = c(0, 1)
 ) {
     # assign averaging method
     avg_method <- match.arg(avg_method)
@@ -115,14 +115,15 @@ plot_methylation_data <- function(
         )
 
     # add auxiliary elements and style
-    if (ylim != "auto") {
+    if (is.numeric(ylim)) {
         p <- p + ggplot2::ylim(ylim)
     }
     p +
         ggplot2::ggtitle(title) +
         ggplot2::xlab(chr) +
         palette_col +
-        ggplot2::theme_bw()
+        ggplot2::theme_bw() +
+        ggplot2::scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_si("b")))
 }
 
 # wrapper function for plotting a single feature
@@ -140,7 +141,7 @@ plot_feature <- function(
     span = NULL,
     palette = ggplot2::scale_colour_brewer(palette = "Set1"),
     line_size = 2,
-    ylim = c(0, 1)
+    mod_scale = c(0, 1)
 ) {
     avg_method <- match.arg(avg_method)
 
@@ -183,6 +184,6 @@ plot_feature <- function(
         span = span,
         palette_col = palette,
         line_size = line_size,
-        ylim = ylim
+        mod_scale = mod_scale
     )
 }

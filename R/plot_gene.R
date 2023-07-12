@@ -93,7 +93,7 @@ setMethod("plot_gene", signature(x = "ModBamResult", gene = "character"),
     gene_anno,
     palette,
     line_size,
-    ylim = c(0, 1)
+    mod_scale = c(0, 1)
 ) {
     assertthat::assert_that(
         nrow(exons(x)) > 0,
@@ -131,14 +131,13 @@ setMethod("plot_gene", signature(x = "ModBamResult", gene = "character"),
             span = span,
             palette = palette,
             line_size = line_size,
-            ylim = ylim
+            mod_scale = mod_scale
         )
     )
     p1 <- p1 + ggplot2::coord_cartesian(
         xlim = c(plot_left, plot_right),
         expand = FALSE
-    ) +
-        ggplot2::scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_si("b")))
+    )
 
 
     if (gene_anno) {
@@ -171,10 +170,9 @@ setMethod("plot_gene", signature(x = "ModBamResult", gene = "character"),
             ggplot2::coord_cartesian(
                 xlim = c(plot_left, plot_right),
                 expand = FALSE
-            ) +
-                ggplot2::scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_si("b")))
+            )
 
-        p_out <- stack_plots(p_out, ggrastr::rasterise(p_heatmap, dpi = 300))
+        p_out <- stack_plots(p_out, ggrastr::rasterise(p_heatmap))
     }
 
     p_out

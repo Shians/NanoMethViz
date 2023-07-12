@@ -348,16 +348,17 @@ parse_bam(
 
     GenomicModPos output(mm_tokens.size());
 
+    int base_offset;
+    int mod_prob;
+
+    // declare variables
+    size_t seq_ind = 0;
+    char current_base = 'N';
+    char target_base = 'N';
+    char current_strand = '*';
+    char current_mod = 'm';
     // iterate through mod positions
     for (std::string_view mm_token : mm_tokens) {
-        // declare variables
-        int base_offset;
-        int mod_prob;
-        size_t seq_ind;
-        char current_base;
-        char target_base;
-        char current_strand;
-        char current_mod;
 
         if (std::isdigit(mm_token[0])) {
             // if token is a number, it is a base offset

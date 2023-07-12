@@ -79,12 +79,12 @@ parse_modbam <- function(x, sample, mod_code) {
     out <- reads_df %>%
         mutate(
             modbam_stats = parse_bam_list(
-                seq,
-                cigar,
-                mod_string,
-                mod_scores,
-                map_pos,
-                as.character(strand),
+                .data$seq,
+                .data$cigar,
+                .data$mod_string,
+                .data$mod_scores,
+                .data$map_pos,
+                as.character(.data$strand),
                 mod_code
             )
 

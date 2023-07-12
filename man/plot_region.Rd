@@ -24,7 +24,8 @@ plot_region(x, chr, start, end, ...)
   span = NULL,
   window_prop = 0,
   palette = ggplot2::scale_colour_brewer(palette = "Set1"),
-  line_size = 2
+  line_size = 2,
+  mod_scale = c(0, 1)
 )
 
 \S4method{plot_region}{ModBamResult,character,numeric,numeric}(
@@ -41,7 +42,8 @@ plot_region(x, chr, start, end, ...)
   span = NULL,
   window_prop = 0,
   palette = ggplot2::scale_colour_brewer(palette = "Set1"),
-  line_size = 2
+  line_size = 2,
+  mod_scale = c(0, 1)
 )
 
 \S4method{plot_region}{NanoMethResult,factor,numeric,numeric}(
@@ -58,7 +60,8 @@ plot_region(x, chr, start, end, ...)
   span = NULL,
   window_prop = 0,
   palette = ggplot2::scale_colour_brewer(palette = "Set1"),
-  line_size = 2
+  line_size = 2,
+  mod_scale = c(0, 1)
 )
 
 \S4method{plot_region}{ModBamResult,factor,numeric,numeric}(
@@ -75,7 +78,8 @@ plot_region(x, chr, start, end, ...)
   span = NULL,
   window_prop = 0,
   palette = ggplot2::scale_colour_brewer(palette = "Set1"),
-  line_size = 2
+  line_size = 2,
+  mod_scale = c(0, 1)
 )
 }
 \arguments{
@@ -116,6 +120,9 @@ length.}
 \item{palette}{the ggplot colour palette used for groups.}
 
 \item{line_size}{the size of the lines.}
+
+\item{mod_scale}{the scale range for modification probabilities. Default c(0, 1), set to "auto" for automatic
+limits.}
 }
 \value{
 a patchwork plot containing the methylation profile in the specified

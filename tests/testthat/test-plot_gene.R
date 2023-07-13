@@ -5,8 +5,7 @@ test_that("Plotting gene works", {
     params <- expand.grid(
         heatmap = c(TRUE, FALSE),
         spaghetti = c(TRUE, FALSE),
-        gene_anno = c(TRUE, FALSE),
-        binary_threshold = c(0, .5, 1)
+        gene_anno = c(TRUE, FALSE)
     )
 
     # test
@@ -17,13 +16,21 @@ test_that("Plotting gene works", {
         expect_silent(p2 <- plot_gene(x, "Peg3", heatmap = TRUE))
         expect_s3_class(p2, "ggplot")
 
+        for (bt in c(0, 0.5, 1)) {
+            expect_silent(
+                p <- plot_gene(
+                    x, "Peg3",
+                    binary_threshold = bt
+                )
+            )
+            expect_s3_class(p, "ggplot")
+        }
         for (i in 1:nrow(params)) {
             expect_silent(
                 p <- plot_gene(
                     x, "Peg3",
                     heatmap = params$heatmap[i],
-                    spaghetti = params$spaghetti[i],
-                    binary_threshold = params$binary_threshold[i]
+                    spaghetti = params$spaghetti[i]
                 )
             )
 

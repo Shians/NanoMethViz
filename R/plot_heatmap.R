@@ -2,7 +2,8 @@ plot_methy_data_heatmap <- function(
         methy_data,
         pos_style,
         subsample,
-        group_col = "group"
+        group_col = "group",
+        mod_scale = c(0, 1)
 ) {
     # subsample reads down to a certain number of read groups
     subsample_groups <- function(x, key, subsample) {

@@ -115,8 +115,8 @@ plot_methylation_data <- function(
         )
 
     # add auxiliary elements and style
-    if (is.numeric(ylim)) {
-        p <- p + ggplot2::ylim(ylim)
+    if (is.numeric(mod_scale) && length(mod_scale) == 2) {
+        p <- p + ggplot2::ylim(mod_scale[1], mod_scale[2])
     }
     p +
         ggplot2::ggtitle(title) +

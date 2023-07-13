@@ -44,8 +44,9 @@ plot_methylation_data <- function(
     plot_data <- methy_data
     if (!is.null(binary_threshold)) {
         # if binary threshold is provided, convert probabilities to binary values
-        plot_data$mod_prob <- methy_data %>%
-            as.numeric(sigmoid(methy_data$statistic) > binary_threshold)
+        plot_data$mod_prob <- as.numeric(
+            sigmoid(methy_data$statistic) > binary_threshold
+        )
     }
 
     plot_data <- plot_data %>%

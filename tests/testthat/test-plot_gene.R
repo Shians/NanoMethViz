@@ -5,7 +5,8 @@ test_that("Plotting gene works", {
     params <- expand.grid(
         heatmap = c(TRUE, FALSE),
         spaghetti = c(TRUE, FALSE),
-        gene_anno = c(TRUE, FALSE)
+        gene_anno = c(TRUE, FALSE),
+        binary_threshold = c(0, .5, 1)
     )
 
     # test
@@ -21,7 +22,8 @@ test_that("Plotting gene works", {
                 p <- plot_gene(
                     x, "Peg3",
                     heatmap = params$heatmap[i],
-                    spaghetti = params$spaghetti[i]
+                    spaghetti = params$spaghetti[i],
+                    binary_threshold = params$binary_threshold[i]
                 )
             )
 

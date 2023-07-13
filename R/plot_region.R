@@ -65,7 +65,8 @@ setMethod("plot_region",
             span = span,
             window_prop = window_prop,
             palette = palette,
-            line_size = line_size
+            line_size = line_size,
+            mod_scale = mod_scale
         )
     }
 )
@@ -112,7 +113,8 @@ setMethod("plot_region",
             span = span,
             window_prop = window_prop,
             palette = palette,
-            line_size = line_size
+            line_size = line_size,
+            mod_scale = mod_scale
         )
     }
 )

@@ -32,7 +32,7 @@
 #' modbam_to_tabix(mbr, out_file)
 #'
 #' @export
-modbam_to_tabix <- function(x, out_file, mod_code = "m") {
+modbam_to_tabix <- function(x, out_file, mod_code = mod_code(x)) {
     assertthat::assert_that(is(x, "ModBamResult"))
 
     bam_info <- dplyr::inner_join(samples(x), methy(x), by = dplyr::join_by(sample))

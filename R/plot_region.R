@@ -309,8 +309,7 @@ setMethod("plot_region",
     if (heatmap) {
         p_heatmap <- plot_region_heatmap(x, chr, start, end, window_prop = window_prop, subsample = heatmap_subsample) +
             ggplot2::coord_cartesian(
-                xlim = xlim,
-                expand = FALSE
+                xlim = xlim
             )
 
 

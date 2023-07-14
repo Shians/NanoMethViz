@@ -172,8 +172,7 @@ setMethod("plot_gene", signature(x = "ModBamResult", gene = "character"),
             subsample = heatmap_subsample
         ) +
             ggplot2::coord_cartesian(
-                xlim = c(plot_left, plot_right),
-                expand = FALSE
+                xlim = c(plot_left, plot_right)
             )
 
         p_out <- stack_plots(p_out, ggrastr::rasterise(p_heatmap))

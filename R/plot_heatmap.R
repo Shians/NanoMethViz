@@ -13,7 +13,6 @@ plot_methy_data_heatmap <- function(
         x
     }
 
-
     methy_data <- methy_data %>%
         dplyr::nest_by(group = .data[[group_col]], read_group = .data$read_group) %>%
         dplyr::group_by(.data$group) %>%
@@ -42,7 +41,10 @@ plot_methy_data_heatmap <- function(
             heatmap_fill_scale +
             ggplot2::theme(
                 axis.ticks.x = ggplot2::element_blank(),
-                axis.text.x = ggplot2::element_blank()
+                axis.text.x = ggplot2::element_blank(),
+                axis.ticks.y = ggplot2::element_blank(),
+                axis.title.y = ggplot2::element_blank(),
+                axis.text.y = ggplot2::element_blank()
             ) +
             ggplot2::xlab("Site")
     } else if (pos_style == "to_scale") {
@@ -58,14 +60,14 @@ plot_methy_data_heatmap <- function(
                 height = 0
             ) +
             ggplot2::geom_point(aes(x = .data$pos, col = .data$mod_prob), alpha = 1, shape = 15) +
+            ggplot2::scale_x_continuous(
+                labels = scales::label_number(scale_cut = scales::cut_si("b")),
+                expand = ggplot2::expansion(0, 0)
+            ) +
             heatmap_col_scale +
+            theme_methy_heatmap +
             ggplot2::xlab("Position")
     }
 
-    p + ggplot2::facet_wrap(~group, scales = "free_y", ncol = 1, strip.position = "right") +
-        ggplot2::scale_x_continuous(
-            labels = scales::label_number(scale_cut = scales::cut_si("b")),
-            expand = ggplot2::expansion(0, 0)
-        ) +
-        theme_methy_heatmap
+    p + ggplot2::facet_wrap(~group, scales = "free_y", ncol = 1, strip.position = "right")
 }

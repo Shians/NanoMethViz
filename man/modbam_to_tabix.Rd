@@ -4,7 +4,7 @@
 \alias{modbam_to_tabix}
 \title{Convert BAM with modifications to tabix format}
 \usage{
-modbam_to_tabix(x, out_file, mod_code = "m")
+modbam_to_tabix(x, out_file, mod_code = NanoMethViz::mod_code(x))
 }
 \arguments{
 \item{x}{the \code{ModBamResult} object.}

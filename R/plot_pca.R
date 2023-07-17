@@ -20,7 +20,7 @@
 #' @importFrom BiocSingular runPCA
 #'
 #' @export
-plot_pca <- function(x, plot_dims = c(1, 2), labels = colnames(x), groups = NULL) {
+plot_pca <- function(x, plot_dims = c(1, 2), labels = colnames(x), groups = NULL, legend_name = "group") {
     if (!is.null(labels)) {
         assertthat::assert_that(ncol(x) == length(labels))
     }
@@ -37,22 +37,48 @@ plot_pca <- function(x, plot_dims = c(1, 2), labels = colnames(x), groups = NULL
     )
 
     plot_data$labels <- labels
-    plot_data$groups <- groups
+    plot_data$group <- groups
 
     xlabel <- glue::glue("PCA Dim {plot_dims[1]}")
     ylabel <- glue::glue("PCA Dim {plot_dims[2]}")
 
-    if (!is.null(groups)) {
-        p <- ggplot2::ggplot(plot_data, ggplot2::aes(x = .data$dim1, y = .data$dim2, col = .data$groups))
-    } else {
-        p <- ggplot2::ggplot(plot_data, ggplot2::aes(x = .data$dim1, y = .data$dim2))
-    }
+    p <- ggplot2::ggplot(
+        plot_data,
+        ggplot2::aes(x = .data$dim1, y = .data$dim2)
+    )
 
-    if (!is.null(labels)) {
-        p <- p + ggplot2::geom_label(ggplot2::aes(label = .data$labels))
+    if (is.null(groups)) {
+        if (is.null(labels)) {
+            # no labels or groups
+            p <- p + ggplot2::geom_point()
+        } else {
+            # no groups, but labels
+            p <- p + ggplot2::geom_label(aes(label = labels))
+        }
     } else {
-        p <- p + ggplot2::geom_point()
-
+        if (is.numeric(groups)) {
+            # continuous colour palette ignores labels
+            if (!is.null(labels)) {
+                message("Ignoring labels as groups is numeric. Set `labels=NULL` to suppress this message.")
+            }
+            p <- p +
+                ggplot2::geom_point(aes(colour = .data$group)) +
+                ggplot2::scale_color_continuous(name = legend_name) 
+        } else {
+            # discrete colour palette
+            if (is.null(labels)) {
+                # no labels, but groups
+                p <- p + ggplot2::geom_point(aes(colour = .data$group)) +
+                    guides(color = guide_legend(title = legend_name))
+            } else {
+                # labels and groups
+                # key_glyph causes the legend to display points
+                p <- p + ggplot2::geom_label(
+                    aes(label = labels, colour = .data$group),
+                    key_glyph = ggplot2::draw_key_point
+                )
+            }
+        }
     }
 
     p +

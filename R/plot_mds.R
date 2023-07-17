@@ -79,7 +79,9 @@ plot_mds <- function(x, top = 500, plot_dims = c(1, 2), labels = colnames(x), gr
     } else {
         if (is.numeric(groups)) {
             # continuous colour palette ignores labels
-            message("Ignoring labels as groups is numeric")
+            if (!is.null(labels)) {
+                message("Ignoring labels as groups is numeric. Set `labels=NULL` to suppress this message.")
+            }
             p <- p +
                 ggplot2::geom_point(aes(colour = .data$group)) +
                 ggplot2::scale_color_continuous(name = legend_name) 

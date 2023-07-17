@@ -10,7 +10,10 @@
 #'   column names of x, set to NULL to plot points.
 #' @param groups the character vector of groups the data points will be coloured
 #'   by. Colour palette can be adjusted using scale_colour_*() functions from
-#'   ggplot2.
+#'   ggplot2. If groups is numeric, the points will be coloured by a continuous
+#'   colour palette. By default, groups is NULL and the points will not be
+#'   coloured.
+#' @param legend_name the name for the legend.
 #'
 #' @return ggplot object of the MDS plot.
 #'
@@ -23,7 +26,7 @@
 #' @importFrom limma plotMDS
 #' @importFrom ggplot2 draw_key_point
 #' @export
-plot_mds <- function(x, top = 500, plot_dims = c(1, 2), labels = colnames(x), groups = NULL) {
+plot_mds <- function(x, top = 500, plot_dims = c(1, 2), labels = colnames(x), groups = NULL, legend_name = "group") {
     if (!is.null(labels)) {
         assertthat::assert_that(ncol(x) == length(labels))
     }
@@ -58,19 +61,43 @@ plot_mds <- function(x, top = 500, plot_dims = c(1, 2), labels = colnames(x), gr
     }
 
     plot_data$labels <- labels
-    plot_data$groups <- groups
+    plot_data$group <- groups
 
+    p <- ggplot2::ggplot(
+        plot_data,
+        ggplot2::aes(x = .data$dim1, y = .data$dim2)
+    )
 
-    if (!is.null(groups)) {
-        p <- ggplot2::ggplot(plot_data, ggplot2::aes(x = .data$dim1, y = .data$dim2, col = .data$groups))
+    if (is.null(groups)) {
+        if (is.null(labels)) {
+            # no labels or groups
+            p <- p + ggplot2::geom_point()
+        } else {
+            # no groups, but labels
+            p <- p + ggplot2::geom_label(aes(label = labels))
+        }
     } else {
-        p <- ggplot2::ggplot(plot_data, ggplot2::aes(x = .data$dim1, y = .data$dim2))
-    }
-
-    if (!is.null(labels)) {
-        p <- p + ggplot2::geom_label(aes(label = labels), key_glyph = ggplot2::draw_key_point)
-    } else {
-        p <- p + ggplot2::geom_point()
+        if (is.numeric(groups)) {
+            # continuous colour palette ignores labels
+            message("Ignoring labels as groups is numeric")
+            p <- p +
+                ggplot2::geom_point(aes(colour = .data$group)) +
+                ggplot2::scale_color_continuous(name = legend_name) 
+        } else {
+            # discrete colour palette
+            if (is.null(labels)) {
+                # no labels, but groups
+                p <- p + ggplot2::geom_point(aes(colour = .data$group)) +
+                    guides(color = guide_legend(title = legend_name))
+            } else {
+                # labels and groups
+                # key_glyph causes the legend to display points
+                p <- p + ggplot2::geom_label(
+                    aes(label = labels, colour = .data$group),
+                    key_glyph = ggplot2::draw_key_point
+                )
+            }
+        }
     }
 
     p +

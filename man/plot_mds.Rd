@@ -9,7 +9,8 @@ plot_mds(
   top = 500,
   plot_dims = c(1, 2),
   labels = colnames(x),
-  groups = NULL
+  groups = NULL,
+  legend_name = "group"
 )
 }
 \arguments{
@@ -24,7 +25,11 @@ column names of x, set to NULL to plot points.}
 
 \item{groups}{the character vector of groups the data points will be coloured
 by. Colour palette can be adjusted using scale_colour_*() functions from
-ggplot2.}
+ggplot2. If groups is numeric, the points will be coloured by a continuous
+colour palette. By default, groups is NULL and the points will not be
+coloured.}
+
+\item{legend_name}{the name for the legend.}
 }
 \value{
 ggplot object of the MDS plot.

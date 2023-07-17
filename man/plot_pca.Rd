@@ -21,6 +21,8 @@ plot_pca(
 points.}
 
 \item{groups}{the character vector of groups the data points will be coloured by.}
+
+\item{legend_name}{the name for the legend.}
 }
 \value{
 ggplot object of the MDS plot.

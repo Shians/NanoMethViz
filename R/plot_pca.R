@@ -8,6 +8,7 @@
 #' @param labels the character vector of labels for data points. By default uses column names of x, set to NULL to plot
 #'   points.
 #' @param groups the character vector of groups the data points will be coloured by.
+#' @param legend_name the name for the legend.
 #'
 #' @return ggplot object of the MDS plot.
 #'

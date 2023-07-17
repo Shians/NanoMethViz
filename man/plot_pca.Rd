@@ -4,7 +4,13 @@
 \alias{plot_pca}
 \title{Plot PCA}
 \usage{
-plot_pca(x, plot_dims = c(1, 2), labels = colnames(x), groups = NULL)
+plot_pca(
+  x,
+  plot_dims = c(1, 2),
+  labels = colnames(x),
+  groups = NULL,
+  legend_name = "group"
+)
 }
 \arguments{
 \item{x}{the log-methylation-ratio matrix.}

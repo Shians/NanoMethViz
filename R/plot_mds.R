@@ -90,7 +90,7 @@ plot_mds <- function(x, top = 500, plot_dims = c(1, 2), labels = colnames(x), gr
             if (is.null(labels)) {
                 # no labels, but groups
                 p <- p + ggplot2::geom_point(aes(colour = .data$group)) +
-                    guides(color = guide_legend(title = legend_name))
+                    ggplot2::guides(color = ggplot2::guide_legend(title = legend_name))
             } else {
                 # labels and groups
                 # key_glyph causes the legend to display points

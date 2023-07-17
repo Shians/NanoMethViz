@@ -7,8 +7,11 @@ test_that("Plot MDS works", {
     
     expect_silent(plot_mds(lmr, plot_dims = c(2, 3)))
     expect_silent(plot_mds(lmr, labels = paste0("samples", 1:6)))
-    expect_silent(plot_mds(lmr, labels = paste0("samples", 1:6), groups = rep(c("A", "B"), 3))
+    expect_silent(plot_mds(lmr, labels = paste0("samples", 1:6), groups = rep(c("A", "B"), 3)))
     
     expect_silent(plot_mds(lmr, groups = rep(c("A", "B"), 3)))
     expect_silent(plot_mds(lmr, groups = rep(c("A", "B"), 3), legend_name = "group_name"))
+
+    expect_message(plot_mds(lmr, groups = 1:6), "Ignoring labels as groups is numeric. Set `labels=NULL` to suppress this message.")
+    expect_silent(plot_mds(lmr, groups = 1:6, labels = NULL))
 })

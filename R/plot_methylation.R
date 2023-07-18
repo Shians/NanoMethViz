@@ -161,15 +161,16 @@ plot_feature <- function(
             chr,
             floor(start - window_left * 1.1),
             ceiling(end + window_right * 1.1),
-            simplify = TRUE) %>%
-        dplyr::select(-"strand") %>%
-        tibble::as_tibble()
-
+            simplify = TRUE)
 
     if (nrow(methy_data) == 0) {
         warning("no methylation data in region")
         return(ggplot() + theme_void())
     }
+
+    methy_data <- methy_data %>%
+        dplyr::select(-"strand") %>%
+        tibble::as_tibble()
 
     plot_methylation_data(
         methy_data = methy_data,

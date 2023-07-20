@@ -1,12 +1,15 @@
 test_that("Aggregate plotting works", {
     # setup
     nmr <- load_example_nanomethresult()
+    mbr <- NanoMethViz:::load_example_modbamresult()
     gene_anno <- exons_to_genes(NanoMethViz::exons(nmr))
 
     # test
-    expect_silent(plot_agg_regions(nmr, gene_anno))
-    expect_silent(plot_agg_regions(nmr, gene_anno, "sample"))
-    expect_silent(plot_agg_regions(nmr, gene_anno, "group"))
+    for (x in list(nmr, mbr)) {
+        expect_silent(plot_agg_regions(x, gene_anno))
+        expect_silent(plot_agg_regions(x, gene_anno, "sample"))
+        expect_silent(plot_agg_regions(x, gene_anno, "group"))
+    }
 })
 
 test_that("Aggregate plotting error checking works", {

@@ -127,7 +127,7 @@ plot_agg_regions <- function(
     methy_data <- purrr::map(
         seq_len(nrow(regions)),
         query_row_methy,
-        methy = methy(x),
+        methy = x,
         regions = regions,
         flank = flank
     )

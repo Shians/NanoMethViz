@@ -68,7 +68,7 @@ modbam_to_tabix <- function(x, out_file, mod_code = NanoMethViz::mod_code(x)) {
         open(bam_file)
         while (Rsamtools::isIncomplete(bam_file)) {
             reads <- read_bam(bam_file)
-            if (!is.null(reads[[1]])) {
+            if (!is.null(reads[[1]]) && length(reads[[1]]$qname) > 0) {
                 # parse if valid data exists
                 data <- parse_read_chunk(reads)
                 readr::write_tsv(data, out_file, append = TRUE, progress = FALSE)

@@ -14,6 +14,7 @@ plot_methylation_data <- function(
     spaghetti = FALSE,
     points = FALSE,
     span = NULL,
+    site_filter = getOption("NanoMethViz.site_filter", 1),
     line_size = 2,
     mod_scale = c(0, 1)
 ) {
@@ -51,6 +52,14 @@ plot_methylation_data <- function(
 
     plot_data <- plot_data %>%
         dplyr::inner_join(sample_anno, by = "sample", multiple = "all")
+
+    # filter poorly covered sites
+    coverage_filter <- plot_data %>%
+        dplyr::count(.data$pos) %>%
+        dplyr::rename("coverage" = "n") %>%
+        dplyr::filter(.data$n >= site_filter)
+
+    plot_data <- inner_join(plot_data, coverage_filter, by = "pos")
 
     # incorporate read annotation if available
     if (!is.null(read_anno)) {
@@ -104,7 +113,9 @@ plot_methylation_data <- function(
     # add smoothed line
     plot_data_smooth <- plot_data %>%
         dplyr::group_by(.data[[group_col]], .data$pos) %>%
-        dplyr::summarise(mod_prob = avg_func(.data$mod_prob))
+        dplyr::summarise(
+            mod_prob = avg_func(.data$mod_prob)
+        )
 
     p <- p +
         stat_lowess(

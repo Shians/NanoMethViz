@@ -57,7 +57,7 @@ plot_methylation_data <- function(
     coverage_filter <- plot_data %>%
         dplyr::count(.data$pos) %>%
         dplyr::rename("coverage" = "n") %>%
-        dplyr::filter(.data$n >= site_filter)
+        dplyr::filter(.data$coverage >= site_filter)
 
     plot_data <- inner_join(plot_data, coverage_filter, by = "pos")
 

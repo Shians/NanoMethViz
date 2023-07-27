@@ -15,6 +15,7 @@ plot_methylation_data <- function(
     points = FALSE,
     span = NULL,
     site_filter = getOption("NanoMethViz.site_filter", 1),
+    highlight_col = getOption("NanoMethViz.highlight_col", "grey50"),
     line_size = 2,
     mod_scale = c(0, 1)
 ) {
@@ -86,7 +87,8 @@ plot_methylation_data <- function(
                     xmax = region$end,
                     ymin = -Inf,
                     ymax = Inf,
-                    alpha = 0.2
+                    alpha = 0.2,
+                    fill = highlight_col
                 )
         }
     }

@@ -36,10 +36,10 @@ modbam_to_tabix <- function(x, out_file, mod_code = NanoMethViz::mod_code(x)) {
     assertthat::assert_that(is(x, "ModBamResult"))
 
     # if .gz at end of output name then trim it so final output
-    # doesn't end with .gz.gz
-    if (stringr::str_detect(out_file, ".gz$")) {
+    # doesn't end with .bgz.bgz
+    if (stringr::str_detect(out_file, ".bgz$")) {
         out_file <- out_file %>%
-            stringr::str_remove(".gz$")
+            stringr::str_remove(".bgz$")
     }
 
     bam_info <- dplyr::inner_join(samples(x), methy(x), by = dplyr::join_by(sample))

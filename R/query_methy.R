@@ -13,6 +13,7 @@
 #' @param truncate when querying from ModBamFiles, whether or not to truncate
 #'   returned results to only those within the specified region. Otherwise
 #'   methylation data for entire reads overlapping the region will be returned.
+#' @param site_filter the minimum amount of coverage to report a site.
 #'
 #' @return A table containing the data within the queried regions. If simplify
 #'   is TRUE (default) then all data is contained within one table, otherwise it
@@ -26,7 +27,16 @@
 #' @importFrom Rsamtools TabixFile scanTabix
 #'
 #' @export
-query_methy <- function(x, chr, start, end, simplify = TRUE, force = FALSE, truncate = TRUE) {
+query_methy <- function(
+    x,
+    chr,
+    start,
+    end,
+    simplify = TRUE,
+    force = FALSE,
+    truncate = TRUE,
+    site_filter = getOption("NanoMethViz.site_filter", 1)
+) {
     if (is(x, "NanoMethResult")) {
         x <- methy(x)
     }
@@ -63,6 +73,22 @@ query_methy <- function(x, chr, start, end, simplify = TRUE, force = FALSE, trun
                 )
         }
         out <- purrr::map2(out, pos_list, truncate_fn)
+    }
+
+    if (site_filter > 0) {
+        out <- purrr::map(out, function(x) {
+            pos_count_filter <- x %>%
+                dplyr::count(.data$chr, .data$pos) %>%
+                dplyr::rename("coverage" = "n") %>%
+                dplyr::filter(.data$coverage >= site_filter) %>%
+                dplyr::select(-coverage)
+
+            x %>%
+                dplyr::inner_join(
+                    pos_count_filter,
+                    by = c("chr", "pos")
+                )
+        })
     }
 
     if (simplify) {

@@ -24,7 +24,7 @@ plot_region(x, chr, start, end, ...)
   span = NULL,
   window_prop = 0,
   palette = ggplot2::scale_colour_brewer(palette = "Set1"),
-  line_size = 2,
+  line_size = 1,
   mod_scale = c(0, 1)
 )
 
@@ -42,7 +42,7 @@ plot_region(x, chr, start, end, ...)
   span = NULL,
   window_prop = 0,
   palette = ggplot2::scale_colour_brewer(palette = "Set1"),
-  line_size = 2,
+  line_size = 1,
   mod_scale = c(0, 1)
 )
 
@@ -60,7 +60,7 @@ plot_region(x, chr, start, end, ...)
   span = NULL,
   window_prop = 0,
   palette = ggplot2::scale_colour_brewer(palette = "Set1"),
-  line_size = 2,
+  line_size = 1,
   mod_scale = c(0, 1)
 )
 
@@ -78,7 +78,7 @@ plot_region(x, chr, start, end, ...)
   span = NULL,
   window_prop = 0,
   palette = ggplot2::scale_colour_brewer(palette = "Set1"),
-  line_size = 2,
+  line_size = 1,
   mod_scale = c(0, 1)
 )
 }

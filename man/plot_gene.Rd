@@ -21,7 +21,7 @@ plot_gene(x, gene, ...)
   span = NULL,
   gene_anno = TRUE,
   palette = ggplot2::scale_colour_brewer(palette = "Set1"),
-  line_size = 2,
+  line_size = 1,
   mod_scale = c(0, 1)
 )
 
@@ -38,7 +38,7 @@ plot_gene(x, gene, ...)
   span = NULL,
   gene_anno = TRUE,
   palette = ggplot2::scale_colour_brewer(palette = "Set1"),
-  line_size = 2,
+  line_size = 1,
   mod_scale = c(0, 1)
 )
 }

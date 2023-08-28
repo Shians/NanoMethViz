@@ -11,7 +11,8 @@ query_methy(
   end,
   simplify = TRUE,
   force = FALSE,
-  truncate = TRUE
+  truncate = TRUE,
+  site_filter = getOption("NanoMethViz.site_filter", 1)
 )
 }
 \arguments{
@@ -34,6 +35,8 @@ region, and an invalid 'chr' will cause an error.}
 \item{truncate}{when querying from ModBamFiles, whether or not to truncate
 returned results to only those within the specified region. Otherwise
 methylation data for entire reads overlapping the region will be returned.}
+
+\item{site_filter}{the minimum amount of coverage to report a site.}
 }
 \value{
 A table containing the data within the queried regions. If simplify

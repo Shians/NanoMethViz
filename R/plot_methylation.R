@@ -14,9 +14,8 @@ plot_methylation_data <- function(
     spaghetti = FALSE,
     points = FALSE,
     span = NULL,
-    site_filter = getOption("NanoMethViz.site_filter", 1),
     highlight_col = getOption("NanoMethViz.highlight_col", "grey50"),
-    line_size = 2,
+    line_size = 1,
     mod_scale = c(0, 1)
 ) {
     # assign averaging method
@@ -37,9 +36,9 @@ plot_methylation_data <- function(
             )
     }
 
-    # assign default span, roughly equal to 3000 bp with a maximum of 0.4
+    # assign default span, roughly equal to 5000 bp with a maximum of 0.4
     if (is.null(span)) {
-        span <- min(3000 / (end - start), 0.4)
+        span <- min(5000 / (end - start), 0.4)
     }
 
     # extract group information and convert probabilities
@@ -53,14 +52,6 @@ plot_methylation_data <- function(
 
     plot_data <- plot_data %>%
         dplyr::inner_join(sample_anno, by = "sample", multiple = "all")
-
-    # filter poorly covered sites
-    coverage_filter <- plot_data %>%
-        dplyr::count(.data$pos) %>%
-        dplyr::rename("coverage" = "n") %>%
-        dplyr::filter(.data$coverage >= site_filter)
-
-    plot_data <- inner_join(plot_data, coverage_filter, by = "pos")
 
     # incorporate read annotation if available
     if (!is.null(read_anno)) {
@@ -154,7 +145,7 @@ plot_feature <- function(
     spaghetti = FALSE,
     span = NULL,
     palette = ggplot2::scale_colour_brewer(palette = "Set1"),
-    line_size = 2,
+    line_size = 1,
     mod_scale = c(0, 1)
 ) {
     avg_method <- match.arg(avg_method)

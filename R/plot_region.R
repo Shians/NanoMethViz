@@ -46,7 +46,7 @@ setMethod("plot_region",
         span = NULL,
         window_prop = 0,
         palette = ggplot2::scale_colour_brewer(palette = "Set1"),
-        line_size = 2,
+        line_size = 1,
         mod_scale = c(0, 1)
     ) {
         avg_method <- match.arg(avg_method)
@@ -94,7 +94,7 @@ setMethod("plot_region",
         span = NULL,
         window_prop = 0,
         palette = ggplot2::scale_colour_brewer(palette = "Set1"),
-        line_size = 2,
+        line_size = 1,
         mod_scale = c(0, 1)
     ) {
         avg_method <- match.arg(avg_method)
@@ -143,7 +143,7 @@ setMethod("plot_region",
         span = NULL,
         window_prop = 0,
         palette = ggplot2::scale_colour_brewer(palette = "Set1"),
-        line_size = 2,
+        line_size = 1,
         mod_scale = c(0, 1)
     ) {
         chr <- as.character(chr)
@@ -192,7 +192,7 @@ setMethod("plot_region",
         span = NULL,
         window_prop = 0,
         palette = ggplot2::scale_colour_brewer(palette = "Set1"),
-        line_size = 2,
+        line_size = 1,
         mod_scale = c(0, 1)
     ) {
         chr <- as.character(chr)

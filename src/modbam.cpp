@@ -211,7 +211,7 @@ mod_tokeniser_cpp(std::string string, std::string scores) {
 }
 
 // helper function for splitting string
-std::vector<std::string_view> 
+std::vector<std::string_view>
 split_string_view(std::string_view sv) {
     std::vector<std::string_view> tokens;
     tokens.reserve(sv.size() * 2/3);
@@ -239,7 +239,7 @@ struct GenomicModPos {
         base.reserve(n_mods);
         mod.reserve(n_mods);
     }
-    
+
     std::vector<int> seq_pos;
     std::vector<int> pos;
     std::vector<double> mod_score;
@@ -355,7 +355,7 @@ parse_bam(
     size_t seq_ind = 0;
     char current_base = 'N';
     char target_base = 'N';
-    char current_strand = '*';
+    // char current_strand = '*';
     char current_mod = 'm';
     // iterate through mod positions
     for (std::string_view mm_token : mm_tokens) {
@@ -370,7 +370,7 @@ parse_bam(
             // else it is mod base declaration
             // store base, strand, and mod type
             current_base = mm_token[0];
-            current_strand = mm_token[1]; // currently unused
+            // current_strand = mm_token[1]; // currently unused
             current_mod = mm_token[2];
             if (strand == "-") {
                 // if strand is negative, complement target base

@@ -81,7 +81,7 @@ query_methy <- function(
                 dplyr::count(.data$chr, .data$pos) %>%
                 dplyr::rename("coverage" = "n") %>%
                 dplyr::filter(.data$coverage >= site_filter) %>%
-                dplyr::select(-coverage)
+                dplyr::select(-"coverage")
 
             x %>%
                 dplyr::inner_join(

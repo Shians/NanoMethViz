@@ -16,11 +16,12 @@ setClass(
 #'
 #' @param samples a character vector with the names of the samples.
 #' @param paths a character vector with the file paths for the BAM files.
-#' 
+#'
 #' @return A ModBamFiles object with the sample and path information.
 #'
 #' @export
 ModBamFiles <- function(samples, paths) {
+
     assert_readable(paths)
     assert_has_index(paths)
 
@@ -206,10 +207,10 @@ setMethod(
 #'  for 5mC. See details for other options.
 #'
 #' @details
-#' The possible tags for mod_code can be found at 
-#' \url{https://samtools.github.io/hts-specs/SAMtags.pdf} under the 
+#' The possible tags for mod_code can be found at
+#' \url{https://samtools.github.io/hts-specs/SAMtags.pdf} under the
 #' 'Base modifications' section.
-#' 
+#'
 #' @export
 ModBamResult <- function(methy, samples, exons = NULL, mod_code = "m") {
     if (is.null(exons)) {

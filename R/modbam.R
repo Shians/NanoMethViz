@@ -115,6 +115,20 @@ read_bam <- function(bam_file, query = NULL) {
         }
     }
 
+    # determine_tag <- function(records) {
+    #     if (is.null(records$tag$Mm) && is.null(records$tag$Ml)) {
+    #         records$tag$Mm <- NULL
+    #         records$tag$Ml <- NULL
+    #     } else (is.null(records$tag$MM) && is.null(records$tag$ML)) {
+    #         records$tag$MM <- records$tag$Mm
+    #         records$tag$ML <- records$tag$Ml
+    #         records$tag$Mm <- NULL
+    #         records$tag$Ml <- NULL
+    #     }
+    #
+    #     records
+    # }
+
     filter_modbam <- function(x) {
         tag <- x$tag
         x$tag <- NULL

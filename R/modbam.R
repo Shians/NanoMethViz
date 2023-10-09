@@ -103,31 +103,31 @@ read_bam <- function(bam_file, query = NULL) {
             Rsamtools::ScanBamParam(
                 flag = Rsamtools::scanBamFlag(isUnmappedQuery = FALSE),
                 what = c("qname", "rname", "strand", "pos", "cigar", "seq"),
-                tag = c("MM", "ML"),
+                tag = c("MM", "ML", "Mm", "Ml"),
                 which = query
             )
         } else {
             Rsamtools::ScanBamParam(
                 flag = Rsamtools::scanBamFlag(isUnmappedQuery = FALSE),
                 what = c("qname", "rname", "strand", "pos", "cigar", "seq"),
-                tag = c("MM", "ML")
+                tag = c("MM", "ML", "Mm", "Ml")
             )
         }
     }
 
-    # determine_tag <- function(records) {
-    #     if (is.null(records$tag$Mm) && is.null(records$tag$Ml)) {
-    #         records$tag$Mm <- NULL
-    #         records$tag$Ml <- NULL
-    #     } else (is.null(records$tag$MM) && is.null(records$tag$ML)) {
-    #         records$tag$MM <- records$tag$Mm
-    #         records$tag$ML <- records$tag$Ml
-    #         records$tag$Mm <- NULL
-    #         records$tag$Ml <- NULL
-    #     }
-    #
-    #     records
-    # }
+    determine_tag <- function(records) {
+        if (is.null(records$tag$Mm) && is.null(records$tag$Ml)) {
+            records$tag$Mm <- NULL
+            records$tag$Ml <- NULL
+        } else {
+            records$tag$MM <- records$tag$Mm
+            records$tag$ML <- records$tag$Ml
+            records$tag$Mm <- NULL
+            records$tag$Ml <- NULL
+        }
+
+        records
+    }
 
     filter_modbam <- function(x) {
         tag <- x$tag
@@ -150,6 +150,7 @@ read_bam <- function(bam_file, query = NULL) {
         bam_file,
         param = modbam_param(query = query)
     ) %>%
+        map(determine_tag) %>%
         map(filter_modbam)
 }
 

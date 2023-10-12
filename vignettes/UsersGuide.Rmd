@@ -1,0 +1,350 @@
+---
+title: "User's Guide"
+author: "Shian Su"
+output: 
+    BiocStyle::html_document:
+        toc: true
+vignette: >
+  %\VignetteIndexEntry{User's Guide}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(fig.width = 7)
+knitr::opts_chunk$set(fig.height = 5)
+knitr::opts_chunk$set(dpi = 72)
+
+# preload to avoid loading messages
+library(NanoMethViz)
+exon_tibble <- get_exons_mm10()
+```
+
+# Installation
+
+To install this package, run
+
+```{r, eval = FALSE}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("NanoMethViz")
+```
+
+```{r}
+library(NanoMethViz)
+```
+
+# Quick start
+
+## Constructing the NanoMethResult object
+
+To generate a methylation plot we need 3 components:
+
+* methylation data in tabix format
+* annotation of exons
+* annotation of samples
+
+The methylation information has been modified from the output of nanopolish/f5c.
+It has then been compressed and indexed using `bgzip()` and `indexTabix()` from
+the `Rsamtools` package.
+
+```{r}
+# methylation data stored in tabix file
+methy <- system.file(package = "NanoMethViz", "methy_subset.tsv.bgz")
+
+# tabix is just a special gzipped tab-separated-values file
+read.table(gzfile(methy), col.names = methy_col_names(), nrows = 6)
+```
+
+The exon annotation was obtained from the Mus.musculus package, and joined into
+a single table. It is important that the chromosomes share the same convention
+as that found in the methylation data.
+
+```{r}
+# helper function extracts exons from TxDb package
+exon_tibble <- get_exons_mm10()
+
+head(exon_tibble)
+```
+
+We will defined the sample annotation ourselves. It is important that the sample
+names match those found in the methylation data.
+
+```{r}
+sample <- c(
+  "B6Cast_Prom_1_bl6", "B6Cast_Prom_1_cast",
+  "B6Cast_Prom_2_bl6", "B6Cast_Prom_2_cast",
+  "B6Cast_Prom_3_bl6", "B6Cast_Prom_3_cast"
+)
+
+group <- c("bl6", "cast", "bl6", "cast", "bl6", "cast")
+
+sample_anno <- data.frame(sample, group, stringsAsFactors = FALSE)
+
+sample_anno
+```
+
+For convenience we assemble these three pieces of data into a single object.
+
+```{r}
+nmr <- NanoMethResult(methy, sample_anno, exon_tibble)
+```
+
+The genes we have available are
+
+* Peg3
+* Meg3
+* Impact
+* Xist
+* Brca1
+* Brca2
+
+## Basic Plotting
+
+For demonstrative purposes we will plot Peg3.
+
+```{r}
+plot_gene(nmr, "Peg3")
+```
+
+We can also load in some DMR results to highlight DMR regions.
+
+```{r}
+# loading saved results from previous bsseq analysis
+bsseq_dmr <- read.table(
+    system.file(package = "NanoMethViz", "dmr_subset.tsv.gz"),
+    sep = "\t",
+    header = TRUE,
+    stringsAsFactors = FALSE
+)
+```
+
+```{r}
+plot_gene(nmr, "Peg3", anno_regions = bsseq_dmr)
+```
+
+Individual long reads can be visualised using the `spaghetti` argument.
+
+```{r, warning = FALSE}
+# warnings have been turned off in this vignette, but this will generally
+# generate many warnings as the smoothing for many reads will fail
+plot_gene(nmr, "Peg3", anno_regions = bsseq_dmr, spaghetti = TRUE)
+```
+
+Alternatively the individual read information can be represented by a heatmap.
+
+```{r, warning = FALSE}
+plot_gene(nmr, "Peg3", anno_regions = bsseq_dmr, heatmap = TRUE)
+```
+
+# Importing and exporting data
+
+In order to use this package, your data must be converted from the output of
+methylation calling software to a tabix indexed bgzipped format. The data needs
+to be sorted by genomic position to respect the requirements of the samtools
+[tabix](http://www.htslib.org/doc/tabix.html) indexing tool. On Linux and macOS
+systems this is done using the bash `sort` utility, which is memory efficient,
+but on Windows this is done by loading the entire table and sorting within R.
+
+We currently support output from
+
+* Nanopolish
+* f5c
+* Megalodon
+
+If you would like any further other formats supported please create an issue
+at https://github.com/Shians/NanoMethViz/issues.
+
+## Data example
+
+The conversion can be done using the `create_tabix_file()` function. We provide
+example data of nanopolish output within the package, we can look inside to see
+how the data looks coming out of nanopolish
+
+```{r}
+methy_calls <- system.file(package = "NanoMethViz",
+    c("sample1_nanopolish.tsv.gz", "sample2_nanopolish.tsv.gz"))
+
+# have a look at the first 10 rows of methy_data
+methy_calls_example <- read.table(
+    methy_calls[1], sep = "\t", header = TRUE, nrows = 6)
+
+methy_calls_example
+```
+
+We then create a temporary path to store a converted file, this will be deleted
+once you exit your R session. Once `create_tabix_file()` is run, it will create
+a .bgz file along with its tabix index. Because we have a small amount of data,
+we can read in a small portion of it for inspection, do not do this with large
+datasets as it decompresses all the data and will take very long to run.
+
+### Megalodon Data
+
+To import data from Megalodon's modification calls, the [per-read modified
+bases](https://nanoporetech.github.io/megalodon/file_formats.html#per-read-modified-bases)
+file must be generated. This can be done by either adding `--write-mods-text`
+argument to Megalodon run or using the `megalodon_extras per_read_text
+modified_bases` utility.
+
+## Importing data
+
+```{r, message=F}
+methy_tabix <- file.path(tempdir(), "methy_data.bgz")
+samples <- c("sample1", "sample2")
+
+# you should see messages when running this yourself
+create_tabix_file(methy_calls, methy_tabix, samples)
+
+# don't do this with actual data
+# we have to use gzfile to tell R that we have a gzip compressed file
+methy_data <- read.table(
+    gzfile(methy_tabix), col.names = methy_col_names(), nrows = 6)
+
+methy_data
+```
+
+Now `methy_tabix` will be the path to a tabix object that is ready for use with
+NanoMethViz. Please head over to the "Introduction" vignette to see how to use
+this data for visualisation!
+
+## Exporting data
+
+The methylation data can be exported into formats appropriate for bsseq, DSS, or
+edgeR. 
+
+### bsseq and DSS
+
+Both bsseq and DSS make use of the BSSeq object, and these can be obtained from
+the NanoMethResult objects using the `methy_to_bsseq()` function.
+
+```{r, message = FALSE}
+nmr <- load_example_nanomethresult()
+bss <- methy_to_bsseq(nmr)
+
+bss
+```
+
+### edgeR
+
+edgeR can also be used to perform differential methylation analysis: https://f1000research.com/articles/6-2055.
+BSSeq objects can be converted into the appropriate format using the
+`bsseq_to_edger()` function. This can be used to count reads on a per-site
+basis or over regions.
+
+```{r}
+gene_regions <- exons_to_genes(NanoMethViz::exons(nmr))
+edger_mat <- bsseq_to_edger(bss, gene_regions)
+
+edger_mat
+```
+
+# Importing Annotations
+
+This package comes with helper functions that import exon annotations from the Bioconductor packages `Homo.sapiens` and `Mus.musculus`. The functions `get_exons_hg19()` and `get_exons_mm10()` simply take data from the respective packages, and reorganise the columns into the following columns:
+
+-   gene_id
+-   chr
+-   strand
+-   start
+-   end
+-   transcript_id
+-   symbol
+
+This is used to provide gene annotations for the gene or region plots.
+
+For other annotations, they will most likely be able to be imported using `rtracklayer::import()` and manipulated into the desired format. As an example, we can use a small sample of the C. Elegans gene annotation provided by ENSEMBL. `rtracklayer` will import the annotation as a `GRanges` object, this can be coerced into a data.frame and manipulated using `dplyr`.
+
+```{r}
+anno <- rtracklayer::import(system.file(package = "NanoMethViz", "c_elegans.gtf.gz"))
+
+head(anno)
+```
+
+```{r}
+anno <- anno %>%
+    as.data.frame() %>%
+    dplyr::rename(
+        chr = "seqnames",
+        symbol = "gene_name"
+    ) %>%
+    dplyr::select("gene_id", "chr", "strand", "start", "end", "transcript_id", "symbol")
+
+head(anno)
+```
+
+## Importing Annotations
+
+Annotations can be simplified if full exon and isoform information is not required. For example, gene-body annotation can be represented as single exon genes. For example we can take the example dataset and transform the isoform annotations of Peg3 into a single gene-body block. The helper function `exons_to_genes()` can help with this common conversion.
+
+```{r, message = FALSE}
+nmr <- load_example_nanomethresult()
+
+plot_gene(nmr, "Peg3")
+```
+
+```{r}
+new_exons <- NanoMethViz::exons(nmr) %>%
+    exons_to_genes() %>%
+    mutate(transcript_id = gene_id)
+
+NanoMethViz::exons(nmr) <- new_exons
+
+plot_gene(nmr, "Peg3")
+```
+
+# Dimensionality reduction
+
+Dimensionality reduction is used to represent high dimensional data in a more tractable form. It is commonly used in RNA-seq analysis, where each sample is characterised by tens of thousands of gene expression values, to visualise samples in a 2D plane with distances between points representing similarity and dissimilarity. For RNA-seq the data used is generally gene counts, for methylation there are generally two relevant count matrices, the count of methylated bases, and the count of methylated bases. The information from these two matrices can be combined by taking log-methylation ratios as done in Chen et al. 2018.
+
+### Preparing data for dimensionality reduction
+
+It is assumed that users of this package have imported the data into the gzipped tabix format as described in the "Importing Data" vignette. From there, further processing is required to create the log-methylation-ratio matrix used in dimensionality reduction. Namely we go through the BSseq format as it is easily coerced into the desired matrix and is itself useful for various other analyses.
+
+```{r, message = FALSE}
+# convert to bsseq
+bss <- methy_to_bsseq(nmr)
+bss
+```
+
+We can generate the log-methylation-ratio based on individual methylation sites or computed over genes, or other feature types. Aggregating over features will generally provide more stable and robust results, here we will use genes.
+
+```{r}
+# create gene annotation from exon annotation
+gene_anno <- exons_to_genes(NanoMethViz::exons(nmr))
+
+# create log-methylation-ratio matrix
+lmr <- bsseq_to_log_methy_ratio(bss, regions = gene_anno)
+```
+
+NanoMethViz currently provides two options, a MDS plot based on the limma implementation of MDS, and a PCA plot using BiocSingular.
+
+```{r}
+plot_mds(lmr) +
+    ggtitle("MDS Plot")
+
+plot_pca(lmr) +
+    ggtitle("PCA Plot")
+```
+
+Additional coloring and labeling options can be provided via arguments to either function. Further customisations can be done using typical ggplot2 commands.
+
+```{r}
+new_labels <- gsub("B6Cast_Prom_", "", colnames(lmr))
+new_labels <- gsub("(\\d)_(.*)", "\\2 \\1", new_labels)
+groups <- gsub(" \\d", "", new_labels)
+
+plot_mds(lmr, labels = new_labels, groups = groups) +
+    ggtitle("MDS Plot") +
+    scale_colour_brewer(palette = "Set1")
+```
+
+Points can also be plotted without labels by setting `labels = NULL`.
+
+```{r}
+plot_mds(lmr, labels = NULL, groups = groups) +
+    ggtitle("MDS Plot") +
+    scale_colour_brewer(palette = "Set1")
+```
+

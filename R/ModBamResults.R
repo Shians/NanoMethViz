@@ -12,15 +12,17 @@ setClass(
 #' Constructor for a ModBamFiles object
 #'
 #' This function creates a ModBamFiles object containing information about the
-#' samples and file paths.
+#' samples and file paths. This constructor checks that the files are readable
+#' and have an index.
 #'
 #' @param samples a character vector with the names of the samples.
 #' @param paths a character vector with the file paths for the BAM files.
-#' 
+#'
 #' @return A ModBamFiles object with the sample and path information.
 #'
 #' @export
 ModBamFiles <- function(samples, paths) {
+
     assert_readable(paths)
     assert_has_index(paths)
 
@@ -47,8 +49,10 @@ setMethod("show", signature("ModBamFiles"), function(object) {
 
 #' Modbam methylation results
 #'
-#' (Experimental) A ModBamResult object stores modbam data used for NanoMethViz
-#' visualisation.
+#' A ModBamResult object stores modbam data used for NanoMethViz
+#' visualisation. It contains stores a ModBamFiles object, sample information
+#' and optional exon information. The object is constructed using the
+#' ModBamResult() constructor function described in "Usage".
 #'
 #' @slot methy a ModBamFiles data.frame specifying the samples and paths to bam
 #'   files.
@@ -206,10 +210,10 @@ setMethod(
 #'  for 5mC. See details for other options.
 #'
 #' @details
-#' The possible tags for mod_code can be found at 
-#' \url{https://samtools.github.io/hts-specs/SAMtags.pdf} under the 
+#' The possible tags for mod_code can be found at
+#' \url{https://samtools.github.io/hts-specs/SAMtags.pdf} under the
 #' 'Base modifications' section.
-#' 
+#'
 #' @export
 ModBamResult <- function(methy, samples, exons = NULL, mod_code = "m") {
     if (is.null(exons)) {

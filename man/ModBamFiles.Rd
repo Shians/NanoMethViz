@@ -22,5 +22,6 @@ A ModBamFiles object with the sample and path information.
 }
 \description{
 This function creates a ModBamFiles object containing information about the
-samples and file paths.
+samples and file paths. This constructor checks that the files are readable
+and have an index.
 }

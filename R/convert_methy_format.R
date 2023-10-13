@@ -59,26 +59,6 @@ reformat_nanopolish <- function(x, sample) {
         )
 }
 
-reformat_megalodon_old <- function(x, sample) {
-    x %>%
-        rename(
-            chr = "chrm",
-            statistic = "mod_log_prob",
-            read_name = "read_id") %>%
-        add_column(sample = sample, .before = 1) %>%
-        mutate(
-            sample = as.factor(.data$sample),
-            chr = factor(.data$chr),
-            statistic = logit(exp(.data$statistic)),
-            strand = case_when(
-                strand == 1 ~ "+",
-                strand == -1 ~ "-",
-                TRUE ~ "*"),
-            pos = as.integer(.data$pos) + 1,
-            strand = factor(.data$strand, levels = c("+", "-", "*"))) %>%
-        select(methy_col_names())
-}
-
 reformat_megalodon <- function(x, sample) {
     x %>%
         rename(

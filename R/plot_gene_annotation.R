@@ -81,7 +81,7 @@ plot_gene_annotation <- function(exons_df, plot_start, plot_end) {
     .filter_regions <- function(exons_df, plot_start, plot_end) {
         transcripts <- exons_df %>%
             dplyr::summarise(
-                .by = .data$transcript_id,
+                .by = "transcript_id",
                 start = min(.data$start),
                 end = max(.data$end)
             )

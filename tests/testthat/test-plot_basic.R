@@ -2,6 +2,15 @@ test_that("Plotting gene works", {
     # setup
     nmr <- load_example_nanomethresult()
     mbr <- load_example_modbamresult()
+
+    mbr_lower <- load_example_modbamresult()
+    methy(mbr_lower) <- ModBamFiles(
+        paths = system.file(package = "NanoMethViz", "peg3_lower_case.bam"),
+        samples = "sample1"
+    )
+
+    data_list <- list(nmr, mbr, mbr_lower)
+
     params <- expand.grid(
         heatmap = c(TRUE, FALSE),
         spaghetti = c(TRUE, FALSE),
@@ -9,7 +18,7 @@ test_that("Plotting gene works", {
     )
 
     # test plot_gene() ----
-    for (x in list(nmr, mbr)) {
+    for (x in data_list) {
         expect_silent(p <- plot_gene(x, "Peg3"))
         expect_s3_class(p, "ggplot")
 
@@ -44,7 +53,7 @@ test_that("Plotting gene works", {
     }
 
     # test plot_region() ----
-    for (x in list(nmr, mbr)) {
+    for (x in data_list) {
         expect_silent(p <- plot_region(x, "chr7", 6703892, 6730431))
         expect_s3_class(p, "ggplot")
 
@@ -75,7 +84,7 @@ test_that("Plotting gene works", {
 
     # test plot_grange() ----
     grange <- GenomicRanges::GRanges("chr7:6703892-6730431")
-    for (x in list(nmr, mbr)) {
+    for (x in data_list) {
         for (i in 1:nrow(params)) {
             expect_silent(
                 p <- plot_grange(

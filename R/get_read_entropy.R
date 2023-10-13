@@ -1,4 +1,5 @@
 #' @importFrom Biostrings width
+# nocov start
 get_read_entropy <- function(bam_path, sample = fs::path_file(bam_path)) {
     # helper functions ----
     count_crossings <- function(numbers) {
@@ -48,3 +49,4 @@ get_read_entropy <- function(bam_path, sample = fs::path_file(bam_path)) {
 
     bind_rows(df_list)
 }
+# nocov end

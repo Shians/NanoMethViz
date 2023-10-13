@@ -60,8 +60,10 @@ the exon annotation.
 the mod code.
 }
 \description{
-(Experimental) A ModBamResult object stores modbam data used for NanoMethViz
-visualisation.
+A ModBamResult object stores modbam data used for NanoMethViz
+visualisation. It contains stores a ModBamFiles object, sample information
+and optional exon information. The object is constructed using the
+ModBamResult() constructor function described in "Usage".
 }
 \details{
 The possible tags for mod_code can be found at

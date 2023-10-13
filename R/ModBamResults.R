@@ -12,7 +12,8 @@ setClass(
 #' Constructor for a ModBamFiles object
 #'
 #' This function creates a ModBamFiles object containing information about the
-#' samples and file paths.
+#' samples and file paths. This constructor checks that the files are readable
+#' and have an index.
 #'
 #' @param samples a character vector with the names of the samples.
 #' @param paths a character vector with the file paths for the BAM files.
@@ -48,8 +49,10 @@ setMethod("show", signature("ModBamFiles"), function(object) {
 
 #' Modbam methylation results
 #'
-#' (Experimental) A ModBamResult object stores modbam data used for NanoMethViz
-#' visualisation.
+#' A ModBamResult object stores modbam data used for NanoMethViz
+#' visualisation. It contains stores a ModBamFiles object, sample information
+#' and optional exon information. The object is constructed using the
+#' ModBamResult() constructor function described in "Usage".
 #'
 #' @slot methy a ModBamFiles data.frame specifying the samples and paths to bam
 #'   files.

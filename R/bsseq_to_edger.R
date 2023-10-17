@@ -68,6 +68,7 @@ methy_to_edger <- function(methy, regions = NULL, out_folder = tempdir(), verbos
 #' @param regions the regions to calculate log-methylation ratios over. If left NULL, ratios will be calculated per
 #'   site.
 #' @param prior_count the prior count added to avoid taking log of 0.
+#' @param drop_na whether to drop rows with all NA values.
 #'
 #' @return a matrix containing log-methylation-ratios.
 #' @export
@@ -78,7 +79,7 @@ methy_to_edger <- function(methy, regions = NULL, out_folder = tempdir(), verbos
 #' regions <- exons_to_genes(NanoMethViz::exons(nmr))
 #' log_m_ratio <- bsseq_to_log_methy_ratio(bsseq, regions)
 
-bsseq_to_log_methy_ratio <- function(bsseq, regions = NULL, prior_count = 2) {
+bsseq_to_log_methy_ratio <- function(bsseq, regions = NULL, prior_count = 2, drop_na = TRUE) {
     if (prior_count < 1) {
         warning("prior_count of 1 or higher is recommended")
     }
@@ -98,6 +99,11 @@ bsseq_to_log_methy_ratio <- function(bsseq, regions = NULL, prior_count = 2) {
     log_mat <- log2(methylated + prior_count) - log2(unmethylated + prior_count)
 
     dimnames(log_mat) <- list(row_names, col_names)
+
+    if (drop_na) {
+        # drop rows that are all NA
+        log_mat <- log_mat[!apply(is.na(log_mat), 1, all), ]
+    }
 
     log_mat
 }

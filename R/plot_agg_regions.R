@@ -198,26 +198,3 @@ plot_agg_regions <- function(
         dplyr::group_by(dplyr::across(dplyr::all_of(group_col)), binned_pos) %>%
         dplyr::summarise(methy_prop = mean(.data$methy_prop), .groups = "drop")
 }
-
-.filter_tabix_chr <- function(nmr, regions) {
-    seqs <- get_tabix_sequences(paste0(methy(nmr), ".tbi"))
-    filter_bad_seqs <- function(x) {
-        bad_seq <- !x$chr %in% seqs
-
-        list(
-            regions = x[!bad_seq, ],
-            bad_seqs = unique(x$chr[bad_seq])
-        )
-    }
-    res <- purrr::map(regions, filter_bad_seqs)
-
-    regions <- purrr::map(res, ~.x$regions)
-    bad_seqs <- purrr::map(res, ~.x$bad_seq)
-    bad_seqs <- unique(unlist(bad_seqs))
-    if (length(bad_seqs) != 0) {
-        warning("requested sequences missing from tabix file:",
-                paste(bad_seqs, collapse = ", "))
-    }
-
-    regions
-}

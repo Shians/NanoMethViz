@@ -28,7 +28,7 @@ The possible tags for mod_code can be found at
 'Base modifications' section.
 }
 \examples{
-out_file <- tempfile()
+out_file <- paste0(tempfile(), ".tsv.bgz")
 mbr <- ModBamResult(
     methy = ModBamFiles(
         samples = "sample1",

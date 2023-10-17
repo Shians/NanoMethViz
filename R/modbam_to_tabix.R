@@ -17,7 +17,7 @@
 #' @return invisibly returns the name of the created tabix file.
 #'
 #' @examples
-#' out_file <- tempfile()
+#' out_file <- paste0(tempfile(), ".tsv.bgz")
 #' mbr <- ModBamResult(
 #'     methy = ModBamFiles(
 #'         samples = "sample1",

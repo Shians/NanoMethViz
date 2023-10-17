@@ -210,6 +210,7 @@ query_methy_tabix <- function(x, chr, start, end, force) {
         }
 
         # using readr::read_tsv on character vectors seems to leak memory
+        # readr::local_edition(1) # temporary fix for vroom bad value
         as_tibble(
             utils::read.table(
                 textConnection(x),

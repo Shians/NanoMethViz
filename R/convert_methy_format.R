@@ -170,7 +170,7 @@ convert_methy_format <- function(
                 scipen = 999L
             )
         }
-
+        readr::local_edition(1) # temporary fix for vroom bad value
         readr::read_tsv_chunked(
             element$file,
             col_types = col_types,

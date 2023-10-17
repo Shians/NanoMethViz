@@ -8,7 +8,7 @@
 #' @importFrom dplyr %>%
 #' @importFrom methods new .valueClassTest is
 #' @importFrom rlang .data
-#' @importFrom readr read_tsv
+#' @importFrom readr read_tsv local_edition
 #' @importFrom ggplot2 aes geom_rect geom_segment geom_text ggplot theme_void
 #'   xlim ylim ggplot_build rel unit geom_vline
 #' @importFrom dplyr filter group_by ungroup inner_join mutate n select summarise case_when

@@ -73,6 +73,7 @@ convert_methy_to_dss <- function(
 #' @importFrom dplyr select distinct arrange mutate
 #' @importFrom bsseq BSseq
 create_bsseq_from_files <- function(paths, samples, verbose = TRUE) {
+    readr::local_edition(1) # temporary fix for vroom bad value
     read_dss <- purrr::partial(
         read_tsv,
         col_types = cols(

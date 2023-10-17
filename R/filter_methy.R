@@ -61,7 +61,7 @@ filter_methy <- function(x, output_file, ...) {
             scipen = 999L
         )
     }
-
+    readr::local_edition(1) # temporary fix for vroom bad value
     readr::read_tsv_chunked(
         input_file,
         callback = readr::SideEffectChunkCallback$new(writer_fn),

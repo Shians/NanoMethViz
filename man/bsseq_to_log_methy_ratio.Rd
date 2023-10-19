@@ -4,7 +4,12 @@
 \alias{bsseq_to_log_methy_ratio}
 \title{Convert BSseq object to log-methylation-ratio matrix}
 \usage{
-bsseq_to_log_methy_ratio(bsseq, regions = NULL, prior_count = 2)
+bsseq_to_log_methy_ratio(
+  bsseq,
+  regions = NULL,
+  prior_count = 2,
+  drop_na = TRUE
+)
 }
 \arguments{
 \item{bsseq}{the BSseq object.}
@@ -13,6 +18,8 @@ bsseq_to_log_methy_ratio(bsseq, regions = NULL, prior_count = 2)
 site.}
 
 \item{prior_count}{the prior count added to avoid taking log of 0.}
+
+\item{drop_na}{whether to drop rows with all NA values.}
 }
 \value{
 a matrix containing log-methylation-ratios.

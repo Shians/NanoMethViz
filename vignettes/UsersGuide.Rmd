@@ -18,6 +18,7 @@ knitr::opts_chunk$set(dpi = 72)
 
 # preload to avoid loading messages
 library(NanoMethViz)
+library(dplyr)
 exon_tibble <- get_exons_mm10()
 ```
 
@@ -34,6 +35,7 @@ BiocManager::install("NanoMethViz")
 
 ```{r}
 library(NanoMethViz)
+library(dplyr)
 ```
 
 # Quick start
@@ -191,13 +193,14 @@ modified_bases` utility.
 ## Importing data
 
 ```{r, message=F}
+# create a temporary file to store the converted data
 methy_tabix <- file.path(tempdir(), "methy_data.bgz")
 samples <- c("sample1", "sample2")
 
 # you should see messages when running this yourself
 create_tabix_file(methy_calls, methy_tabix, samples)
 
-# don't do this with actual data
+# you don't need to do this with real data
 # we have to use gzfile to tell R that we have a gzip compressed file
 methy_data <- read.table(
     gzfile(methy_tabix), col.names = methy_col_names(), nrows = 6)
@@ -206,8 +209,39 @@ methy_data
 ```
 
 Now `methy_tabix` will be the path to a tabix object that is ready for use with
-NanoMethViz. Please head over to the "Introduction" vignette to see how to use
-this data for visualisation!
+NanoMethViz.
+
+## Using BAM files with modification tags
+
+In the latest versions of megalodon and other ONT software, the modifications
+are stored in the BAM file. This can be used directly with NanoMethViz using the
+`ModBamResult` class as a substitute for `NanoMethResult`.
+
+This requires a `ModBamFiles` object, which is a list of paths to the BAM files
+and the sample names. The sample names must match the sample names in the
+`sample_anno` data frame.
+
+Because the BAM files contain significantly more data than the tabix files, it
+may be useful to convert the BAM files to tabix files using the 
+`modbam_to_tabix()` function for sharing the data.
+
+```{r}
+# construct with a ModBamFiles object as the methylation data
+mbr <- ModBamResult(
+    methy = ModBamFiles(
+        samples = "sample1",
+        system.file(package = "NanoMethViz", "peg3.bam")
+    ),
+    samples = data.frame(
+        sample = "sample1",
+        group = 1
+    ),
+    exons = exon_tibble
+)
+
+# use in the same way as you would a NanoMethResult object
+plot_gene(mbr, "Peg3")
+```
 
 ## Exporting data
 
@@ -300,7 +334,7 @@ Dimensionality reduction is used to represent high dimensional data in a more tr
 
 ### Preparing data for dimensionality reduction
 
-It is assumed that users of this package have imported the data into the gzipped tabix format as described in the "Importing Data" vignette. From there, further processing is required to create the log-methylation-ratio matrix used in dimensionality reduction. Namely we go through the BSseq format as it is easily coerced into the desired matrix and is itself useful for various other analyses.
+It is assumed that users of this package have imported the data into the gzipped tabix format. From there, further processing is required to create the log-methylation-ratio matrix used in dimensionality reduction. Namely we go through the BSseq format as it is easily coerced into the desired matrix and is itself useful for various other analyses.
 
 ```{r, message = FALSE}
 # convert to bsseq

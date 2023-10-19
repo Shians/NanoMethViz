@@ -78,6 +78,7 @@ reformat_megalodon <- function(x, sample) {
 guess_methy_source <- function(methy_file) {
     assert_readable(methy_file)
 
+    readr::local_edition(1) # temporary fix for vroom bad value
     first_line <- readr::read_lines(methy_file, n_max = 1)
 
     switch (

@@ -68,7 +68,6 @@ plot_agg_regions <- function(
                 x = .data$binned_pos,
                 y = .data$methy_prop)
     }
-    aes_spec <-
 
     # set up plot
     p <- ggplot2::ggplot() +

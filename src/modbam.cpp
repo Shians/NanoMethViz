@@ -224,6 +224,9 @@ split_string_view(std::string_view sv) {
     }
     tokens.emplace_back(sv.substr(start));
 
+    // shrink to fit
+    tokens.shrink_to_fit();
+
     return tokens;
 }
 
@@ -299,14 +302,14 @@ qpos_to_gpos(const std::string& seq, int map_pos, const std::string& cigar) {
     int seq_pos = 0;
     int len;
     char op;
-    while (ss >> len >> op) {
+    while (ss >> len >> op) { 
         switch (op) {
             case 'M': case '=': case 'X':
                 for (int i = 0; i < len; ++i) {
                     genomic_positions[seq_pos++] = genomic_pos++;
                 }
                 break;
-            case 'I': case 'S':
+            case 'I': case 'S': case 'H':
                 seq_pos += len;
                 break;
             case 'D': case 'N':
@@ -316,6 +319,7 @@ qpos_to_gpos(const std::string& seq, int map_pos, const std::string& cigar) {
                 break;
         }
     }
+    
 
     return genomic_positions;
 }
@@ -345,7 +349,7 @@ parse_bam(
 
     // split mm_string into tokens for mod positions
     std::vector<std::string_view> mm_tokens = split_string_view(mm_string);
-
+    
     GenomicModPos output(mm_tokens.size());
 
     int base_offset;
@@ -358,20 +362,21 @@ parse_bam(
     // char current_strand = '*';
     char current_mod = 'm';
     // iterate through mod positions
-    for (std::string_view mm_token : mm_tokens) {
+    
 
-        if (std::isdigit(mm_token[0])) {
+    for (std::string_view mm_tok : mm_tokens) {
+        if (std::isdigit(mm_tok[0])) {
             // if token is a number, it is a base offset
             // store base offset and mod probability
-            base_offset = std::stoi(std::string(mm_token));
+            base_offset = std::stoi(std::string(mm_tok));
             std::getline(ss_ml, ml_token, ',');
             mod_prob = std::stoi(std::string(ml_token));
         } else {
             // else it is mod base declaration
             // store base, strand, and mod type
-            current_base = mm_token[0];
-            // current_strand = mm_token[1]; // currently unused
-            current_mod = mm_token[2];
+            current_base = mm_tok[0];
+            // current_strand = mm_tok[1]; // currently unused
+            current_mod = mm_tok[2];
             if (strand == "-") {
                 // if strand is negative, complement target base
                 target_base = comp_base(current_base);
@@ -439,14 +444,14 @@ parse_bam_cpp(
     char mod_code
 ) {
     GenomicModPos output = parse_bam(
-        mm_string,
-        ml_string,
-        seq,
-        cigar,
-        strand,
-        map_pos
-    );
-
+            mm_string,
+            ml_string,
+            seq,
+            cigar,
+            strand,
+            map_pos
+        );
+    
     // filter out mods that don't match mod_code
     for (size_t i = 0; i < output.pos.size(); ++i) {
         if (output.mod[i] != mod_code) {

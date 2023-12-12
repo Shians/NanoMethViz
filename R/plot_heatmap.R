@@ -44,7 +44,9 @@ plot_methy_data_heatmap <- function(
                 axis.text.x = ggplot2::element_blank(),
                 axis.ticks.y = ggplot2::element_blank(),
                 axis.title.y = ggplot2::element_blank(),
-                axis.text.y = ggplot2::element_blank()
+                axis.text.y = ggplot2::element_blank(),
+                panel.grid.minor = ggplot2::element_blank(),
+                panel.grid.major = ggplot2::element_blank()
             ) +
             ggplot2::xlab("Site")
     } else if (pos_style == "to_scale") {

@@ -26,7 +26,7 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
         mod_scale = c(0, 1)
     ) {
         avg_method <- match.arg(avg_method)
-        .plot_gene(
+        plot_gene_impl(
             x,
             gene,
             window_prop = window_prop,
@@ -64,7 +64,7 @@ setMethod("plot_gene", signature(x = "ModBamResult", gene = "character"),
         mod_scale = c(0, 1)
     ) {
         avg_method <- match.arg(avg_method)
-        .plot_gene(
+        plot_gene_impl(
             x,
             gene,
             window_prop = window_prop,
@@ -83,7 +83,7 @@ setMethod("plot_gene", signature(x = "ModBamResult", gene = "character"),
     }
 )
 
-.plot_gene <- function(
+plot_gene_impl <- function(
     x,
     gene,
     window_prop,

@@ -29,7 +29,7 @@ setMethod(
     ) {
         pos_style <- match.arg(pos_style)
 
-        .plot_gene_heatmap(
+        plot_gene_heatmap_impl(
             x = x,
             gene = gene,
             window_prop = window_prop,
@@ -54,7 +54,7 @@ setMethod(
     ) {
         pos_style <- match.arg(pos_style)
 
-        .plot_gene_heatmap(
+        plot_gene_heatmap_impl(
             x = x,
             gene = gene,
             window_prop = window_prop,
@@ -64,7 +64,7 @@ setMethod(
     }
 )
 
-.plot_gene_heatmap <- function(
+plot_gene_heatmap_impl <- function(
     x,
     gene,
     window_prop,

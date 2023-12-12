@@ -4,8 +4,8 @@ theme_methy_heatmap <- ggplot2::theme_bw() +
             axis.ticks.y = ggplot2::element_blank(),
             axis.title.y = ggplot2::element_blank(),
             axis.text.y = ggplot2::element_blank(),
-            panel.grid.major.y = ggplot2::element_blank(),
-            panel.grid.minor.y = ggplot2::element_blank()
+            panel.grid.major = ggplot2::element_blank(),
+            panel.grid.minor = ggplot2::element_blank()
         )
 
 heatmap_fill_scale <- scico::scale_fill_scico(palette = 'imola', direction = -1)

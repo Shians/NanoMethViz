@@ -1,3 +1,4 @@
+# plot methylation data queried using NanoMethViz
 plot_methylation_data <- function(
     methy_data,
     sample_anno,
@@ -22,7 +23,7 @@ plot_methylation_data <- function(
     avg_method <- match.arg(avg_method)
     avg_func <- switch(
         avg_method,
-        mean = mean,
+        mean = confidence_weighted_mean,
         median = median
     )
 
@@ -108,13 +109,15 @@ plot_methylation_data <- function(
         dplyr::group_by(.data[[group_col]], .data$pos) %>%
         dplyr::summarise(
             mod_prob = avg_func(.data$mod_prob)
+        ) %>%
+        dplyr::mutate(
+            mod_prob = rolling_average(.data$mod_prob, .data$pos)
         )
 
     p <- p +
-        stat_lowess(
+        ggplot2::geom_line(
             aes(y = .data$mod_prob),
             data = plot_data_smooth,
-            span = span,
             na.rm = TRUE,
             linewidth = line_size
         )
@@ -128,6 +131,7 @@ plot_methylation_data <- function(
         ggplot2::xlab(chr) +
         palette_col +
         ggplot2::theme_bw() +
+        ggplot2::theme(panel.grid.minor = ggplot2::element_blank()) +
         ggplot2::scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_si("b")))
 }
 
@@ -192,4 +196,30 @@ plot_feature <- function(
         line_size = line_size,
         mod_scale = mod_scale
     )
+}
+
+confidence_weighted_mean <- function(x, threshold = 0.5) {
+    weights <- abs(x - threshold)^2
+    weights <- weights / sum(weights)
+    sum(x * weights)
+}
+
+rolling_average <- function(y, x, window_size = 100) {
+    tricube_kern <- function(x) {
+        ifelse(abs(x) < 1, (1 - abs(x))^3, 0)
+    }
+
+    n <- length(y)
+    y_smooth <- rep(NA, n)
+    for (i in 1:n) {
+        start <- max(1, i - window_size)
+        end <- min(n, i + window_size)
+        dists <- abs(x[start:end] - x[i])
+        weights <- tricube_kern(dists / 2000)
+        weights <- weights / sum(weights)
+
+        y_smooth[i] <- sum(y[start:end] * weights)
+    }
+
+    y_smooth
 }

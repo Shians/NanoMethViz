@@ -20,6 +20,7 @@
 #' @param line_size the size of the lines.
 #' @param mod_scale the scale range for modification probabilities. Default c(0, 1), set to "auto" for automatic
 #'   limits.
+#' @param span DEPRECATED, use smoothing_window instead. Will be removed in next version.
 #'
 #' @details
 #' This function plots the methylation data for a given region. The region is specified by
@@ -56,7 +57,8 @@ setMethod("plot_region",
         window_prop = 0,
         palette = ggplot2::scale_colour_brewer(palette = "Set1"),
         line_size = 1,
-        mod_scale = c(0, 1)
+        mod_scale = c(0, 1),
+        span = NULL
     ) {
         if (!missing("span")) {
             warning("the 'span' argument has been deprecated, please use 'smoothing_window' instead")
@@ -105,7 +107,8 @@ setMethod("plot_region",
         window_prop = 0,
         palette = ggplot2::scale_colour_brewer(palette = "Set1"),
         line_size = 1,
-        mod_scale = c(0, 1)
+        mod_scale = c(0, 1),
+        span = NULL
     ) {
         if (!missing("span")) {
             warning("the 'span' argument has been deprecated, please use 'smoothing_window' instead")
@@ -155,7 +158,8 @@ setMethod("plot_region",
         window_prop = 0,
         palette = ggplot2::scale_colour_brewer(palette = "Set1"),
         line_size = 1,
-        mod_scale = c(0, 1)
+        mod_scale = c(0, 1),
+        span = NULL
     ) {
         if (!missing("span")) {
             warning("the 'span' argument has been deprecated, please use 'smoothing_window' instead")
@@ -205,7 +209,8 @@ setMethod("plot_region",
         window_prop = 0,
         palette = ggplot2::scale_colour_brewer(palette = "Set1"),
         line_size = 1,
-        mod_scale = c(0, 1)
+        mod_scale = c(0, 1),
+        span = NULL
     ) {
         if (!missing("span")) {
             warning("the 'span' argument has been deprecated, please use 'smoothing_window' instead")

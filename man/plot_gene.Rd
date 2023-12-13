@@ -22,7 +22,8 @@ plot_gene(x, gene, ...)
   gene_anno = TRUE,
   palette = ggplot2::scale_colour_brewer(palette = "Set1"),
   line_size = 1,
-  mod_scale = c(0, 1)
+  mod_scale = c(0, 1),
+  span = NULL
 )
 
 \S4method{plot_gene}{ModBamResult,character}(
@@ -39,7 +40,8 @@ plot_gene(x, gene, ...)
   gene_anno = TRUE,
   palette = ggplot2::scale_colour_brewer(palette = "Set1"),
   line_size = 1,
-  mod_scale = c(0, 1)
+  mod_scale = c(0, 1),
+  span = NULL
 )
 }
 \arguments{
@@ -81,6 +83,8 @@ closer to an average within the more common methylation state.}
 
 \item{mod_scale}{the scale range for modification probabilities. Default c(0, 1), set to "auto" for automatic
 limits.}
+
+\item{span}{DEPRECATED, use smoothing_window instead. Will be removed in next version.}
 }
 \value{
 a patchwork plot containing the methylation profile in the specified

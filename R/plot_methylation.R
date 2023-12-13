@@ -17,7 +17,8 @@ plot_methylation_data <- function(
     smoothing_window = 500,
     highlight_col = getOption("NanoMethViz.highlight_col", "grey50"),
     line_size = 1,
-    mod_scale = c(0, 1)
+    mod_scale = c(0, 1),
+        span = NULL
 ) {
     if (!missing("span")) {
         warning("the 'span' argument has been deprecated, please use 'smoothing_window' instead")
@@ -152,7 +153,8 @@ plot_feature <- function(
     smoothing_window = 500,
     palette = ggplot2::scale_colour_brewer(palette = "Set1"),
     line_size = 1,
-    mod_scale = c(0, 1)
+    mod_scale = c(0, 1),
+        span = NULL
 ) {
     if (!missing("span")) {
         warning("the 'span' argument has been deprecated, please use 'smoothing_window' instead")

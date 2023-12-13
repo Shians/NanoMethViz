@@ -16,7 +16,8 @@ plot_grange(
   smoothing_window = 500,
   window_prop = 0,
   palette = ggplot2::scale_colour_brewer(palette = "Set1"),
-  line_size = 1
+  line_size = 1,
+  span = NULL
 )
 }
 \arguments{
@@ -51,6 +52,8 @@ length.}
 \item{palette}{the ggplot colour palette used for groups.}
 
 \item{line_size}{the size of the lines.}
+
+\item{span}{DEPRECATED, use smoothing_window instead. Will be removed in next version.}
 }
 \value{
 a patchwork plot containing the methylation profile in the specified

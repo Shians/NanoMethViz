@@ -22,7 +22,8 @@ plot_grange <- function(
     smoothing_window = 500,
     window_prop = 0,
     palette = ggplot2::scale_colour_brewer(palette = "Set1"),
-    line_size = 1
+    line_size = 1,
+        span = NULL
 ) {
     if (!missing("span")) {
         warning("the 'span' argument has been deprecated, please use 'smoothing_window' instead")

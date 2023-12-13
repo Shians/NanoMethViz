@@ -30,7 +30,8 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
         gene_anno = TRUE,
         palette = ggplot2::scale_colour_brewer(palette = "Set1"),
         line_size = 1,
-        mod_scale = c(0, 1)
+        mod_scale = c(0, 1),
+        span = NULL
     ) {
         if (!missing("span")) {
             warning("the 'span' argument has been deprecated, please use 'smoothing_window' instead")
@@ -72,7 +73,8 @@ setMethod("plot_gene", signature(x = "ModBamResult", gene = "character"),
         gene_anno = TRUE,
         palette = ggplot2::scale_colour_brewer(palette = "Set1"),
         line_size = 1,
-        mod_scale = c(0, 1)
+        mod_scale = c(0, 1),
+        span = NULL
     ) {
         if (!missing("span")) {
             warning("the 'span' argument has been deprecated, please use 'smoothing_window' instead")

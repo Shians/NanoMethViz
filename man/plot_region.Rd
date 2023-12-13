@@ -3,9 +3,6 @@
 \name{plot_region}
 \alias{plot_region}
 \alias{plot_region,NanoMethResult,character,numeric,numeric-method}
-\alias{plot_region,ModBamResult,character,numeric,numeric-method}
-\alias{plot_region,NanoMethResult,factor,numeric,numeric-method}
-\alias{plot_region,ModBamResult,factor,numeric,numeric-method}
 \title{Plot region methylation}
 \usage{
 plot_region(x, chr, start, end, ...)
@@ -21,61 +18,7 @@ plot_region(x, chr, start, end, ...)
   spaghetti = FALSE,
   heatmap = FALSE,
   heatmap_subsample = 50,
-  span = NULL,
-  window_prop = 0,
-  palette = ggplot2::scale_colour_brewer(palette = "Set1"),
-  line_size = 1,
-  mod_scale = c(0, 1)
-)
-
-\S4method{plot_region}{ModBamResult,character,numeric,numeric}(
-  x,
-  chr,
-  start,
-  end,
-  anno_regions = NULL,
-  binary_threshold = NULL,
-  avg_method = c("mean", "median"),
-  spaghetti = FALSE,
-  heatmap = FALSE,
-  heatmap_subsample = 50,
-  span = NULL,
-  window_prop = 0,
-  palette = ggplot2::scale_colour_brewer(palette = "Set1"),
-  line_size = 1,
-  mod_scale = c(0, 1)
-)
-
-\S4method{plot_region}{NanoMethResult,factor,numeric,numeric}(
-  x,
-  chr,
-  start,
-  end,
-  anno_regions = NULL,
-  binary_threshold = NULL,
-  avg_method = c("mean", "median"),
-  spaghetti = FALSE,
-  heatmap = FALSE,
-  heatmap_subsample = 50,
-  span = NULL,
-  window_prop = 0,
-  palette = ggplot2::scale_colour_brewer(palette = "Set1"),
-  line_size = 1,
-  mod_scale = c(0, 1)
-)
-
-\S4method{plot_region}{ModBamResult,factor,numeric,numeric}(
-  x,
-  chr,
-  start,
-  end,
-  anno_regions = NULL,
-  binary_threshold = NULL,
-  avg_method = c("mean", "median"),
-  spaghetti = FALSE,
-  heatmap = FALSE,
-  heatmap_subsample = 50,
-  span = NULL,
+  smoothing_window = 500,
   window_prop = 0,
   palette = ggplot2::scale_colour_brewer(palette = "Set1"),
   line_size = 1,
@@ -111,7 +54,7 @@ closer to an average within the more common methylation state.}
 
 \item{heatmap_subsample}{how many packed rows of reads to subsample to.}
 
-\item{span}{the span for loess smoothing.}
+\item{smoothing_window}{the window size for smoothing the trend line.}
 
 \item{window_prop}{the size of flanking region to plot. Can be a vector of two
 values for left and right window size. Values indicate proportion of gene
@@ -130,6 +73,15 @@ region.
 }
 \description{
 Plot the methylation of a genomic region.
+}
+\details{
+This function plots the methylation data for a given region. The region is specified by
+chromosome, start and end positions. The basic plot contains a smoothed line plot of
+the methylation of each experimental group. Since V3.0.0 NanoMethViz has changed the
+smoothing strategy from a loess smoothing to a weighted moving average. This is because
+the loess smoothing was too computationally expensive for large datasets and had a
+span parameter that was difficult to tune. The new smoothing strategy is controlled
+by the smoothing_window argument.
 }
 \examples{
 nmr <- load_example_nanomethresult()

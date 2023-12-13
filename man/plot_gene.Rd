@@ -18,7 +18,7 @@ plot_gene(x, gene, ...)
   spaghetti = FALSE,
   heatmap = FALSE,
   heatmap_subsample = 50,
-  span = NULL,
+  smoothing_window = 500,
   gene_anno = TRUE,
   palette = ggplot2::scale_colour_brewer(palette = "Set1"),
   line_size = 1,
@@ -35,7 +35,7 @@ plot_gene(x, gene, ...)
   spaghetti = FALSE,
   heatmap = FALSE,
   heatmap_subsample = 50,
-  span = NULL,
+  smoothing_window = 500,
   gene_anno = TRUE,
   palette = ggplot2::scale_colour_brewer(palette = "Set1"),
   line_size = 1,
@@ -71,7 +71,7 @@ closer to an average within the more common methylation state.}
 
 \item{heatmap_subsample}{how many packed rows of reads to subsample to.}
 
-\item{span}{the span for loess smoothing.}
+\item{smoothing_window}{the window size for smoothing the trend line.}
 
 \item{gene_anno}{whether to show gene annotation.}
 
@@ -88,6 +88,14 @@ region.
 }
 \description{
 Plot the methylation of a gene symbol specified within the exon(x) slot.
+}
+\details{
+This function plots the methylation data for a given gene. Since
+V3.0.0 NanoMethViz has changed the smoothing strategy from a loess smoothing
+to a weighted moving average. This is because the loess smoothing was too
+computationally expensive for large datasets and had a span parameter that
+was difficult to tune. The new smoothing strategy is controlled by the
+smoothing_window argument.
 }
 \section{Functions}{
 \itemize{

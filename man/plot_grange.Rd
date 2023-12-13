@@ -12,7 +12,8 @@ plot_grange(
   avg_method = c("mean", "median"),
   spaghetti = FALSE,
   heatmap = FALSE,
-  span = NULL,
+  heatmap_subsample = 50,
+  smoothing_window = 500,
   window_prop = 0,
   palette = ggplot2::scale_colour_brewer(palette = "Set1"),
   line_size = 1
@@ -39,7 +40,9 @@ closer to an average within the more common methylation state.}
 
 \item{heatmap}{whether or not read-methylation heatmap should be shown.}
 
-\item{span}{the span for loess smoothing.}
+\item{heatmap_subsample}{how many packed rows of reads to subsample to.}
+
+\item{smoothing_window}{the window size for smoothing the trend line.}
 
 \item{window_prop}{the size of flanking region to plot. Can be a vector of two
 values for left and right window size. Values indicate proportion of gene

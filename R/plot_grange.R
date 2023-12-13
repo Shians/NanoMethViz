@@ -24,6 +24,9 @@ plot_grange <- function(
     palette = ggplot2::scale_colour_brewer(palette = "Set1"),
     line_size = 1
 ) {
+    if (!missing("span")) {
+        warning("the 'span' argument has been deprecated, please use 'smoothing_window' instead")
+    }
     avg_method <- match.arg(avg_method)
 
     assert_that(
@@ -73,7 +76,6 @@ plot_grange_heatmap <- function(
     window_prop = 0,
     subsample = 50
 ) {
-
     assert_that(
         is(grange, "GRanges"),
         length(grange) == 1

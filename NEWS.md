@@ -1,3 +1,7 @@
+### Version 3.0.0
+* Added plot_violin().
+* Changed smoothing strategy in plot_gene(), plot_region, and plot_granges() to use moving mean instead of loess.
+
 ### Version 2.6.0
 * Added preliminary modbam file support.
 * Changed rug plot to appear under other geoms. This helps with visibility of data when methylation values are close to 0.

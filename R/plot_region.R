@@ -12,7 +12,7 @@
 #' @param spaghetti whether or not individual reads should be shown.
 #' @param heatmap whether or not read-methylation heatmap should be shown.
 #' @param heatmap_subsample how many packed rows of reads to subsample to.
-#' @param span the span for loess smoothing.
+#' @param smoothing_window the window size for smoothing the trend line.
 #' @param window_prop the size of flanking region to plot. Can be a vector of two
 #'   values for left and right window size. Values indicate proportion of gene
 #'   length.
@@ -20,6 +20,15 @@
 #' @param line_size the size of the lines.
 #' @param mod_scale the scale range for modification probabilities. Default c(0, 1), set to "auto" for automatic
 #'   limits.
+#'
+#' @details
+#' This function plots the methylation data for a given region. The region is specified by
+#' chromosome, start and end positions. The basic plot contains a smoothed line plot of
+#' the methylation of each experimental group. Since V3.0.0 NanoMethViz has changed the
+#' smoothing strategy from a loess smoothing to a weighted moving average. This is because
+#' the loess smoothing was too computationally expensive for large datasets and had a
+#' span parameter that was difficult to tune. The new smoothing strategy is controlled
+#' by the smoothing_window argument.
 #'
 #' @examples
 #' nmr <- load_example_nanomethresult()
@@ -43,12 +52,15 @@ setMethod("plot_region",
         spaghetti = FALSE,
         heatmap = FALSE,
         heatmap_subsample = 50,
-        span = NULL,
+        smoothing_window = 500,
         window_prop = 0,
         palette = ggplot2::scale_colour_brewer(palette = "Set1"),
         line_size = 1,
         mod_scale = c(0, 1)
     ) {
+        if (!missing("span")) {
+            warning("the 'span' argument has been deprecated, please use 'smoothing_window' instead")
+        }
         avg_method <- match.arg(avg_method)
 
         plot_region_impl(
@@ -71,8 +83,6 @@ setMethod("plot_region",
     }
 )
 
-#' @rdname plot_region
-#'
 #' @export
 setMethod("plot_region",
     signature(
@@ -97,6 +107,9 @@ setMethod("plot_region",
         line_size = 1,
         mod_scale = c(0, 1)
     ) {
+        if (!missing("span")) {
+            warning("the 'span' argument has been deprecated, please use 'smoothing_window' instead")
+        }
         avg_method <- match.arg(avg_method)
 
         plot_region_impl(
@@ -119,8 +132,6 @@ setMethod("plot_region",
     }
 )
 
-#' @rdname plot_region
-#'
 #' @export
 setMethod("plot_region",
     signature(
@@ -146,6 +157,9 @@ setMethod("plot_region",
         line_size = 1,
         mod_scale = c(0, 1)
     ) {
+        if (!missing("span")) {
+            warning("the 'span' argument has been deprecated, please use 'smoothing_window' instead")
+        }
         chr <- as.character(chr)
         avg_method <- match.arg(avg_method)
         plot_region(
@@ -159,7 +173,7 @@ setMethod("plot_region",
             spaghetti = spaghetti,
             heatmap = heatmap,
             heatmap_subsample = heatmap_subsample,
-            span = span,
+            smoothing_window = smoothing_window,
             window_prop = window_prop,
             palette = palette,
             line_size = line_size,
@@ -168,8 +182,6 @@ setMethod("plot_region",
     }
 )
 
-#' @rdname plot_region
-#'
 #' @export
 setMethod("plot_region",
     signature(
@@ -195,6 +207,9 @@ setMethod("plot_region",
         line_size = 1,
         mod_scale = c(0, 1)
     ) {
+        if (!missing("span")) {
+            warning("the 'span' argument has been deprecated, please use 'smoothing_window' instead")
+        }
         chr <- as.character(chr)
         avg_method <- match.arg(avg_method)
         plot_region(
@@ -208,7 +223,7 @@ setMethod("plot_region",
             spaghetti = spaghetti,
             heatmap = heatmap,
             heatmap_subsample = heatmap_subsample,
-            span = span,
+            smoothing_window = smoothing_window,
             window_prop = window_prop,
             palette = palette,
             line_size = line_size,

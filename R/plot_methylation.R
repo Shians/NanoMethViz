@@ -19,6 +19,9 @@ plot_methylation_data <- function(
     line_size = 1,
     mod_scale = c(0, 1)
 ) {
+    if (!missing("span")) {
+        warning("the 'span' argument has been deprecated, please use 'smoothing_window' instead")
+    }
     # assign averaging method
     avg_method <- match.arg(avg_method)
     avg_func <- switch(
@@ -151,6 +154,9 @@ plot_feature <- function(
     line_size = 1,
     mod_scale = c(0, 1)
 ) {
+    if (!missing("span")) {
+        warning("the 'span' argument has been deprecated, please use 'smoothing_window' instead")
+    }
     avg_method <- match.arg(avg_method)
 
     chr <- feature$chr

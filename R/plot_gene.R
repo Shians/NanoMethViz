@@ -3,6 +3,13 @@
 #' @inheritParams plot_region
 #' @param gene_anno whether to show gene annotation.
 #'
+#' @details This function plots the methylation data for a given gene. Since
+#' V3.0.0 NanoMethViz has changed the smoothing strategy from a loess smoothing
+#' to a weighted moving average. This is because the loess smoothing was too
+#' computationally expensive for large datasets and had a span parameter that
+#' was difficult to tune. The new smoothing strategy is controlled by the
+#' smoothing_window argument.
+#'
 #' @examples
 #' nmr <- load_example_nanomethresult()
 #' plot_gene(nmr, "Peg3")
@@ -25,6 +32,10 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
         line_size = 1,
         mod_scale = c(0, 1)
     ) {
+        if (!missing("span")) {
+            warning("the 'span' argument has been deprecated, please use 'smoothing_window' instead")
+        }
+
         avg_method <- match.arg(avg_method)
         plot_gene_impl(
             x,
@@ -63,6 +74,9 @@ setMethod("plot_gene", signature(x = "ModBamResult", gene = "character"),
         line_size = 1,
         mod_scale = c(0, 1)
     ) {
+        if (!missing("span")) {
+            warning("the 'span' argument has been deprecated, please use 'smoothing_window' instead")
+        }
         avg_method <- match.arg(avg_method)
         plot_gene_impl(
             x,

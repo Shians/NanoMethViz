@@ -18,7 +18,8 @@ plot_grange <- function(
     avg_method = c("mean", "median"),
     spaghetti = FALSE,
     heatmap = FALSE,
-    span = NULL,
+    heatmap_subsample = 50,
+    smoothing_window = 500,
     window_prop = 0,
     palette = ggplot2::scale_colour_brewer(palette = "Set1"),
     line_size = 1
@@ -44,7 +45,8 @@ plot_grange <- function(
         avg_method = avg_method,
         spaghetti = spaghetti,
         heatmap = heatmap,
-        span = span,
+        heatmap_subsample = heatmap_subsample,
+        smoothing_window = smoothing_window,
         window_prop = window_prop,
         palette = palette,
         line_size = line_size

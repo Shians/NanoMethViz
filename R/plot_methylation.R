@@ -14,7 +14,7 @@ plot_methylation_data <- function(
     avg_method = c("mean", "median"),
     spaghetti = FALSE,
     points = FALSE,
-    span = NULL,
+    smoothing_window = 500,
     highlight_col = getOption("NanoMethViz.highlight_col", "grey50"),
     line_size = 1,
     mod_scale = c(0, 1)
@@ -35,11 +35,6 @@ plot_methylation_data <- function(
                 .data$end >= min(methy_data$pos),
                 .data$start <= max(methy_data$pos)
             )
-    }
-
-    # assign default span, roughly equal to 5000 bp with a maximum of 0.4
-    if (is.null(span)) {
-        span <- min(5000 / (end - start), 0.4)
     }
 
     # extract group information and convert probabilities
@@ -111,7 +106,11 @@ plot_methylation_data <- function(
             mod_prob = avg_func(.data$mod_prob)
         ) %>%
         dplyr::mutate(
-            mod_prob = rolling_average(.data$mod_prob, .data$pos)
+            mod_prob = rolling_average(
+                .data$mod_prob,
+                .data$pos,
+                smoothing_window = smoothing_window
+            )
         )
 
     p <- p +
@@ -147,7 +146,7 @@ plot_feature <- function(
     binary_threshold = NULL,
     avg_method = c("mean", "median"),
     spaghetti = FALSE,
-    span = NULL,
+    smoothing_window = 500,
     palette = ggplot2::scale_colour_brewer(palette = "Set1"),
     line_size = 1,
     mod_scale = c(0, 1)
@@ -191,7 +190,7 @@ plot_feature <- function(
         avg_method = avg_method,
         spaghetti = spaghetti,
         sample_anno = sample_anno,
-        span = span,
+        smoothing_window = smoothing_window,
         palette_col = palette,
         line_size = line_size,
         mod_scale = mod_scale
@@ -204,7 +203,7 @@ confidence_weighted_mean <- function(x, threshold = 0.5) {
     sum(x * weights)
 }
 
-rolling_average <- function(y, x, window_size = 100) {
+rolling_average <- function(y, x, smoothing_window = 500, neighbours = smoothing_window/10) {
     tricube_kern <- function(x) {
         ifelse(abs(x) < 1, (1 - abs(x))^3, 0)
     }
@@ -212,10 +211,10 @@ rolling_average <- function(y, x, window_size = 100) {
     n <- length(y)
     y_smooth <- rep(NA, n)
     for (i in 1:n) {
-        start <- max(1, i - window_size)
-        end <- min(n, i + window_size)
+        start <- max(1, i - neighbours)
+        end <- min(n, i + neighbours)
         dists <- abs(x[start:end] - x[i])
-        weights <- tricube_kern(dists / 2000)
+        weights <- tricube_kern(dists / smoothing_window)
         weights <- weights / sum(weights)
 
         y_smooth[i] <- sum(y[start:end] * weights)

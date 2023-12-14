@@ -15,30 +15,15 @@ parse_bam_list <- function(seq, cigar, mod_str, mod_scores, map_pos, strand, mod
     assert_that(length(seq) == length(map_pos))
     assert_that(length(seq) == length(strand))
 
-    # Check that there are no hard clips in CIGAR
-    hardclipped <- stringr::str_detect(cigar, "H")
-
-    if (length(hardclipped) > 0) {
-        parse_bam_list_cpp(
-            seq[!hardclipped],
-            cigar[!hardclipped],
-            mod_str[!hardclipped],
-            mod_scores[!hardclipped],
-            map_pos[!hardclipped],
-            as.character(strand)[!hardclipped],
-            mod_code
-        )
-    } else {
-        parse_bam_list_cpp(
-            seq,
-            cigar,
-            mod_str,
-            mod_scores,
-            map_pos,
-            as.character(strand),
-            mod_code
-        )
-    }
+    parse_bam_list_cpp(
+        seq,
+        cigar,
+        mod_str,
+        mod_scores,
+        map_pos,
+        as.character(strand),
+        mod_code
+    )
 }
 
 parse_modbam <- function(x, sample, mod_code) {

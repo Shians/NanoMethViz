@@ -361,9 +361,8 @@ parse_bam(
     char target_base = 'N';
     // char current_strand = '*';
     char current_mod = 'm';
-    // iterate through mod positions
     
-
+    // iterate through mod positions
     for (std::string_view mm_tok : mm_tokens) {
         if (std::isdigit(mm_tok[0])) {
             // if token is a number, it is a base offset
@@ -389,6 +388,10 @@ parse_bam(
         }
 
         while (base_offset >= 0) {
+            if  (seq_ind >= seq.size() || seq_ind < 0) {
+                throw std::runtime_error("CIGAR implies different length than SEQ, skipping read"); 
+            }
+
             if (seq[seq_ind] == target_base) {
                 --base_offset;
             }
@@ -443,14 +446,24 @@ parse_bam_cpp(
     std::string const &strand,
     char mod_code
 ) {
-    GenomicModPos output = parse_bam(
-            mm_string,
-            ml_string,
-            seq,
-            cigar,
-            strand,
-            map_pos
+    GenomicModPos output;
+    try {
+        output = parse_bam(
+                mm_string,
+                ml_string,
+                seq,
+                cigar,
+                strand,
+                map_pos
+            );
+    } catch (std::runtime_error& e) {
+        // if an error occurs, return empty data frame
+        std::cout << e.what() << std::endl;
+        return DataFrame::create(
+            _["pos"] = IntegerVector::create(),
+            _["statistic"] = NumericVector::create()
         );
+    }
     
     // filter out mods that don't match mod_code
     for (size_t i = 0; i < output.pos.size(); ++i) {

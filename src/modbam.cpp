@@ -291,37 +291,39 @@ char comp_base(char b) {
     }
 }
 
-// map psitions in query to positions in genome
-// if query base not present in genome, return -1
+// map positions in query to positions in genome
 std::vector<int>
-qpos_to_gpos(const std::string& seq, int map_pos, const std::string& cigar) {
-    std::vector<int> genomic_positions(seq.size(), -1);
+query_pos_to_genome_pos(const std::string& seq, int map_pos, const std::string& cigar) {
+    try {
+        std::vector<int> genomic_positions(seq.size(), -1);
 
-    std::istringstream ss(cigar);
-    int genomic_pos = map_pos;
-    int seq_pos = 0;
-    int len;
-    char op;
-    while (ss >> len >> op) { 
-        switch (op) {
-            case 'M': case '=': case 'X':
-                for (int i = 0; i < len; ++i) {
-                    genomic_positions[seq_pos++] = genomic_pos++;
-                }
-                break;
-            case 'I': case 'S': case 'H':
-                seq_pos += len;
-                break;
-            case 'D': case 'N':
-                genomic_pos += len;
-                break;
-            default:
-                break;
+        std::istringstream ss(cigar);
+        int genomic_pos = map_pos;
+        int seq_pos = 0;
+        int len;
+        char op;
+        while (ss >> len >> op) { 
+            switch (op) {
+                case 'M': case '=': case 'X':
+                    for (int i = 0; i < len; ++i) {
+                        genomic_positions.at(seq_pos++) = genomic_pos++;
+                    }
+                    break;
+                case 'I': case 'S': case 'H':
+                    seq_pos += len;
+                    break;
+                case 'D': case 'N':
+                    genomic_pos += len;
+                    break;
+                default:
+                    break;
+            }
         }
-    }
-    
 
-    return genomic_positions;
+        return genomic_positions;
+    } catch (const std::exception& e) {
+        throw std::runtime_error("CIGAR string does not match sequence length");
+    }
 }
 
 int
@@ -339,94 +341,94 @@ parse_bam(
     std::string const &strand,
     int const map_pos
 ) {
+    try {
+        std::vector<int> gpos_map = query_pos_to_genome_pos(seq, map_pos, cigar);
 
-    std::vector<int> gpos_map = qpos_to_gpos(seq, map_pos, cigar);
+        // set up mod offsets
+        std::istringstream ss_mm(mm_string);
+        std::istringstream ss_ml(ml_string);
+        std::string ml_token;
 
-    // set up mod offsets
-    std::istringstream ss_mm(mm_string);
-    std::istringstream ss_ml(ml_string);
-    std::string ml_token;
+        // split mm_string into tokens for mod positions
+        std::vector<std::string_view> mm_tokens = split_string_view(mm_string);
+        
+        GenomicModPos output(mm_tokens.size());
 
-    // split mm_string into tokens for mod positions
-    std::vector<std::string_view> mm_tokens = split_string_view(mm_string);
-    
-    GenomicModPos output(mm_tokens.size());
+        int base_offset;
+        int mod_prob;
 
-    int base_offset;
-    int mod_prob;
-
-    // declare variables
-    size_t seq_ind = 0;
-    char current_base = 'N';
-    char target_base = 'N';
-    // char current_strand = '*';
-    char current_mod = 'm';
-    
-    // iterate through mod positions
-    for (std::string_view mm_tok : mm_tokens) {
-        if (std::isdigit(mm_tok[0])) {
-            // if token is a number, it is a base offset
-            // store base offset and mod probability
-            base_offset = std::stoi(std::string(mm_tok));
-            std::getline(ss_ml, ml_token, ',');
-            mod_prob = std::stoi(std::string(ml_token));
-        } else {
-            // else it is mod base declaration
-            // store base, strand, and mod type
-            current_base = mm_tok[0];
-            // current_strand = mm_tok[1]; // currently unused
-            current_mod = mm_tok[2];
-            if (strand == "-") {
-                // if strand is negative, complement target base
-                target_base = comp_base(current_base);
-                seq_ind = seq.size() - 1;
+        // declare variables
+        size_t seq_ind = 0;
+        char current_base = 'N';
+        char target_base = 'N';
+        // char current_strand = '*';
+        char current_mod = 'm';
+        
+        // iterate through mod positions
+        for (std::string_view mm_tok : mm_tokens) {
+            if (std::isdigit(mm_tok[0])) {
+                // if token is a number, it is a base offset
+                // store base offset and mod probability
+                base_offset = std::stoi(std::string(mm_tok));
+                std::getline(ss_ml, ml_token, ',');
+                mod_prob = std::stoi(std::string(ml_token));
             } else {
-                target_base = current_base;
-                seq_ind = 0;
+                // else it is mod base declaration
+                // store base, strand, and mod type
+                current_base = mm_tok[0];
+                // current_strand = mm_tok[1]; // currently unused
+                current_mod = mm_tok[2];
+                if (strand == "-") {
+                    // if strand is negative, complement target base
+                    target_base = comp_base(current_base);
+                    seq_ind = seq.size() - 1;
+                } else {
+                    target_base = current_base;
+                    seq_ind = 0;
+                }
+                continue;
             }
-            continue;
-        }
 
-        while (base_offset >= 0) {
-            if  (seq_ind >= seq.size() || seq_ind < 0) {
-                throw std::runtime_error("CIGAR implies different length than SEQ, skipping read"); 
+            while (base_offset >= 0) {
+                if (seq.at(seq_ind) == target_base) {
+                    --base_offset;
+                }
+
+                if (strand == "-") {
+                    seq_ind--;
+                } else {
+                    seq_ind++;
+                }
             }
 
-            if (seq[seq_ind] == target_base) {
-                --base_offset;
-            }
-
+            output.seq_pos.push_back(seq_ind);
             if (strand == "-") {
-                seq_ind--;
+                output.pos.push_back(gpos_map[seq_ind + 1]);
             } else {
-                seq_ind++;
+                output.pos.push_back(gpos_map[seq_ind - 1]);
+            }
+            output.base.push_back(current_base);
+            output.mod.push_back(current_mod);
+            output.mod_score.push_back(mod_prob);
+        }
+
+        // filter out positions that are not in the genome
+        for (size_t i = 0; i < output.pos.size(); ++i) {
+            if (output.pos[i] == -1) {
+                output.pos.erase(output.pos.begin() + i);
+                output.seq_pos.erase(output.seq_pos.begin() + i);
+                output.base.erase(output.base.begin() + i);
+                output.mod.erase(output.mod.begin() + i);
+                output.mod_score.erase(output.mod_score.begin() + i);
+                --i;
             }
         }
 
-        output.seq_pos.push_back(seq_ind);
-        if (strand == "-") {
-            output.pos.push_back(gpos_map[seq_ind + 1]);
-        } else {
-            output.pos.push_back(gpos_map[seq_ind - 1]);
-        }
-        output.base.push_back(current_base);
-        output.mod.push_back(current_mod);
-        output.mod_score.push_back(mod_prob);
+        return output;
+    } catch (const std::exception& e) {
+        throw std::runtime_error("CIGAR string does not match sequence length");
     }
 
-    // filter out positions that are not in the genome
-    for (size_t i = 0; i < output.pos.size(); ++i) {
-        if (output.pos[i] == -1) {
-            output.pos.erase(output.pos.begin() + i);
-            output.seq_pos.erase(output.seq_pos.begin() + i);
-            output.base.erase(output.base.begin() + i);
-            output.mod.erase(output.mod.begin() + i);
-            output.mod_score.erase(output.mod_score.begin() + i);
-            --i;
-        }
-    }
-
-    return output;
 }
 
 double
@@ -446,9 +448,8 @@ parse_bam_cpp(
     std::string const &strand,
     char mod_code
 ) {
-    GenomicModPos output;
     try {
-        output = parse_bam(
+        GenomicModPos output = parse_bam(
                 mm_string,
                 ml_string,
                 seq,
@@ -456,7 +457,41 @@ parse_bam_cpp(
                 strand,
                 map_pos
             );
-    } catch (std::runtime_error& e) {
+        // filter out mods that don't match mod_code
+        for (size_t i = 0; i < output.pos.size(); ++i) {
+            if (output.mod[i] != mod_code) {
+                output.pos.erase(output.pos.begin() + i);
+                output.seq_pos.erase(output.seq_pos.begin() + i);
+                output.base.erase(output.base.begin() + i);
+                output.mod.erase(output.mod.begin() + i);
+                output.mod_score.erase(output.mod_score.begin() + i);
+                --i;
+            }
+        }
+
+        std::vector<double> statistic(output.pos.size(), 0.0);
+        for (size_t i = 0; i < output.pos.size(); ++i) {
+            statistic[i] = logit(output.mod_score[i] / 255.0);
+        }
+
+        if (strand == "-") {
+            switch (mod_code) {
+                case 'm': case 'h':
+                    // assume CG symmetry and shift pos by -1
+                    for (size_t i = 0; i < output.pos.size(); ++i) {
+                        output.pos[i] -= 1;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        return DataFrame::create(
+            _["pos"] = output.pos,
+            _["statistic"] = statistic
+        );
+    } catch (const std::exception& e) {
         // if an error occurs, return empty data frame
         std::cout << e.what() << std::endl;
         return DataFrame::create(
@@ -464,41 +499,6 @@ parse_bam_cpp(
             _["statistic"] = NumericVector::create()
         );
     }
-    
-    // filter out mods that don't match mod_code
-    for (size_t i = 0; i < output.pos.size(); ++i) {
-        if (output.mod[i] != mod_code) {
-            output.pos.erase(output.pos.begin() + i);
-            output.seq_pos.erase(output.seq_pos.begin() + i);
-            output.base.erase(output.base.begin() + i);
-            output.mod.erase(output.mod.begin() + i);
-            output.mod_score.erase(output.mod_score.begin() + i);
-            --i;
-        }
-    }
-
-    std::vector<double> statistic(output.pos.size(), 0.0);
-    for (size_t i = 0; i < output.pos.size(); ++i) {
-        statistic[i] = logit(output.mod_score[i] / 255.0);
-    }
-
-    if (strand == "-") {
-        switch (mod_code) {
-            case 'm': case 'h':
-                // assume CG symmetry and shift pos by -1
-                for (size_t i = 0; i < output.pos.size(); ++i) {
-                    output.pos[i] -= 1;
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
-    return DataFrame::create(
-        _["pos"] = output.pos,
-        _["statistic"] = statistic
-    );
 }
 
 // [[Rcpp::export]]

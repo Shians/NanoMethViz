@@ -30,18 +30,22 @@ find_nth_column(
 
 entry
 parse_line(const string &line) {
-    pair<int, int> sample_pos = find_nth_column(line, "\t", 1);
-    pair<int, int> chr_pos = find_nth_column(line, "\t", 2);
-    pair<int, int> pos_pos = find_nth_column(line, "\t", 3);
-    pair<int, int> stat_pos = find_nth_column(line, "\t", 5);
-    entry e{
-        line.substr(sample_pos.first, sample_pos.second - sample_pos.first),
-        line.substr(chr_pos.first, chr_pos.second - chr_pos.first),
-        stoi(line.substr(pos_pos.first, pos_pos.second - pos_pos.first)),
-        stod(line.substr(stat_pos.first, stat_pos.second - stat_pos.first))
-    };
+    try {
+        pair<int, int> sample_pos = find_nth_column(line, "\t", 1);
+        pair<int, int> chr_pos = find_nth_column(line, "\t", 2);
+        pair<int, int> pos_pos = find_nth_column(line, "\t", 3);
+        pair<int, int> stat_pos = find_nth_column(line, "\t", 5);
+        entry e{
+            line.substr(sample_pos.first, sample_pos.second - sample_pos.first),
+            line.substr(chr_pos.first, chr_pos.second - chr_pos.first),
+            stoi(line.substr(pos_pos.first, pos_pos.second - pos_pos.first)),
+            stod(line.substr(stat_pos.first, stat_pos.second - stat_pos.first))
+        };
 
-    return(e);
+        return(e);
+    } catch (const std::exception& e) {
+        Rcpp::stop("Error parsing line: " + line);
+    }
 }
 
 void

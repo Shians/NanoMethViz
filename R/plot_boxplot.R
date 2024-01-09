@@ -15,16 +15,15 @@
 #' @examples
 #' nmr <- load_example_nanomethresult()
 #' gene_anno <- exons_to_genes(NanoMethViz::exons(nmr))
-#' plot_boxplot(nmr, gene_anno)
-#' plot_boxplot(nmr, gene_anno, group_col = "sample")
-#' plot_boxplot(nmr, gene_anno, group_col = "group")
+#' plot_violin(nmr, gene_anno)
+#' plot_violin(nmr, gene_anno, group_col = "sample")
 #'
 #' @export
 plot_violin <- function(
-    nmr,
-    gene_anno,
+    x,
+    regions,
     binary_threshold = 0.5,
-    group_col = NULL,
+    group_col = "group",
     palette = ggplot2::scale_colour_brewer(palette = "Set1")
 ) {
     if (!is.null(group_col)) {
@@ -78,7 +77,7 @@ plot_violin <- function(
                 col = .data$group)
     } else {
         aes_spec <- ggplot2::aes(
-                x = .data$binned_pos,
+                x = .data[[group_col]],
                 y = .data$methy_prop)
     }
 

@@ -3,11 +3,71 @@
 \name{plot_region}
 \alias{plot_region}
 \alias{plot_region,NanoMethResult,character,numeric,numeric-method}
+\alias{plot_region,ModBamResult,character,numeric,numeric-method}
+\alias{plot_region,NanoMethResult,factor,numeric,numeric-method}
+\alias{plot_region,ModBamResult,factor,numeric,numeric-method}
 \title{Plot region methylation}
 \usage{
 plot_region(x, chr, start, end, ...)
 
 \S4method{plot_region}{NanoMethResult,character,numeric,numeric}(
+  x,
+  chr,
+  start,
+  end,
+  anno_regions = NULL,
+  binary_threshold = NULL,
+  avg_method = c("mean", "median"),
+  spaghetti = FALSE,
+  heatmap = FALSE,
+  heatmap_subsample = 50,
+  smoothing_window = 500,
+  window_prop = 0,
+  palette = ggplot2::scale_colour_brewer(palette = "Set1"),
+  line_size = 1,
+  mod_scale = c(0, 1),
+  span = NULL
+)
+
+\S4method{plot_region}{ModBamResult,character,numeric,numeric}(
+  x,
+  chr,
+  start,
+  end,
+  anno_regions = NULL,
+  binary_threshold = NULL,
+  avg_method = c("mean", "median"),
+  spaghetti = FALSE,
+  heatmap = FALSE,
+  heatmap_subsample = 50,
+  smoothing_window = 500,
+  window_prop = 0,
+  palette = ggplot2::scale_colour_brewer(palette = "Set1"),
+  line_size = 1,
+  mod_scale = c(0, 1),
+  span = NULL
+)
+
+\S4method{plot_region}{NanoMethResult,factor,numeric,numeric}(
+  x,
+  chr,
+  start,
+  end,
+  anno_regions = NULL,
+  binary_threshold = NULL,
+  avg_method = c("mean", "median"),
+  spaghetti = FALSE,
+  heatmap = FALSE,
+  heatmap_subsample = 50,
+  smoothing_window = 500,
+  window_prop = 0,
+  palette = ggplot2::scale_colour_brewer(palette = "Set1"),
+  line_size = 1,
+  mod_scale = c(0, 1),
+  span = NULL
+)
+
+\S4method{plot_region}{ModBamResult,factor,numeric,numeric}(
   x,
   chr,
   start,

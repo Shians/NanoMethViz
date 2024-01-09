@@ -85,6 +85,7 @@ setMethod("plot_region",
     }
 )
 
+#' @rdname plot_region
 #' @export
 setMethod("plot_region",
     signature(
@@ -135,6 +136,7 @@ setMethod("plot_region",
     }
 )
 
+#' @rdname plot_region
 #' @export
 setMethod("plot_region",
     signature(
@@ -186,6 +188,7 @@ setMethod("plot_region",
     }
 )
 
+#' @rdname plot_region
 #' @export
 setMethod("plot_region",
     signature(

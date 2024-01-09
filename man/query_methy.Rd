@@ -12,7 +12,7 @@ query_methy(
   simplify = TRUE,
   force = FALSE,
   truncate = TRUE,
-  site_filter = getOption("NanoMethViz.site_filter", 1)
+  site_filter = getOption("NanoMethViz.site_filter", 1L)
 )
 }
 \arguments{
@@ -36,7 +36,11 @@ region, and an invalid 'chr' will cause an error.}
 returned results to only those within the specified region. Otherwise
 methylation data for entire reads overlapping the region will be returned.}
 
-\item{site_filter}{the minimum amount of coverage to report a site.}
+\item{site_filter}{the minimum amount of coverage to report a site. This
+filters the queried data such that any site with less than the filter is
+not returned. The default is 1, which means that all sites are returned.
+This option can be set globally using the \code{options(site_filter = ...)}
+which will affect all plotting functions in NanoMethviz.}
 }
 \value{
 A table containing the data within the queried regions. If simplify
@@ -45,6 +49,9 @@ is a list of tables where each element is the data from one region.
 }
 \description{
 Query methylation data
+}
+\details{
+The argument \code{site_filter} can be set globally using the \code{options(site_filter = ...)} command.
 }
 \examples{
 nmr <- load_example_nanomethresult()

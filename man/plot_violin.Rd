@@ -5,14 +5,19 @@
 \title{Plot boxplots for regions}
 \usage{
 plot_violin(
-  nmr,
-  gene_anno,
+  x,
+  regions,
   binary_threshold = 0.5,
-  group_col = NULL,
+  group_col = "group",
   palette = ggplot2::scale_colour_brewer(palette = "Set1")
 )
 }
 \arguments{
+\item{x}{the NanoMethResult object.}
+
+\item{regions}{a table of regions containing at least columns chr, strand,
+start and end. Any additional columns can be used for grouping.}
+
 \item{binary_threshold}{the modification probability such that calls with
 modification probability above the threshold are considered methylated, and
 those with probability equal or below are considered unmethylated.}
@@ -21,11 +26,6 @@ those with probability equal or below are considered unmethylated.}
 be in from the regions table or samples(x).}
 
 \item{palette}{the ggplot colour palette used for groups.}
-
-\item{x}{the NanoMethResult object.}
-
-\item{regions}{a table of regions containing at least columns chr, strand,
-start and end. Any additional columns can be used for grouping.}
 }
 \value{
 a ggplot object containing the methylation boxplots.
@@ -36,8 +36,7 @@ Plot boxplots for regions
 \examples{
 nmr <- load_example_nanomethresult()
 gene_anno <- exons_to_genes(NanoMethViz::exons(nmr))
-plot_boxplot(nmr, gene_anno)
-plot_boxplot(nmr, gene_anno, group_col = "sample")
-plot_boxplot(nmr, gene_anno, group_col = "group")
+plot_violin(nmr, gene_anno)
+plot_violin(nmr, gene_anno, group_col = "sample")
 
 }

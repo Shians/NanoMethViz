@@ -13,12 +13,19 @@
 #' @param truncate when querying from ModBamFiles, whether or not to truncate
 #'   returned results to only those within the specified region. Otherwise
 #'   methylation data for entire reads overlapping the region will be returned.
-#' @param site_filter the minimum amount of coverage to report a site.
+#' @param site_filter the minimum amount of coverage to report a site. This
+#'   filters the queried data such that any site with less than the filter is
+#'   not returned. The default is 1, which means that all sites are returned.
+#'   This option can be set globally using the `options(site_filter = ...)`
+#'   which will affect all plotting functions in NanoMethviz.
 #'
 #' @return A table containing the data within the queried regions. If simplify
 #'   is TRUE (default) then all data is contained within one table, otherwise it
 #'   is a list of tables where each element is the data from one region.
 #'
+#' @details
+#' The argument `site_filter` can be set globally using the `options(site_filter
+#' = ...)` command.
 #'
 #' @examples
 #' nmr <- load_example_nanomethresult()
@@ -35,7 +42,7 @@ query_methy <- function(
     simplify = TRUE,
     force = FALSE,
     truncate = TRUE,
-    site_filter = getOption("NanoMethViz.site_filter", 1)
+    site_filter = getOption("NanoMethViz.site_filter", 1L)
 ) {
     if (is(x, "NanoMethResult")) {
         x <- methy(x)
@@ -50,46 +57,53 @@ query_methy <- function(
         msg = "vectors 'chr', 'start' and 'end' must be the same length"
     )
 
-    if (is(x, "ModBamResult")) {
-        out <- query_methy_modbam(x, chr, start, end, mod_code)
-    } else if (can_open_tabix(x)) {
+    assert_that(site_filter > 0)
+
+    input_type <- guess_input_type(x)
+    if (input_type == "tabix") {
         out <- query_methy_tabix(x, chr, start, end, force = force)
+
+    } else if (input_type == "modbam") {
+        out <- query_methy_modbam(x, chr, start, end, mod_code)
+        if (truncate) {
+            # truncate data to within requested region
+            pos_list <- purrr::map2(start, end, ~c(start = .x, end = .y))
+
+            truncate_fn <- function(x, pos_range) {
+                x %>%
+                    dplyr::filter(
+                        .data$pos >= pos_range["start"],
+                        .data$pos <= pos_range["end"]
+                    )
+            }
+
+            out <- purrr::map2(out, pos_list, truncate_fn)
+        }
+
     } else {
         stop("'x' is not a recognised file type")
     }
 
+    # compute modification probability column
     out <- map(out, function(x) {
-        dplyr::mutate(x, mod_prob = sigmoid(.data$statistic))
+        x %>%
+            dplyr::mutate(mod_prob = sigmoid(.data$statistic))
     })
 
-    if (truncate) {
-        pos_list <- purrr::map2(start, end, ~c(start = .x, end = .y))
+    # filter output for coverage
+    out <- purrr::map(out, function(x) {
+        pos_count_filter <- x %>%
+            dplyr::count(.data$chr, .data$pos) %>%
+            dplyr::rename("coverage" = "n") %>%
+            dplyr::filter(.data$coverage >= site_filter) %>%
+            dplyr::select(-"coverage")
 
-        truncate_fn <- function(x, pos_range) {
-            x %>%
-                dplyr::filter(
-                    .data$pos >= pos_range["start"],
-                    .data$pos <= pos_range["end"]
-                )
-        }
-        out <- purrr::map2(out, pos_list, truncate_fn)
-    }
-
-    if (site_filter > 0) {
-        out <- purrr::map(out, function(x) {
-            pos_count_filter <- x %>%
-                dplyr::count(.data$chr, .data$pos) %>%
-                dplyr::rename("coverage" = "n") %>%
-                dplyr::filter(.data$coverage >= site_filter) %>%
-                dplyr::select(-"coverage")
-
-            x %>%
-                dplyr::inner_join(
-                    pos_count_filter,
-                    by = c("chr", "pos")
-                )
-        })
-    }
+        x %>%
+            dplyr::inner_join(
+                pos_count_filter,
+                by = c("chr", "pos")
+            )
+    })
 
     if (simplify) {
         out <- dplyr::bind_rows(out)
@@ -171,8 +185,10 @@ empty_methy_query_output <- function() {
 
 #' @importFrom utils read.table
 query_methy_tabix <- function(x, chr, start, end, force) {
+    # set up tabix file
     tabix_file <- Rsamtools::TabixFile(x)
 
+    # query tabix index for missing sequences
     tabix_seqs <- get_tabix_sequences(paste0(x, ".tbi"))
     miss <- which(!chr %in% tabix_seqs)
     miss_seqs <- unique(chr[miss])
@@ -181,6 +197,7 @@ query_methy_tabix <- function(x, chr, start, end, force) {
             "requested sequences missing from tabix file:",
             paste(miss_seqs, collapse = ", ")
         )
+        # remove missing sequences
         chr <- chr[-miss]
         start <- start[-miss]
         end <- end[-miss]
@@ -194,13 +211,11 @@ query_methy_tabix <- function(x, chr, start, end, force) {
         }
     }
 
+    # make query into a granges object
     query <- make_granges(chr, start, end)
-
-    col_names <- methy_col_names()
-    col_types <- methy_col_types()
-
     query_result <- Rsamtools::scanTabix(tabix_file, param = query)
 
+    # helper function to parse tabix output
     parse_tabix <- function(x) {
         if (length(x) == 0) {
             return(empty_methy_query_output())
@@ -209,8 +224,8 @@ query_methy_tabix <- function(x, chr, start, end, force) {
             x <- paste0(x, "\n")
         }
 
+        col_names <- methy_col_names()
         # using readr::read_tsv on character vectors seems to leak memory
-        # readr::local_edition(1) # temporary fix for vroom bad value
         as_tibble(
             utils::read.table(
                 textConnection(x),
@@ -281,3 +296,16 @@ query_methy_modbam <- function(x, chr, start, end, mod_code) {
     out
 }
 
+guess_input_type <- function(x) {
+    if (is(x, "ModBamResult")) {
+        return("modbam")
+    }
+
+    if (is(x, "character")) {
+        if (can_open_tabix(x)) {
+            return("tabix")
+        }
+    }
+
+    return("uknown")
+}

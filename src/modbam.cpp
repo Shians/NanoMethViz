@@ -302,7 +302,7 @@ query_pos_to_genome_pos(const std::string& seq, int map_pos, const std::string& 
         int seq_pos = 0;
         int len;
         char op;
-        while (ss >> len >> op) { 
+        while (ss >> len >> op) {
             switch (op) {
                 case 'M': case '=': case 'X':
                     for (int i = 0; i < len; ++i) {
@@ -351,7 +351,7 @@ parse_bam(
 
         // split mm_string into tokens for mod positions
         std::vector<std::string_view> mm_tokens = split_string_view(mm_string);
-        
+
         GenomicModPos output(mm_tokens.size());
 
         int base_offset;
@@ -363,7 +363,7 @@ parse_bam(
         char target_base = 'N';
         // char current_strand = '*';
         char current_mod = 'm';
-        
+
         // iterate through mod positions
         for (std::string_view mm_tok : mm_tokens) {
             if (std::isdigit(mm_tok[0])) {
@@ -493,7 +493,7 @@ parse_bam_cpp(
         );
     } catch (const std::exception& e) {
         // if an error occurs, return empty data frame
-        std::cout << e.what() << std::endl;
+        Rcout << e.what() << std::endl;
         return DataFrame::create(
             _["pos"] = IntegerVector::create(),
             _["statistic"] = NumericVector::create()

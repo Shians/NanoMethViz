@@ -82,7 +82,7 @@ plot_violin <- function(
     }
 
     ggplot2::ggplot(region_data, aes_spec) +
-        ggplot2::geom_violin() +
+        ggplot2::geom_violin(draw_quantiles = 0.5) +
         ggplot2::scale_y_continuous(limits = c(0, 1)) +
         ggplot2::theme_bw() +
         palette

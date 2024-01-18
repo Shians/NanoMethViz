@@ -218,11 +218,11 @@ split_string_view(std::string_view sv) {
     size_t start = 0;
     size_t end;
 
+    // insert tokens into vector when split by comma or semicolon
     while ((end = sv.find_first_of(",;", start)) != std::string_view::npos) {
         tokens.emplace_back(sv.substr(start, end - start));
         start = end + 1;
     }
-    tokens.emplace_back(sv.substr(start));
 
     // shrink to fit
     tokens.shrink_to_fit();
@@ -366,6 +366,7 @@ parse_bam(
 
         // iterate through mod positions
         for (std::string_view mm_tok : mm_tokens) {
+
             if (std::isdigit(mm_tok[0])) {
                 // if token is a number, it is a base offset
                 // store base offset and mod probability
@@ -373,20 +374,25 @@ parse_bam(
                 std::getline(ss_ml, ml_token, ',');
                 mod_prob = std::stoi(std::string(ml_token));
             } else {
-                // else it is mod base declaration
-                // store base, strand, and mod type
-                current_base = mm_tok[0];
-                // current_strand = mm_tok[1]; // currently unused
-                current_mod = mm_tok[2];
-                if (strand == "-") {
-                    // if strand is negative, complement target base
-                    target_base = comp_base(current_base);
-                    seq_ind = seq.size() - 1;
+                if (!mm_tok.empty()) {
+                    // if it is mod base declaration
+                    // store base, strand, and mod type
+                    current_base = mm_tok[0];
+                    // current_strand = mm_tok[1]; // currently unused
+                    current_mod = mm_tok[2];
+                    if (strand == "-") {
+                        // if strand is negative, complement target base
+                        target_base = comp_base(current_base);
+                        seq_ind = seq.size() - 1;
+                    } else {
+                        target_base = current_base;
+                        seq_ind = 0;
+                    }
+                    continue;
                 } else {
-                    target_base = current_base;
-                    seq_ind = 0;
+                    // token is empty
+                    continue;
                 }
-                continue;
             }
 
             while (base_offset >= 0) {

@@ -60,8 +60,7 @@ Imports:
     tibble,
     tidyr,
     utils,
-    withr,
-    zlibbioc
+    withr
 Suggests:
     BiocStyle,
     DSS,

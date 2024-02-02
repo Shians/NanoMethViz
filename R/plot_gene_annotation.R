@@ -71,7 +71,7 @@ plot_gene_annotation <- function(exons_df, plot_start, plot_end) {
         )
 
         ggplot2::geom_text(
-            aes(x = .data$gene_middle, y = .data$y_offset + 0.8, label = .data$symbol),
+            aes(x = .data$label_pos, y = .data$y_offset + 0.8, label = .data$symbol),
             data = gene_labels,
             hjust = "center",
             size = ggplot2::rel(2.5)
@@ -193,9 +193,15 @@ plot_gene_annotation <- function(exons_df, plot_start, plot_end) {
     gap_neg <- .get_gaps(gap, "-")
     gap_none <- .get_gaps(gap, "*")
 
+    region_width <- plot_end - plot_start
     gene_labels <- exons_df %>%
         dplyr::group_by(.data$gene_id, .data$symbol, .data$transcript_id, .data$y_offset, .data$strand) %>%
-        dplyr::summarise(gene_middle = (min(.data$start) + max(.data$end)) / 2)
+        dplyr::summarise(
+            gene_middle = (min(.data$start) + max(.data$end)) / 2,
+            label_pos = gene_middle,
+            label_pos = pmin(label_pos, plot_end - region_width * 0.05),
+            label_pos = pmax(label_pos, plot_start +  region_width * 0.05)
+        )
 
     exons_df <- .truncate_region(exons_df, plot_start, plot_end, "*")
 
@@ -204,7 +210,7 @@ plot_gene_annotation <- function(exons_df, plot_start, plot_end) {
     gap_none <- .truncate_region(gap_none, plot_start, plot_end, "*")
     gene_labels <- gene_labels %>%
         dplyr::filter(
-            dplyr::between(.data$gene_middle, plot_start, plot_end)
+            dplyr::between(.data$label_pos, plot_start, plot_end)
         )
 
     if (length(exons_df$y_offset) > 0) {

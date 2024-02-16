@@ -12,3 +12,4 @@ NanoMethViz.Rproj
 renv
 renv.lock
 experimental
+.DS_Store

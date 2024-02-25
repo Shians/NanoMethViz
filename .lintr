@@ -1,0 +1,6 @@
+encoding: "UTF-8"
+linters: linters_with_defaults(
+    line_length_linter(120),
+    indentation_linter = NULL,
+    commented_code_linter = NULL
+  )

@@ -18,7 +18,7 @@ plot_methylation_data <- function(
     highlight_col = getOption("NanoMethViz.highlight_col", "grey50"),
     line_size = 1,
     mod_scale = c(0, 1),
-        span = NULL
+    span = NULL
 ) {
     if (!missing("span")) {
         warning("the 'span' argument has been deprecated, please use 'smoothing_window' instead")
@@ -170,8 +170,7 @@ plot_feature <- function(
     window_right <- window_size[2]
     xlim <- c(start - window_left, end + window_right)
 
-    methy_data <-
-        query_methy(
+    methy_data <- query_methy(
             methy,
             chr,
             floor(start - window_left * 1.1),

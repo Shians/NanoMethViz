@@ -36,7 +36,6 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
         if (!missing("span")) {
             warning("the 'span' argument has been deprecated, please use 'smoothing_window' instead")
         }
-
         avg_method <- match.arg(avg_method)
         plot_gene_impl(
             x,

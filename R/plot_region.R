@@ -267,16 +267,17 @@ plot_region_impl <- function(
     window_left <- feature_width * window_prop[1]
     window_right <- feature_width * window_prop[2]
 
-    methy_data <-
-        query_methy(
-            x,
-            chr,
-            floor(start - window_left * 1.1),
-            ceiling(end + window_right * 1.1),
-            simplify = TRUE)
+    # query data
+    methy_data <- query_methy(
+        x,
+        chr,
+        floor(start - window_left * 1.1),
+        ceiling(end + window_right * 1.1),
+        simplify = TRUE
+    )
 
     if (nrow(methy_data) == 0) {
-        warning("no methylation data in region")
+        warning("no methylation data in region, returning empty plot")
         return(ggplot() + theme_void())
     }
 
@@ -284,6 +285,8 @@ plot_region_impl <- function(
         dplyr::select(-"strand") %>%
         tibble::as_tibble()
 
+
+    # setup base plot
     title <- glue::glue("{chr}:{start}-{end}")
     xlim <- round(c(start - window_left, end + window_right))
     p1 <- plot_methylation_data(
@@ -309,34 +312,26 @@ plot_region_impl <- function(
 
     p_out <- p1
 
-    # if exon anno exists
+    # if exon anno exists, append it to plot
     if (nrow(exons(x)) != 0) {
-        exons_anno <- query_exons_region(
-            exons(x),
-            chr = chr,
-            start = start,
-            end = end
-        )
+        exons_anno <- query_exons_region(exons(x), chr = chr, start = start, end = end)
 
         p2 <- plot_gene_annotation(exons_anno, xlim[1], xlim[2]) +
-            ggplot2::coord_cartesian(
-                xlim = xlim,
-                expand = FALSE
-            ) +
-                ggplot2::scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_si("b")))
-        anno_height <- attr(p2, "plot_height")
+            ggplot2::coord_cartesian(xlim = xlim, expand = FALSE) +
+            ggplot2::scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_si("b")))
 
+        anno_height <- attr(p2, "plot_height")
         heights <- c(1, 0.075 * anno_height)
+
         p_out <- p1 / p2 + patchwork::plot_layout(heights = heights)
     }
 
-    # if heatmap requested
+    # if heatmap requested, append it to plot
     if (heatmap) {
         p_heatmap <- plot_region_heatmap(x, chr, start, end, window_prop = window_prop, subsample = heatmap_subsample) +
             ggplot2::coord_cartesian(
                 xlim = xlim
             )
-
 
         p_out <- stack_plots(p_out, ggrastr::rasterise(p_heatmap, dpi = 300))
     }

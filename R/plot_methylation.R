@@ -70,7 +70,7 @@ plot_methylation_data <- function(
     # add annotated regions
     if (!is.null(anno_regions)) {
         for (i in seq_len(nrow(anno_regions))) {
-            region <- anno_regions[i,]
+            region <- anno_regions[i, ]
             p <- p +
                 ggplot2::annotate(
                     "rect",
@@ -210,7 +210,7 @@ confidence_weighted_mean <- function(x, threshold = 0.5) {
     sum(x * weights)
 }
 
-rolling_average <- function(y, x, smoothing_window = 500, neighbours = smoothing_window/10) {
+rolling_average <- function(y, x, smoothing_window = 500, neighbours = smoothing_window / 10) {
     tricube_kern <- function(x) {
         ifelse(abs(x) < 1, (1 - abs(x))^3, 0)
     }

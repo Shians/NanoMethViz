@@ -161,8 +161,6 @@ plot_gene_impl <- function(
 
     if (gene_anno) {
         # if gene annotation is needed
-        xlim <- .get_ggplot_range_x(p1)
-
         p2 <- plot_gene_annotation(exons_anno, plot_left, plot_right) +
             ggplot2::coord_cartesian(
                 xlim = c(plot_left, plot_right),
@@ -170,7 +168,9 @@ plot_gene_impl <- function(
             ) +
                 ggplot2::scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_si("b")))
 
-        n_unique <- function(x) { length(unique(x)) }
+        n_unique <- function(x) {
+            length(unique(x))
+        }
 
         heights <- c(1, 0.075 * n_unique(exons_anno$transcript_id))
         p_out <- p1 / p2 + patchwork::plot_layout(heights = heights)

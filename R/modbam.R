@@ -89,7 +89,8 @@ read_bam <- function(bam_file, query = NULL) {
         }
     }
 
-    determine_tag <- function(records) {
+    # determine if ML or ml is used in BAM records
+    determine_tag_case <- function(records) {
         if (is.null(records$tag$Mm) && is.null(records$tag$Ml)) {
             records$tag$Mm <- NULL
             records$tag$Ml <- NULL
@@ -103,7 +104,8 @@ read_bam <- function(bam_file, query = NULL) {
         records
     }
 
-    filter_modbam <- function(x) {
+    # filter any reads without mod tags
+    filter_missing_mod_tags <- function(x) {
         tag <- x$tag
         x$tag <- NULL
 
@@ -124,8 +126,8 @@ read_bam <- function(bam_file, query = NULL) {
         bam_file,
         param = modbam_param(query = query)
     ) %>%
-        map(determine_tag) %>%
-        map(filter_modbam)
+        map(determine_tag_case) %>%
+        map(filter_missing_mod_tags)
 }
 
 read_modbam_table <- function(x, chr, start, end, sample, mod_code) {

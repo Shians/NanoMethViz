@@ -85,7 +85,7 @@ convert_modbam_to_tsv <- function(x, out_file, mod_code) {
             clear = FALSE
         )
 
-        bam_file <- Rsamtools::BamFile(path, yieldSize = 5000)
+        bam_file <- Rsamtools::BamFile(path, yieldSize = 2000)
         open(bam_file)
         while (Rsamtools::isIncomplete(bam_file)) {
             reads <- read_bam(bam_file)

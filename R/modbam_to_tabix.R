@@ -85,19 +85,19 @@ convert_modbam_to_tsv <- function(x, out_file, mod_code) {
             clear = FALSE
         )
 
-        bam_file <- Rsamtools::BamFile(path, yieldSize = 15000)
+        bam_file <- Rsamtools::BamFile(path, yieldSize = 5000)
         open(bam_file)
         while (Rsamtools::isIncomplete(bam_file)) {
             reads <- read_bam(bam_file)
-
-            n_reads <- length(reads[[1]][[1]])
-            cli::cli_progress_update(n_reads, id = prog_bar_id)
 
             if (!is.null(reads[[1]]) && length(reads[[1]]$qname) > 0) {
                 # parse if valid data exists
                 data <- parse_read_chunk(reads)
                 readr::write_tsv(data, out_file, append = TRUE, progress = FALSE)
             }
+
+            n_reads <- length(reads[[1]][[1]])
+            cli::cli_progress_update(n_reads, id = prog_bar_id)
         }
 
     }

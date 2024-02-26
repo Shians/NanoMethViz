@@ -1,7 +1,12 @@
 ### Version 3.0.0
-* Added plot_violin().
-* Changed smoothing strategy in plot_gene(), plot_region, and plot_granges() to use weighted moving mean instead of loess.
-
+* Breaking change to smoothing strategy in plot_gene(), plot_region(), and plot_granges() to use weighted moving mean instead of loess. This deprecates the `span` argument in favour of `smoothing_window` which is defaulted to 2000 bases.
+  * Smoothing for various plotting functions was previously performed using loess smoothing, this performed locally weighted linear estimation to create a smoothed line, the span argument controlled the proportion of data used in this smoothing. This was always a difficult parameter to tune because as you plot a larger region, the amount of data also increased. The consequence was that, under fixed span, the smoothed line would look different based on scale of the plotting region. Internally NanoMethViz utilised a dynamic span value which changed inversely proportional to the width of the plotting region, this decreased the span as the plotting region grew in order to prevent fine changes from being smoothed out. However the calculated span was invisible to users, and it was unclear how to set a span to change the appearance of the plot.
+  * The change of the smoothing method to a weighted rolling means approach lead to the new `smoothing_window` argument which represents the window size in bases from which data is used for smoothing around each point. This serves the same purpose as the dynamic calculation done previously, but is set more explicitly and should be more intuitive for users. The default is always 2000, and can be increased to increase smoothness and decreased to decrease smoothness.
+* Added plot_violin() function for creating violin plots for samples over specific regions.
+* Added check to remove hard-clipped reads because they may not have matching mod strings.
+* Changed gene annotation to always put label on visible isoforms, previously labels are plotted at the center of isoform.
+* Fixed memory leak in bam parsing.
+* Fixed crash when CIGAR doesn't match length of SEQ.
 
 ### Version 2.6.0
 * Added preliminary modbam file support.

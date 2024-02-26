@@ -127,7 +127,7 @@ binarise_statistics <- function(plot_data, binary_threshold) {
     if (!is.null(binary_threshold)) {
         # if binary threshold is provided, convert probabilities to binary values
         plot_data$mod_prob <- as.numeric(
-            sigmoid(methy_data$statistic) > binary_threshold
+            sigmoid(plot_data$statistic) > binary_threshold
         )
     }
     plot_data

@@ -1,6 +1,7 @@
 ### Version 3.0.0
 * Added plot_violin().
-* Changed smoothing strategy in plot_gene(), plot_region, and plot_granges() to use moving mean instead of loess.
+* Changed smoothing strategy in plot_gene(), plot_region, and plot_granges() to use weighted moving mean instead of loess.
+
 
 ### Version 2.6.0
 * Added preliminary modbam file support.

@@ -13,7 +13,7 @@ plot_grange(
   spaghetti = FALSE,
   heatmap = FALSE,
   heatmap_subsample = 50,
-  smoothing_window = 500,
+  smoothing_window = 2000,
   window_prop = 0,
   palette = ggplot2::scale_colour_brewer(palette = "Set1"),
   line_size = 1,

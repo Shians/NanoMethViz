@@ -14,7 +14,7 @@ plot_methylation_data <- function(
     avg_method = c("mean", "median"),
     spaghetti = FALSE,
     points = FALSE,
-    smoothing_window = 500,
+    smoothing_window = 2000,
     highlight_col = getOption("NanoMethViz.highlight_col", "grey50"),
     line_size = 1,
     mod_scale = c(0, 1),
@@ -31,6 +31,7 @@ plot_methylation_data <- function(
         median = median
     )
 
+    # if there are regions to annotate
     if (!is.null(anno_regions)) {
         # filter annotation regions to be within plotting region
         anno_regions <- anno_regions %>%
@@ -41,26 +42,10 @@ plot_methylation_data <- function(
             )
     }
 
-    # extract group information and convert probabilities
-    plot_data <- methy_data
-    if (!is.null(binary_threshold)) {
-        # if binary threshold is provided, convert probabilities to binary values
-        plot_data$mod_prob <- as.numeric(
-            sigmoid(methy_data$statistic) > binary_threshold
-        )
-    }
-
-    plot_data <- plot_data %>%
-        dplyr::inner_join(sample_anno, by = "sample", multiple = "all")
-
-    # incorporate read annotation if available
-    if (!is.null(read_anno)) {
-        # remove any duplicate columns and use plot_data as reference
-        plot_data_names <- setdiff(names(plot_data), "read_name")
-        read_anno <- dplyr::select(read_anno, -dplyr::any_of(plot_data_names))
-        plot_data <- dplyr::inner_join(plot_data, read_anno, by = "read_name") %>%
-            tidyr::drop_na()
-    }
+    plot_data <- methy_data %>%
+        binarise_statistics(binary_threshold = binary_threshold) %>%
+        join_samples_anno(sample_anno) %>%
+        add_read_anno(read_anno)
 
     # set up plot
     # rug first so it appears on the bottom layer
@@ -138,6 +123,34 @@ plot_methylation_data <- function(
         ggplot2::scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_si("b")))
 }
 
+binarise_statistics <- function(plot_data, binary_threshold) {
+    if (!is.null(binary_threshold)) {
+        # if binary threshold is provided, convert probabilities to binary values
+        plot_data$mod_prob <- as.numeric(
+            sigmoid(methy_data$statistic) > binary_threshold
+        )
+    }
+    plot_data
+}
+
+join_samples_anno <- function(plot_data, sample_anno) {
+    plot_data %>%
+        dplyr::inner_join(sample_anno, by = "sample", multiple = "all")
+}
+
+add_read_anno <- function(plot_data, read_anno) {
+    # incorporate read annotation if available
+    if (!is.null(read_anno)) {
+        # remove any duplicate columns and use plot_data as reference
+        plot_data_names <- setdiff(names(plot_data), "read_name")
+        read_anno <- dplyr::select(read_anno, -dplyr::any_of(plot_data_names))
+        plot_data <- dplyr::inner_join(plot_data, read_anno, by = "read_name") %>%
+            tidyr::drop_na()
+    }
+
+    plot_data
+}
+
 # wrapper function for plotting a single feature
 # responsible for setting up the query and calling plot_methylation_data
 plot_feature <- function(
@@ -150,7 +163,7 @@ plot_feature <- function(
     binary_threshold = NULL,
     avg_method = c("mean", "median"),
     spaghetti = FALSE,
-    smoothing_window = 500,
+    smoothing_window = 2000,
     palette = ggplot2::scale_colour_brewer(palette = "Set1"),
     line_size = 1,
     mod_scale = c(0, 1),
@@ -210,7 +223,7 @@ confidence_weighted_mean <- function(x, threshold = 0.5) {
     sum(x * weights)
 }
 
-rolling_average <- function(y, x, smoothing_window = 500, neighbours = smoothing_window / 10) {
+rolling_average <- function(y, x, smoothing_window = 2000, neighbours = smoothing_window / 10) {
     tricube_kern <- function(x) {
         ifelse(abs(x) < 1, (1 - abs(x))^3, 0)
     }

@@ -1,4 +1,4 @@
-#' Plot boxplots for regions
+#' Plot violin for regions
 #'
 #' @param x the NanoMethResult object.
 #' @param regions a table of regions containing at least columns chr, strand,
@@ -10,7 +10,7 @@
 #'   be in from the regions table or samples(x).
 #' @param palette the ggplot colour palette used for groups.
 #'
-#' @return a ggplot object containing the methylation boxplots.
+#' @return a ggplot object containing the methylation violin plot.
 #'
 #' @examples
 #' nmr <- load_example_nanomethresult()

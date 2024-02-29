@@ -48,7 +48,9 @@ filter_methy <- function(x, output_file, ...) {
     lines_read <- 0
     lines_kept <- 0
 
-    filter_fn <- function(x) { dplyr::filter(x, ...) }
+    filter_fn <- function(x) {
+        dplyr::filter(x, ...)
+    }
     writer_fn <- function(x, i) {
         lines_read <<- lines_read + nrow(x)
         filtered_x <- filter_fn(x)
@@ -74,7 +76,7 @@ filter_methy <- function(x, output_file, ...) {
     tabix_compress(x = output_tsv, index = TRUE)
     file.remove(output_tsv)
 
-    kept_pct <- scales::percent(lines_kept/lines_read, accuracy = 0.01)
+    kept_pct <- scales::percent(lines_kept / lines_read, accuracy = 0.01)
     lines_kept <- scales::comma(lines_kept)
     lines_read <- scales::comma(lines_read)
 

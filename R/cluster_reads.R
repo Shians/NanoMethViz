@@ -59,7 +59,7 @@ cluster_reads <- function(x, chr, start, end, min_pts = 5) {
     mod_mat_filled <- mod_mat_filled[row_missingness < 0.3, ]
 
     # fill in missing values with mean methylation probability across that read
-    for (i in 1:nrow(mod_mat_filled)) {
+    for (i in seq_len(nrow(mod_mat_filled))) {
         mod_mat_filled[i, is.na(mod_mat_filled[i, ])] <- mean(mod_mat_filled[i, ], na.rm = TRUE)
     }
 
@@ -97,4 +97,3 @@ get_read_stats <- function(methy_data) {
         ) %>%
         arrange(.data$strand)
 }
-

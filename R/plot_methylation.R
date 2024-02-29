@@ -178,10 +178,8 @@ plot_feature <- function(
     start <- feature$start
     end <- feature$end
 
-    feature_width <- end - start
     window_left <- window_size[1]
     window_right <- window_size[2]
-    xlim <- c(start - window_left, end + window_right)
 
     methy_data <- query_methy(
             methy,

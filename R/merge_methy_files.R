@@ -34,4 +34,3 @@ merge_methy_files <- function(inputs, output) {
     tabix_compress(output)
     fs::file_delete(output)
 }
-

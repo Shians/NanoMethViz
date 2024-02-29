@@ -64,4 +64,3 @@ query_exons_symbol <- function(exons, symbol) {
 
     out
 }
-

@@ -109,14 +109,14 @@ read_bam <- function(bam_file, query = NULL) {
         tag <- x$tag
         x$tag <- NULL
 
-        missing <- map_lgl(tag$ML, ~length(.) == 0) |
+        missing_tags <- map_lgl(tag$ML, ~length(.) == 0) |
             map_lgl(x$rname, is.na) |
             map_lgl(x$strand, is.na) |
             map_lgl(x$pos, is.na) |
             map_lgl(x$cigar, is.na)
 
-        x <- map(x, ~.[!missing])
-        tag <- map(tag, ~.[!missing])
+        x <- map(x, ~.[!missing_tags])
+        tag <- map(tag, ~.[!missing_tags])
 
         x$tag <- tag
         x

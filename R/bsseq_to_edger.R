@@ -28,14 +28,14 @@ bsseq_to_edger <- function(bsseq, regions = NULL) {
 
     edger_mat <- matrix(
         0,
-        ncol = 2*ncol(methylated),
+        ncol = 2 * ncol(methylated),
         nrow = nrow(methylated),
         dimnames = list(edger_row_names, edger_col_names)
     )
 
     for (i in 0:(ncol(methylated) - 1)) {
-        edger_mat[, 2*i + 1] <- methylated[, i + 1]
-        edger_mat[, 2*i + 2] <- unmethylated[, i + 1]
+        edger_mat[, 2 * i + 1] <- methylated[, i + 1]
+        edger_mat[, 2 * i + 2] <- unmethylated[, i + 1]
     }
 
     edger_mat
@@ -132,8 +132,8 @@ bsseq_to_log_methy_ratio <- function(bsseq, regions = NULL, prior_count = 2, dro
     un_names <- paste0(samples, "_Un")
     edger_col_names <- character(2 * length(samples))
     for (i in 0:(length(samples) - 1)) {
-        edger_col_names[2*i + 1] <- me_names[i + 1]
-        edger_col_names[2*i + 2] <- un_names[i + 1]
+        edger_col_names[2 * i + 1] <- me_names[i + 1]
+        edger_col_names[2 * i + 2] <- un_names[i + 1]
     }
 
     edger_col_names

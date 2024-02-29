@@ -8,17 +8,16 @@ expand_motifs <- function(x) {
         start_offsets <- stringr::str_locate_all(
             stringr::str_sub(sequence, start = 6),
             "CG"
-        )
-        start_offsets <- lapply(
-            start_offsets,
+        ) %>%
+        purrr::map(
             function(x) {
                 x[, 1] - 1
             }
-        )
+        ) %>%
+        unlist()
 
-        start_offsets <- unlist(start_offsets)
         tidyr::uncount(x_mult, .data$num_cpgs) %>%
-            dplyr::mutate(start = .data$start + start_offsets) %>%
+            dplyr::mutate(start = start_offsets + .data$start) %>%
             dplyr::select(!"num_cpgs")
     })
 
@@ -81,7 +80,7 @@ guess_methy_source <- function(methy_file) {
     readr::local_edition(1) # temporary fix for vroom bad value
     first_line <- readr::read_lines(methy_file, n_max = 1)
 
-    switch (
+    switch(
         first_line,
         "chromosome\tstart\tend\tread_name\tlog_lik_ratio\tlog_lik_methylated\tlog_lik_unmethylated\tnum_calling_strands\tnum_cpgs\tsequence" = "f5c",
         "chromosome\tstrand\tstart\tend\tread_name\tlog_lik_ratio\tlog_lik_methylated\tlog_lik_unmethylated\tnum_calling_strands\tnum_motifs\tsequence" = "nanopolish",
@@ -128,14 +127,14 @@ convert_methy_format <- function(
             message(glue::glue("guessing file is produced by {methy_source}..."))
         }
 
-        col_types <- switch (
+        col_types <- switch(
             methy_source,
             "nanopolish" = nanopolish_col_types(),
             "f5c" = f5c_col_types(),
             "megalodon" = megalodon_col_types()
         )
 
-        reformatter <- switch (
+        reformatter <- switch(
             methy_source,
             "nanopolish" = reformat_nanopolish,
             "f5c" = reformat_f5c,

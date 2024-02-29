@@ -131,7 +131,7 @@ plot_agg_regions <- function(
         flank = flank
     )
 
-    output <- regions %>%
+    regions %>%
         mutate(methy_data = methy_data)
 }
 
@@ -183,8 +183,8 @@ plot_agg_regions <- function(
 }
 
 .bin_avg <- function(x, group_col, grid_size = 2^10) {
-    min <- -1.1/3
-    max <- 1 + 1.1/3
+    min <- -1.1 / 3
+    max <- 1 + 1.1 / 3
     binned_pos <- seq(min, max, length.out = grid_size + 1)
     binned_pos_df <- data.frame(
         binned_pos = binned_pos[-1],

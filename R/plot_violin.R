@@ -37,18 +37,6 @@ plot_violin <- function(
     # grouped regions crashes downstream operations
     regions <- ungroup(regions)
 
-    query_row_methy <- function(i, methy, regions, flank) {
-        # query a larger region such that smoothing doesn't
-        # misbehave around ends
-        flank <- flank * 1.1
-        query_methy(
-            methy,
-            regions$chr[i],
-            regions$start[i] - flank,
-            regions$end[i] + flank,
-            force = TRUE)
-    }
-
     regions$methy_data <- purrr::map(
         seq_len(nrow(regions)),
         ~query_methy(
@@ -62,12 +50,14 @@ plot_violin <- function(
 
     # remove regions with no data
     regions <- regions %>%
-        dplyr::filter(purrr::map_lgl(methy_data, function(x) nrow(x) != 0))
+        dplyr::filter(purrr::map_lgl(.data$methy_data, function(x) nrow(x) != 0))
 
     region_data <- regions %>%
         dplyr::select(!dplyr::any_of(c("chr", "strand", "start", "end"))) %>%
         tidyr::unnest("methy_data") %>%
-        dplyr::summarise(methy_prop = mean(.data$mod_prob > binary_threshold), .by = c("gene_id", "symbol", "sample", "chr", "strand")) %>%
+        dplyr::summarise(
+            methy_prop = mean(.data$mod_prob > binary_threshold),
+            .by = c("gene_id", "symbol", "sample", "chr", "strand")) %>%
         dplyr::inner_join(samples(x), by = "sample", multiple = "all")
 
     if (!is.null(group_col)) {

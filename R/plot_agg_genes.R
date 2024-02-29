@@ -63,7 +63,7 @@ plot_agg_tss <- function(
         ) %>%
         mutate(
             start = .data$start - flank,
-            end = .data$start + 2*flank
+            end = .data$start + 2 * flank
         )
     kb_marker <- round(flank / 1000, 1)
     labels <- c(
@@ -117,7 +117,7 @@ plot_agg_tes <- function(
         ) %>%
         mutate(
             start = .data$start - flank,
-            end = .data$start + 2*flank
+            end = .data$start + 2 * flank
         )
     kb_marker <- round(flank / 1000, 1)
     labels <- c(

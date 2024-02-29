@@ -37,7 +37,7 @@ cluster_regions <- function(x, regions, centers = 2, grid_method = c("density", 
     )
 
     # rescale position values
-    for (i in 1:nrow(methy_df)) {
+    for (i in seq_len(nrow(methy_df))) {
         start <- methy_df$start[i]
         end <- methy_df$end[i]
         methy_df$methy[[i]] <- if (methy_df$strand[i] == "-") {
@@ -60,10 +60,10 @@ cluster_regions <- function(x, regions, centers = 2, grid_method = c("density", 
     } else if (grid_method == "density") {
         unique_pos <- unlist(purrr::map(methy_df$methy, ~unique(.x$pos)))
         hist_out <- hist(unique_pos, plot = FALSE, breaks = grid_length)
-        epdf <- approxfun(hist_out$mids, hist_out$density/sum(hist_out$density), rule = 2)
+        epdf <- approxfun(hist_out$mids, hist_out$density / sum(hist_out$density), rule = 2)
         epdf_vals <- epdf(seq(0, 1, length.out = grid_length))
 
-        ecdf_vals <- cumsum(epdf_vals)/max(cumsum(epdf_vals))
+        ecdf_vals <- cumsum(epdf_vals) / max(cumsum(epdf_vals))
         inv_cdf <- suppressWarnings(
             approxfun(ecdf_vals, seq(0, 1, length.out = grid_length), rule = 2, ties = mean)
         )
@@ -90,8 +90,6 @@ cluster_regions <- function(x, regions, centers = 2, grid_method = c("density", 
         unlist() %>%
         matrix(nrow = length(methy_df$methy), byrow = TRUE)
 
-    pca <- prcomp(methy_matrix)
-    pc10 <- as.matrix(pca$x[, 1:min(ncol(pca$x), 10)])
     km_pca <- kmeans(methy_matrix, centers = centers)
 
     row_means_split <- function(x, f) {
@@ -111,7 +109,7 @@ cluster_regions <- function(x, regions, centers = 2, grid_method = c("density", 
         mutate(cluster = km_pca$cluster)
 
     out$cluster_dev <- numeric(nrow(out))
-    for (i in 1:nrow(out)) {
+    for (i in seq_len(nrow(out))) {
         out$cluster_dev[i] <- sum((methy_matrix[i, ] - cluster_means[[out$cluster[i]]])^2) / ncol(methy_matrix)
     }
 

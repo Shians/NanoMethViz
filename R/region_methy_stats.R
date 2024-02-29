@@ -20,7 +20,7 @@ region_methy_stats <- function(nmr, regions, threshold = 0.5) {
 
     # calculate methylation statistics for each region using
     methy_stats <- purrr::map_df(
-        1:nrow(regions),
+        seq_len(nrow(regions)),
         get_region_methy_stats,
         nmr = nmr,
         regions = regions,

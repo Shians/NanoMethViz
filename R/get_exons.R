@@ -107,10 +107,10 @@ get_exons_mm10 <- function() {
 }
 
 #' @rdname get_exons
-#' 
+#'
 #' @examples
 #' grcm39_exons <- get_exons_grcm39()
-#' 
+#'
 #' @export
 get_exons_grcm39 <- function() {
     package_check(

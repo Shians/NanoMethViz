@@ -198,9 +198,9 @@ plot_gene_annotation <- function(exons_df, plot_start, plot_end) {
         dplyr::group_by(.data$gene_id, .data$symbol, .data$transcript_id, .data$y_offset, .data$strand) %>%
         dplyr::summarise(
             gene_middle = (min(.data$start) + max(.data$end)) / 2,
-            label_pos = gene_middle,
-            label_pos = pmin(label_pos, plot_end - region_width * 0.05),
-            label_pos = pmax(label_pos, plot_start +  region_width * 0.05)
+            label_pos = .data$gene_middle,
+            label_pos = pmin(.data$label_pos, plot_end - region_width * 0.05),
+            label_pos = pmax(.data$label_pos, plot_start +  region_width * 0.05)
         )
 
     exons_df <- .truncate_region(exons_df, plot_start, plot_end, "*")

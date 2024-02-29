@@ -109,7 +109,7 @@ create_bsseq_from_files <- function(paths, samples, verbose = TRUE) {
         dplyr::mutate(id = paste(.data$chr, .data$pos))
 
     # create methylation matrix
-    M_mat <- matrix(
+    methylation_mat <- matrix(
         0,
         nrow = nrow(unique_pos_df),
         ncol = length(dat),
@@ -119,7 +119,7 @@ create_bsseq_from_files <- function(paths, samples, verbose = TRUE) {
         row_inds <- paste(dat[[i]]$chr, dat[[i]]$pos) %>%
             factor(levels = unique_pos_df$id)
 
-        M_mat[row_inds, i] <- dat[[i]]$methylated
+        methylation_mat[row_inds, i] <- dat[[i]]$methylated
     }
 
     # create coverage matrix
@@ -140,7 +140,7 @@ create_bsseq_from_files <- function(paths, samples, verbose = TRUE) {
     result <- bsseq::BSseq(
         chr = unique_pos_df$chr,
         pos = unique_pos_df$pos,
-        M = M_mat,
+        M = methylation_mat,
         Cov = cov_mat,
         sampleNames = samples
     )

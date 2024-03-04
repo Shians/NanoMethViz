@@ -4,6 +4,7 @@
   * The change of the smoothing method to a weighted rolling means approach lead to the new `smoothing_window` argument which represents the window size in bases from which data is used for smoothing around each point. This serves the same purpose as the dynamic calculation done previously, but is set more explicitly and should be more intuitive for users. The default is always 2000, and can be increased to increase smoothness and decreased to decrease smoothness.
 * Added plot_violin() function for creating violin plots for samples over specific regions.
 * Added check to remove hard-clipped reads because they may not have matching mod strings.
+* Added handling of .csi indices for bam files instead of just .bai.
 * Changed gene annotation to always put label on visible isoforms, previously labels are plotted at the center of isoform.
 * Fixed memory leak in bam parsing.
 * Fixed crash when CIGAR doesn't match length of SEQ.

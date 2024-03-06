@@ -342,6 +342,7 @@ parse_bam(
     int const map_pos
 ) {
     try {
+        // get genomic positions
         std::vector<int> gpos_map = query_pos_to_genome_pos(seq, map_pos, cigar);
 
         // set up mod offsets
@@ -352,10 +353,8 @@ parse_bam(
         // split mm_string into tokens for mod positions
         std::vector<std::string_view> mm_tokens = split_string_view(mm_string);
 
+        // create output struct
         GenomicModPos output(mm_tokens.size());
-
-        int base_offset;
-        int mod_prob;
 
         // declare variables
         size_t seq_ind = 0;
@@ -365,6 +364,8 @@ parse_bam(
         char current_mod = 'm';
 
         // iterate through mod positions
+        int base_offset;
+        int mod_prob;
         for (std::string_view mm_tok : mm_tokens) {
 
             if (std::isdigit(mm_tok[0])) {
@@ -456,13 +457,13 @@ parse_bam_cpp(
 ) {
     try {
         GenomicModPos output = parse_bam(
-                mm_string,
-                ml_string,
-                seq,
-                cigar,
-                strand,
-                map_pos
-            );
+            mm_string,
+            ml_string,
+            seq,
+            cigar,
+            strand,
+            map_pos
+        );
         // filter out mods that don't match mod_code
         for (size_t i = 0; i < output.pos.size(); ++i) {
             if (output.mod[i] != mod_code) {

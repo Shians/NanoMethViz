@@ -91,7 +91,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // parse_bam_cpp
-DataFrame parse_bam_cpp(std::string const& seq, std::string const& cigar, std::string const& mm_string, std::string const& ml_string, int const map_pos, std::string const& strand, char mod_code);
+DataFrame parse_bam_cpp(std::string const& seq, std::string const& cigar, std::string const& mm_string, std::string const& ml_string, int const map_pos, std::string const& strand, std::string mod_code);
 RcppExport SEXP _NanoMethViz_parse_bam_cpp(SEXP seqSEXP, SEXP cigarSEXP, SEXP mm_stringSEXP, SEXP ml_stringSEXP, SEXP map_posSEXP, SEXP strandSEXP, SEXP mod_codeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -102,13 +102,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< std::string const& >::type ml_string(ml_stringSEXP);
     Rcpp::traits::input_parameter< int const >::type map_pos(map_posSEXP);
     Rcpp::traits::input_parameter< std::string const& >::type strand(strandSEXP);
-    Rcpp::traits::input_parameter< char >::type mod_code(mod_codeSEXP);
+    Rcpp::traits::input_parameter< std::string >::type mod_code(mod_codeSEXP);
     rcpp_result_gen = Rcpp::wrap(parse_bam_cpp(seq, cigar, mm_string, ml_string, map_pos, strand, mod_code));
     return rcpp_result_gen;
 END_RCPP
 }
 // parse_bam_list_cpp
-List parse_bam_list_cpp(std::vector<std::string> const& seq, std::vector<std::string> const& cigar, std::vector<std::string> const& mm_string, std::vector<std::string> const& ml_string, std::vector<int> const& map_pos, std::vector<std::string> const& strand, char mod_code);
+List parse_bam_list_cpp(std::vector<std::string> const& seq, std::vector<std::string> const& cigar, std::vector<std::string> const& mm_string, std::vector<std::string> const& ml_string, std::vector<int> const& map_pos, std::vector<std::string> const& strand, std::string mod_code);
 RcppExport SEXP _NanoMethViz_parse_bam_list_cpp(SEXP seqSEXP, SEXP cigarSEXP, SEXP mm_stringSEXP, SEXP ml_stringSEXP, SEXP map_posSEXP, SEXP strandSEXP, SEXP mod_codeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -119,7 +119,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< std::vector<std::string> const& >::type ml_string(ml_stringSEXP);
     Rcpp::traits::input_parameter< std::vector<int> const& >::type map_pos(map_posSEXP);
     Rcpp::traits::input_parameter< std::vector<std::string> const& >::type strand(strandSEXP);
-    Rcpp::traits::input_parameter< char >::type mod_code(mod_codeSEXP);
+    Rcpp::traits::input_parameter< std::string >::type mod_code(mod_codeSEXP);
     rcpp_result_gen = Rcpp::wrap(parse_bam_list_cpp(seq, cigar, mm_string, ml_string, map_pos, strand, mod_code));
     return rcpp_result_gen;
 END_RCPP

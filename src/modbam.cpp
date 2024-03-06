@@ -247,7 +247,7 @@ struct GenomicModPos {
     std::vector<int> pos;
     std::vector<double> mod_score;
     std::vector<char> base;
-    std::vector<char> mod;
+    std::vector<std::string> mod;
     size_t size() const {
         return pos.size();
     }
@@ -331,6 +331,12 @@ get_n_mods(const std::string& str) {
     return std::count(str.begin(), str.end(), ',');
 }
 
+// enum for mode parsing mode
+enum class ParseMode {
+    skip_low_prob,
+    skip_unknown
+};
+
 // function for calculating genomic positions
 GenomicModPos
 parse_bam(
@@ -358,14 +364,15 @@ parse_bam(
 
         // declare variables
         size_t seq_ind = 0;
-        char current_base = 'N';
-        char target_base = 'N';
-        // char current_strand = '*';
-        char current_mod = 'm';
-
-        // iterate through mod positions
+        char current_base;
+        char target_base;
+        // char current_strand;
+        std::string current_mod;
+        ParseMode parse_mode;
         int base_offset;
         int mod_prob;
+
+        // iterate through mod positions
         for (std::string_view mm_tok : mm_tokens) {
 
             if (std::isdigit(mm_tok[0])) {
@@ -378,9 +385,26 @@ parse_bam(
                 if (!mm_tok.empty()) {
                     // if it is mod base declaration
                     // store base, strand, and mod type
+
                     current_base = mm_tok[0];
                     // current_strand = mm_tok[1]; // currently unused
-                    current_mod = mm_tok[2];
+                    int mod_string_end = 3;
+                    
+                    // parse until non-alphanumeric character
+                    while ( mod_string_end < mm_tok.size() && std::isalnum(mm_tok[mod_string_end]) ) {
+                        mod_string_end++;
+                    }
+                    current_mod = std::string(mm_tok.substr(2, mod_string_end - 2));
+
+                    // set parse mode
+                    if (mod_string_end == mm_tok.size() || mm_tok[mod_string_end] == '.') {
+                        parse_mode = ParseMode::skip_low_prob;
+                    } else if (mm_tok[mod_string_end] == '?') {
+                        parse_mode = ParseMode::skip_unknown;
+                    } else {
+                        throw std::runtime_error("Invalid mod parsing mode");
+                    }
+
                     if (strand == "-") {
                         // if strand is negative, complement target base
                         target_base = comp_base(current_base);
@@ -397,10 +421,23 @@ parse_bam(
             }
 
             while (base_offset >= 0) {
-                if (seq.at(seq_ind) == target_base) {
-                    --base_offset;
-                }
+                // if every base needs to be parsed
+                if (parse_mode == ParseMode::skip_low_prob) {
+                    if (seq.at(seq_ind) == target_base) {
+                        --base_offset;
+                        output.seq_pos.push_back(seq_ind);
+                        output.pos.push_back(gpos_map[seq_ind-1]);
+                        output.base.push_back(current_base);
+                        output.mod.push_back(current_mod);
+                        output.mod_score.push_back(0);
+                    }
 
+                // if only tagged bases need to be parsed
+                } else if (parse_mode == ParseMode::skip_unknown) {
+                    if (seq.at(seq_ind) == target_base) {
+                        --base_offset;
+                    }
+                }
                 if (strand == "-") {
                     seq_ind--;
                 } else {
@@ -453,7 +490,7 @@ parse_bam_cpp(
     std::string const &ml_string,
     int const map_pos,
     std::string const &strand,
-    char mod_code
+    std::string mod_code
 ) {
     try {
         GenomicModPos output = parse_bam(
@@ -482,15 +519,11 @@ parse_bam_cpp(
         }
 
         if (strand == "-") {
-            switch (mod_code) {
-                case 'm': case 'h':
-                    // assume CG symmetry and shift pos by -1
-                    for (size_t i = 0; i < output.pos.size(); ++i) {
-                        output.pos[i] -= 1;
-                    }
-                    break;
-                default:
-                    break;
+            if (mod_code == "m" || mod_code == "h") {
+                // assume CG symmetry and shift pos by -1
+                for (size_t i = 0; i < output.pos.size(); ++i) {
+                    output.pos[i] -= 1;
+                }
             }
         }
 
@@ -517,7 +550,7 @@ parse_bam_list_cpp(
     std::vector<std::string> const &ml_string,
     std::vector<int> const &map_pos,
     std::vector<std::string> const &strand,
-    char mod_code
+    std::string mod_code
 ) {
     std::vector<DataFrame> output_list;
 

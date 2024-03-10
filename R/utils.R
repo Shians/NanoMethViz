@@ -36,6 +36,18 @@ load_example_nanomethresult <- function() {
     NanoMethResult(methy, sample_anno, exon_tibble)
 }
 
+#' Load an example ModBamResult object
+#'
+#' Load an example ModBamResult object for demonstration of plotting
+#' functions. Run `load_example_modbamresult` without the function call to
+#' see how the object is constructed.
+#'
+#' @return a ModBamResult object
+#'
+#' @export
+#'
+#' @examples
+#' mbr <- load_example_modbamresult()
 load_example_modbamresult <- function() {
     ModBamResult(
         methy = ModBamFiles(

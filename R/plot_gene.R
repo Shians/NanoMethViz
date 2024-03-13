@@ -37,6 +37,7 @@ setMethod("plot_gene", signature(x = "NanoMethResult", gene = "character"),
             warning("the 'span' argument has been deprecated, please use 'smoothing_window' instead")
         }
         avg_method <- match.arg(avg_method)
+
         plot_gene_impl(
             x,
             gene,
@@ -79,6 +80,7 @@ setMethod("plot_gene", signature(x = "ModBamResult", gene = "character"),
             warning("the 'span' argument has been deprecated, please use 'smoothing_window' instead")
         }
         avg_method <- match.arg(avg_method)
+
         plot_gene_impl(
             x,
             gene,
@@ -125,73 +127,30 @@ plot_gene_impl <- function(
     }
 
     sample_anno <- samples(x)
-    exons_anno <- query_exons_symbol(exons(x), symbol = gene)
+    exons_anno <- query_exons_symbol(x, symbol = gene)
 
     feature <- list()
-    feature$chr <- unique(exons_anno$chr)
-    feature$start <- min(exons_anno$start)
-    feature$end <- max(exons_anno$end)
-    window_size <- round((feature$end - feature$start) * window_prop)
+    feature_chr <- unique(exons_anno$chr)
+    feature_start <- min(exons_anno$start)
+    feature_end <- max(exons_anno$end)
+    window_size <- round((feature_end - feature_start) * window_prop)
 
-    plot_left <- feature$start - window_size[1]
-    plot_right <- feature$end + window_size[2]
-
-    p1 <- with(exons_anno,
-        plot_feature(
-            feature,
-            title = gene,
-            methy = x,
-            window_size = window_size,
-            sample_anno = sample_anno,
-            anno_regions = anno_regions,
-            binary_threshold = binary_threshold,
-            avg_method = avg_method,
-            spaghetti = spaghetti,
-            smoothing_window = smoothing_window,
-            palette = palette,
-            line_size = line_size,
-            mod_scale = mod_scale
-        )
-    )
-    p1 <- p1 + ggplot2::coord_cartesian(
-        xlim = c(plot_left, plot_right),
-        expand = FALSE
-    )
-
-
-    if (gene_anno) {
-        # if gene annotation is needed
-        p2 <- plot_gene_annotation(exons_anno, plot_left, plot_right) +
-            ggplot2::coord_cartesian(
-                xlim = c(plot_left, plot_right),
-                expand = FALSE
-            ) +
-                ggplot2::scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_si("b")))
-
-        n_unique <- function(x) {
-            length(unique(x))
-        }
-
-        heights <- c(1, 0.075 * n_unique(exons_anno$transcript_id))
-        p_out <- p1 / p2 + patchwork::plot_layout(heights = heights)
-    } else {
-        # if no gene annotation
-        p_out <- p1
-    }
-
-    if (heatmap) {
-        p_heatmap <- plot_gene_heatmap(
-            x,
-            gene,
-            window_prop,
-            subsample = heatmap_subsample
-        ) +
-            ggplot2::coord_cartesian(
-                xlim = c(plot_left, plot_right)
-            )
-
-        p_out <- stack_plots(p_out, ggrastr::rasterise(p_heatmap))
-    }
-
-    p_out
+    plot_region(
+        x = x,
+        chr = feature_chr,
+        start = feature_start,
+        end = feature_end,
+        anno_regions = anno_regions,
+        binary_threshold = binary_threshold,
+        avg_method = avg_method,
+        spaghetti = spaghetti,
+        heatmap = heatmap,
+        heatmap_subsample = heatmap_subsample,
+        smoothing_window = smoothing_window,
+        gene_anno = gene_anno,
+        window_prop = window_prop,
+        palette = palette,
+        line_size = line_size,
+        mod_scale = mod_scale
+    ) 
 }

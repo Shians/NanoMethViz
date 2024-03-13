@@ -1,20 +1,23 @@
 #' Query exons
 #'
-#' Query a data.frame of exons for a subset.
+#' Query a data.frame, NanoMethResult or ModBamResult for exon annotation.
 #'
+#' @param x the object to query.
+#' 
 #' @return data.frame of queried exons.
 #'
 #' @name query_exons
 NULL
 
-#' @param exons the data.frame of exons.
 #' @param chr the chromosome to query.
 #' @param start the start of the query region.
 #' @param end the end of the query region.
 #'
 #' @export
 #' @describeIn query_exons Query region.
-query_exons_region <- function(exons, chr, start, end) {
+query_exons_region <- function(x, chr, start, end) {
+    exons <- get_exons(x)
+
     genes_df <- exons %>%
         dplyr::group_by(.data$gene_id, .data$chr) %>%
         dplyr::summarise(
@@ -33,12 +36,13 @@ query_exons_region <- function(exons, chr, start, end) {
         dplyr::inner_join(genes, by = "gene_id", multiple = "all")
 }
 
-#' @param exons the data.frame of exons.
 #' @param gene_id the gene_id to query.
 #'
 #' @export
 #' @describeIn query_exons Query gene ID.
-query_exons_gene_id <- function(exons, gene_id) {
+query_exons_gene_id <- function(x, gene_id) {
+    exons <- get_exons(x)
+
     out <- exons %>%
         dplyr::filter(gene_id %in% !!gene_id)
 
@@ -49,12 +53,13 @@ query_exons_gene_id <- function(exons, gene_id) {
     out
 }
 
-#' @param exons the data.frame of exons.
 #' @param symbol the gene_id to query.
 #'
 #' @export
 #' @describeIn query_exons Query gene symbol.
-query_exons_symbol <- function(exons, symbol) {
+query_exons_symbol <- function(x, symbol) {
+    exons <- get_exons(x)
+
     out <- exons %>%
         dplyr::filter(symbol %in% !!symbol)
 
@@ -63,4 +68,16 @@ query_exons_symbol <- function(exons, symbol) {
     }
 
     out
+}
+
+get_exons <- function(x) {
+    if (is(x, "NanoMethResult")) {
+        exons(x)
+    } else if (is(x, "ModBamResult")) {
+        exons(x)
+    } else if (is(x, "data.frame")) {
+        x
+    } else {
+        stop("x must be a NanoMethResult, ModBamResult or data.frame")
+    }
 }

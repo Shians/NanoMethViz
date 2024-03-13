@@ -42,6 +42,7 @@ setMethod("plot_region",
         chr = "character",
         start = "numeric",
         end = "numeric"),
+
     function(
         x,
         chr,
@@ -54,6 +55,7 @@ setMethod("plot_region",
         heatmap = FALSE,
         heatmap_subsample = 50,
         smoothing_window = 2000,
+        gene_anno = TRUE,
         window_prop = 0,
         palette = ggplot2::scale_colour_brewer(palette = "Set1"),
         line_size = 1,
@@ -72,11 +74,12 @@ setMethod("plot_region",
             end = end,
             anno_regions = anno_regions,
             binary_threshold = binary_threshold,
-            spaghetti = spaghetti,
             avg_method = avg_method,
+            spaghetti = spaghetti,
             heatmap = heatmap,
             heatmap_subsample = heatmap_subsample,
             smoothing_window = smoothing_window,
+            gene_anno = gene_anno,
             window_prop = window_prop,
             palette = palette,
             line_size = line_size,
@@ -93,6 +96,7 @@ setMethod("plot_region",
         chr = "character",
         start = "numeric",
         end = "numeric"),
+
     function(
         x,
         chr,
@@ -105,6 +109,7 @@ setMethod("plot_region",
         heatmap = FALSE,
         heatmap_subsample = 50,
         smoothing_window = 2000,
+        gene_anno = TRUE,
         window_prop = 0,
         palette = ggplot2::scale_colour_brewer(palette = "Set1"),
         line_size = 1,
@@ -123,11 +128,12 @@ setMethod("plot_region",
             end = end,
             anno_regions = anno_regions,
             binary_threshold = binary_threshold,
-            spaghetti = spaghetti,
             avg_method = avg_method,
+            spaghetti = spaghetti,
             heatmap = heatmap,
             heatmap_subsample = heatmap_subsample,
             smoothing_window = smoothing_window,
+            gene_anno = gene_anno,
             window_prop = window_prop,
             palette = palette,
             line_size = line_size,
@@ -157,6 +163,7 @@ setMethod("plot_region",
         heatmap = FALSE,
         heatmap_subsample = 50,
         smoothing_window = 2000,
+        gene_anno = TRUE,
         window_prop = 0,
         palette = ggplot2::scale_colour_brewer(palette = "Set1"),
         line_size = 1,
@@ -166,9 +173,9 @@ setMethod("plot_region",
         if (!missing("span")) {
             warning("the 'span' argument has been deprecated, please use 'smoothing_window' instead")
         }
-        chr <- as.character(chr)
         avg_method <- match.arg(avg_method)
-        plot_region(
+
+        plot_region_impl(
             x = x,
             chr = chr,
             start = start,
@@ -180,6 +187,7 @@ setMethod("plot_region",
             heatmap = heatmap,
             heatmap_subsample = heatmap_subsample,
             smoothing_window = smoothing_window,
+            gene_anno = gene_anno,
             window_prop = window_prop,
             palette = palette,
             line_size = line_size,
@@ -209,6 +217,7 @@ setMethod("plot_region",
         heatmap = FALSE,
         heatmap_subsample = 50,
         smoothing_window = 2000,
+        gene_anno = TRUE,
         window_prop = 0,
         palette = ggplot2::scale_colour_brewer(palette = "Set1"),
         line_size = 1,
@@ -218,9 +227,9 @@ setMethod("plot_region",
         if (!missing("span")) {
             warning("the 'span' argument has been deprecated, please use 'smoothing_window' instead")
         }
-        chr <- as.character(chr)
         avg_method <- match.arg(avg_method)
-        plot_region(
+
+        plot_region_impl(
             x = x,
             chr = chr,
             start = start,
@@ -232,6 +241,7 @@ setMethod("plot_region",
             heatmap = heatmap,
             heatmap_subsample = heatmap_subsample,
             smoothing_window = smoothing_window,
+            gene_anno = gene_anno,
             window_prop = window_prop,
             palette = palette,
             line_size = line_size,
@@ -252,12 +262,16 @@ plot_region_impl <- function(
     heatmap,
     heatmap_subsample,
     smoothing_window,
+    gene_anno,
     window_prop,
     palette,
     line_size,
     mod_scale
 ) {
     sample_anno <- samples(x)
+    chr <- as.character(chr)
+    start <- as.numeric(start)
+    end <- as.numeric(end)
 
     if (length(window_prop) == 1) {
         window_prop <- c(window_prop, window_prop)
@@ -313,8 +327,8 @@ plot_region_impl <- function(
     p_out <- p1
 
     # if exon anno exists, append it to plot
-    if (nrow(exons(x)) != 0) {
-        exons_anno <- query_exons_region(exons(x), chr = chr, start = start, end = end)
+    if (gene_anno && nrow(exons(x)) != 0) {
+        exons_anno <- query_exons_region(x, chr = chr, start = start, end = end)
 
         p2 <- plot_gene_annotation(exons_anno, xlim[1], xlim[2]) +
             ggplot2::coord_cartesian(xlim = xlim, expand = FALSE) +

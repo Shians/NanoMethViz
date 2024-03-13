@@ -7,14 +7,14 @@
 \alias{query_exons_symbol}
 \title{Query exons}
 \usage{
-query_exons_region(exons, chr, start, end)
+query_exons_region(x, chr, start, end)
 
-query_exons_gene_id(exons, gene_id)
+query_exons_gene_id(x, gene_id)
 
-query_exons_symbol(exons, symbol)
+query_exons_symbol(x, symbol)
 }
 \arguments{
-\item{exons}{the data.frame of exons.}
+\item{x}{the object to query.}
 
 \item{chr}{the chromosome to query.}
 
@@ -30,7 +30,7 @@ query_exons_symbol(exons, symbol)
 data.frame of queried exons.
 }
 \description{
-Query a data.frame of exons for a subset.
+Query a data.frame, NanoMethResult or ModBamResult for exon annotation.
 }
 \section{Functions}{
 \itemize{

@@ -9,11 +9,9 @@
 NanoMethViz is a toolkit for visualising methylation data from Oxford Nanopore sequencing. It can be used to explore methylation patterns from reads derived from Oxford Nanopore direct DNA sequencing with methylation called by callers including nanopolish, f5c and megalodon. The plots in this package allow the visualisation of methylation profiles aggregated over experimental groups and across classes of genomic features.
 }
 \details{
-The main plotting functions in this package are \code{\link[=plot_gene]{plot_gene()}} and
-\code{\link[=plot_region]{plot_region()}}.
+The main plotting functions in this package are \code{\link[=plot_gene]{plot_gene()}} and \code{\link[=plot_region]{plot_region()}}.
 \itemize{
-\item See \code{vignette("ImportingData", package = "NanoMethViz")} for how to import data from Nanopolish and f5c.
-\item See \code{vignette("Introduction", package = "NanoMethViz")} for how to create visualisations using this package.
+\item See \code{vignette("UserGuide", package = "NanoMethViz")} for documentation of how to use this package.
 }
 }
 \seealso{

@@ -42,7 +42,8 @@ test_that("Plotting gene works", {
                 p <- plot_gene(
                     x, "Peg3",
                     heatmap = params$heatmap[i],
-                    spaghetti = params$spaghetti[i]
+                    spaghetti = params$spaghetti[i],
+                    gene_anno = params$gene_anno[i]
                 )
             )
 
@@ -68,7 +69,8 @@ test_that("Plotting gene works", {
                 p <- plot_region(
                     x, "chr7", 6703892, 6730431,
                     heatmap = params$heatmap[i],
-                    spaghetti = params$spaghetti[i]
+                    spaghetti = params$spaghetti[i],
+                    gene_anno = params$gene_anno[i]
                 )
             )
 

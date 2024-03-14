@@ -225,6 +225,11 @@ Because the BAM files contain significantly more data than the tabix files, it
 may be useful to convert the BAM files to tabix files using the 
 `modbam_to_tabix()` function for sharing the data.
 
+In modbam files the modification calls are made along the read, allowing sequencing errors to produce modifications
+calls where there is none in the genome. This may lead to noise impacting the averaging results. The
+`NanoMethViz.site_filter` option can be used to remove sites with low coverage. We recommending setting
+`options("NanoMethViz.site_filter" = 3)` to remove any sites with coverage less than 3 from queries and plots.
+
 ```{r}
 # construct with a ModBamFiles object as the methylation data
 mbr <- ModBamResult(
@@ -240,7 +245,7 @@ mbr <- ModBamResult(
 )
 
 # use in the same way as you would a NanoMethResult object
-plot_gene(mbr, "Peg3")
+plot_gene(mbr, "Peg3", heatmap = TRUE)
 ```
 
 ## Exporting data
@@ -382,3 +387,25 @@ plot_mds(lmr, labels = NULL, groups = groups) +
     scale_colour_brewer(palette = "Set1")
 ```
 
+# Package options
+
+## Site filtering
+
+NanoMethViz offers a site filtering option to remove sites with low coverage. This is particularly useful for modbam
+files as the modifications calls are made along the reads, allowing methylation to be called at miscalled sites. The
+site filter is set to 1 by default, allowing all sites to be included. This can be changed using the option
+`NanoMethViz.site_filter`. The following will remove any sites with coverage less than 3 from queries and plots.
+
+```{r, eval = FALSE}
+options("NanoMethViz.site_filter" = 3)
+```
+
+## Region annotation colours
+
+By default the `anno_regions` argument in plotting functions will create bands coloured grey, specifically `grey50`.
+This can be changed globally across the package using the option `NanoMethViz.highlight_col`. For example the following
+will change the colour to red.
+
+```{r, eval = FALSE}
+options("NanoMethViz.highlight_col" = "red")
+```

@@ -26,7 +26,6 @@
 #' @import patchwork
 #' @import assertthat
 #' @import fs
-#' @import zlibbioc
 #' @import Rcpp
 #' @useDynLib NanoMethViz
 #' @keywords internal

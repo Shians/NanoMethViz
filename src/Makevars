@@ -1,1 +1,1 @@
-PKG_LIBS = -lz -hts
+PKG_LIBS = -lz

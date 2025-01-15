@@ -144,13 +144,16 @@ region.
 Plot the methylation of a genomic region.
 }
 \details{
-This function plots the methylation data for a given region. The region is specified by
-chromosome, start and end positions. The basic plot contains a smoothed line plot of
-the methylation of each experimental group. Since V3.0.0 NanoMethViz has changed the
-smoothing strategy from a loess smoothing to a weighted moving average. This is because
-the loess smoothing was too computationally expensive for large datasets and had a
-span parameter that was difficult to tune. The new smoothing strategy is controlled
-by the smoothing_window argument.
+This function plots the methylation data for a given region. The main trendline plot shows the average methylation
+probability across the region. The heatmap plot shows the methylation probability for each read across the region.
+The gene annotation plot shows the exons of the region. In the heatmap, each row represents one or more
+non-overlapping reads where the coloured segments represent the methylation probability at each position. Data along
+a read is connected by a grey line. The gene annotation plot shows the isoforms and exons of genes within the region,
+with arrows indicating the direction of transcription.
+
+Since V3.0.0 NanoMethViz has changed the smoothing strategy from a loess smoothing to a weighted moving average. This
+is because the loess smoothing was too computationally expensive for large datasets and had a span parameter that was
+difficult to tune. The new smoothing strategy is controlled by the smoothing_window argument.
 }
 \examples{
 nmr <- load_example_nanomethresult()

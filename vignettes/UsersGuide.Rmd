@@ -147,6 +147,8 @@ We currently support output from
 * f5c
 * Megalodon
 
+The `create_tabix_file()` should correctly identify the format of the input file and convert it to the appropriate format.
+
 If you would like any further other formats supported please create an issue at https://github.com/Shians/NanoMethViz/issues.
 
 ## Data example

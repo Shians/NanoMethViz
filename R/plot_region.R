@@ -53,25 +53,23 @@ plot_region_impl <- function(
     title <- glue::glue("{chr}:{start}-{end}")
     xlim <- round(c(start - window_left, end + window_right))
     p1 <- plot_methylation_data(
-        methy_data = methy_data,
-        start = start,
-        end = end,
-        chr = chr,
-        title = title,
-        anno_regions = anno_regions,
-        binary_threshold = binary_threshold,
-        avg_method = avg_method,
-        spaghetti = spaghetti,
-        sample_anno = sample_anno,
-        smoothing_window = smoothing_window,
-        palette_col = palette,
-        line_size = line_size,
-        mod_scale = mod_scale
-    ) +
-        ggplot2::coord_cartesian(
-            xlim = xlim,
-            expand = FALSE
-        )
+            methy_data = methy_data,
+            start = start,
+            end = end,
+            chr = chr,
+            title = title,
+            anno_regions = anno_regions,
+            binary_threshold = binary_threshold,
+            avg_method = avg_method,
+            spaghetti = spaghetti,
+            sample_anno = sample_anno,
+            smoothing_window = smoothing_window,
+            palette_col = palette,
+            line_size = line_size,
+            mod_scale = mod_scale
+        ) +
+        ggplot2::coord_cartesian(xlim = xlim, expand = FALSE) +
+        ggplot2::labs(x = "Position", y = "Mean Methylation Probability")
 
     p_out <- p1
 

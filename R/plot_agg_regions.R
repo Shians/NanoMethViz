@@ -103,7 +103,7 @@ plot_agg_regions <- function(
 
     region_widths <- regions$end - regions$start
     width_avg <- round(mean(region_widths))
-    width_std_dev <- round(sd(region_widths), 2)
+    width_std_dev <- round(sd(region_widths))
 
     p + ggplot2::coord_cartesian(clip = "off") +
         ggplot2::scale_x_continuous(

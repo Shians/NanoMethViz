@@ -69,7 +69,7 @@ plot_region_impl <- function(
             mod_scale = mod_scale
         ) +
         ggplot2::coord_cartesian(xlim = xlim, expand = FALSE) +
-        ggplot2::labs(x = "Position", y = "Mean Methylation Probability")
+        ggplot2::labs(x = "Position", y = "Mean Modification Probability")
 
     p_out <- p1
 

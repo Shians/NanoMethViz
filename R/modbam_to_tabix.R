@@ -43,7 +43,7 @@ modbam_to_tabix <- function(x, out_file, mod_code = NanoMethViz::mod_code(x)) {
 
     assert_that(
         !(fs::file_exists(out_file) && !fs::is_file(out_file)),
-        msg = "Output path exists and is not a file"
+        msg = "output_file exists and is not a file"
     )
 
     if (fs::file_exists(out_file)) {

@@ -34,29 +34,49 @@
 #'
 #' @export
 modbam_to_tabix <- function(x, out_file, mod_code = NanoMethViz::mod_code(x)) {
-    assertthat::assert_that(is(x, "ModBamResult"))
+    assert_that(is(x, "ModBamResult"))
+
+    assert_that(
+        tools::file_ext(out_file) == "bgz",
+        msg = "output_file must end with .bgz extension."
+    )
+
+    assert_that(
+        !(fs::file_exists(out_file) && !fs::is_file(out_file)),
+        msg = "Output path exists and is not a file"
+    )
 
     if (fs::file_exists(out_file)) {
-        cli::cli_progress_step(paste0("Output file exists, overwriting ", out_file))
-        fs::file_delete(out_file)
+        cli::cli_alert_info(paste0("Output file exists, will overwrite ", out_file))
     }
 
+    tmp_tsv_path <- base::tempfile(fileext = ".tsv")
+    cli::cli_progress_step(paste0("Writing data to temporary file: ", tmp_tsv_path))
+
     cli::cli_progress_step("Converting data to TSV")
-    tsv_file <- run_modbam_to_tsv_converter(x, out_file, mod_code)
+    tsv_file <- run_modbam_to_tsv_converter(x, tmp_tsv_path, mod_code)
 
     cli::cli_progress_step("Sorting data")
-    f <- sort_methy_file(tsv_file)
+    sorted <- sort_methy_file(tsv_file)
 
     cli::cli_progress_step("Compressing data")
-    out <- tabix_compress(f)
-    fs::file_delete(f)
+    tmp_out <- tabix_compress(sorted)
 
-    cli::cli_progress_step(paste0("Tabix file created: ", out))
-    invisible(out)
+    cli::cli_alert_info(paste0("Moving data to final location: ", out_file))
+
+    output_dir = fs::path_dir(out_file)
+    if (output_dir != "" && fs::file_exists(output_dir)) {
+        fs::dir_create(fs::path_dir(out_file))
+    }
+
+    fs::file_move(tmp_out, out_file)
+
+    cli::cli_progress_step(paste0("Tabix file created: ", out_file))
+    invisible(out_file)
 }
 
 run_modbam_to_tsv_converter <- function(x, out_file, mod_code) {
-    # if .gz at end of output name then trim it so final output
+    # if .bgz at end of output name then trim it so final output
     # doesn't end with .bgz.bgz
     if (stringr::str_detect(out_file, ".bgz$")) {
         out_file <- out_file %>%

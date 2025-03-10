@@ -1,3 +1,6 @@
+## Version 3.4.0
+* Fixed `modbam_to_tabix()` to not delete existing directories when provided as the output file. Previously it would delete the directory and create a file with the same name, now it will fail if the output is a directory.
+
 ## Version 3.2.0
 * Added preliminary support for importing modkit data using `create_tabix_file()`.
 
@@ -34,7 +37,7 @@
 * Fixed `plot_region_heatmap()` producing the wrong plot when a factor is used for the chromosome.
 * Fixed nanopolish and f5c import positions being off by 1.
 * Fixed broken `samples()` setter for NanoMethResults.
-* Added `plot_agg_genes()` function as a shorthand for `plot_agg_regions(x, exons_to_genes(exons(x)))`. 
+* Added `plot_agg_genes()` function as a shorthand for `plot_agg_regions(x, exons_to_genes(exons(x)))`.
 * Added the ability to interrupt `methy_to_bsseq()` calls.
 * Added handling for NanoMethResults objects in `filter_methy()`. If NanoMethResult is used as input, then NanoMethResult is invisibly returned as output.
 * Added black outlines to exons in annotation to distinguish contiguous segments for features like tandem repeats.

@@ -197,7 +197,7 @@ The genes we have available are
 
 ## Basic Plotting
 
-For demonstrative purposes we will plot Peg3.
+For demonstrative purposes we will plot Peg3. The plot on top shows the average methylation probabilities across all samples for each experimental condition. The heatmap below it shows the methylation probabilities along individual reads, with disjoint reads stacked onto the same row. The annotation down the bottom shows the isoforms of the Peg3 gene as well as its directionality.
 
 ```{r}
 plot_gene(nmr, "Peg3")
@@ -217,20 +217,6 @@ bsseq_dmr <- read.table(
 
 ```{r}
 plot_gene(nmr, "Peg3", anno_regions = bsseq_dmr)
-```
-
-Individual long reads can be visualised using the `spaghetti` argument.
-
-```{r, warning = FALSE}
-# warnings have been turned off in this vignette, but this will generally
-# generate many warnings as the smoothing for many reads will fail
-plot_gene(nmr, "Peg3", anno_regions = bsseq_dmr, spaghetti = TRUE)
-```
-
-Alternatively the individual read information can be represented by a heatmap.
-
-```{r, warning = FALSE}
-plot_gene(nmr, "Peg3", anno_regions = bsseq_dmr, heatmap = TRUE)
 ```
 
 See other plotting options in the [package documentation](https://shians.github.io/NanoMethViz/reference/index.html).

@@ -44,7 +44,7 @@ plot_gene_annotation <- function(exons_df, plot_start, plot_end) {
     exons_df <- exons_df %>%
         dplyr::mutate(
             uid = factor(paste(.data$gene_id, .data$transcript_id, sep = ".")),
-            y_offset = as.integer(.data$uid) - 1
+            y_offset = 2.5 * as.integer(.data$uid) - 1
         )
 
     exons_count <- exons_df %>%
@@ -101,7 +101,7 @@ plot_gene_annotation <- function(exons_df, plot_start, plot_end) {
         )
 
     if (length(exons_df$y_offset) > 0) {
-        plot_height <- 1 + max(exons_df$y_offset)
+        plot_height <- 2 + max(exons_df$y_offset)
     } else {
         plot_height <- 0
     }
@@ -192,7 +192,7 @@ plot_gene_annotation <- function(exons_df, plot_start, plot_end) {
     )
 
     ggplot2::geom_text(
-        ggplot2::aes(x = .data$label_pos, y = .data$y_offset + 0.8, label = .data$symbol),
+        ggplot2::aes(x = .data$label_pos, y = .data$y_offset + 1.2, label = .data$symbol),
         data = gene_labels,
         hjust = "center",
         size = ggplot2::rel(2.5)

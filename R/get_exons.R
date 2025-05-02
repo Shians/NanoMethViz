@@ -343,6 +343,22 @@ get_exons_hg38 <- function() {
         )
 }
 
+#' @rdname get_exons
+#'
+#' @examples
+#' t2t_exons <- get_exons_t2t()
+#'
+#' @export
+get_exons_t2t <- function() {
+    anno_file <- system.file(
+        "exons_t2t.rds",
+        package = "NanoMethViz",
+        mustWork = TRUE
+    )
+
+    readRDS(anno_file)
+}
+
 #' @importFrom utils installed.packages packageVersion
 package_check <- function(packages, req_versions) {
     assertthat::assert_that(length(packages) == length(req_versions))

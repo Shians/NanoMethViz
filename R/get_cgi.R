@@ -7,7 +7,7 @@
 #' @return tibble (data.frame) object containing CpG islands annotation.
 #'
 get_cgi <- function(genome) {
-    available_genomes <- c("hg19", "hg38", "mm10", "grcm39")
+    available_genomes <- c("hg19", "hg38", "t2t", "mm10", "grcm39")
     assertthat::assert_that(
         genome %in% available_genomes,
         msg = sprintf("genome must be one of %s", paste(available_genomes, collapse = ", "))
@@ -17,6 +17,7 @@ get_cgi <- function(genome) {
         genome,
         hg19 = system.file("cgi_hg19.rds", package = "NanoMethViz", mustWork = FALSE),
         hg38 = system.file("cgi_hg38.rds", package = "NanoMethViz", mustWork = FALSE),
+        t2t = system.file("cgi_t2t.rds", package = "NanoMethViz", mustWork = FALSE),
         mm10 = system.file("cgi_mm10.rds", package = "NanoMethViz", mustWork = FALSE),
         grcm39 = system.file("cgi_GRCm39.rds", package = "NanoMethViz", mustWork = FALSE)
     )
@@ -42,6 +43,16 @@ get_cgi_mm10 <- function() {
 #' @export
 get_cgi_grcm39 <- function() {
     get_cgi("grcm39")
+}
+
+#' @rdname get_exons
+#'
+#' @examples
+#' cgi_t2t <- get_cgi_t2t()
+#'
+#'# @export
+get_cgi_t2t <- function() {
+    get_cgi("t2t")
 }
 
 #' @rdname get_exons

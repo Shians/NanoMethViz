@@ -1,14 +1,4 @@
-# bin	611	smallint(6)	range	Indexing field to speed chromosome range queries.
-# chrom	chr1	varchar(255)	values	Reference sequence chromosome or scaffold
-# chromStart	3531624	int(10) unsigned	range	Start position in chromosome
-# chromEnd	3531843	int(10) unsigned	range	End position in chromosome
-# name	CpG: 27	varchar(255)	values	CpG Island
-# length	219	int(10) unsigned	range	Island Length
-# cpgNum	27	int(10) unsigned	range	Number of CpGs in island
-# gcNum	167	int(10) unsigned	range	Number of C and G in island
-# perCpg	24.7	float	range	Percentage of island that is CpG
-# perGc	76.3	float	range	Percentage of island that is C or G
-# obsExp	0.86	float	range	Ratio of observed(cpgNum) to expected(numC*numG/length) CpG in island
+# UCSC Genomes ----
 
 # exons
 # the data.frame of exon information containing at least columns gene_id, chr, strand, start, end, transcript_id and symbol.
@@ -76,3 +66,32 @@ download_parse_and_save(
     "hg38",
     "https://hgdownload.soe.ucsc.edu/goldenPath/hg38/database/cpgIslandExt.txt.gz"
 )
+
+# T2T ----
+download_parse_and_save(
+    "t2t",
+    "https://hgdownload.soe.ucsc.edu/gbdb/hs1/bbi/cpgIslandExt.bb"
+)
+
+# T2T Genome ----
+temp_path <- tempfile()
+download.file("https://hgdownload.soe.ucsc.edu/gbdb/hs1/bbi/cpgIslandExt.bb", temp_path)
+
+anno_t2t <- rtracklayer::import.bb(temp_path) %>%
+    as_tibble()
+
+cgi_anno_t2t <- anno_t2t %>%
+    dplyr::rename(
+        gene_id = name,
+        chr = seqnames
+    ) %>%
+    mutate(
+        transcript_id = gene_id,
+        strand = "*",
+        symbol = gene_id
+    )
+
+anno_name <- paste0("inst/cgi_t2t.rds")
+saveRDS(exon_anno_t2t_formatted, anno_name, compress = "xz")
+
+fs::file_delete(temp_path)

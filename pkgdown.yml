@@ -3,7 +3,7 @@ pkgdown: 2.1.2
 pkgdown_sha: ~
 articles:
   UsersGuide: UsersGuide.html
-last_built: 2025-05-02T02:42Z
+last_built: 2025-05-04T11:01Z
 urls:
   reference: https://shians.github.io/NanoMethViz/reference
   article: https://shians.github.io/NanoMethViz/articles

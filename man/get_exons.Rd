@@ -3,6 +3,7 @@
 \name{get_cgi_mm10}
 \alias{get_cgi_mm10}
 \alias{get_cgi_grcm39}
+\alias{get_cgi_t2t}
 \alias{get_cgi_hg19}
 \alias{get_cgi_hg38}
 \alias{get_exons}
@@ -10,11 +11,14 @@
 \alias{get_exons_grcm39}
 \alias{get_exons_hg19}
 \alias{get_exons_hg38}
+\alias{get_exons_t2t}
 \title{Get exon annotations}
 \usage{
 get_cgi_mm10()
 
 get_cgi_grcm39()
+
+get_cgi_t2t()
 
 get_cgi_hg19()
 
@@ -27,6 +31,8 @@ get_exons_grcm39()
 get_exons_hg19()
 
 get_exons_hg38()
+
+get_exons_t2t()
 }
 \value{
 tibble (data.frame) object containing exon annotation.
@@ -41,6 +47,9 @@ cgi_mm10 <- get_cgi_mm10()
 
 cgi_GRCm39 <- get_cgi_grcm39()
 
+cgi_t2t <- get_cgi_t2t()
+
+# @export
 cgi_hg19 <- get_cgi_hg19()
 
 cgi_hg38 <- get_cgi_hg38()
@@ -52,5 +61,7 @@ grcm39_exons <- get_exons_grcm39()
 hg19_exons <- get_exons_hg19()
 
 hg38_exons <- get_exons_hg38()
+
+t2t_exons <- get_exons_t2t()
 
 }

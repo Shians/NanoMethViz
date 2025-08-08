@@ -108,15 +108,39 @@ guess_methy_source <- function(methy_file) {
     readr::local_edition(1) # temporary fix for vroom bad value
     first_line <- readr::read_lines(methy_file, n_max = 1)
 
-    switch(
-        first_line,
-        "chromosome\tstart\tend\tread_name\tlog_lik_ratio\tlog_lik_methylated\tlog_lik_unmethylated\tnum_calling_strands\tnum_cpgs\tsequence" = "f5c",
-        "chromosome\tstrand\tstart\tend\tread_name\tlog_lik_ratio\tlog_lik_methylated\tlog_lik_unmethylated\tnum_calling_strands\tnum_motifs\tsequence" = "nanopolish",
-        "read_id\tchrm\tstrand\tpos\tmod_log_prob\tcan_log_prob\tmod_base\tmotif" = "megalodon",
-        "read_id\tchrm\tstrand\tpos\tmod_log_prob\tcan_log_prob\tmod_base" = "megalodon",
-        "read_id\tforward_read_position\tref_position\tchrom\tmod_strand\tref_strand\tref_mod_strand\tfw_soft_clipped_start\tfw_soft_clipped_end\tread_length\tmod_qual\tmod_code\tbase_qual\tref_kmer\tquery_kmer\tcanonical_base\tmodified_primary_base\tinferred\tflag" = "modkit",
-        stop("Format not recognised.")
-    )
+    # Be robust to BOM and whitespace
+    header <- stringr::str_replace(first_line, "^\ufeff", "")
+    header <- stringr::str_trim(header)
+
+    # Detect delimiter (prefer tab, fallback to comma, then whitespace)
+    delim <- if (stringr::str_detect(header, "\t")) "\t"
+        else if (stringr::str_detect(header, ",")) ","
+        else "\\s+"
+
+    cols <- stringr::str_split(header, delim)[[1]]
+    cols <- stringr::str_trim(cols)
+    cols_lower <- stringr::str_to_lower(cols)
+
+    has_all <- function(required) all(required %in% cols_lower)
+
+    # Identify by minimal, distinctive column sets; allow extras and any order
+    if (has_all(c("read_id", "chrm", "strand", "pos", "mod_log_prob"))) {
+        return("megalodon")
+    }
+
+    if (has_all(c("read_id", "ref_position", "chrom", "mod_strand", "mod_qual"))) {
+        return("modkit")
+    }
+
+    if (has_all(c("chromosome", "strand", "start", "read_name", "log_lik_ratio", "num_motifs", "sequence"))) {
+        return("nanopolish")
+    }
+
+    if (has_all(c("chromosome", "start", "read_name", "log_lik_ratio", "num_cpgs", "sequence"))) {
+        return("f5c")
+    }
+
+    stop("Format not recognised.")
 }
 
 #' Convert methylation calls to NanoMethViz format

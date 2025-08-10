@@ -50,6 +50,11 @@ a ggplot plot containing the heatmap.
 \description{
 Plot the methylation heatmap of a gene symbol specified within the exon(x) slot.
 }
+\details{
+This function creates a heatmap visualization of methylation data for a specific gene.
+Each row in the heatmap represents one or more packed reads, where colored segments
+indicate methylation probability at each genomic position.
+}
 \examples{
 nmr <- load_example_nanomethresult()
 plot_gene_heatmap(nmr, "Peg3")

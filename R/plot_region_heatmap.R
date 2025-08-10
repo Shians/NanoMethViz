@@ -1,7 +1,7 @@
 #' @rdname plot_region_heatmap
 #'
 #' @param window_prop the size of flanking region to plot. Can be a vector of two
-#'   values for left and right window size. Values indicate proportion of gene
+#'   values for left and right window size. Values indicate proportion of region
 #'   length.
 #' @param pos_style the style for plotting the base positions along the x-axis.
 #'   Defaults to "to_scale", plotting (potentially) overlapping squares
@@ -10,6 +10,12 @@
 #' @param subsample the number of read of packed read rows to subsample to.
 #'
 #' @return a ggplot plot containing the heatmap.
+#'
+#' @details
+#' This function creates a heatmap visualization of methylation data for a specified
+#' genomic region. Each row represents one or more packed reads, with colored segments
+#' indicating methylation probability at each position. Reads are packed vertically
+#' to minimize plot height while avoiding overlaps.
 #'
 #' @examples
 #' nmr <- load_example_nanomethresult()

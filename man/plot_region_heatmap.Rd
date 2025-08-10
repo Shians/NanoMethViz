@@ -67,7 +67,7 @@ along the genomic position to scale. The "compact" options plots only the
 positions with measured modification.}
 
 \item{window_prop}{the size of flanking region to plot. Can be a vector of two
-values for left and right window size. Values indicate proportion of gene
+values for left and right window size. Values indicate proportion of region
 length.}
 
 \item{subsample}{the number of read of packed read rows to subsample to.}
@@ -79,6 +79,12 @@ a ggplot plot containing the heatmap.
 }
 \description{
 Plot the methylation heatmap of a genomic region.
+}
+\details{
+This function creates a heatmap visualization of methylation data for a specified
+genomic region. Each row represents one or more packed reads, with colored segments
+indicating methylation probability at each position. Reads are packed vertically
+to minimize plot height while avoiding overlaps.
 }
 \examples{
 nmr <- load_example_nanomethresult()

@@ -1,15 +1,30 @@
 #' Plot gene aggregate plot
 #'
-#' @param genes a character vector of genes to include in aggregate plot, if NULL then all genes are used.
+#' @param genes a character vector of gene symbols to include in aggregate plot.
+#'   If NULL (default), all genes in exons(x) are used.
 #' @inheritParams plot_agg_regions
 #'
 #' @return a ggplot object containing the aggregate methylation trend of genes.
+#'
+#' @details
+#' This function creates an aggregate methylation profile across multiple genes by
+#' scaling all genes to the same relative coordinates (0 to 1) and averaging
+#' methylation levels at each relative position. Genes are optionally extended by
+#' flanking regions specified by the flank parameter. The resulting plot shows
+#' smoothed trends of average methylation probability from gene start to gene end,
+#' with optional flanking regions.
 #'
 #' @export
 #'
 #' @examples
 #' nmr <- load_example_nanomethresult()
 #' plot_agg_genes(nmr)
+#'
+#' # Plot specific genes only
+#' plot_agg_genes(nmr, genes = c("Peg3", "Impact"))
+#'
+#' # Group by sample
+#' plot_agg_genes(nmr, group_col = "sample")
 #'
 plot_agg_genes <- function(
     x,

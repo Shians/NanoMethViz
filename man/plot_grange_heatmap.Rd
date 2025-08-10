@@ -23,7 +23,7 @@ along the genomic position to scale. The "compact" options plots only the
 positions with measured modification.}
 
 \item{window_prop}{the size of flanking region to plot. Can be a vector of two
-values for left and right window size. Values indicate proportion of gene
+values for left and right window size. Values indicate proportion of region
 length.}
 
 \item{subsample}{the number of read of packed read rows to subsample to.}

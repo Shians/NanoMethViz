@@ -1,17 +1,20 @@
 #' Plot aggregate regions
 #'
-#' @param x the NanoMethResult object.
+#' @param x the NanoMethResult or ModBamResult object.
 #' @param regions a table of regions containing at least columns chr, strand,
 #'   start and end. Any additional columns can be used for grouping.
 #' @param binary_threshold the modification probability such that calls with
 #'   modification probability above the threshold are considered methylated, and
 #'   those with probability equal or below are considered unmethylated.
-#' @param group_col the column to group aggregated trends by. This column can
-#'   be in from the regions table or samples(x).
+#' @param group_col the column name to group aggregated trends by. This column can
+#'   be found in either the regions table or samples(x). When NULL (default), all
+#'   data is aggregated together. Common values include "sample" to show individual
+#'   samples or "group" to show sample groups.
 #' @param flank the number of flanking bases to add to each side of each region.
-#' @param stranded TRUE if negative strand features should have coordinates
-#'   flipped to reflect features like transcription start sites.
-#' @param span the span for loess smoothing.
+#' @param stranded if TRUE, negative strand features will have their coordinates
+#'   flipped to reflect biological features like transcription start sites
+#'   (e.g., for genes, coordinates run from TSS to TES regardless of strand).
+#' @param span the span parameter for loess smoothing of the trend lines.
 #' @param palette the ggplot colour palette used for groups.
 #'
 #' @return a ggplot object containing the aggregate methylation trend.

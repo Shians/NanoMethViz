@@ -16,7 +16,7 @@ plot_agg_regions(
 )
 }
 \arguments{
-\item{x}{the NanoMethResult object.}
+\item{x}{the NanoMethResult or ModBamResult object.}
 
 \item{regions}{a table of regions containing at least columns chr, strand,
 start and end. Any additional columns can be used for grouping.}
@@ -25,15 +25,18 @@ start and end. Any additional columns can be used for grouping.}
 modification probability above the threshold are considered methylated, and
 those with probability equal or below are considered unmethylated.}
 
-\item{group_col}{the column to group aggregated trends by. This column can
-be in from the regions table or samples(x).}
+\item{group_col}{the column name to group aggregated trends by. This column can
+be found in either the regions table or samples(x). When NULL (default), all
+data is aggregated together. Common values include "sample" to show individual
+samples or "group" to show sample groups.}
 
 \item{flank}{the number of flanking bases to add to each side of each region.}
 
-\item{stranded}{TRUE if negative strand features should have coordinates
-flipped to reflect features like transcription start sites.}
+\item{stranded}{if TRUE, negative strand features will have their coordinates
+flipped to reflect biological features like transcription start sites
+(e.g., for genes, coordinates run from TSS to TES regardless of strand).}
 
-\item{span}{the span for loess smoothing.}
+\item{span}{the span parameter for loess smoothing of the trend lines.}
 
 \item{palette}{the ggplot colour palette used for groups.}
 }

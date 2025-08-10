@@ -136,7 +136,7 @@ plot_agg_regions.get_methy_data <- function(x, regions, flank) {
     )
 
     regions %>%
-        mutate(methy_data = methy_data)
+        dplyr::mutate(methy_data = methy_data)
 }
 
 plot_agg_regions.process_methy_data <- function(methy_data, stranded, flank, binary_threshold) {

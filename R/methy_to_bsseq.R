@@ -78,12 +78,12 @@ convert_methy_to_dss <- function(
 create_bsseq_from_files <- function(paths, sample_anno, verbose = TRUE) {
     readr::local_edition(1) # temporary fix for vroom bad value
     read_dss <- purrr::partial(
-        read_tsv,
-        col_types = cols(
-            chr = col_character(),
-            pos = col_double(),
-            total = col_double(),
-            methylated = col_double()
+        readr::read_tsv,
+        col_types = readr::cols(
+            chr = readr::col_character(),
+            pos = readr::col_double(),
+            total = readr::col_double(),
+            methylated = readr::col_double()
         )
     )
 

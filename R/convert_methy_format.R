@@ -60,39 +60,39 @@ reformat_nanopolish <- function(x, sample) {
 
 reformat_megalodon <- function(x, sample) {
     x %>%
-        rename(
+        dplyr::rename(
             chr = "chrm",
             statistic = "mod_log_prob",
             read_name = "read_id") %>%
         add_column(sample = sample, .before = 1) %>%
-        mutate(
+        dplyr::mutate(
             sample = as.factor(.data$sample),
             chr = factor(.data$chr),
             statistic = logit(exp(.data$statistic)),
             pos = as.integer(.data$pos) + 1,
             strand = factor(.data$strand, levels = c("+", "-", "*"))) %>%
-        select(methy_col_names())
+        dplyr::select(methy_col_names())
 }
 
 reformat_modkit <- function(x, sample) {
     x %>%
-        filter(ref_position > 0) %>% # remove unmapped positions
+        dplyr::filter(ref_position > 0) %>% # remove unmapped positions
         add_column(sample = sample, .before = 1) %>%
-        rename(
+        dplyr::rename(
             chr = "chrom",
             pos = "ref_position",
             strand = "mod_strand",
             statistic = "mod_qual",
             read_name = "read_id"
         ) %>%
-        mutate(
+        dplyr::mutate(
             sample = as.factor(.data$sample),
             chr = factor(.data$chr),
             pos = as.integer(.data$pos),
             strand = factor(.data$strand, levels = c("+", "-", "*")),
             statistic = logit(.data$statistic)
         ) %>%
-        select(
+        dplyr::select(
             "sample",
             "chr",
             "pos",

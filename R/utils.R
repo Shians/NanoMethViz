@@ -190,7 +190,7 @@ assertthat::on_failure(is_coordinate) <- function(call, env) {
 same_length <- function(...) {
     nulls <- purrr::map_lgl(list(...), is.null)
     lengths <- purrr::map_dbl(list(...), length)
-    !any(nulls) && all(map_lgl(lengths, ~ . == lengths[1]))
+    !any(nulls) && all(purrr::map_lgl(lengths, ~ . == lengths[1]))
 }
 
 #' @importFrom IRanges IRanges

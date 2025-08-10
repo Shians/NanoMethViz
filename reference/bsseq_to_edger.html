@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">NanoMethViz</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.5.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.5.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -68,18 +68,18 @@ site.</p></dd>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">methy</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"methy_subset.tsv.bgz"</span>, package <span class="op">=</span> <span class="st">"NanoMethViz"</span>, mustWork <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">bsseq</span> <span class="op">&lt;-</span> <span class="fu"><a href="methy_to_bsseq.html">methy_to_bsseq</a></span><span class="op">(</span><span class="va">methy</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> [2025-08-08 11:18:56] creating intermediate files...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> [2025-08-08 11:18:56] parsing chr11...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> [2025-08-08 11:18:56] parsing chr12...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> [2025-08-08 11:18:56] parsing chr18...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> [2025-08-08 11:18:56] parsing chr5...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> [2025-08-08 11:18:56] parsing chr7...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> [2025-08-08 11:18:56] parsing chrX...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> [2025-08-08 11:18:56] samples found: B6Cast_Prom_3_cast B6Cast_Prom_3_bl6 B6Cast_Prom_2_cast B6Cast_Prom_2_bl6 B6Cast_Prom_1_cast B6Cast_Prom_1_bl6 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> [2025-08-08 11:18:56] creating bsseq object...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> [2025-08-08 11:18:56] reading in parsed data...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> [2025-08-08 11:18:56] constructing matrices...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> [2025-08-08 11:18:56] done</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> [2025-08-10 05:04:53] creating intermediate files...</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> [2025-08-10 05:04:53] parsing chr11...</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> [2025-08-10 05:04:53] parsing chr12...</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> [2025-08-10 05:04:53] parsing chr18...</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> [2025-08-10 05:04:53] parsing chr5...</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> [2025-08-10 05:04:53] parsing chr7...</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> [2025-08-10 05:04:53] parsing chrX...</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> [2025-08-10 05:04:53] samples found: B6Cast_Prom_3_cast B6Cast_Prom_3_bl6 B6Cast_Prom_2_cast B6Cast_Prom_2_bl6 B6Cast_Prom_1_cast B6Cast_Prom_1_bl6 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> [2025-08-10 05:04:53] creating bsseq object...</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> [2025-08-10 05:04:53] reading in parsed data...</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> [2025-08-10 05:04:53] constructing matrices...</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> [2025-08-10 05:04:53] done</span>
 <span class="r-in"><span><span class="va">edger_mat</span> <span class="op">&lt;-</span> <span class="fu">bsseq_to_edger</span><span class="op">(</span><span class="va">bsseq</span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>

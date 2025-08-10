@@ -31,7 +31,7 @@ struct GenomicPos {
 };
 
 bool operator < (GenomicPos const &a, GenomicPos const &b) {
-    return (a.pos < b.pos  || a.chr < b.chr) && (a.chr <= b.chr);
+    return (a.chr < b.chr) || (a.chr == b.chr && a.pos < b.pos);
 }
 
 typedef std::map<GenomicPos, MethyCount> MethyData;

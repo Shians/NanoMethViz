@@ -123,7 +123,7 @@ positions with measured modification.</p></dd>
 
 <dt id="arg-window-prop">window_prop<a class="anchor" aria-label="anchor" href="#arg-window-prop"></a></dt>
 <dd><p>the size of flanking region to plot. Can be a vector of two
-values for left and right window size. Values indicate proportion of gene
+values for left and right window size. Values indicate proportion of region
 length.</p></dd>
 
 
@@ -135,6 +135,13 @@ length.</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>a ggplot object of the heatmap.</p>
 <p>a ggplot plot containing the heatmap.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>This function creates a heatmap visualization of methylation data for a specified
+genomic region. Each row represents one or more packed reads, with colored segments
+indicating methylation probability at each position. Reads are packed vertically
+to minimize plot height while avoiding overlaps.</p>
     </div>
 
     <div class="section level2">

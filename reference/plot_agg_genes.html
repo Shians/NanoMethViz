@@ -60,11 +60,12 @@
 
 
 <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
-<dd><p>the NanoMethResult object.</p></dd>
+<dd><p>the NanoMethResult or ModBamResult object.</p></dd>
 
 
 <dt id="arg-genes">genes<a class="anchor" aria-label="anchor" href="#arg-genes"></a></dt>
-<dd><p>a character vector of genes to include in aggregate plot, if NULL then all genes are used.</p></dd>
+<dd><p>a character vector of gene symbols to include in aggregate plot.
+If NULL (default), all genes in exons(x) are used.</p></dd>
 
 
 <dt id="arg-binary-threshold">binary_threshold<a class="anchor" aria-label="anchor" href="#arg-binary-threshold"></a></dt>
@@ -74,8 +75,10 @@ those with probability equal or below are considered unmethylated.</p></dd>
 
 
 <dt id="arg-group-col">group_col<a class="anchor" aria-label="anchor" href="#arg-group-col"></a></dt>
-<dd><p>the column to group aggregated trends by. This column can
-be in from the regions table or samples(x).</p></dd>
+<dd><p>the column name to group aggregated trends by. This column can
+be found in either the regions table or samples(x). When NULL (default), all
+data is aggregated together. Common values include "sample" to show individual
+samples or "group" to show sample groups.</p></dd>
 
 
 <dt id="arg-flank">flank<a class="anchor" aria-label="anchor" href="#arg-flank"></a></dt>
@@ -83,12 +86,13 @@ be in from the regions table or samples(x).</p></dd>
 
 
 <dt id="arg-stranded">stranded<a class="anchor" aria-label="anchor" href="#arg-stranded"></a></dt>
-<dd><p>TRUE if negative strand features should have coordinates
-flipped to reflect features like transcription start sites.</p></dd>
+<dd><p>if TRUE, negative strand features will have their coordinates
+flipped to reflect biological features like transcription start sites
+(e.g., for genes, coordinates run from TSS to TES regardless of strand).</p></dd>
 
 
 <dt id="arg-span">span<a class="anchor" aria-label="anchor" href="#arg-span"></a></dt>
-<dd><p>the span for loess smoothing.</p></dd>
+<dd><p>the span parameter for loess smoothing of the trend lines.</p></dd>
 
 
 <dt id="arg-palette">palette<a class="anchor" aria-label="anchor" href="#arg-palette"></a></dt>
@@ -99,12 +103,29 @@ flipped to reflect features like transcription start sites.</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>a ggplot object containing the aggregate methylation trend of genes.</p>
     </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>This function creates an aggregate methylation profile across multiple genes by
+scaling all genes to the same relative coordinates (0 to 1) and averaging
+methylation levels at each relative position. Genes are optionally extended by
+flanking regions specified by the flank parameter. The resulting plot shows
+smoothed trends of average methylation probability from gene start to gene end,
+with optional flanking regions.</p>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">nmr</span> <span class="op">&lt;-</span> <span class="fu"><a href="load_example_nanomethresult.html">load_example_nanomethresult</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">plot_agg_genes</span><span class="op">(</span><span class="va">nmr</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plot_agg_genes-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Plot specific genes only</span></span></span>
+<span class="r-in"><span><span class="fu">plot_agg_genes</span><span class="op">(</span><span class="va">nmr</span>, genes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Peg3"</span>, <span class="st">"Impact"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="plot_agg_genes-2.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Group by sample</span></span></span>
+<span class="r-in"><span><span class="fu">plot_agg_genes</span><span class="op">(</span><span class="va">nmr</span>, group_col <span class="op">=</span> <span class="st">"sample"</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="plot_agg_genes-3.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

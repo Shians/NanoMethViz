@@ -60,7 +60,7 @@
 
 
 <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
-<dd><p>the NanoMethResult object.</p></dd>
+<dd><p>the NanoMethResult or ModBamResult object.</p></dd>
 
 
 <dt id="arg-regions">regions<a class="anchor" aria-label="anchor" href="#arg-regions"></a></dt>
@@ -75,8 +75,10 @@ those with probability equal or below are considered unmethylated.</p></dd>
 
 
 <dt id="arg-group-col">group_col<a class="anchor" aria-label="anchor" href="#arg-group-col"></a></dt>
-<dd><p>the column to group aggregated trends by. This column can
-be in from the regions table or samples(x).</p></dd>
+<dd><p>the column name to group aggregated trends by. This column can
+be found in either the regions table or samples(x). When NULL (default), all
+data is aggregated together. Common values include "sample" to show individual
+samples or "group" to show sample groups.</p></dd>
 
 
 <dt id="arg-flank">flank<a class="anchor" aria-label="anchor" href="#arg-flank"></a></dt>
@@ -84,12 +86,13 @@ be in from the regions table or samples(x).</p></dd>
 
 
 <dt id="arg-stranded">stranded<a class="anchor" aria-label="anchor" href="#arg-stranded"></a></dt>
-<dd><p>TRUE if negative strand features should have coordinates
-flipped to reflect features like transcription start sites.</p></dd>
+<dd><p>if TRUE, negative strand features will have their coordinates
+flipped to reflect biological features like transcription start sites
+(e.g., for genes, coordinates run from TSS to TES regardless of strand).</p></dd>
 
 
 <dt id="arg-span">span<a class="anchor" aria-label="anchor" href="#arg-span"></a></dt>
-<dd><p>the span for loess smoothing.</p></dd>
+<dd><p>the span parameter for loess smoothing of the trend lines.</p></dd>
 
 
 <dt id="arg-palette">palette<a class="anchor" aria-label="anchor" href="#arg-palette"></a></dt>

@@ -49,7 +49,6 @@ cgi_GRCm39 <- get_cgi_grcm39()
 
 cgi_t2t <- get_cgi_t2t()
 
-# @export
 cgi_hg19 <- get_cgi_hg19()
 
 cgi_hg38 <- get_cgi_hg38()

@@ -50,7 +50,7 @@ get_cgi_grcm39 <- function() {
 #' @examples
 #' cgi_t2t <- get_cgi_t2t()
 #'
-#'# @export
+#' @export
 get_cgi_t2t <- function() {
     get_cgi("t2t")
 }

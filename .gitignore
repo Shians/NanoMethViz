@@ -20,3 +20,5 @@ renv.lock
 src/*.dll
 src/*.o
 src/*.so
+
+TODO/

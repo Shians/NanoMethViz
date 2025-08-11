@@ -85,8 +85,8 @@ test_that("Plotting gene works", {
 
             expect_s3_class(p, "ggplot")
         }
-        expect_error(plot_region(x, chr = "chr7", start = 0, end = 0), "Elements 1 of start < end are not true")
-        expect_warning(plot_region(x, chr = "chr7", start = 0, end = 10), "no methylation data in region")
+        expect_error(plot_region(x, chr = "chr7", start = 0, end = 0), "Start positions must be")
+        expect_warning(plot_region(x, chr = "chr7", start = 1, end = 10), "No methylation data found in region")
     }
 
     # test plot_region() with unknown chromosome ----

@@ -25,7 +25,7 @@ test_that("ModBamResults getters and setters work", {
             paths = system.file(package = "NanoMethViz", "missing.bam", mustWork = FALSE),
             samples = "sample1"
         ),
-        regex = "Path .+ does not exist"
+        regex = "File path .+ does not exist"
     )
 
     expect_error(
@@ -33,6 +33,6 @@ test_that("ModBamResults getters and setters work", {
             paths = system.file(package = "NanoMethViz", "no_index.bam", mustWork = FALSE),
             samples = "sample1"
         ),
-        regex = ".+ does not have bam index"
+        regex = ".+ is missing its index file"
     )
 })

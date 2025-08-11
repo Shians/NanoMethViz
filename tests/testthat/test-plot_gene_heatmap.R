@@ -53,12 +53,12 @@ test_that("plot_gene_heatmap error handling", {
 
     expect_error(
         plot_gene_heatmap(nmr_no_exons, "Peg3"),
-        "exons\\(x\\) is empty, gene cannot be queried"
+        "No exon annotation found in the data object"
     )
 
     # test with gene not in annotation
     expect_error(
         plot_gene_heatmap(nmr, "NonExistentGene"),
-        "gene NonExistentGene not found in exon annotation"
+        "Gene 'NonExistentGene' not found in exon annotation"
     )
 })

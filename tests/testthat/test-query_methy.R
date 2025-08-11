@@ -68,7 +68,7 @@ test_that("Querying methylation works", {
     # test when query regions are empty
     queries_with_empty <- tibble(
         chr = c("chr7", "chr7", "chr7"),
-        start = c(6703892, 6717162, 0),
+        start = c(6703892, 6717162, 1),
         end = c(6717161, 6730431, 10)
     )
     expect_s3_class(query_methy_df(mbr, queries_with_empty), "data.frame")

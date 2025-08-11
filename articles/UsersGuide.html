@@ -149,9 +149,10 @@ more information.</p>
 <span>        group <span class="op">=</span> <span class="fl">1</span></span>
 <span>    <span class="op">)</span>,</span>
 <span>    exons <span class="op">=</span> <span class="va">exon_tibble</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># use in the same way as you would a NanoMethResult object</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Successfully created ModBamResult with 1 matched samples.</span></span></code></pre>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># use in the same way as you would a NanoMethResult object</span></span>
 <span><span class="fu"><a href="../reference/plot_gene.html">plot_gene</a></span><span class="op">(</span><span class="va">mbr</span>, <span class="st">"Peg3"</span>, heatmap <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="UsersGuide_files/figure-html/unnamed-chunk-3-1.png" width="504"></p>
 </div>
@@ -193,7 +194,7 @@ the <code>ModBamResult</code> class as a substitute for
 above, the conversion can be done using the
 <code><a href="../reference/create_tabix_file.html">create_tabix_file()</a></code> function. We provide example data of
 nanopolish output within the package.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">methy_calls</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span>package <span class="op">=</span> <span class="st">"NanoMethViz"</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sample1_nanopolish.tsv.gz"</span>, <span class="st">"sample2_nanopolish.tsv.gz"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>We then create a temporary path to store a converted file, this will
@@ -207,7 +208,7 @@ to run.</p>
 <div class="section level3">
 <h3 id="importing-data-1">Importing data<a class="anchor" aria-label="anchor" href="#importing-data-1"></a>
 </h3>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># create a temporary file to store the converted data</span></span>
 <span><span class="va">methy_tabix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"methy_data.bgz"</span><span class="op">)</span></span>
 <span><span class="va">samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sample1"</span>, <span class="st">"sample2"</span><span class="op">)</span></span>
@@ -251,7 +252,7 @@ nanopolish/f5c. It has then been compressed and indexed using
 to retrieve data internal to the package, for your down data you simply
 need to provide a path without the <code>system_file()</code>
 function.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># methylation data stored in tabix file</span></span>
 <span><span class="va">methy</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span>package <span class="op">=</span> <span class="st">"NanoMethViz"</span>, <span class="st">"methy_subset.tsv.bgz"</span><span class="op">)</span></span>
 <span></span>
@@ -275,7 +276,7 @@ function.</p>
 package, and joined into a single table. It is important that the
 chromosomes share the same convention as that found in the methylation
 data.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># helper function extracts exons from TxDb package</span></span>
 <span><span class="va">exon_tibble</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_exons.html">get_exons_mm10</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
@@ -291,7 +292,7 @@ data.</p>
 <span><span class="co">## <span style="color: #BCBCBC;">6</span> 100009600 chr9  -      21<span style="text-decoration: underline;">062</span>400 21<span style="text-decoration: underline;">062</span>717         <span style="text-decoration: underline;">74</span>538 Zglp1</span></span></code></pre>
 <p>We will defined the sample annotation ourselves. It is important that
 the sample names match those found in the methylation data.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sample</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>  <span class="st">"B6Cast_Prom_1_bl6"</span>, <span class="st">"B6Cast_Prom_1_cast"</span>,</span>
 <span>  <span class="st">"B6Cast_Prom_2_bl6"</span>, <span class="st">"B6Cast_Prom_2_cast"</span>,</span>
@@ -312,8 +313,9 @@ the sample names match those found in the methylation data.</p>
 <span><span class="co">## 6 B6Cast_Prom_3_cast  cast</span></span></code></pre>
 <p>For convenience we assemble these three pieces of data into a single
 object.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nmr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/NanoMethResult-class.html">NanoMethResult</a></span><span class="op">(</span><span class="va">methy</span>, <span class="va">sample_anno</span>, <span class="va">exon_tibble</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Successfully matched 6 samples between data and annotation.</span></span></code></pre>
 <p>The genes we have available are</p>
 <ul>
 <li>Peg3</li>
@@ -333,11 +335,11 @@ experimental condition. The heatmap below it shows the methylation
 probabilities along individual reads, with disjoint reads stacked onto
 the same row. The annotation down the bottom shows the isoforms of the
 Peg3 gene as well as its directionality.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_gene.html">plot_gene</a></span><span class="op">(</span><span class="va">nmr</span>, <span class="st">"Peg3"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="UsersGuide_files/figure-html/unnamed-chunk-10-1.png" width="504"></p>
 <p>We can also load in some DMR results to highlight DMR regions.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># loading saved results from previous bsseq analysis</span></span>
 <span><span class="va">bsseq_dmr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.table</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span>package <span class="op">=</span> <span class="st">"NanoMethViz"</span>, <span class="st">"dmr_subset.tsv.gz"</span><span class="op">)</span>,</span>
@@ -345,7 +347,7 @@ Peg3 gene as well as its directionality.</p>
 <span>    header <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>    stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_gene.html">plot_gene</a></span><span class="op">(</span><span class="va">nmr</span>, <span class="st">"Peg3"</span>, anno_regions <span class="op">=</span> <span class="va">bsseq_dmr</span><span class="op">)</span></span></code></pre></div>
 <p><img src="UsersGuide_files/figure-html/unnamed-chunk-12-1.png" width="504"></p>
 <p>See other plotting options in the <a href="https://shians.github.io/NanoMethViz/reference/index.html">package
@@ -363,7 +365,7 @@ bsseq, DSS, or edgeR.</p>
 <p>Both bsseq and DSS make use of the BSSeq object, and these can be
 obtained from the NanoMethResult objects using the
 <code><a href="../reference/methy_to_bsseq.html">methy_to_bsseq()</a></code> function.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nmr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_example_nanomethresult.html">load_example_nanomethresult</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">bss</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/methy_to_bsseq.html">methy_to_bsseq</a></span><span class="op">(</span><span class="va">nmr</span><span class="op">)</span></span>
 <span></span>
@@ -382,7 +384,7 @@ obtained from the NanoMethResult objects using the
 can be converted into the appropriate format using the
 <code><a href="../reference/bsseq_to_edger.html">bsseq_to_edger()</a></code> function. This can be used to count reads
 on a per-site basis or over regions.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">gene_regions</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/exons_to_genes.html">exons_to_genes</a></span><span class="op">(</span><span class="fu">NanoMethViz</span><span class="fu">::</span><span class="fu"><a href="../reference/exons.html">exons</a></span><span class="op">(</span><span class="va">nmr</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">edger_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bsseq_to_edger.html">bsseq_to_edger</a></span><span class="op">(</span><span class="va">bss</span>, <span class="va">gene_regions</span><span class="op">)</span></span>
 <span></span>
@@ -442,7 +444,7 @@ desired format. As an example, we can use a small sample of the C.
 Elegans gene annotation provided by ENSEMBL. <code>rtracklayer</code>
 will import the annotation as a <code>GRanges</code> object, this can be
 coerced into a data.frame and manipulated using <code>dplyr</code>.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">anno</span> <span class="op">&lt;-</span> <span class="fu">rtracklayer</span><span class="fu">::</span><span class="fu">import</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span>package <span class="op">=</span> <span class="st">"NanoMethViz"</span>, <span class="st">"c_elegans.gtf.gz"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">anno</span><span class="op">)</span></span></code></pre></div>
@@ -473,7 +475,7 @@ coerced into a data.frame and manipulated using <code>dplyr</code>.</p>
 <span><span class="co">##   [6] protein_coding          WormBase     protein_coding F27C8.1.1.e6</span></span>
 <span><span class="co">##   -------</span></span>
 <span><span class="co">##   seqinfo: 3 sequences from an unspecified genome; no seqlengths</span></span></code></pre>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">anno</span> <span class="op">&lt;-</span> <span class="va">anno</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span></span>
@@ -499,12 +501,12 @@ single exon genes. For example we can take the example dataset and
 transform the isoform annotations of Peg3 into a single gene-body block.
 The helper function <code><a href="../reference/exons_to_genes.html">exons_to_genes()</a></code> can help with this
 common conversion.</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nmr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_example_nanomethresult.html">load_example_nanomethresult</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/plot_gene.html">plot_gene</a></span><span class="op">(</span><span class="va">nmr</span>, <span class="st">"Peg3"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="UsersGuide_files/figure-html/unnamed-chunk-17-1.png" width="504"></p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">new_exons</span> <span class="op">&lt;-</span> <span class="fu">NanoMethViz</span><span class="fu">::</span><span class="fu"><a href="../reference/exons.html">exons</a></span><span class="op">(</span><span class="va">nmr</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="../reference/exons_to_genes.html">exons_to_genes</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>transcript_id <span class="op">=</span> <span class="va">gene_id</span><span class="op">)</span></span>
@@ -537,7 +539,7 @@ create the log-methylation-ratio matrix used in dimensionality
 reduction. Namely we go through the BSseq format as it is easily coerced
 into the desired matrix and is itself useful for various other
 analyses.</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># convert to bsseq</span></span>
 <span><span class="va">bss</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/methy_to_bsseq.html">methy_to_bsseq</a></span><span class="op">(</span><span class="va">nmr</span><span class="op">)</span></span>
 <span><span class="va">bss</span></span></code></pre></div>
@@ -550,7 +552,7 @@ analyses.</p>
 methylation sites or computed over genes, or other feature types.
 Aggregating over features will generally provide more stable and robust
 results, here we will use genes.</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># create gene annotation from exon annotation</span></span>
 <span><span class="va">gene_anno</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/exons_to_genes.html">exons_to_genes</a></span><span class="op">(</span><span class="fu">NanoMethViz</span><span class="fu">::</span><span class="fu"><a href="../reference/exons.html">exons</a></span><span class="op">(</span><span class="va">nmr</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -558,18 +560,18 @@ results, here we will use genes.</p>
 <span><span class="va">lmr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bsseq_to_log_methy_ratio.html">bsseq_to_log_methy_ratio</a></span><span class="op">(</span><span class="va">bss</span>, regions <span class="op">=</span> <span class="va">gene_anno</span><span class="op">)</span></span></code></pre></div>
 <p>NanoMethViz currently provides two options, a MDS plot based on the
 limma implementation of MDS, and a PCA plot using BiocSingular.</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_mds.html">plot_mds</a></span><span class="op">(</span><span class="va">lmr</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"MDS Plot"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="UsersGuide_files/figure-html/unnamed-chunk-21-1.png" width="504"></p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_pca.html">plot_pca</a></span><span class="op">(</span><span class="va">lmr</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"PCA Plot"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="UsersGuide_files/figure-html/unnamed-chunk-21-2.png" width="504"></p>
 <p>Additional coloring and labeling options can be provided via
 arguments to either function. Further customisations can be done using
 typical ggplot2 commands.</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">new_labels</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">"B6Cast_Prom_"</span>, <span class="st">""</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">lmr</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">new_labels</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">"(\\d)_(.*)"</span>, <span class="st">"\\2 \\1"</span>, <span class="va">new_labels</span><span class="op">)</span></span>
 <span><span class="va">groups</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">" \\d"</span>, <span class="st">""</span>, <span class="va">new_labels</span><span class="op">)</span></span>
@@ -580,7 +582,7 @@ typical ggplot2 commands.</p>
 <p><img src="UsersGuide_files/figure-html/unnamed-chunk-22-1.png" width="504"></p>
 <p>Points can also be plotted without labels by setting
 <code>labels = NULL</code>.</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_mds.html">plot_mds</a></span><span class="op">(</span><span class="va">lmr</span>, labels <span class="op">=</span> <span class="cn">NULL</span>, groups <span class="op">=</span> <span class="va">groups</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"MDS Plot"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span><span class="op">)</span></span></code></pre></div>
@@ -600,7 +602,7 @@ called at miscalled sites. The site filter is set to 3 by default, to
 filter any sites with coverage less than 3. This can be changed using
 the option <code>NanoMethViz.site_filter</code>. The following will
 remove any sites with coverage less than 5 from queries and plots.</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="st">"NanoMethViz.site_filter"</span> <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -611,7 +613,7 @@ functions will create bands coloured grey, specifically
 <code>grey50</code>. This can be changed globally across the package
 using the option <code>NanoMethViz.highlight_col</code>. For example the
 following will change the colour to red.</p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="st">"NanoMethViz.highlight_col"</span> <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>

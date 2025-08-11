@@ -159,6 +159,7 @@ gene_id, chr, strand, start, end, transcript_id and symbol.</p></dd>
 <span class="r-in"><span><span class="va">sample_anno</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">sample</span>, <span class="va">group</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">exon_tibble</span> <span class="op">&lt;-</span> <span class="fu"><a href="get_example_exons_mus_musculus.html">get_example_exons_mus_musculus</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">NanoMethResult</span><span class="op">(</span><span class="va">methy</span>, <span class="va">sample_anno</span>, <span class="va">exon_tibble</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Successfully matched 6 samples between data and annotation.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> An object of class "NanoMethResult"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Slot "methy":</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/home/runner/work/_temp/Library/NanoMethViz/methy_subset.tsv.bgz"</span>
@@ -192,6 +193,7 @@ gene_id, chr, strand, start, end, transcript_id and symbol.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="load_example_nanomethresult.html">load_example_nanomethresult</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Successfully matched 6 samples between data and annotation.</span>
 <span class="r-in"><span><span class="fu"><a href="methy.html">methy</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/home/runner/work/_temp/Library/NanoMethViz/methy_subset.tsv.bgz"</span>
 <span class="r-in"><span></span></span>

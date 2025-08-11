@@ -24,7 +24,14 @@ cluster_reads <- function(x, chr, start, end, min_pts = 5) {
     methy_data <- query_methy(x, chr, start, end)
 
     if (nrow(methy_data) == 0) {
-        stop(glue::glue("no reads containing methylation data found in specified region"))
+        stop(glue::glue(
+            "No reads containing methylation data found in region {chr}:{start}-{end}.\n",
+            "This could be due to:\n",
+            "  - No data in this genomic region\n",
+            "  - Incorrect chromosome naming\n",
+            "  - Region outside of data coverage\n",
+            "Please check your genomic coordinates and data."
+        ))
     }
 
     methy_data <- methy_data %>%
@@ -48,7 +55,10 @@ cluster_reads <- function(x, chr, start, end, min_pts = 5) {
 
     # pre-check before filtering
     if (nrow(mod_mat) < min_pts) {
-        stop(glue::glue("fewer reads available ({nrow(mod_mat)} reads) than minimum cluster size 'min_pts' ({min_pts})"))
+        stop(glue::glue(
+            "Insufficient reads for clustering: found {nrow(mod_mat)} reads but need at least {min_pts}.\n",
+            "Try reducing 'min_pts' parameter or expanding the genomic region."
+        ))
     }
 
     # remove positions with high missingness (>60%) then reads with high missingness (>30%)
@@ -65,7 +75,10 @@ cluster_reads <- function(x, chr, start, end, min_pts = 5) {
 
     # post-check before filtering
     if (nrow(mod_mat_filled) < min_pts) {
-        stop(glue::glue("fewer reads available ({nrow(mod_mat_filled)} reads) than minimum cluster size 'min_pts' ({min_pts})"))
+        stop(glue::glue(
+            "Insufficient reads after filtering: {nrow(mod_mat_filled)} reads remaining but need at least {min_pts}.\n",
+            "Try reducing 'min_pts' parameter or adjusting filtering criteria."
+        ))
     }
 
     # cluster reads using HDBSCAN algorithm with specified minimum number of points

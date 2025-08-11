@@ -45,6 +45,22 @@ query_methy <- function(
     truncate = TRUE,
     site_filter = getOption("NanoMethViz.site_filter", 3L)
 ) {
+    # validate input
+    chr <- as.character(chr)
+    start <- as.numeric(start)
+    end <- as.numeric(end)
+
+    # validate genomic coordinates
+    assert_valid_genomic_coords(chr, start, end)
+
+    # validate site_filter
+    if (!is.numeric(site_filter) || site_filter < 0) {
+        stop(glue::glue(
+            "site_filter must be a non-negative number. Got: {site_filter}\n",
+            "This parameter filters sites with coverage below the threshold. Set using `options(site_filter = ...)`."
+        ))
+    }
+
     if (is(x, "NanoMethResult")) {
         x <- methy(x)
     }

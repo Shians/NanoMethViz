@@ -17,10 +17,15 @@ plot_region_impl <- function(
         mod_scale = c(0, 1),
         span = NULL
 ) {
-    sample_anno <- samples(x)
+    # validate inputs
     chr <- as.character(chr)
     start <- as.numeric(start)
     end <- as.numeric(end)
+
+    # validate genomic coordinates
+    assert_valid_genomic_coords(chr, start, end)
+
+    sample_anno <- samples(x)
 
     if (length(window_prop) == 1) {
         window_prop <- c(window_prop, window_prop)
@@ -40,7 +45,14 @@ plot_region_impl <- function(
     )
 
     if (nrow(methy_data) == 0) {
-        warning("no methylation data in region, returning empty plot")
+        warning(glue::glue(
+            "No methylation data found in region {chr}:{start}-{end}.\n",
+            "This could be due to:\n",
+            "  - No data in this genomic region\n",
+            "  - Incorrect chromosome naming (try 'chr{chr}' if using '{chr}')\n",
+            "  - Region outside of data coverage\n",
+            "Returning empty plot."
+        ))
         return(ggplot() + theme_void())
     }
 

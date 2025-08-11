@@ -55,6 +55,7 @@ setClass(
 #'
 #' @export
 NanoMethResult <- function(methy, samples, exons = NULL) {
+    # validate input
     if (is.null(exons)) {
         exons <- tibble::tibble(
             gene_id = character(),
@@ -67,31 +68,16 @@ NanoMethResult <- function(methy, samples, exons = NULL) {
         )
     }
 
+    # validate inputs
     assert_readable(methy)
-    assert_has_columns(
-        exons,
-        c("gene_id", "chr", "strand", "start", "end", "transcript_id", "symbol")
-    )
-    assert_has_columns(samples, c("sample", "group"))
+    assert_valid_samples(samples, context = "NanoMethResult constructor")
+    assert_valid_exons(exons)
+
+    # convert group to factor
     samples$group <- as.factor(samples$group)
 
-    # Check in first 1000 entries that samples are in sample annotation
-    head_values <- read.table(
-        gzfile(methy),
-        col.names = methy_col_names(),
-        nrows = 1000
-    )
-    if (length(intersect(head_values$sample, samples$sample)) == 0) {
-        stop("in first 1000 entries, no sample names matched samples from annotation")
-    }
-    if (!all(head_values$sample %in% samples$sample)) {
-        warning(glue::glue(
-            "in first 1000 entires, the following samples were not in annotation: {missing_cols}",
-            missing_cols = paste(setdiff(head_values$sample, samples$sample), collapse = ", ")
-        ))
-    }
-
-    assertthat::assert_that(any(head_values$sample %in% samples$sample))
+    # ensure samples match
+    assert_valid_methy_samples(methy, samples)
 
     methods::new(
         "NanoMethResult",
@@ -151,9 +137,12 @@ setMethod("samples", signature("NanoMethResult"), function(object) {
 #'
 #' @export
 setMethod("samples<-", signature("NanoMethResult", "data.frame"), function(object, value) {
-    assert_has_columns(value, c("sample", "group"))
+    assert_valid_samples(value, context = "NanoMethResult samples setter")
 
-    object@samples <- value
+    # Convert group to factor
+    value$group <- as.factor(value$group)
+
+    object@samples <- tibble::as_tibble(value)
     object
 })
 
@@ -176,10 +165,8 @@ setMethod("exons", signature("NanoMethResult"), function(object) {
 #'
 #' @export
 setMethod("exons<-", signature("NanoMethResult", "data.frame"), function(object, value) {
-    assert_has_columns(
-        value,
-        c("gene_id", "chr", "strand", "start", "end", "transcript_id", "symbol")
-    )
-    object@exons <- value
+    assert_valid_exons(value)
+
+    object@exons <- tibble::as_tibble(value)
     object
 })

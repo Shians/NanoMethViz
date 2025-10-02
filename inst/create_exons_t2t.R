@@ -44,13 +44,13 @@ exon_anno_t2t_formatted <- exon_anno_t2t %>%
         symbol
     ) %>%
     mutate(
-        gene_id = factor(gene_id),
-        chr = factor(chr),
-        strand = factor(strand),
+        gene_id = as.character(gene_id),
+        chr = as.character(chr),
+        strand = as.character(strand),
         start = as.integer(start),
         end = as.integer(end),
-        transcript_id = factor(transcript_id),
-        symbol = factor(symbol)
+        transcript_id = as.character(transcript_id),
+        symbol = as.character(symbol)
     ) %>%
     drop_na()
 

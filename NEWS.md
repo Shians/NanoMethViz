@@ -1,5 +1,7 @@
 ## Version 3.4.0
 * Fixed `modbam_to_tabix()` to not delete existing directories when provided as the output file. Previously it would delete the directory and create a file with the same name, now it will fail if the output is a directory.
+* Fixed gene annotation labels not showing up when symbol column is a factor.
+* Updated `get_exons_t2t()` to use character columns instead of factors.
 
 ## Version 3.2.0
 * Added preliminary support for importing modkit data using `create_tabix_file()`.

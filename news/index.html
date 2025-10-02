@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">NanoMethViz</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.5.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.5.6</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,6 +39,8 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="3.4.0" id="version-340">Version 3.4.0<a class="anchor" aria-label="anchor" href="#version-340"></a></h2>
 <ul><li>Fixed <code><a href="../reference/modbam_to_tabix.html">modbam_to_tabix()</a></code> to not delete existing directories when provided as the output file. Previously it would delete the directory and create a file with the same name, now it will fail if the output is a directory.</li>
+<li>Fixed gene annotation labels not showing up when symbol column is a factor.</li>
+<li>Updated <code><a href="../reference/get_exons.html">get_exons_t2t()</a></code> to use character columns instead of factors.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="3.2.0" id="version-320">Version 3.2.0<a class="anchor" aria-label="anchor" href="#version-320"></a></h2>

@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">NanoMethViz</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.5.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.7.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,49 +57,148 @@
 </h1></div>
 <!-- badges: start -->
 
-<p>NanoMethViz is a toolkit for visualising methylation data from Oxford Nanopore sequencing.</p>
+<p>NanoMethViz is a Bioconductor package for visualising and summarising DNA methylation from Oxford Nanopore long-read sequencing.</p>
+<p>It supports:</p>
+<ul>
+<li>tabular methylation calls (for example, Modkit, Megalodon, Nanopolish, and f5c)</li>
+<li>modBAM-based methylation calls</li>
+</ul>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install NanoMethViz from Bioconductor with:</p>
+<p>Install from Bioconductor:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"BiocManager"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"BiocManager"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span></span>
-<span></span>
+<span><span class="op">}</span></span>
 <span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"NanoMethViz"</span><span class="op">)</span></span></code></pre></div>
-<p>To install the latest developmental version, use:</p>
+<p>Install the Bioconductor devel version:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"BiocManager"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"BiocManager"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span>version<span class="op">=</span><span class="st">'devel'</span><span class="op">)</span></span>
-<span></span>
+<span><span class="op">}</span></span>
+<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span>version <span class="op">=</span> <span class="st">"devel"</span><span class="op">)</span></span>
 <span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"NanoMethViz"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
+<h2 id="quick-start">Quick Start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
 </h2>
-<p>This package currently works with data from dorado, megalodon, nanopolish and f5c, for information on how to use the package, please refer to the <a href="https://www.bioconductor.org/packages/release/bioc/vignettes/NanoMethViz/inst/doc/UsersGuide.html" class="external-link">Users Guide</a>.</p>
+<p>For tabix-backed methylation data, <code>NanoMethResult</code> needs three inputs:</p>
+<ul>
+<li>
+<code>methy</code>: path to a bgzip-compressed and tabix-indexed methylation file</li>
+<li>
+<code>samples</code>: a <code>data.frame</code> with at least a <code>sample</code> column</li>
+<li>
+<code>exons</code>: a <code>data.frame</code> with exon-level annotation</li>
+</ul>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/shians/NanoMethViz" class="external-link">NanoMethViz</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Example object bundled with the package</span></span>
+<span><span class="va">nmr</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/load_example_nanomethresult.html">load_example_nanomethresult</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Region/gene visualisation</span></span>
+<span><span class="fu"><a href="reference/plot_gene.html">plot_gene</a></span><span class="op">(</span><span class="va">nmr</span>, <span class="st">"Peg3"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Group-level summaries</span></span>
+<span><span class="fu"><a href="reference/plot_agg_genes.html">plot_agg_genes</a></span><span class="op">(</span><span class="va">nmr</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Dimension reduction on methylation profiles</span></span>
+<span><span class="va">bss</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/methy_to_bsseq.html">methy_to_bsseq</a></span><span class="op">(</span><span class="va">nmr</span><span class="op">)</span></span>
+<span><span class="va">gene_regions</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/exons_to_genes.html">exons_to_genes</a></span><span class="op">(</span><span class="fu"><a href="reference/exons.html">exons</a></span><span class="op">(</span><span class="va">nmr</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">lmr</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/bsseq_to_log_methy_ratio.html">bsseq_to_log_methy_ratio</a></span><span class="op">(</span><span class="va">bss</span>, <span class="va">gene_regions</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/plot_mds.html">plot_mds</a></span><span class="op">(</span><span class="va">lmr</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/plot_pca.html">plot_pca</a></span><span class="op">(</span><span class="va">lmr</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
+<h2 id="typical-workflow">Typical Workflow<a class="anchor" aria-label="anchor" href="#typical-workflow"></a>
+</h2>
+<ol style="list-style-type: decimal">
+<li>Import methylation calls.</li>
+<li>Convert to tabix format if needed (<code><a href="reference/convert_methy_format.html">convert_methy_format()</a></code>, <code><a href="reference/create_tabix_file.html">create_tabix_file()</a></code>, <code><a href="reference/modbam_to_tabix.html">modbam_to_tabix()</a></code>).</li>
+<li>Prepare sample metadata and exon annotation (<code><a href="reference/get_exons.html">get_exons_hg38()</a></code>, <code><a href="reference/get_exons.html">get_exons_mm10()</a></code>, or custom annotation).</li>
+<li>Build a result object (<code><a href="reference/NanoMethResult-class.html">NanoMethResult()</a></code> or <code><a href="reference/ModBamResult-class.html">ModBamResult()</a></code>).</li>
+<li>Query and visualise methylation (<code><a href="reference/query_methy.html">query_methy()</a></code>, <code><a href="reference/plot_gene.html">plot_gene()</a></code>, <code><a href="reference/plot_region.html">plot_region()</a></code>, <code><a href="reference/plot_agg_genes.html">plot_agg_genes()</a></code>, <code><a href="reference/plot_agg_regions.html">plot_agg_regions()</a></code>, <code><a href="reference/plot_violin.html">plot_violin()</a></code>, <code><a href="reference/plot_region_heatmap.html">plot_region_heatmap()</a></code>).</li>
+<li>Export for downstream differential analysis (<code><a href="reference/methy_to_bsseq.html">methy_to_bsseq()</a></code>, <code><a href="reference/bsseq_to_edger.html">bsseq_to_edger()</a></code>).</li>
+</ol>
+</div>
+<div class="section level2">
+<h2 id="common-tasks">Common Tasks<a class="anchor" aria-label="anchor" href="#common-tasks"></a>
+</h2>
+<p>Choose the right object type:</p>
+<ul>
+<li>Use <code>NanoMethResult</code> for tabix-backed tabular methylation calls.</li>
+<li>Use <code>ModBamResult</code> for modBAM-based workflows.</li>
+</ul>
+<p>If you want to…</p>
+<ul>
+<li>plot one gene: use <code>plot_gene(x, gene)</code>
+</li>
+<li>plot one genomic interval: use <code>plot_region(x, chr, start, end)</code>
+</li>
+<li>show per-read heatmap in a region: use <code>plot_region_heatmap(x, chr, start, end)</code>
+</li>
+<li>aggregate over genes/regions: use <code>plot_agg_genes(x)</code> / <code>plot_agg_regions(x, regions)</code>
+</li>
+<li>get methylation values for a region: use <code>query_methy(x, chr, start, end)</code>
+</li>
+<li>run dimension reduction: use <code>plot_mds(log_methy_ratio_matrix)</code> / <code>plot_pca(log_methy_ratio_matrix)</code>
+</li>
+<li>export for differential testing: use <code>methy_to_bsseq(x)</code>, then <code>bsseq_to_edger(...)</code>
+</li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="core-data-requirements">Core Data Requirements<a class="anchor" aria-label="anchor" href="#core-data-requirements"></a>
+</h2>
+<ul>
+<li>Chromosome naming must match across methylation calls and annotation (<code>chr1</code> vs <code>1</code>).</li>
+<li>Sample names in methylation data must match <code>samples$sample</code>.</li>
+<li>Exon annotation should include columns: <code>gene_id</code>, <code>chr</code>, <code>strand</code>, <code>start</code>, <code>end</code>, <code>transcript_id</code>, <code>symbol</code>
+</li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="key-global-options">Key Global Options<a class="anchor" aria-label="anchor" href="#key-global-options"></a>
+</h2>
+<ul>
+<li>
+<code>options(NanoMethViz.site_filter = 3L)</code>: minimum site coverage used by query/plot functions.</li>
+<li>
+<code>options(NanoMethViz.highlight_col = "grey50")</code>: default colour for highlighted annotation regions.</li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
+</h2>
+<ul>
+<li>User Guide (Bioconductor vignette): <a href="https://www.bioconductor.org/packages/release/bioc/vignettes/NanoMethViz/inst/doc/UsersGuide.html" class="external-link uri">https://www.bioconductor.org/packages/release/bioc/vignettes/NanoMethViz/inst/doc/UsersGuide.html</a>
+</li>
+<li>User Guide (pkgdown site): <a href="https://shians.github.io/NanoMethViz/articles/UsersGuide.html" class="uri">https://shians.github.io/NanoMethViz/articles/UsersGuide.html</a>
+</li>
+<li>Function reference index: <a href="https://shians.github.io/NanoMethViz/reference/index.html" class="uri">https://shians.github.io/NanoMethViz/reference/index.html</a>
+</li>
+<li>Issue tracker: <a href="https://github.com/Shians/NanoMethViz/issues" class="external-link uri">https://github.com/Shians/NanoMethViz/issues</a>
+</li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="example-plots">Example Plots<a class="anchor" aria-label="anchor" href="#example-plots"></a>
 </h2>
 <div class="section level3">
-<h3 id="mds-plot">MDS Plot<a class="anchor" aria-label="anchor" href="#mds-plot"></a>
+<h3 id="mds-plot">MDS plot<a class="anchor" aria-label="anchor" href="#mds-plot"></a>
 </h3>
-<p>The MDS plot is used to visualise differences in the methylation profiles of multiple samples.</p>
 <p><img src="reference/figures/mds.png"></p>
 </div>
 <div class="section level3">
-<h3 id="feature-aggregation">Feature Aggregation<a class="anchor" aria-label="anchor" href="#feature-aggregation"></a>
+<h3 id="feature-aggregation">Feature aggregation<a class="anchor" aria-label="anchor" href="#feature-aggregation"></a>
 </h3>
-<p>The feature aggregation plot can average the methylation profiles across a set of features.</p>
 <p><img src="reference/figures/agg_genes.png"></p>
 </div>
 <div class="section level3">
-<h3 id="region-methylation-plot">Region Methylation Plot<a class="anchor" aria-label="anchor" href="#region-methylation-plot"></a>
+<h3 id="region-methylation-plot">Region methylation plot<a class="anchor" aria-label="anchor" href="#region-methylation-plot"></a>
 </h3>
-<p>The region methylation plot can visualise the methylation profile of a region of interest. As well as provide a heatmap of the methylation along individual reads.</p>
 <p><img src="reference/figures/peg3_gene.png"></p>
 </div>
 </div>

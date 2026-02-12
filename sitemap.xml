@@ -11,6 +11,10 @@
 <url><loc>https://shians.github.io/NanoMethViz/reference/ModBamResult-class.html</loc></url>
 <url><loc>https://shians.github.io/NanoMethViz/reference/NanoMethResult-class.html</loc></url>
 <url><loc>https://shians.github.io/NanoMethViz/reference/NanoMethViz-package.html</loc></url>
+<url><loc>https://shians.github.io/NanoMethViz/reference/assert_valid_exons.html</loc></url>
+<url><loc>https://shians.github.io/NanoMethViz/reference/assert_valid_genomic_coords.html</loc></url>
+<url><loc>https://shians.github.io/NanoMethViz/reference/assert_valid_methy_samples.html</loc></url>
+<url><loc>https://shians.github.io/NanoMethViz/reference/assert_valid_samples.html</loc></url>
 <url><loc>https://shians.github.io/NanoMethViz/reference/bsseq_to_edger.html</loc></url>
 <url><loc>https://shians.github.io/NanoMethViz/reference/bsseq_to_log_methy_ratio.html</loc></url>
 <url><loc>https://shians.github.io/NanoMethViz/reference/cluster_reads.html</loc></url>

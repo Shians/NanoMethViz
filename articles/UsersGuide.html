@@ -131,12 +131,12 @@ the sample names in the <code>sample_anno</code> data frame.</p>
 files, it may be useful to convert the BAM files to tabix files using
 the <code><a href="../reference/modbam_to_tabix.html">modbam_to_tabix()</a></code> function for sharing the data.</p>
 <p>In modBAM files the modification calls are made along the read,
-allowing sequencing errors to produce modifications calls where there is
+allowing sequencing errors to produce modification calls where there are
 none in the genome. This may lead to noise impacting the averaging
 results. The <code>NanoMethViz.site_filter</code> option can be used to
-remove sites with low coverage, by default it is set to 3 to remove any
-sites with coverage less than 3. See the “Site filtering” section for
-more information.</p>
+remove sites with low coverage. By default it is set to 3, which removes
+any sites with coverage less than 3. See the “Site filtering” section
+for more information.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># construct with a ModBamFiles object as the methylation data</span></span>
 <span><span class="va">mbr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ModBamResult-class.html">ModBamResult</a></span><span class="op">(</span></span>
@@ -155,22 +155,22 @@ more information.</p>
 <code class="sourceCode R"><span><span class="co"># use in the same way as you would a NanoMethResult object</span></span>
 <span><span class="fu"><a href="../reference/plot_gene.html">plot_gene</a></span><span class="op">(</span><span class="va">mbr</span>, <span class="st">"Peg3"</span>, heatmap <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## `height` was translated to `width`.</span></span></code></pre>
-<p><img src="UsersGuide_files/figure-html/unnamed-chunk-3-1.png" width="504"></p>
+<p><img src="UsersGuide_files/figure-html/unnamed-chunk-3-1.png" class="r-plt" alt="" width="504"></p>
 </div>
 <div class="section level3">
 <h3 id="tabular-data-modkit-megalodon-nanopolish-f5c">Tabular data (Modkit, Megalodon, Nanopolish, f5c)<a class="anchor" aria-label="anchor" href="#tabular-data-modkit-megalodon-nanopolish-f5c"></a>
 </h3>
 <p>Tabular data is the most common format for methylation data, and is
-the format used by most of the software. The columns in the tabular data
-varies according to the software used. <code>NanoMethViz</code> will
-attempt to automatically detect the format of the data.</p>
+the format used by most software. The columns in the tabular data vary
+according to the software used. <code>NanoMethViz</code> will attempt to
+automatically detect the format of the data.</p>
 <div class="section level4">
 <h4 id="modkit">Modkit<a class="anchor" aria-label="anchor" href="#modkit"></a>
 </h4>
-<p>Modkit can be used to extract site-level modification data modBAM
-files. The <code>modkit extract full</code> command will output a
-tab-separated file with the required columns that can be converted
-useing the <code><a href="../reference/create_tabix_file.html">create_tabix_file()</a></code> function.</p>
+<p>Modkit can be used to extract site-level modification data from
+modBAM files. The <code>modkit extract full</code> command will output a
+tab-separated file with the required columns that can be converted using
+the <code><a href="../reference/create_tabix_file.html">create_tabix_file()</a></code> function.</p>
 <p>NOTE: <code>modkit</code> BED files are not supported as they do not
 contain read-level information, only position-aggregated data.</p>
 </div>
@@ -183,7 +183,7 @@ modified bases</a> file must be generated. This can be done by either
 adding <code>--write-mods-text</code> argument to Megalodon run or using
 the <code>megalodon_extras per_read_text modified_bases</code>
 utility.</p>
-<p>Later version of Megalodon will also produce <code>modBAM</code>
+<p>Later versions of Megalodon will also produce <code>modBAM</code>
 files, which can be used directly with <code>NanoMethViz</code> using
 the <code>ModBamResult</code> class as a substitute for
 <code>NanoMethResult</code>.</p>
@@ -191,10 +191,10 @@ the <code>ModBamResult</code> class as a substitute for
 <div class="section level3">
 <h3 id="importing-to-tabix-format">Importing to tabix format<a class="anchor" aria-label="anchor" href="#importing-to-tabix-format"></a>
 </h3>
-<p>Once you have produce the correct output from the software listed
+<p>Once you have produced the correct output from the software listed
 above, the conversion can be done using the
-<code><a href="../reference/create_tabix_file.html">create_tabix_file()</a></code> function. We provide example data of
-nanopolish output within the package.</p>
+<code><a href="../reference/create_tabix_file.html">create_tabix_file()</a></code> function. We provide example nanopolish
+output data within the package.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">methy_calls</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span>package <span class="op">=</span> <span class="st">"NanoMethViz"</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sample1_nanopolish.tsv.gz"</span>, <span class="st">"sample2_nanopolish.tsv.gz"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -249,9 +249,9 @@ is ready for use with NanoMethViz.</p>
 <p>The methylation information has been modified from the output of
 nanopolish/f5c. It has then been compressed and indexed using
 <code>bgzip()</code> and <code>indexTabix()</code> from the
-<code>Rsamtools</code> package. Here <code>system_file()</code> is used
-to retrieve data internal to the package, for your down data you simply
-need to provide a path without the <code>system_file()</code>
+<code>Rsamtools</code> package. Here <code><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file()</a></code> is used
+to retrieve data internal to the package. For your own data, you simply
+need to provide a path without the <code><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file()</a></code>
 function.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># methylation data stored in tabix file</span></span>
@@ -291,7 +291,7 @@ data.</p>
 <span><span class="co">## <span style="color: #BCBCBC;">4</span> 100009600 chr9  -      21<span style="text-decoration: underline;">066</span>024 21<span style="text-decoration: underline;">066</span>377         <span style="text-decoration: underline;">74</span>536 Zglp1 </span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">5</span> 100009600 chr9  -      21<span style="text-decoration: underline;">066</span>940 21<span style="text-decoration: underline;">067</span>093         <span style="text-decoration: underline;">74</span>536 Zglp1 </span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">6</span> 100009600 chr9  -      21<span style="text-decoration: underline;">062</span>400 21<span style="text-decoration: underline;">062</span>717         <span style="text-decoration: underline;">74</span>538 Zglp1</span></span></code></pre>
-<p>We will defined the sample annotation ourselves. It is important that
+<p>We will define the sample annotation ourselves. It is important that
 the sample names match those found in the methylation data.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sample</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
@@ -339,7 +339,7 @@ Peg3 gene as well as its directionality.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_gene.html">plot_gene</a></span><span class="op">(</span><span class="va">nmr</span>, <span class="st">"Peg3"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## `height` was translated to `width`.</span></span></code></pre>
-<p><img src="UsersGuide_files/figure-html/unnamed-chunk-10-1.png" width="504"></p>
+<p><img src="UsersGuide_files/figure-html/unnamed-chunk-10-1.png" class="r-plt" alt="" width="504"></p>
 <p>We can also load in some DMR results to highlight DMR regions.</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># loading saved results from previous bsseq analysis</span></span>
@@ -352,7 +352,7 @@ Peg3 gene as well as its directionality.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_gene.html">plot_gene</a></span><span class="op">(</span><span class="va">nmr</span>, <span class="st">"Peg3"</span>, anno_regions <span class="op">=</span> <span class="va">bsseq_dmr</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## `height` was translated to `width`.</span></span></code></pre>
-<p><img src="UsersGuide_files/figure-html/unnamed-chunk-12-1.png" width="504"></p>
+<p><img src="UsersGuide_files/figure-html/unnamed-chunk-12-1.png" class="r-plt" alt="" width="504"></p>
 <p>See other plotting options in the <a href="https://shians.github.io/NanoMethViz/reference/index.html">package
 documentation</a>.</p>
 </div>
@@ -383,7 +383,7 @@ obtained from the NanoMethResult objects using the
 <h3 id="edger">edgeR<a class="anchor" aria-label="anchor" href="#edger"></a>
 </h3>
 <p>edgeR can also be used to perform differential methylation analysis:
-<a href="https://f1000research.com/articles/6-2055" class="external-link uri">https://f1000research.com/articles/6-2055</a>. BSSeq objects
+<a href="https://f1000research.com/articles/6-2055" class="external-link uri">https://f1000research.com/articles/6-2055</a>. BSseq objects
 can be converted into the appropriate format using the
 <code><a href="../reference/bsseq_to_edger.html">bsseq_to_edger()</a></code> function. This can be used to count reads
 on a per-site basis or over regions.</p>
@@ -508,7 +508,7 @@ common conversion.</p>
 <code class="sourceCode R"><span><span class="va">nmr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_example_nanomethresult.html">load_example_nanomethresult</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/plot_gene.html">plot_gene</a></span><span class="op">(</span><span class="va">nmr</span>, <span class="st">"Peg3"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UsersGuide_files/figure-html/unnamed-chunk-17-1.png" width="504"></p>
+<p><img src="UsersGuide_files/figure-html/unnamed-chunk-17-1.png" class="r-plt" alt="" width="504"></p>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">new_exons</span> <span class="op">&lt;-</span> <span class="fu">NanoMethViz</span><span class="fu">::</span><span class="fu"><a href="../reference/exons.html">exons</a></span><span class="op">(</span><span class="va">nmr</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="../reference/exons_to_genes.html">exons_to_genes</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -518,7 +518,7 @@ common conversion.</p>
 <span></span>
 <span><span class="fu"><a href="../reference/plot_gene.html">plot_gene</a></span><span class="op">(</span><span class="va">nmr</span>, <span class="st">"Peg3"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## `height` was translated to `width`.</span></span></code></pre>
-<p><img src="UsersGuide_files/figure-html/unnamed-chunk-18-1.png" width="504"></p>
+<p><img src="UsersGuide_files/figure-html/unnamed-chunk-18-1.png" class="r-plt" alt="" width="504"></p>
 </div>
 </div>
 <div class="section level2">
@@ -567,11 +567,11 @@ limma implementation of MDS, and a PCA plot using BiocSingular.</p>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_mds.html">plot_mds</a></span><span class="op">(</span><span class="va">lmr</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"MDS Plot"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UsersGuide_files/figure-html/unnamed-chunk-21-1.png" width="504"></p>
+<p><img src="UsersGuide_files/figure-html/unnamed-chunk-21-1.png" class="r-plt" alt="" width="504"></p>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_pca.html">plot_pca</a></span><span class="op">(</span><span class="va">lmr</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"PCA Plot"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UsersGuide_files/figure-html/unnamed-chunk-21-2.png" width="504"></p>
+<p><img src="UsersGuide_files/figure-html/unnamed-chunk-21-2.png" class="r-plt" alt="" width="504"></p>
 <p>Additional coloring and labeling options can be provided via
 arguments to either function. Further customisations can be done using
 typical ggplot2 commands.</p>
@@ -583,14 +583,14 @@ typical ggplot2 commands.</p>
 <span><span class="fu"><a href="../reference/plot_mds.html">plot_mds</a></span><span class="op">(</span><span class="va">lmr</span>, labels <span class="op">=</span> <span class="va">new_labels</span>, groups <span class="op">=</span> <span class="va">groups</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"MDS Plot"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UsersGuide_files/figure-html/unnamed-chunk-22-1.png" width="504"></p>
+<p><img src="UsersGuide_files/figure-html/unnamed-chunk-22-1.png" class="r-plt" alt="" width="504"></p>
 <p>Points can also be plotted without labels by setting
 <code>labels = NULL</code>.</p>
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_mds.html">plot_mds</a></span><span class="op">(</span><span class="va">lmr</span>, labels <span class="op">=</span> <span class="cn">NULL</span>, groups <span class="op">=</span> <span class="va">groups</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"MDS Plot"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UsersGuide_files/figure-html/unnamed-chunk-23-1.png" width="504"></p>
+<p><img src="UsersGuide_files/figure-html/unnamed-chunk-23-1.png" class="r-plt" alt="" width="504"></p>
 </div>
 </div>
 <div class="section level2">
@@ -600,12 +600,12 @@ typical ggplot2 commands.</p>
 <h3 id="site-filtering">Site filtering<a class="anchor" aria-label="anchor" href="#site-filtering"></a>
 </h3>
 <p>NanoMethViz offers a site filtering option to remove sites with low
-coverage. This is particularly useful for modBAM files as the
-modifications calls are made along the reads, allowing methylation to be
-called at miscalled sites. The site filter is set to 3 by default, to
-filter any sites with coverage less than 3. This can be changed using
-the option <code>NanoMethViz.site_filter</code>. The following will
-remove any sites with coverage less than 5 from queries and plots.</p>
+coverage. This is particularly useful for modBAM files as modification
+calls are made along reads, allowing methylation to be called at
+miscalled sites. The site filter is set to 3 by default, filtering out
+any sites with coverage less than 3. This can be changed using the
+option <code>NanoMethViz.site_filter</code>. The following will remove
+any sites with coverage less than 5 from queries and plots.</p>
 <div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="st">"NanoMethViz.site_filter"</span> <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -632,7 +632,7 @@ following will change the colour to red.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

@@ -74,7 +74,7 @@
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.6.0" id="version-260">Version 2.6.0<a class="anchor" aria-label="anchor" href="#version-260"></a></h2>
-<ul><li>Added preliminary modbam file support.</li>
+<ul><li>Added preliminary modBAM file support.</li>
 <li>Changed rug plot to appear under other geoms. This helps with visibility of data when methylation values are close to 0.</li>
 <li>Changed heatmap alpha from 0.5 to 1, line width from 1.0 to 1.2 and line colour from black to darkgrey.</li>
 <li>Changed x-axis limits on plots to be controlled using coord_cartesian instead of scale_x_continuous. Plots should now accurately represent data around the boundaries.</li>
@@ -83,10 +83,10 @@
 <h2 class="pkg-version" data-toc-text="2.4.0" id="version-240">Version 2.4.0<a class="anchor" aria-label="anchor" href="#version-240"></a></h2>
 <ul><li>Fixed <code><a href="../reference/plot_region_heatmap.html">plot_region_heatmap()</a></code> producing the wrong plot when a factor is used for the chromosome.</li>
 <li>Fixed nanopolish and f5c import positions being off by 1.</li>
-<li>Fixed broken <code><a href="../reference/samples.html">samples()</a></code> setter for NanoMethResults.</li>
+<li>Fixed broken <code><a href="../reference/samples.html">samples()</a></code> setter for NanoMethResult.</li>
 <li>Added <code><a href="../reference/plot_agg_genes.html">plot_agg_genes()</a></code> function as a shorthand for <code>plot_agg_regions(x, exons_to_genes(exons(x)))</code>.</li>
 <li>Added the ability to interrupt <code><a href="../reference/methy_to_bsseq.html">methy_to_bsseq()</a></code> calls.</li>
-<li>Added handling for NanoMethResults objects in <code><a href="../reference/filter_methy.html">filter_methy()</a></code>. If NanoMethResult is used as input, then NanoMethResult is invisibly returned as output.</li>
+<li>Added handling for NanoMethResult objects in <code><a href="../reference/filter_methy.html">filter_methy()</a></code>. If NanoMethResult is used as input, then NanoMethResult is invisibly returned as output.</li>
 <li>Added black outlines to exons in annotation to distinguish contiguous segments for features like tandem repeats.</li>
 <li>Added <code>line_size</code> argument to <code><a href="../reference/plot_gene.html">plot_gene()</a></code>, <code><a href="../reference/plot_region.html">plot_region()</a></code> and <code>plot_granges()</code> plots for adjusting line size.</li>
 <li>Added <code>subsample</code> argument to heatmap plots, default 50. This reduces the number of rows shown the plot to the specified amount.</li>
@@ -170,7 +170,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

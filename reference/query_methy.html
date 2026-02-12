@@ -60,7 +60,7 @@
 
 
 <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
-<dd><p>the NanoMethResults object or a path to the methylation data
+<dd><p>the NanoMethResult object or a path to the methylation data
 (tabix-bgzipped).</p></dd>
 
 
@@ -97,8 +97,8 @@ methylation data for entire reads overlapping the region will be returned.</p></
 <dd><p>the minimum amount of coverage to report a site. This
 filters the queried data such that any site with less than the filter is
 not returned. The default is 1, which means that all sites are returned.
-This option can be set globally using the <code>options(site_filter = ...)</code>
-which will affect all plotting functions in NanoMethviz.</p></dd>
+This option can be set globally using the <code>options(NanoMethViz.site_filter = ...)</code>
+which will affect all plotting functions in NanoMethViz.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -109,7 +109,7 @@ a list of tables where each table is the data from one region.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>The argument <code>site_filter</code> can be set globally using the <code>options(site_filter = ...)</code> command. The same data entry may appear multiple times in the output
+    <p>The argument <code>site_filter</code> can be set globally using the <code>options(NanoMethViz.site_filter = ...)</code> command. The same data entry may appear multiple times in the output
 if it overlaps multiple regions.</p>
     </div>
 
@@ -144,7 +144,7 @@ if it overlaps multiple regions.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

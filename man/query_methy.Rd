@@ -16,7 +16,7 @@ query_methy(
 )
 }
 \arguments{
-\item{x}{the NanoMethResults object or a path to the methylation data
+\item{x}{the NanoMethResult object or a path to the methylation data
 (tabix-bgzipped).}
 
 \item{chr}{the vector of chromosomes}
@@ -39,8 +39,8 @@ methylation data for entire reads overlapping the region will be returned.}
 \item{site_filter}{the minimum amount of coverage to report a site. This
 filters the queried data such that any site with less than the filter is
 not returned. The default is 1, which means that all sites are returned.
-This option can be set globally using the \code{options(site_filter = ...)}
-which will affect all plotting functions in NanoMethviz.}
+This option can be set globally using the \code{options(NanoMethViz.site_filter = ...)}
+which will affect all plotting functions in NanoMethViz.}
 }
 \value{
 A table containing the data within the queried regions. If simplify
@@ -51,7 +51,7 @@ a list of tables where each table is the data from one region.
 Query methylation data
 }
 \details{
-The argument \code{site_filter} can be set globally using the \code{options(site_filter = ...)} command. The same data entry may appear multiple times in the output
+The argument \code{site_filter} can be set globally using the \code{options(NanoMethViz.site_filter = ...)} command. The same data entry may appear multiple times in the output
 if it overlaps multiple regions.
 }
 \examples{

@@ -12,7 +12,7 @@
 \alias{mod_code,ModBamResult-method}
 \alias{mod_code<-,ModBamResult,character-method}
 \alias{ModBamResult}
-\title{Modbam methylation results}
+\title{modBAM methylation results}
 \usage{
 \S4method{methy}{ModBamResult}(object)
 
@@ -49,7 +49,7 @@ least columns gene_id, chr, strand, start, end, transcript_id and symbol.}
 for 5mC. See details for other options.}
 }
 \value{
-a NanoMethResult object to be used with plotting functions
+a ModBamResult object to be used with plotting functions
 
 a ModBamFiles data.frame.
 
@@ -60,7 +60,7 @@ the exon annotation.
 the mod code.
 }
 \description{
-A ModBamResult object stores modbam data used for NanoMethViz
+A ModBamResult object stores modBAM data used for NanoMethViz
 visualisation. It contains stores a ModBamFiles object, sample information
 and optional exon information. The object is constructed using the
 ModBamResult() constructor function described in "Usage".
@@ -72,9 +72,9 @@ The possible tags for mod_code can be found at
 }
 \section{Functions}{
 \itemize{
-\item \code{methy(ModBamResult)}: modbam information getter.
+\item \code{methy(ModBamResult)}: modBAM information getter.
 
-\item \code{methy(object = ModBamResult) <- value}: modbam information setter.
+\item \code{methy(object = ModBamResult) <- value}: modBAM information setter.
 
 \item \code{samples(ModBamResult)}: sample annotation getter.
 

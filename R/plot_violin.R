@@ -1,6 +1,10 @@
 #' Plot violin for regions
 #'
-#' This function plots a violin plot of the methylation proportion for each region in the regions table. The methylation proportion is calculated as the mean of the modification probability wihtin each region and the violin represents the . The regions are then grouped and coloured by the group_col column in the regions table or samples(x).
+#' This function plots a violin plot of the methylation proportion for each
+#' region in the regions table. The methylation proportion is calculated as the
+#' mean of the modification probability within each region, and the violin shows
+#' the distribution across groups. Regions are grouped and coloured by the
+#' `group_col` column in the `regions` table or `samples(x)`.
 #'
 #' @param x the NanoMethResult object.
 #' @param regions a table of regions containing at least columns chr, strand,

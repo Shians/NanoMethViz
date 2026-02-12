@@ -5,6 +5,6 @@
 \alias{ModBamFiles-class}
 \title{ModBamFiles class}
 \description{
-This is a class for holding information about modbam files. It is a
-data.frame containing information about samples and paths to modbam files.
+This is a class for holding information about modBAM files. It is a
+data.frame containing information about samples and paths to modBAM files.
 }

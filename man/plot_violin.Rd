@@ -31,7 +31,11 @@ be in from the regions table or samples(x).}
 a ggplot object containing the methylation violin plot.
 }
 \description{
-This function plots a violin plot of the methylation proportion for each region in the regions table. The methylation proportion is calculated as the mean of the modification probability wihtin each region and the violin represents the . The regions are then grouped and coloured by the group_col column in the regions table or samples(x).
+This function plots a violin plot of the methylation proportion for each
+region in the regions table. The methylation proportion is calculated as the
+mean of the modification probability within each region, and the violin shows
+the distribution across groups. Regions are grouped and coloured by the
+\code{group_col} column in the \code{regions} table or \code{samples(x)}.
 }
 \examples{
 nmr <- load_example_nanomethresult()

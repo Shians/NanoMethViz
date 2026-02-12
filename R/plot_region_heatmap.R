@@ -12,7 +12,7 @@
 #' @return a ggplot plot containing the heatmap.
 #'
 #' @details
-#' This function creates a heatmap visualization of methylation data for a specified
+#' This function creates a heatmap visualisation of methylation data for a specified
 #' genomic region. Each row represents one or more packed reads, with colored segments
 #' indicating methylation probability at each position. Reads are packed vertically
 #' to minimize plot height while avoiding overlaps.

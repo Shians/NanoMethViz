@@ -1,7 +1,7 @@
 #' Plot gene annotations with exons and introns
 #'
 #' @description
-#' Creates a ggplot visualization of gene annotations showing exons and intron regions
+#' Creates a ggplot visualisation of gene annotations showing exons and intron regions
 #' within a specified genomic range.
 #'
 #' @param exons_df A data frame containing exon information with columns:
@@ -22,7 +22,7 @@
 #'
 #' @details
 #' The function filters exons to the specified region, organizes them by transcript,
-#' and visualizes them with connecting lines for introns. Gene symbols are placed
+#' and visualises them with connecting lines for introns. Gene symbols are placed
 #' near the middle of each transcript. Arrows indicate the strand direction when available.
 #'
 #' @importFrom dplyr mutate group_by summarise filter inner_join arrange ungroup

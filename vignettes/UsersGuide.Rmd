@@ -66,7 +66,7 @@ This requires a `ModBamFiles` object, which is a list of paths to the BAM files 
 
 Because the BAM files contain significantly more data than the tabix files, it may be useful to convert the BAM files to tabix files using the  `modbam_to_tabix()` function for sharing the data.
 
-In modBAM files the modification calls are made along the read, allowing sequencing errors to produce modifications calls where there is none in the genome. This may lead to noise impacting the averaging results. The `NanoMethViz.site_filter` option can be used to remove sites with low coverage, by default it is set to 3 to remove any sites with coverage less than 3. See the "Site filtering" section for more information.
+In modBAM files the modification calls are made along the read, allowing sequencing errors to produce modification calls where there are none in the genome. This may lead to noise impacting the averaging results. The `NanoMethViz.site_filter` option can be used to remove sites with low coverage. By default it is set to 3, which removes any sites with coverage less than 3. See the "Site filtering" section for more information.
 
 ```{r}
 # construct with a ModBamFiles object as the methylation data
@@ -89,11 +89,11 @@ plot_gene(mbr, "Peg3", heatmap = TRUE)
 
 ## Tabular data (Modkit, Megalodon, Nanopolish, f5c)
 
-Tabular data is the most common format for methylation data, and is the format used by most of the software. The columns in the tabular data varies according to the software used. `NanoMethViz` will attempt to automatically detect the format of the data.
+Tabular data is the most common format for methylation data, and is the format used by most software. The columns in the tabular data vary according to the software used. `NanoMethViz` will attempt to automatically detect the format of the data.
 
 ### Modkit
 
-Modkit can be used to extract site-level modification data modBAM files. The `modkit extract full` command will output a tab-separated file with the required columns that can be converted useing the `create_tabix_file()` function.
+Modkit can be used to extract site-level modification data from modBAM files. The `modkit extract full` command will output a tab-separated file with the required columns that can be converted using the `create_tabix_file()` function.
 
 NOTE: `modkit` BED files are not supported as they do not contain read-level information, only position-aggregated data.
 
@@ -101,11 +101,11 @@ NOTE: `modkit` BED files are not supported as they do not contain read-level inf
 
 To import data from Megalodon's modification calls, the [per-read modified bases](https://nanoporetech.github.io/megalodon/file_formats.html#per-read-modified-bases) file must be generated. This can be done by either adding `--write-mods-text` argument to Megalodon run or using the `megalodon_extras per_read_text modified_bases` utility.
 
-Later version of Megalodon will also produce `modBAM` files, which can be used directly with `NanoMethViz` using the `ModBamResult` class as a substitute for `NanoMethResult`.
+Later versions of Megalodon will also produce `modBAM` files, which can be used directly with `NanoMethViz` using the `ModBamResult` class as a substitute for `NanoMethResult`.
 
 ## Importing to tabix format
 
-Once you have produce the correct output from the software listed above, the conversion can be done using the `create_tabix_file()` function. We provide example data of nanopolish output within the package.
+Once you have produced the correct output from the software listed above, the conversion can be done using the `create_tabix_file()` function. We provide example nanopolish output data within the package.
 
 ```{r}
 methy_calls <- system.file(package = "NanoMethViz",
@@ -144,7 +144,7 @@ To generate a methylation plot we need 3 components:
 * annotation of exons
 * annotation of samples
 
-The methylation information has been modified from the output of nanopolish/f5c. It has then been compressed and indexed using `bgzip()` and `indexTabix()` from the `Rsamtools` package. Here `system_file()` is used to retrieve data internal to the package, for your down data you simply need to provide a path without the `system_file()` function.
+The methylation information has been modified from the output of nanopolish/f5c. It has then been compressed and indexed using `bgzip()` and `indexTabix()` from the `Rsamtools` package. Here `system.file()` is used to retrieve data internal to the package. For your own data, you simply need to provide a path without the `system.file()` function.
 
 
 ```{r}
@@ -164,7 +164,7 @@ exon_tibble <- get_exons_mm10()
 head(exon_tibble)
 ```
 
-We will defined the sample annotation ourselves. It is important that the sample names match those found in the methylation data.
+We will define the sample annotation ourselves. It is important that the sample names match those found in the methylation data.
 
 ```{r}
 sample <- c(
@@ -238,7 +238,7 @@ bss
 
 ## edgeR
 
-edgeR can also be used to perform differential methylation analysis: https://f1000research.com/articles/6-2055. BSSeq objects can be converted into the appropriate format using the `bsseq_to_edger()` function. This can be used to count reads on a per-site basis or over regions.
+edgeR can also be used to perform differential methylation analysis: https://f1000research.com/articles/6-2055. BSseq objects can be converted into the appropriate format using the `bsseq_to_edger()` function. This can be used to count reads on a per-site basis or over regions.
 
 ```{r}
 gene_regions <- exons_to_genes(NanoMethViz::exons(nmr))
@@ -359,7 +359,7 @@ plot_mds(lmr, labels = NULL, groups = groups) +
 
 ## Site filtering
 
-NanoMethViz offers a site filtering option to remove sites with low coverage. This is particularly useful for modBAM files as the modifications calls are made along the reads, allowing methylation to be called at miscalled sites. The site filter is set to 3 by default, to filter any sites with coverage less than 3. This can be changed using the option `NanoMethViz.site_filter`. The following will remove any sites with coverage less than 5 from queries and plots.
+NanoMethViz offers a site filtering option to remove sites with low coverage. This is particularly useful for modBAM files as modification calls are made along reads, allowing methylation to be called at miscalled sites. The site filter is set to 3 by default, filtering out any sites with coverage less than 3. This can be changed using the option `NanoMethViz.site_filter`. The following will remove any sites with coverage less than 5 from queries and plots.
 
 ```{r, eval = FALSE}
 options("NanoMethViz.site_filter" = 5)

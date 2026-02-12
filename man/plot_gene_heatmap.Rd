@@ -51,7 +51,7 @@ a ggplot plot containing the heatmap.
 Plot the methylation heatmap of a gene symbol specified within the exon(x) slot.
 }
 \details{
-This function creates a heatmap visualization of methylation data for a specific gene.
+This function creates a heatmap visualisation of methylation data for a specific gene.
 Each row in the heatmap represents one or more packed reads, where colored segments
 indicate methylation probability at each genomic position.
 }

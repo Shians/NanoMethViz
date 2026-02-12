@@ -1,7 +1,7 @@
 #' ModBamFiles class
 #'
-#' This is a class for holding information about modbam files. It is a
-#' data.frame containing information about samples and paths to modbam files.
+#' This is a class for holding information about modBAM files. It is a
+#' data.frame containing information about samples and paths to modBAM files.
 #'
 #' @export
 setClass(
@@ -71,9 +71,9 @@ setMethod("show", signature("ModBamFiles"), function(object) {
     print(object)
 })
 
-#' Modbam methylation results
+#' modBAM methylation results
 #'
-#' A ModBamResult object stores modbam data used for NanoMethViz
+#' A ModBamResult object stores modBAM data used for NanoMethViz
 #' visualisation. It contains stores a ModBamFiles object, sample information
 #' and optional exon information. The object is constructed using the
 #' ModBamResult() constructor function described in "Usage".
@@ -86,7 +86,7 @@ setMethod("show", signature("ModBamFiles"), function(object) {
 #'   gene_id, chr, strand, start, end, transcript_id and symbol.
 #' @slot mod_code the modification code of interest.
 #'
-#' @return a NanoMethResult object to be used with plotting functions
+#' @return a ModBamResult object to be used with plotting functions
 #'
 #' @export
 setClass(
@@ -99,7 +99,7 @@ setClass(
     )
 )
 
-#' @describeIn ModBamResult-class modbam information getter.
+#' @describeIn ModBamResult-class modBAM information getter.
 #'
 #' @param object the ModBamResult object.
 #'
@@ -114,7 +114,7 @@ setMethod(
     }
 )
 
-#' @describeIn ModBamResult-class modbam information setter.
+#' @describeIn ModBamResult-class modBAM information setter.
 #'
 #' @param object the ModBamResult object.
 #' @param value the path to the methylation data.

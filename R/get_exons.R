@@ -1,7 +1,7 @@
 #' Get exon annotations
 #'
 #' Helper functions are provided for obtaining exon annotations from relevant
-#' TxDb packages on Bioconductor for the construction of NanoMethResults
+#' TxDb packages on Bioconductor for the construction of NanoMethResult
 #' objects.
 #'
 #' @name get_exons

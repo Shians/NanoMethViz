@@ -7,11 +7,11 @@
 load_example_nanomethresult()
 }
 \value{
-a NanoMethResults object
+a NanoMethResult object
 }
 \description{
 Load an example NanoMethResult object for demonstration of plotting
-functions. Run \code{load_example_nanomethresults} without the function call to
+functions. Run \code{load_example_nanomethresult} without the function call to
 see how the object is constructed.
 }
 \examples{

@@ -30,7 +30,7 @@
 * Fixed crash when CIGAR doesn't match length of SEQ.
 
 ## Version 2.6.0
-* Added preliminary modbam file support.
+* Added preliminary modBAM file support.
 * Changed rug plot to appear under other geoms. This helps with visibility of data when methylation values are close to 0.
 * Changed heatmap alpha from 0.5 to 1, line width from 1.0 to 1.2 and line colour from black to darkgrey.
 * Changed x-axis limits on plots to be controlled using coord_cartesian instead of scale_x_continuous. Plots should now accurately represent data around the boundaries.
@@ -38,10 +38,10 @@
 ## Version 2.4.0
 * Fixed `plot_region_heatmap()` producing the wrong plot when a factor is used for the chromosome.
 * Fixed nanopolish and f5c import positions being off by 1.
-* Fixed broken `samples()` setter for NanoMethResults.
+* Fixed broken `samples()` setter for NanoMethResult.
 * Added `plot_agg_genes()` function as a shorthand for `plot_agg_regions(x, exons_to_genes(exons(x)))`.
 * Added the ability to interrupt `methy_to_bsseq()` calls.
-* Added handling for NanoMethResults objects in `filter_methy()`. If NanoMethResult is used as input, then NanoMethResult is invisibly returned as output.
+* Added handling for NanoMethResult objects in `filter_methy()`. If NanoMethResult is used as input, then NanoMethResult is invisibly returned as output.
 * Added black outlines to exons in annotation to distinguish contiguous segments for features like tandem repeats.
 * Added `line_size` argument to `plot_gene()`, `plot_region()` and `plot_granges()` plots for adjusting line size.
 * Added `subsample` argument to heatmap plots, default 50. This reduces the number of rows shown the plot to the specified amount.

@@ -70,7 +70,7 @@ plot_pca(lmr)
 5. Query and visualise methylation (`query_methy()`, `plot_gene()`, `plot_region()`, `plot_agg_genes()`, `plot_agg_regions()`, `plot_violin()`, `plot_region_heatmap()`).
 6. Export for downstream differential analysis (`methy_to_bsseq()`, `bsseq_to_edger()`).
 
-## Common Tasks and Pitfalls
+## Common Tasks
 
 Choose the right object type:
 

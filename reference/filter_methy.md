@@ -36,8 +36,8 @@ nmr <- load_example_nanomethresult()
 output_file <- paste0(tempfile(), ".tsv.bgz")
 filter_methy(nmr, output_file = output_file, chr == "chrX")
 #> 21,798 of 224,267 (9.72%) entries kept after filtering
-#> results written to '/tmp/RtmptibKdL/file1d22583e3901.tsv.bgz' along with index file '/tmp/RtmptibKdL/file1d22583e3901.tsv.bgz.tbi'
+#> results written to '/tmp/RtmprhhzqA/file1c665036c242.tsv.bgz' along with index file '/tmp/RtmprhhzqA/file1c665036c242.tsv.bgz.tbi'
 filter_methy(methy(nmr), output_file = output_file, chr == "chrX")
 #> 21,798 of 224,267 (9.72%) entries kept after filtering
-#> results written to '/tmp/RtmptibKdL/file1d22583e3901.tsv.bgz' along with index file '/tmp/RtmptibKdL/file1d22583e3901.tsv.bgz.tbi'
+#> results written to '/tmp/RtmprhhzqA/file1c665036c242.tsv.bgz' along with index file '/tmp/RtmprhhzqA/file1c665036c242.tsv.bgz.tbi'
 ```

@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 3.8.0
+
+- Addes sorting to the heatmap so reads appear from most to least
+  methylated. This is done by calculating the average methylation across
+  the region for each read and sorting by this value.
+
 ## Version 3.4.0
 
 - Fixed

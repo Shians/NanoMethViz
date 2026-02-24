@@ -76,6 +76,5 @@ genomic position.
 nmr <- load_example_nanomethresult()
 #> Successfully matched 6 samples between data and annotation.
 plot_gene_heatmap(nmr, "Peg3")
-#> `height` was translated to `width`.
 
 ```

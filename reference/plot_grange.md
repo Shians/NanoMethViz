@@ -101,6 +101,5 @@ region.
 nmr <- load_example_nanomethresult()
 #> Successfully matched 6 samples between data and annotation.
 plot_grange(nmr, GenomicRanges::GRanges("chr7:6703892-6730431"))
-#> `height` was translated to `width`.
 
 ```

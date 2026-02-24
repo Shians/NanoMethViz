@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">NanoMethViz</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.7.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.7.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,6 +36,10 @@
       <small>Source: <a href="https://github.com/Shians/NanoMethViz/blob/devel/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="3.8.0" id="version-380">Version 3.8.0<a class="anchor" aria-label="anchor" href="#version-380"></a></h2>
+<ul><li>Addes sorting to the heatmap so reads appear from most to least methylated. This is done by calculating the average methylation across the region for each read and sorting by this value.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="3.4.0" id="version-340">Version 3.4.0<a class="anchor" aria-label="anchor" href="#version-340"></a></h2>
 <ul><li>Fixed <code><a href="../reference/modbam_to_tabix.html">modbam_to_tabix()</a></code> to not delete existing directories when provided as the output file. Previously it would delete the directory and create a file with the same name, now it will fail if the output is a directory.</li>

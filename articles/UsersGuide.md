@@ -102,8 +102,6 @@ mbr <- ModBamResult(
 plot_gene(mbr, "Peg3", heatmap = TRUE)
 ```
 
-    ## `height` was translated to `width`.
-
 ![](UsersGuide_files/figure-html/unnamed-chunk-3-1.png)
 
 ### Tabular data (Modkit, Megalodon, Nanopolish, f5c)
@@ -304,8 +302,6 @@ Peg3 gene as well as its directionality.
 plot_gene(nmr, "Peg3")
 ```
 
-    ## `height` was translated to `width`.
-
 ![](UsersGuide_files/figure-html/unnamed-chunk-10-1.png)
 
 We can also load in some DMR results to highlight DMR regions.
@@ -323,8 +319,6 @@ bsseq_dmr <- read.table(
 ``` r
 plot_gene(nmr, "Peg3", anno_regions = bsseq_dmr)
 ```
-
-    ## `height` was translated to `width`.
 
 ![](UsersGuide_files/figure-html/unnamed-chunk-12-1.png)
 
@@ -510,8 +504,6 @@ NanoMethViz::exons(nmr) <- new_exons
 
 plot_gene(nmr, "Peg3")
 ```
-
-    ## `height` was translated to `width`.
 
 ![](UsersGuide_files/figure-html/unnamed-chunk-18-1.png)
 

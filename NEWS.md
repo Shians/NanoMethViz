@@ -1,3 +1,6 @@
+## Version 3.8.0
+* Addes sorting to the heatmap so reads appear from most to least methylated. This is done by calculating the average methylation across the region for each read and sorting by this value.
+
 ## Version 3.4.0
 * Fixed `modbam_to_tabix()` to not delete existing directories when provided as the output file. Previously it would delete the directory and create a file with the same name, now it will fail if the output is a directory.
 * Fixed gene annotation labels not showing up when symbol column is a factor.

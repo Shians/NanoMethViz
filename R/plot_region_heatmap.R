@@ -1,167 +1,15 @@
-#' @rdname plot_region_heatmap
-#'
-#' @param window_prop the size of flanking region to plot. Can be a vector of two
-#'   values for left and right window size. Values indicate proportion of region
-#'   length.
-#' @param pos_style the style for plotting the base positions along the x-axis.
-#'   Defaults to "to_scale", plotting (potentially) overlapping squares
-#'   along the genomic position to scale. The "compact" options plots only the
-#'   positions with measured modification.
-#' @param subsample the number of read of packed read rows to subsample to.
-#'
-#' @return a ggplot plot containing the heatmap.
-#'
-#' @details
-#' This function creates a heatmap visualisation of methylation data for a specified
-#' genomic region. Each row represents one or more packed reads, with colored segments
-#' indicating methylation probability at each position. Reads are packed vertically
-#' to minimize plot height while avoiding overlaps.
-#'
-#' @examples
-#' nmr <- load_example_nanomethresult()
-#' plot_region_heatmap(nmr, "chr7", 6703892, 6730431)
-#'
-#' @export
-setMethod(
-    "plot_region_heatmap",
-    signature(
-        x = "NanoMethResult",
-        chr = "character",
-        start = "numeric",
-        end = "numeric"),
-
-    function(
-        x,
-        chr,
-        start,
-        end,
-        pos_style = c("to_scale", "compact"),
-        window_prop = 0,
-        subsample = 50
-
-    ) {
-        pos_style <- match.arg(pos_style)
-
-        plot_region_heatmap_impl(
-            x = x,
-            chr = chr,
-            start = start,
-            end = end,
-            pos_style = pos_style,
-            window_prop = window_prop,
-            subsample = subsample
-        )
-    }
-)
-
-#' @rdname plot_region_heatmap
-#'
-#' @export
-setMethod(
-    "plot_region_heatmap",
-    signature(
-        x = "ModBamResult",
-        chr = "character",
-        start = "numeric",
-        end = "numeric"),
-
-    function(
-        x,
-        chr,
-        start,
-        end,
-        pos_style = c("to_scale", "compact"),
-        window_prop = 0,
-        subsample = 50
-
-    ) {
-        pos_style <- match.arg(pos_style)
-
-        plot_region_heatmap_impl(
-            x = x,
-            chr = chr,
-            start = start,
-            end = end,
-            pos_style = pos_style,
-            window_prop = window_prop,
-            subsample = subsample
-        )
-    }
-)
-
-#' @rdname plot_region_heatmap
-#'
-#' @export
-setMethod("plot_region_heatmap",
-    signature(
-        x = "NanoMethResult",
-        chr = "factor",
-        start = "numeric",
-        end = "numeric"),
-
-    function(
-        x,
-        chr,
-        start,
-        end,
-        pos_style = c("to_scale", "compact"),
-        window_prop = 0,
-        subsample = 50
-    ) {
-        chr <- as.character(chr)
-        plot_region_heatmap_impl(
-            x = x,
-            chr = chr,
-            start = start,
-            end = end,
-            pos_style = pos_style,
-            window_prop = window_prop,
-            subsample = subsample
-        )
-    }
-)
-
-#' @rdname plot_region_heatmap
-#'
-#' @export
-setMethod("plot_region_heatmap",
-    signature(
-        x = "ModBamResult",
-        chr = "factor",
-        start = "numeric",
-        end = "numeric"),
-
-    function(
-        x,
-        chr,
-        start,
-        end,
-        pos_style = c("to_scale", "compact"),
-        window_prop = 0,
-        subsample = 50
-    ) {
-        chr <- as.character(chr)
-        plot_region_heatmap_impl(
-            x = x,
-            chr = chr,
-            start = start,
-            end = end,
-            pos_style = pos_style,
-            window_prop = window_prop,
-            subsample = subsample
-        )
-    }
-)
-
 plot_region_heatmap_impl <- function(
     x,
     chr,
     start,
     end,
-    window_prop,
-    pos_style,
-    subsample
+    pos_style = c("to_scale", "compact"),
+    window_prop = 0,
+    subsample = 50
 ) {
+    pos_style <- match.arg(pos_style)
+    chr <- as.character(chr)
+
     if (length(window_prop) == 1) {
         window_prop <- c(window_prop, window_prop)
     }
@@ -218,3 +66,60 @@ plot_region_heatmap_impl <- function(
         subsample = subsample
     )
 }
+
+#' @rdname plot_region_heatmap
+#'
+#' @param window_prop the size of flanking region to plot. Can be a vector of two
+#'   values for left and right window size. Values indicate proportion of region
+#'   length.
+#' @param pos_style the style for plotting the base positions along the x-axis.
+#'   Defaults to "to_scale", plotting (potentially) overlapping squares
+#'   along the genomic position to scale. The "compact" options plots only the
+#'   positions with measured modification.
+#' @param subsample the number of read of packed read rows to subsample to.
+#'
+#' @return a ggplot plot containing the heatmap.
+#'
+#' @details
+#' This function creates a heatmap visualisation of methylation data for a specified
+#' genomic region. Each row represents one or more packed reads, with colored segments
+#' indicating methylation probability at each position. Reads are packed vertically
+#' to minimize plot height while avoiding overlaps.
+#'
+#' @examples
+#' nmr <- load_example_nanomethresult()
+#' plot_region_heatmap(nmr, "chr7", 6703892, 6730431)
+#'
+#' @export
+setMethod(
+    "plot_region_heatmap",
+    signature(x = "NanoMethResult", chr = "character", start = "numeric", end = "numeric"),
+    plot_region_heatmap_impl
+)
+
+#' @rdname plot_region_heatmap
+#'
+#' @export
+setMethod(
+    "plot_region_heatmap",
+    signature(x = "ModBamResult", chr = "character", start = "numeric", end = "numeric"),
+    plot_region_heatmap_impl
+)
+
+#' @rdname plot_region_heatmap
+#'
+#' @export
+setMethod(
+    "plot_region_heatmap",
+    signature(x = "NanoMethResult", chr = "factor", start = "numeric", end = "numeric"),
+    plot_region_heatmap_impl
+)
+
+#' @rdname plot_region_heatmap
+#'
+#' @export
+setMethod(
+    "plot_region_heatmap",
+    signature(x = "ModBamResult", chr = "factor", start = "numeric", end = "numeric"),
+    plot_region_heatmap_impl
+)

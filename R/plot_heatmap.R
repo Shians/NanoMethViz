@@ -1,8 +1,15 @@
+# subsample stacked reads to rough maximum coverage
 subsample_read_groups <- function(methy_data, subsample, group_col = "group") {
     subsample_fn <- function(x, key, subsample) {
-        if (nrow(x) > subsample) dplyr::sample_n(x, subsample) else x
+        if (nrow(x) > subsample) {
+            dplyr::sample_n(x, subsample)
+        } else {
+            x
+        }
     }
 
+    # nest per (group, read_group) so each row represents one read, then subsample
+    # within each group before unnesting back to per-site rows
     methy_data %>%
         dplyr::nest_by(group = .data[[group_col]], read_group = .data$read_group) %>%
         dplyr::group_by(.data$group) %>%
@@ -10,7 +17,10 @@ subsample_read_groups <- function(methy_data, subsample, group_col = "group") {
         tidyr::unnest("data")
 }
 
+# build a compact heatmap where sites are evenly spaced regardless of genomic distance
 build_heatmap_compact <- function(methy_data) {
+    # positions are treated as discrete factors so sites are evenly spaced
+    # regardless of their genomic distance (compact layout)
     ggplot2::ggplot(
         methy_data,
         aes(
@@ -21,6 +31,7 @@ build_heatmap_compact <- function(methy_data) {
     ) +
         ggplot2::geom_raster() +
         heatmap_fill_scale +
+        # strip all axis labels/ticks for reads
         ggplot2::theme(
             axis.ticks.x = ggplot2::element_blank(),
             axis.text.x = ggplot2::element_blank(),
@@ -33,8 +44,12 @@ build_heatmap_compact <- function(methy_data) {
         ggplot2::xlab("Site")
 }
 
+# build a heatmap with positions shown at their true genomic coordinates
 build_heatmap_to_scale <- function(methy_data, read_data) {
+    # draw each read as a horizontal line spanning its first to last observed site,
+    # then overlay coloured squares at each methylation site position
     ggplot2::ggplot(methy_data, aes(y = .data$read_group)) +
+        # read spans shown as zero-height error bars (width = 0 removes caps)
         ggplot2::geom_errorbarh(
             ggplot2::aes(xmin = .data$start, xmax = .data$end),
             data = read_data,
@@ -53,7 +68,10 @@ build_heatmap_to_scale <- function(methy_data, read_data) {
         ggplot2::xlab("Position")
 }
 
+# sort read groups within each group by ascending mean methylation probability
 sort_read_groups_by_methy <- function(methy_data) {
+    # order reads within each group by ascending mean modification probability so
+    # that highly methylated reads appear at the top of each facet
     read_group_levels <- methy_data %>%
         dplyr::group_by(.data$group, .data$read_group) %>%
         dplyr::summarise(mean_mod = mean(.data$mod_prob, na.rm = TRUE), .groups = "drop") %>%
@@ -76,6 +94,7 @@ plot_methy_data_heatmap <- function(
     if (pos_style == "compact") {
         p <- build_heatmap_compact(methy_data)
     } else {
+        # compute per-read extents for the background span layer used in to-scale plots
         read_data <- methy_data %>%
             dplyr::group_by(.data$read_name) %>%
             dplyr::summarise(start = min(.data$pos), end = max(.data$pos)) %>%
@@ -86,5 +105,7 @@ plot_methy_data_heatmap <- function(
         p <- build_heatmap_to_scale(methy_data, read_data)
     }
 
+    # each sample group gets its own facet
+    # free_y allows independent read counts per panel
     p + ggplot2::facet_wrap(~group, scales = "free_y", ncol = 1, strip.position = "right")
 }

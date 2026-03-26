@@ -64,7 +64,7 @@ modbam_to_tabix <- function(x, out_file, mod_code = NanoMethViz::mod_code(x)) {
 
     cli::cli_alert_info(paste0("Moving data to final location: ", out_file))
 
-    output_dir = fs::path_dir(out_file)
+    output_dir <- fs::path_dir(out_file)
     if (output_dir != "" && fs::file_exists(output_dir)) {
         fs::dir_create(fs::path_dir(out_file))
     }

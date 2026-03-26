@@ -125,7 +125,7 @@ plot_agg_regions.get_methy_data <- function(x, regions, flank) {
         query_methy(
             methy,
             regions$chr[i],
-            regions$start[i] - flank,
+            max(regions$start[i] - flank, 1),
             regions$end[i] + flank,
             force = TRUE)
     }

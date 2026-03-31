@@ -1,7 +1,7 @@
 # NanoMethViz
 
 <!-- badges: start -->
-[![Codecov test coverage](https://codecov.io/gh/Shians/NanoMethViz/branch/master/graph/badge.svg)](https://codecov.io/gh/Shians/NanoMethViz?branch=master)
+[![codecov](https://codecov.io/gh/Shians/NanoMethViz/branch/devel/graph/badge.svg?token=I40WANFT0B)](https://codecov.io/gh/Shians/NanoMethViz)
 [![R-CMD-check](https://github.com/Shians/NanoMethViz/workflows/R-CMD-check/badge.svg)](https://github.com/Shians/NanoMethViz/actions)
 <!-- badges: end -->
 

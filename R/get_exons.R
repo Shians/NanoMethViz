@@ -25,34 +25,7 @@ NULL
 #' @export
 get_exons_mus_musculus <- function() {
     package_check("Mus.musculus", "1.3.1")
-
-    genes <-  AnnotationDbi::keys(Mus.musculus::Mus.musculus, "GENEID")
-    exon_data <- suppressMessages(AnnotationDbi::select(
-        Mus.musculus::Mus.musculus,
-        keys = genes,
-        keytype = "GENEID",
-        columns = c(
-            "GENEID",
-            "TXID",
-            "EXONCHROM",
-            "EXONSTRAND",
-            "EXONSTART",
-            "EXONEND",
-            "SYMBOL"
-        )
-    ))
-
-    tibble::as_tibble(exon_data) %>%
-        dplyr::rename(
-            gene_id = "GENEID",
-            chr = "EXONCHROM",
-            strand = "EXONSTRAND",
-            start = "EXONSTART",
-            end = "EXONEND",
-            transcript_id = "TXID",
-            symbol = "SYMBOL"
-        ) %>%
-        filter_primary_chr()
+    get_exons_from_organism_db(Mus.musculus::Mus.musculus)
 }
 
 #' @rdname get_exons
@@ -66,46 +39,10 @@ get_exons_mm10 <- function() {
         c("TxDb.Mmusculus.UCSC.mm10.knownGene", "org.Mm.eg.db"),
         c("3.10.0", "3.15.0")
     )
-
-    txdb <- TxDb.Mmusculus.UCSC.mm10.knownGene::TxDb.Mmusculus.UCSC.mm10.knownGene
-
-    genes <-  AnnotationDbi::keys(txdb, "GENEID")
-    exon_data <- suppressMessages(AnnotationDbi::select(
-        txdb,
-        keys = genes,
-        keytype = "GENEID",
-        columns = c(
-            "GENEID",
-            "TXID",
-            "EXONCHROM",
-            "EXONSTRAND",
-            "EXONSTART",
-            "EXONEND"
-        )
-    ))
-
-    symbols_data <- suppressMessages(AnnotationDbi::select(
-            org.Mm.eg.db::org.Mm.eg.db,
-            keys = genes,
-            keytype = "ENTREZID",
-            columns = c(
-                "SYMBOL"
-            )
-        )) %>%
-        dplyr::rename(GENEID = "ENTREZID")
-
-    dplyr::left_join(exon_data, symbols_data, by = "GENEID", multiple = "all") %>%
-        tibble::as_tibble() %>%
-        dplyr::rename(
-            gene_id = "GENEID",
-            chr = "EXONCHROM",
-            strand = "EXONSTRAND",
-            start = "EXONSTART",
-            end = "EXONEND",
-            transcript_id = "TXID",
-            symbol = "SYMBOL"
-        ) %>%
-        filter_primary_chr()
+    get_exons_from_txdb_orgdb(
+        TxDb.Mmusculus.UCSC.mm10.knownGene::TxDb.Mmusculus.UCSC.mm10.knownGene,
+        org.Mm.eg.db::org.Mm.eg.db
+    )
 }
 
 #' @rdname get_exons
@@ -119,46 +56,10 @@ get_exons_grcm39 <- function() {
         c("TxDb.Mmusculus.UCSC.mm39.refGene", "org.Mm.eg.db"),
         c("3.10.0", "3.15.0")
     )
-
-    txdb <- TxDb.Mmusculus.UCSC.mm39.refGene::TxDb.Mmusculus.UCSC.mm39.refGene
-
-    genes <-  AnnotationDbi::keys(txdb, "GENEID")
-    exon_data <- suppressMessages(AnnotationDbi::select(
-        txdb,
-        keys = genes,
-        keytype = "GENEID",
-        columns = c(
-            "GENEID",
-            "TXID",
-            "EXONCHROM",
-            "EXONSTRAND",
-            "EXONSTART",
-            "EXONEND"
-        )
-    ))
-
-    symbols_data <- suppressMessages(AnnotationDbi::select(
-            org.Mm.eg.db::org.Mm.eg.db,
-            keys = genes,
-            keytype = "ENTREZID",
-            columns = c(
-                "SYMBOL"
-            )
-        )) %>%
-        dplyr::rename(GENEID = "ENTREZID")
-
-    dplyr::left_join(exon_data, symbols_data, by = "GENEID", multiple = "all") %>%
-        tibble::as_tibble() %>%
-        dplyr::rename(
-            gene_id = "GENEID",
-            chr = "EXONCHROM",
-            strand = "EXONSTRAND",
-            start = "EXONSTART",
-            end = "EXONEND",
-            transcript_id = "TXID",
-            symbol = "SYMBOL"
-        ) %>%
-        filter_primary_chr()
+    get_exons_from_txdb_orgdb(
+        TxDb.Mmusculus.UCSC.mm39.refGene::TxDb.Mmusculus.UCSC.mm39.refGene,
+        org.Mm.eg.db::org.Mm.eg.db
+    )
 }
 
 #' Get example exon annotations for mus musculus (mm10)
@@ -175,34 +76,10 @@ get_exons_grcm39 <- function() {
 #' @export
 get_example_exons_mus_musculus <- function() {
     package_check("Mus.musculus", "1.3.1")
-
-    genes <-  c("12189", "12190", "16210", "17263", "18616", "213742")
-    exon_data <- suppressMessages(AnnotationDbi::select(
+    get_exons_from_organism_db(
         Mus.musculus::Mus.musculus,
-        keys = genes,
-        keytype = "GENEID",
-        columns = c(
-            "GENEID",
-            "TXID",
-            "EXONCHROM",
-            "EXONSTRAND",
-            "EXONSTART",
-            "EXONEND",
-            "SYMBOL"
-        )
-    ))
-
-    tibble::as_tibble(exon_data) %>%
-        dplyr::rename(
-            gene_id = "GENEID",
-            chr = "EXONCHROM",
-            strand = "EXONSTRAND",
-            start = "EXONSTART",
-            end = "EXONEND",
-            transcript_id = "TXID",
-            symbol = "SYMBOL"
-        ) %>%
-        filter_primary_chr()
+        keys = c("12189", "12190", "16210", "17263", "18616", "213742")
+    )
 }
 
 #' Get exon annotations for Homo sapiens (hg19)
@@ -217,35 +94,7 @@ get_example_exons_mus_musculus <- function() {
 #' @export
 get_exons_homo_sapiens <- function() {
     package_check("Homo.sapiens", "1.3.1")
-
-    genes <-  AnnotationDbi::keys(Homo.sapiens::Homo.sapiens, "GENEID")
-    exon_data <- suppressMessages(AnnotationDbi::select(
-        Homo.sapiens::Homo.sapiens,
-        keys = genes,
-        keytype = "GENEID",
-        columns = c(
-            "GENEID",
-            "TXID",
-            "EXONCHROM",
-            "EXONSTRAND",
-            "EXONSTART",
-            "EXONEND",
-            "SYMBOL"
-        )
-    ))
-
-    tibble::as_tibble(exon_data) %>%
-        dplyr::rename(
-            gene_id = "GENEID",
-            chr = "EXONCHROM",
-            strand = "EXONSTRAND",
-            start = "EXONSTART",
-            end = "EXONEND",
-            transcript_id = "TXID",
-            symbol = "SYMBOL"
-        ) %>%
-        filter_primary_chr()
-
+    get_exons_from_organism_db(Homo.sapiens::Homo.sapiens)
 }
 
 #' @rdname get_exons
@@ -257,46 +106,12 @@ get_exons_homo_sapiens <- function() {
 get_exons_hg19 <- function() {
     package_check(
         c("org.Hs.eg.db", "TxDb.Hsapiens.UCSC.hg19.knownGene"),
-        c("3.15.0", "3.2.2"))
-
-    txdb <- TxDb.Hsapiens.UCSC.hg19.knownGene::TxDb.Hsapiens.UCSC.hg19.knownGene
-    genes <-  AnnotationDbi::keys(txdb, "GENEID")
-    exon_data <- suppressMessages(AnnotationDbi::select(
-        txdb,
-        keys = genes,
-        keytype = "GENEID",
-        columns = c(
-            "GENEID",
-            "TXID",
-            "EXONCHROM",
-            "EXONSTRAND",
-            "EXONSTART",
-            "EXONEND"
-        )
-    ))
-
-    symbols_data <- suppressMessages(AnnotationDbi::select(
-            org.Hs.eg.db::org.Hs.eg.db,
-            keys = genes,
-            keytype = "ENTREZID",
-            columns = c(
-                "SYMBOL"
-            )
-        )) %>%
-        dplyr::rename(GENEID = "ENTREZID")
-
-    dplyr::left_join(exon_data, symbols_data, by = "GENEID", multiple = "all") %>%
-        tibble::as_tibble() %>%
-        dplyr::rename(
-            gene_id = "GENEID",
-            chr = "EXONCHROM",
-            strand = "EXONSTRAND",
-            start = "EXONSTART",
-            end = "EXONEND",
-            transcript_id = "TXID",
-            symbol = "SYMBOL"
-        ) %>%
-        filter_primary_chr()
+        c("3.15.0", "3.2.2")
+    )
+    get_exons_from_txdb_orgdb(
+        TxDb.Hsapiens.UCSC.hg19.knownGene::TxDb.Hsapiens.UCSC.hg19.knownGene,
+        org.Hs.eg.db::org.Hs.eg.db
+    )
 }
 
 #' @rdname get_exons
@@ -308,46 +123,12 @@ get_exons_hg19 <- function() {
 get_exons_hg38 <- function() {
     package_check(
         c("org.Hs.eg.db", "TxDb.Hsapiens.UCSC.hg38.knownGene"),
-        c("3.15.0", "3.15.0"))
-
-    txdb <- TxDb.Hsapiens.UCSC.hg38.knownGene::TxDb.Hsapiens.UCSC.hg38.knownGene
-    genes <-  AnnotationDbi::keys(txdb, "GENEID")
-    exon_data <- suppressMessages(AnnotationDbi::select(
-        txdb,
-        keys = genes,
-        keytype = "GENEID",
-        columns = c(
-            "GENEID",
-            "TXID",
-            "EXONCHROM",
-            "EXONSTRAND",
-            "EXONSTART",
-            "EXONEND"
-        )
-    ))
-
-    symbols_data <- suppressMessages(AnnotationDbi::select(
-            org.Hs.eg.db::org.Hs.eg.db,
-            keys = genes,
-            keytype = "ENTREZID",
-            columns = c(
-                "SYMBOL"
-            )
-        )) %>%
-        dplyr::rename(GENEID = "ENTREZID")
-
-    dplyr::left_join(exon_data, symbols_data, by = "GENEID", multiple = "all") %>%
-        tibble::as_tibble() %>%
-        dplyr::rename(
-            gene_id = "GENEID",
-            chr = "EXONCHROM",
-            strand = "EXONSTRAND",
-            start = "EXONSTART",
-            end = "EXONEND",
-            transcript_id = "TXID",
-            symbol = "SYMBOL"
-        ) %>%
-        filter_primary_chr()
+        c("3.15.0", "3.15.0")
+    )
+    get_exons_from_txdb_orgdb(
+        TxDb.Hsapiens.UCSC.hg38.knownGene::TxDb.Hsapiens.UCSC.hg38.knownGene,
+        org.Hs.eg.db::org.Hs.eg.db
+    )
 }
 
 #' @rdname get_exons
@@ -362,9 +143,55 @@ get_exons_t2t <- function() {
         package = "NanoMethViz",
         mustWork = TRUE
     )
-
     readRDS(anno_file) %>%
         filter_primary_chr()
+}
+
+get_exons_from_organism_db <- function(db, keys = NULL) {
+    if (is.null(keys)) keys <- AnnotationDbi::keys(db, "GENEID")
+    suppressMessages(AnnotationDbi::select(
+        db,
+        keys = keys,
+        keytype = "GENEID",
+        columns = c("GENEID", "TXID", "EXONCHROM", "EXONSTRAND", "EXONSTART", "EXONEND", "SYMBOL")
+    )) %>%
+        tibble::as_tibble() %>%
+        standardise_exon_col_names() %>%
+        filter_primary_chr()
+}
+
+get_exons_from_txdb_orgdb <- function(txdb, orgdb) {
+    genes <- AnnotationDbi::keys(txdb, "GENEID")
+    exon_data <- suppressMessages(AnnotationDbi::select(
+        txdb,
+        keys = genes,
+        keytype = "GENEID",
+        columns = c("GENEID", "TXID", "EXONCHROM", "EXONSTRAND", "EXONSTART", "EXONEND")
+    ))
+    symbols_data <- suppressMessages(AnnotationDbi::select(
+        orgdb,
+        keys = genes,
+        keytype = "ENTREZID",
+        columns = "SYMBOL"
+    )) %>%
+        dplyr::rename(GENEID = "ENTREZID")
+
+    dplyr::left_join(exon_data, symbols_data, by = "GENEID", multiple = "all") %>%
+        tibble::as_tibble() %>%
+        standardise_exon_col_names() %>%
+        filter_primary_chr()
+}
+
+standardise_exon_col_names <- function(exon_data) {
+    dplyr::rename(exon_data,
+        gene_id = "GENEID",
+        chr = "EXONCHROM",
+        strand = "EXONSTRAND",
+        start = "EXONSTART",
+        end = "EXONEND",
+        transcript_id = "TXID",
+        symbol = "SYMBOL"
+    )
 }
 
 filter_primary_chr <- function(exon_data) {

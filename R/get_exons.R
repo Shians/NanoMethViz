@@ -24,7 +24,7 @@ NULL
 #' @importFrom dplyr rename
 #' @export
 get_exons_mus_musculus <- function() {
-    package_check("Mus.musculus", "1.3.1")
+    bioc_package_check("Mus.musculus>=1.3.1")
     get_exons_from_organism_db(Mus.musculus::Mus.musculus)
 }
 
@@ -35,10 +35,7 @@ get_exons_mus_musculus <- function() {
 #'
 #' @export
 get_exons_mm10 <- function() {
-    package_check(
-        c("TxDb.Mmusculus.UCSC.mm10.knownGene", "org.Mm.eg.db"),
-        c("3.10.0", "3.15.0")
-    )
+    bioc_package_check(c("TxDb.Mmusculus.UCSC.mm10.knownGene>=3.10.0", "org.Mm.eg.db>=3.15.0"))
     get_exons_from_txdb_orgdb(
         TxDb.Mmusculus.UCSC.mm10.knownGene::TxDb.Mmusculus.UCSC.mm10.knownGene,
         org.Mm.eg.db::org.Mm.eg.db
@@ -52,10 +49,7 @@ get_exons_mm10 <- function() {
 #'
 #' @export
 get_exons_grcm39 <- function() {
-    package_check(
-        c("TxDb.Mmusculus.UCSC.mm39.refGene", "org.Mm.eg.db"),
-        c("3.10.0", "3.15.0")
-    )
+    bioc_package_check(c("TxDb.Mmusculus.UCSC.mm39.refGene>=3.10.0", "org.Mm.eg.db>=3.15.0"))
     get_exons_from_txdb_orgdb(
         TxDb.Mmusculus.UCSC.mm39.refGene::TxDb.Mmusculus.UCSC.mm39.refGene,
         org.Mm.eg.db::org.Mm.eg.db
@@ -75,7 +69,7 @@ get_exons_grcm39 <- function() {
 #'
 #' @export
 get_example_exons_mus_musculus <- function() {
-    package_check("Mus.musculus", "1.3.1")
+    bioc_package_check("Mus.musculus>=1.3.1")
     get_exons_from_organism_db(
         Mus.musculus::Mus.musculus,
         keys = c("12189", "12190", "16210", "17263", "18616", "213742")
@@ -93,7 +87,7 @@ get_example_exons_mus_musculus <- function() {
 #' @importFrom dplyr rename
 #' @export
 get_exons_homo_sapiens <- function() {
-    package_check("Homo.sapiens", "1.3.1")
+    bioc_package_check("Homo.sapiens>=1.3.1")
     get_exons_from_organism_db(Homo.sapiens::Homo.sapiens)
 }
 
@@ -104,10 +98,7 @@ get_exons_homo_sapiens <- function() {
 #'
 #' @export
 get_exons_hg19 <- function() {
-    package_check(
-        c("org.Hs.eg.db", "TxDb.Hsapiens.UCSC.hg19.knownGene"),
-        c("3.15.0", "3.2.2")
-    )
+    bioc_package_check(c("org.Hs.eg.db>=3.15.0", "TxDb.Hsapiens.UCSC.hg19.knownGene>=3.2.2"))
     get_exons_from_txdb_orgdb(
         TxDb.Hsapiens.UCSC.hg19.knownGene::TxDb.Hsapiens.UCSC.hg19.knownGene,
         org.Hs.eg.db::org.Hs.eg.db
@@ -121,10 +112,7 @@ get_exons_hg19 <- function() {
 #'
 #' @export
 get_exons_hg38 <- function() {
-    package_check(
-        c("org.Hs.eg.db", "TxDb.Hsapiens.UCSC.hg38.knownGene"),
-        c("3.15.0", "3.15.0")
-    )
+    bioc_package_check(c("org.Hs.eg.db>=3.15.0", "TxDb.Hsapiens.UCSC.hg38.knownGene>=3.15.0"))
     get_exons_from_txdb_orgdb(
         TxDb.Hsapiens.UCSC.hg38.knownGene::TxDb.Hsapiens.UCSC.hg38.knownGene,
         org.Hs.eg.db::org.Hs.eg.db
@@ -199,8 +187,10 @@ filter_primary_chr <- function(exon_data) {
 }
 
 #' @importFrom utils installed.packages packageVersion
-package_check <- function(packages, req_versions) {
-    assertthat::assert_that(length(packages) == length(req_versions))
+bioc_package_check <- function(specs) {
+    spec_components <- stringr::str_split(specs, ">=")
+    packages <- purrr::map_chr(spec_components, 1)
+    req_versions <- purrr::map_chr(spec_components, 2)
 
     any_missing <- FALSE
     for (i in seq_along(packages)) {

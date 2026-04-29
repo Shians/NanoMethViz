@@ -51,7 +51,8 @@ get_exons_mus_musculus <- function() {
             end = "EXONEND",
             transcript_id = "TXID",
             symbol = "SYMBOL"
-        )
+        ) %>%
+        filter_primary_chr()
 }
 
 #' @rdname get_exons
@@ -103,7 +104,8 @@ get_exons_mm10 <- function() {
             end = "EXONEND",
             transcript_id = "TXID",
             symbol = "SYMBOL"
-        )
+        ) %>%
+        filter_primary_chr()
 }
 
 #' @rdname get_exons
@@ -155,7 +157,8 @@ get_exons_grcm39 <- function() {
             end = "EXONEND",
             transcript_id = "TXID",
             symbol = "SYMBOL"
-        )
+        ) %>%
+        filter_primary_chr()
 }
 
 #' Get example exon annotations for mus musculus (mm10)
@@ -198,7 +201,8 @@ get_example_exons_mus_musculus <- function() {
             end = "EXONEND",
             transcript_id = "TXID",
             symbol = "SYMBOL"
-        )
+        ) %>%
+        filter_primary_chr()
 }
 
 #' Get exon annotations for Homo sapiens (hg19)
@@ -239,7 +243,8 @@ get_exons_homo_sapiens <- function() {
             end = "EXONEND",
             transcript_id = "TXID",
             symbol = "SYMBOL"
-        )
+        ) %>%
+        filter_primary_chr()
 
 }
 
@@ -290,7 +295,8 @@ get_exons_hg19 <- function() {
             end = "EXONEND",
             transcript_id = "TXID",
             symbol = "SYMBOL"
-        )
+        ) %>%
+        filter_primary_chr()
 }
 
 #' @rdname get_exons
@@ -340,7 +346,8 @@ get_exons_hg38 <- function() {
             end = "EXONEND",
             transcript_id = "TXID",
             symbol = "SYMBOL"
-        )
+        ) %>%
+        filter_primary_chr()
 }
 
 #' @rdname get_exons
@@ -356,7 +363,12 @@ get_exons_t2t <- function() {
         mustWork = TRUE
     )
 
-    readRDS(anno_file)
+    readRDS(anno_file) %>%
+        filter_primary_chr()
+}
+
+filter_primary_chr <- function(exon_data) {
+    dplyr::filter(exon_data, grepl("^chr([0-9]+|[XYM])$", .data$chr))
 }
 
 #' @importFrom utils installed.packages packageVersion

@@ -79,7 +79,7 @@ mbr <- ModBamResult(
         sample = "sample1",
         group = 1
     ),
-    exons = exon_tibble
+    exons = get_exons_mm10()
 )
 
 # use in the same way as you would a NanoMethResult object

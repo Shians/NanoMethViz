@@ -25,6 +25,7 @@ additional formats supported, please create an issue at
 Install from Bioconductor:
 
 ``` r
+
 if (!requireNamespace("BiocManager", quietly = TRUE)) {
     install.packages("BiocManager")
 }
@@ -34,6 +35,7 @@ BiocManager::install("NanoMethViz")
 Install the Bioconductor devel version:
 
 ``` r
+
 if (!requireNamespace("BiocManager", quietly = TRUE)) {
     install.packages("BiocManager")
 }
@@ -52,6 +54,7 @@ To generate a methylation plot, you need three components:
     `chr`, `strand`, `start`, `end`, `transcript_id`, `symbol`
 
 ``` r
+
 library(NanoMethViz)
 
 # Load bundled example data
@@ -111,6 +114,7 @@ Recent versions of dorado and ONT software store modifications directly
 in BAM files. These can be used with `ModBamResult` without conversion:
 
 ``` r
+
 mbr <- ModBamResult(
     methy = ModBamFiles(
         samples = c("sample1", "sample2"),

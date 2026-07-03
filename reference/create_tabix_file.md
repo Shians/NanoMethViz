@@ -44,11 +44,11 @@ methy_calls <- system.file(package = "NanoMethViz",
 temp_file <- paste0(tempfile(), ".tsv.bgz")
 
 create_tabix_file(methy_calls, temp_file)
-#> [2026-03-31 03:52:29] creating methylation table
+#> [2026-07-03 10:23:01] creating methylation table
 #> processing /home/runner/work/_temp/Library/NanoMethViz/sample1_nanopolish.tsv.gz...
 #> guessing file is produced by nanopolish...
 #> processing /home/runner/work/_temp/Library/NanoMethViz/sample2_nanopolish.tsv.gz...
 #> guessing file is produced by nanopolish...
-#> [2026-03-31 03:52:30] sorting methylation table
-#> [2026-03-31 03:52:30] compressing methylation table to tabix with index
+#> [2026-07-03 10:23:02] sorting methylation table
+#> [2026-07-03 10:23:02] compressing methylation table to tabix with index
 ```

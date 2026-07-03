@@ -34,6 +34,7 @@ other formats supported please create an issue at
 To install this package, run
 
 ``` r
+
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 
@@ -41,6 +42,7 @@ BiocManager::install("NanoMethViz")
 ```
 
 ``` r
+
 library(NanoMethViz)
 library(dplyr)
 ```
@@ -81,6 +83,7 @@ coverage less than 3. See the “Site filtering” section for more
 information.
 
 ``` r
+
 # construct with a ModBamFiles object as the methylation data
 mbr <- ModBamResult(
     methy = ModBamFiles(
@@ -91,13 +94,14 @@ mbr <- ModBamResult(
         sample = "sample1",
         group = 1
     ),
-    exons = exon_tibble
+    exons = get_exons_mm10()
 )
 ```
 
     ## Successfully created ModBamResult with 1 matched samples.
 
 ``` r
+
 # use in the same way as you would a NanoMethResult object
 plot_gene(mbr, "Peg3", heatmap = TRUE)
 ```
@@ -143,6 +147,7 @@ above, the conversion can be done using the
 function. We provide example nanopolish output data within the package.
 
 ``` r
+
 methy_calls <- system.file(package = "NanoMethViz",
     c("sample1_nanopolish.tsv.gz", "sample2_nanopolish.tsv.gz"))
 ```
@@ -158,6 +163,7 @@ the data and will take very long to run.
 ### Importing data
 
 ``` r
+
 # create a temporary file to store the converted data
 methy_tabix <- file.path(tempdir(), "methy_data.bgz")
 samples <- c("sample1", "sample2")
@@ -203,6 +209,7 @@ need to provide a path without the
 [`system.file()`](https://rdrr.io/r/base/system.file.html) function.
 
 ``` r
+
 # methylation data stored in tabix file
 methy <- system.file(package = "NanoMethViz", "methy_subset.tsv.bgz")
 
@@ -230,6 +237,7 @@ joined into a single table. It is important that the chromosomes share
 the same convention as that found in the methylation data.
 
 ``` r
+
 # helper function extracts exons from TxDb package
 exon_tibble <- get_exons_mm10()
 
@@ -250,6 +258,7 @@ We will define the sample annotation ourselves. It is important that the
 sample names match those found in the methylation data.
 
 ``` r
+
 sample <- c(
   "B6Cast_Prom_1_bl6", "B6Cast_Prom_1_cast",
   "B6Cast_Prom_2_bl6", "B6Cast_Prom_2_cast",
@@ -275,6 +284,7 @@ For convenience we assemble these three pieces of data into a single
 object.
 
 ``` r
+
 nmr <- NanoMethResult(methy, sample_anno, exon_tibble)
 ```
 
@@ -299,6 +309,7 @@ the same row. The annotation down the bottom shows the isoforms of the
 Peg3 gene as well as its directionality.
 
 ``` r
+
 plot_gene(nmr, "Peg3")
 ```
 
@@ -307,6 +318,7 @@ plot_gene(nmr, "Peg3")
 We can also load in some DMR results to highlight DMR regions.
 
 ``` r
+
 # loading saved results from previous bsseq analysis
 bsseq_dmr <- read.table(
     system.file(package = "NanoMethViz", "dmr_subset.tsv.gz"),
@@ -317,6 +329,7 @@ bsseq_dmr <- read.table(
 ```
 
 ``` r
+
 plot_gene(nmr, "Peg3", anno_regions = bsseq_dmr)
 ```
 
@@ -338,6 +351,7 @@ obtained from the NanoMethResult objects using the
 function.
 
 ``` r
+
 nmr <- load_example_nanomethresult()
 bss <- methy_to_bsseq(nmr)
 
@@ -360,6 +374,7 @@ function. This can be used to count reads on a per-site basis or over
 regions.
 
 ``` r
+
 gene_regions <- exons_to_genes(NanoMethViz::exons(nmr))
 edger_mat <- bsseq_to_edger(bss, gene_regions)
 
@@ -424,6 +439,7 @@ as a `GRanges` object, this can be coerced into a data.frame and
 manipulated using `dplyr`.
 
 ``` r
+
 anno <- rtracklayer::import(system.file(package = "NanoMethViz", "c_elegans.gtf.gz"))
 
 head(anno)
@@ -458,6 +474,7 @@ head(anno)
     ##   seqinfo: 3 sequences from an unspecified genome; no seqlengths
 
 ``` r
+
 anno <- anno %>%
     as.data.frame() %>%
     dplyr::rename(
@@ -488,6 +505,7 @@ The helper function
 can help with this common conversion.
 
 ``` r
+
 nmr <- load_example_nanomethresult()
 
 plot_gene(nmr, "Peg3")
@@ -496,6 +514,7 @@ plot_gene(nmr, "Peg3")
 ![](UsersGuide_files/figure-html/unnamed-chunk-17-1.png)
 
 ``` r
+
 new_exons <- NanoMethViz::exons(nmr) %>%
     exons_to_genes() %>%
     mutate(transcript_id = gene_id)
@@ -528,6 +547,7 @@ reduction. Namely we go through the BSseq format as it is easily coerced
 into the desired matrix and is itself useful for various other analyses.
 
 ``` r
+
 # convert to bsseq
 bss <- methy_to_bsseq(nmr)
 bss
@@ -545,6 +565,7 @@ Aggregating over features will generally provide more stable and robust
 results, here we will use genes.
 
 ``` r
+
 # create gene annotation from exon annotation
 gene_anno <- exons_to_genes(NanoMethViz::exons(nmr))
 
@@ -556,6 +577,7 @@ NanoMethViz currently provides two options, a MDS plot based on the
 limma implementation of MDS, and a PCA plot using BiocSingular.
 
 ``` r
+
 plot_mds(lmr) +
     ggtitle("MDS Plot")
 ```
@@ -563,6 +585,7 @@ plot_mds(lmr) +
 ![](UsersGuide_files/figure-html/unnamed-chunk-21-1.png)
 
 ``` r
+
 plot_pca(lmr) +
     ggtitle("PCA Plot")
 ```
@@ -574,6 +597,7 @@ to either function. Further customisations can be done using typical
 ggplot2 commands.
 
 ``` r
+
 new_labels <- gsub("B6Cast_Prom_", "", colnames(lmr))
 new_labels <- gsub("(\\d)_(.*)", "\\2 \\1", new_labels)
 groups <- gsub(" \\d", "", new_labels)
@@ -588,6 +612,7 @@ plot_mds(lmr, labels = new_labels, groups = groups) +
 Points can also be plotted without labels by setting `labels = NULL`.
 
 ``` r
+
 plot_mds(lmr, labels = NULL, groups = groups) +
     ggtitle("MDS Plot") +
     scale_colour_brewer(palette = "Set1")
@@ -608,6 +633,7 @@ option `NanoMethViz.site_filter`. The following will remove any sites
 with coverage less than 5 from queries and plots.
 
 ``` r
+
 options("NanoMethViz.site_filter" = 5)
 ```
 
@@ -619,5 +645,6 @@ across the package using the option `NanoMethViz.highlight_col`. For
 example the following will change the colour to red.
 
 ``` r
+
 options("NanoMethViz.highlight_col" = "red")
 ```

@@ -1,3 +1,9 @@
+## Version 3.9.2
+* Fixed ModKit positions being off by 1.
+* Fixed `modbam_to_tabix()` leaving the tabix index (.tbi) in the temporary directory, making the converted file unqueryable.
+* Fixed `methy_to_bsseq()` failing or corrupting output when called multiple times in the same R session due to internal state persisting between calls.
+* Fixed `plot_mds()` plotting unscaled MDS eigenvectors, distorting the geometry of the plot relative to the variance explained shown on the axes.
+
 ## Version 3.8.0
 * Addes sorting to the heatmap so reads appear from most to least methylated. This is done by calculating the average methylation across the region for each read and sorting by this value.
 

@@ -13,13 +13,17 @@ test_that("Modbam to tabix conversion works", {
 
     expect_no_error(modbam_to_tabix(mbr, out_file))
     expect_true(file_exists(out_file))
+    expect_true(file_exists(paste0(out_file, ".tbi")))
 
     tabix_data <- expect_no_error(read_tsv(out_file, col_names = methy_col_names()))
     expect_equal(nrow(tabix_data), 10371)
     expect_equal(ncol(tabix_data), 6)
     expect_equal(unique(tabix_data$sample), "sample1")
 
+    expect_no_error(query_methy(out_file, "chr7", 6713552, 6730431))
+
     fs::file_delete(out_file)
+    fs::file_delete(paste0(out_file, ".tbi"))
 })
 
 

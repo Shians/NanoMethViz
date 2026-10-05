@@ -3,9 +3,6 @@
 using namespace std;
 using namespace Rcpp;
 
-vector<string> samples_found;
-map<string, bool> file_known;
-
 pair<int, int>
 find_nth_column(
         const string &str,
@@ -49,7 +46,12 @@ parse_line(const string &line) {
 }
 
 void
-flush_data(unordered_map<string, MethyData> const &sample_data, string const &prefix) {
+flush_data(
+        unordered_map<string, MethyData> const &sample_data,
+        string const &prefix,
+        map<string, bool> &file_known,
+        vector<string> &samples_found
+) {
     for (auto const &s_data : sample_data) {
         string const &sample_name = s_data.first;
 
@@ -87,6 +89,9 @@ convert_methy_to_dss_cpp(
     // Input file
     zstr::ifstream file(input, ios_base::in | ios_base::binary);
 
+    vector<string> samples_found;
+    map<string, bool> file_known;
+
     unordered_map<string, MethyData> sample_data;
     std::string line;
     string current_chr = "";
@@ -101,7 +106,7 @@ convert_methy_to_dss_cpp(
         // if encountering new chr
         if (e.chr != current_chr) {
             // write out data for finished chr
-            flush_data(sample_data, output_dir);
+            flush_data(sample_data, output_dir, file_known, samples_found);
             sample_data.clear();
 
             // set new chr
@@ -120,7 +125,7 @@ convert_methy_to_dss_cpp(
     }
 
     // write out final chr
-    flush_data(sample_data, output_dir);
+    flush_data(sample_data, output_dir, file_known, samples_found);
 
     stringstream ss;
     ss << "samples found: ";

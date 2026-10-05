@@ -70,6 +70,9 @@ modbam_to_tabix <- function(x, out_file, mod_code = NanoMethViz::mod_code(x)) {
     }
 
     fs::file_move(tmp_out, out_file)
+    if (fs::file_exists(paste0(tmp_out, ".tbi"))) {
+        fs::file_move(paste0(tmp_out, ".tbi"), paste0(out_file, ".tbi"))
+    }
 
     cli::cli_progress_step(paste0("Tabix file created: ", out_file))
     invisible(out_file)

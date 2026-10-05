@@ -57,8 +57,8 @@ plot_mds <- function(x, top = 500, plot_dims = c(1, 2), labels = colnames(x), gr
 
     if ("eigen.vectors" %in% names(mds_res)) {
         plot_data <- data.frame(
-            dim1 = mds_res$eigen.vectors[, plot_dims[1]],
-            dim2 = mds_res$eigen.vectors[, plot_dims[2]]
+            dim1 = mds_res$eigen.vectors[, plot_dims[1]] * sqrt(pmax(mds_res$eigen.values[plot_dims[1]], 0)),
+            dim2 = mds_res$eigen.vectors[, plot_dims[2]] * sqrt(pmax(mds_res$eigen.values[plot_dims[2]], 0))
         )
         xlabel <- glue::glue("Leading logFC Dim {plot_dims[1]} ({var_exp1}%)")
         ylabel <- glue::glue("Leading logFC Dim {plot_dims[2]} ({var_exp2}%)")

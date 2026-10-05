@@ -34,6 +34,23 @@ methy_to_bsseq <- function(
         sample_anno <- tibble::tibble(sample = files$sample)
     }
 
+    # the C++ converter returns file paths in lexicographic sample order, so
+    # files must be re-matched to the sample annotation by name
+    missing_samples <- setdiff(sample_anno$sample, files$sample)
+    assert_that(
+        length(missing_samples) == 0,
+        msg = paste0(
+            "samples in sample annotation have no data in methylation file: ",
+            paste(missing_samples, collapse = ", ")
+        )
+    )
+
+    files <- dplyr::inner_join(
+        tibble::tibble(sample = sample_anno$sample),
+        files,
+        by = "sample"
+    )
+
     if (verbose) {
         timed_log("creating bsseq object...")
     }

@@ -47,6 +47,63 @@ test_that("repeated methy_to_bsseq calls don't share state", {
     }
 })
 
+test_that("methy_to_bsseq matches samples by name, not path order", {
+    methy_file <- file.path(tempdir(), paste0("methy-sample-order-", Sys.getpid(), ".tsv"))
+    writeLines(
+        c(
+            "B\tchr1\t100\t+\t1.5\tr1",
+            "A\tchr1\t100\t+\t-1.5\tr2",
+            "B\tchr1\t200\t+\t2\tr3"
+        ),
+        methy_file
+    )
+
+    # annotation order deliberately differs from lexicographic file order
+    sample_anno <- tibble::tibble(
+        sample = c("B", "A"),
+        group = c("b", "a")
+    )
+    nmr <- NanoMethResult(methy_file, sample_anno)
+
+    bss <- suppressMessages(methy_to_bsseq(nmr, verbose = FALSE))
+
+    M <- bsseq::getBSseq(bss, "M")
+    Cov <- bsseq::getBSseq(bss, "Cov")
+
+    expect_equal(bsseq::sampleNames(bss), c("B", "A"))
+
+    # row 1 is chr1:100, row 2 is chr1:200
+    expect_equal(unname(M[1, "B"]), 1)
+    expect_equal(unname(M[1, "A"]), 0)
+    expect_equal(unname(Cov[1, "B"]), 1)
+    expect_equal(unname(Cov[1, "A"]), 1)
+    expect_equal(unname(M[2, "B"]), 1)
+    expect_equal(unname(Cov[2, "B"]), 1)
+    expect_equal(unname(Cov[2, "A"]), 0)
+})
+
+test_that("methy_to_bsseq errors when annotation sample has no data", {
+    methy_file <- file.path(tempdir(), paste0("methy-sample-missing-", Sys.getpid(), ".tsv"))
+    writeLines(
+        c(
+            "B\tchr1\t100\t+\t1.5\tr1",
+            "A\tchr1\t100\t+\t-1.5\tr2"
+        ),
+        methy_file
+    )
+
+    sample_anno <- tibble::tibble(
+        sample = c("B", "A", "C"),
+        group = c("b", "a", "c")
+    )
+    nmr <- NanoMethResult(methy_file, sample_anno)
+
+    expect_error(
+        suppressMessages(methy_to_bsseq(nmr, verbose = FALSE)),
+        "C"
+    )
+})
+
 test_that("bsseq_to_* works", {
     nmr <- load_example_nanomethresult()
     bss <- methy_to_bsseq(NanoMethViz::methy(nmr))

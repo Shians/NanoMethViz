@@ -282,7 +282,8 @@ parse_bam(
     std::string const &seq,
     std::string const &cigar,
     std::string const &strand,
-    int const map_pos
+    int const map_pos,
+    std::string const &mod_code
 ) {
     try {
         // get genomic positions
@@ -308,6 +309,11 @@ parse_bam(
         ParseMode parse_mode;
         int base_offset;
         int mod_prob;
+        // a single MM group may declare multiple modification codes, in
+        // which case each listed position carries one ML value per code
+        int n_codes = 1;
+        int code_index = 0;
+        bool keep_group = false;
 
         // iterate through mod positions
         for (std::string_view mm_tok : mm_tokens) {
@@ -316,8 +322,16 @@ parse_bam(
                 // if token is a number, it is a base offset
                 // store base offset and mod probability
                 base_offset = std::stoi(std::string(mm_tok));
-                std::getline(ss_ml, ml_token, ',');
-                mod_prob = std::stoi(std::string(ml_token));
+
+                // for multi-code groups each listed position carries one ML
+                // value per declared code, consume them all and keep the
+                // value belonging to the requested mod code
+                for (int i = 0; i < n_codes; i++) {
+                    std::getline(ss_ml, ml_token, ',');
+                    if (i == code_index) {
+                        mod_prob = std::stoi(std::string(ml_token));
+                    }
+                }
             } else {
                 if (!mm_tok.empty()) {
                     // if it is mod base declaration
@@ -326,12 +340,24 @@ parse_bam(
                     current_base = mm_tok[0];
                     // current_strand = mm_tok[1]; // currently unused
                     int mod_string_end = 3;
-                    
+
                     // parse until non-alphanumeric character
                     while ( mod_string_end < mm_tok.size() && std::isalnum(mm_tok[mod_string_end]) ) {
                         mod_string_end++;
                     }
                     current_mod = std::string(mm_tok.substr(2, mod_string_end - 2));
+
+                    // find where the requested mod code sits within the
+                    // declared codes, the group is dropped if it is absent
+                    size_t found = current_mod.find(mod_code);
+                    if (found == std::string::npos) {
+                        code_index = -1;
+                        keep_group = false;
+                    } else {
+                        code_index = static_cast<int>(found);
+                        keep_group = true;
+                    }
+                    n_codes = current_mod.size();
 
                     // set parse mode
                     // this goes against spec, however more closely matches the real-world data behaviour
@@ -363,11 +389,13 @@ parse_bam(
                 if (seq.at(seq_ind) == target_base) {
                     switch (parse_mode) {
                         case ParseMode::skip_is_low_prob:
-                            output.seq_pos.push_back(seq_ind);
-                            output.pos.push_back(gpos_map[seq_ind]);
-                            output.base.push_back(current_base);
-                            output.mod.push_back(current_mod);
-                            output.mod_score.push_back(0);
+                            if (keep_group) {
+                                output.seq_pos.push_back(seq_ind);
+                                output.pos.push_back(gpos_map[seq_ind]);
+                                output.base.push_back(current_base);
+                                output.mod.push_back(std::string(1, current_mod[code_index]));
+                                output.mod_score.push_back(0);
+                            }
                             base_offset--;
                             break;
                         case ParseMode::skip_is_unknown:
@@ -391,13 +419,15 @@ parse_bam(
                 }
             }
 
-            output.seq_pos.push_back(seq_ind);
-            output.pos.push_back(gpos_map[seq_ind]);
-            output.base.push_back(current_base);
-            output.mod.push_back(current_mod);
-            output.mod_score.push_back(mod_prob);
+            if (keep_group) {
+                output.seq_pos.push_back(seq_ind);
+                output.pos.push_back(gpos_map[seq_ind]);
+                output.base.push_back(current_base);
+                output.mod.push_back(std::string(1, current_mod[code_index]));
+                output.mod_score.push_back(mod_prob);
+            }
 
-            if (strand == "-") {    
+            if (strand == "-") {
                 seq_ind--;
             } else {
                 seq_ind++;
@@ -448,7 +478,8 @@ parse_bam_cpp(
             seq,
             cigar,
             strand,
-            map_pos
+            map_pos,
+            mod_code
         );
         // filter out mods that don't match mod_code
         for (size_t i = 0; i < output.pos.size(); ++i) {

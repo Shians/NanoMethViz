@@ -76,7 +76,7 @@ reformat_megalodon <- function(x, sample) {
 
 reformat_modkit <- function(x, sample) {
     x %>%
-        dplyr::filter(ref_position > 0) %>% # remove unmapped positions
+        dplyr::filter(ref_position >= 0) %>% # remove unmapped positions
         add_column(sample = sample, .before = 1) %>%
         dplyr::rename(
             chr = "chrom",
@@ -88,7 +88,7 @@ reformat_modkit <- function(x, sample) {
         dplyr::mutate(
             sample = as.factor(.data$sample),
             chr = factor(.data$chr),
-            pos = as.integer(.data$pos),
+            pos = as.integer(.data$pos) + 1,
             strand = factor(.data$strand, levels = c("+", "-", "*")),
             statistic = logit(.data$statistic)
         ) %>%

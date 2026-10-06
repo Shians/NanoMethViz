@@ -155,6 +155,27 @@ test_that("force returns empty output for sequences missing from modbam", {
     expect_equal(nrow(out_mixed[[2]]), 0)
 })
 
+test_that("modbam regions on interleaved chromosomes keep their input order", {
+    # setup
+    mbr <- get_query_test_modbamresult()
+    chr <- c("chr7", "chr1", "chr7")
+    start <- c(6703892, 1e6, 6717162)
+    end <- c(6717161, 2e6, 6730431)
+
+    # test
+    out <- query_methy(mbr, chr, start, end, simplify = FALSE, truncate = FALSE)
+    expect_length(out, 3)
+    expect_equal(nrow(out[[2]]), 0)
+    expect_identical(
+        out[[1]],
+        query_methy(mbr, chr[1], start[1], end[1], truncate = FALSE)
+    )
+    expect_identical(
+        out[[3]],
+        query_methy(mbr, chr[3], start[3], end[3], truncate = FALSE)
+    )
+})
+
 test_that("read_methy_lines parses numeric chromosomes consistently", {
     # setup
     lines_num <- "sample1\t1\t100\t+\t0.5\tread1"

@@ -265,6 +265,10 @@ query_methy_modbam <- function(x, chr, start, end, mod_code, force = FALSE) {
         stop("no chromosome matches between query and modbam file, please check chromosome format matches between query and methylation file.")
     }
 
+    # scanBam returns regions grouped by chromosome in order of first
+    # appearance, so order the kept indices to match its output
+    keep <- keep[order(factor(chr[keep], levels = unique(chr[keep])))]
+
     # query each file
     x <- data.frame(
         sample = x$sample,

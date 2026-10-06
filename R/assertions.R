@@ -21,20 +21,26 @@ assert_readable <- function(x) {
 
 #' @importFrom purrr map_lgl
 assert_has_index <- function(x) {
-    has_index <- purrr::map_lgl(paste0(x, ".bai"), fs::file_exists)
+    has_index <- purrr::map_lgl(
+        x,
+        function(path) {
+            fs::file_exists(paste0(path, ".bai")) ||
+                fs::file_exists(paste0(path, ".csi"))
+        }
+    )
 
     if (any(!has_index)) {
         no_index <- x[!has_index]
         if (length(no_index) == 1) {
             stop(glue::glue(
-                "BAM file '{no_index}' is missing its index file (.bai).\n",
+                "BAM file '{no_index}' is missing its index file (.bai or .csi).\n",
                 "To fix this, run: samtools index {no_index}\n",
-                "Or ensure the .bai file is in the same directory as the BAM file."
+                "Or ensure the .bai or .csi file is in the same directory as the BAM file."
             ))
         } else {
             no_index_list <- paste(glue::glue("'{no_index}'"), collapse = ", ")
             stop(glue::glue(
-                "BAM files {no_index_list} are missing their index files (.bai).\n",
+                "BAM files {no_index_list} are missing their index files (.bai or .csi).\n",
                 "To fix this, run 'samtools index' on each file:\n",
                 "{paste0('samtools index ', no_index, collapse = '\n')}"
             ))

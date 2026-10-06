@@ -1,3 +1,59 @@
+# Check that `gene` is a single valid symbol present in the exon annotation of
+# `x`, otherwise stop with a message suggesting similar or available symbols.
+validate_gene_symbol <- function(x, gene) {
+    if (length(gene) != 1 || is.na(gene) || gene == "") {
+        stop("Gene symbol cannot be empty or NA. Please provide a valid gene symbol.")
+    }
+
+    if (nrow(exons(x)) == 0) {
+        stop(glue::glue(
+            "No exon annotation found in the data object.\n",
+            "Gene '{gene}' cannot be plotted without exon information.\n",
+            "Please add exon annotation using: exons(your_object) <- your_exons"
+        ))
+    }
+
+    available_genes <- unique(stats::na.omit(exons(x)$symbol))
+
+    if (gene %in% available_genes) {
+        return(invisible(TRUE))
+    }
+
+    stop(gene_not_found_message(gene, available_genes))
+}
+
+gene_not_found_message <- function(gene, available_genes, max_similar = 10, max_available = 20) {
+    prefix <- tolower(substr(gene, 1, 3))
+    similar_genes <- available_genes[startsWith(tolower(available_genes), prefix)]
+
+    error_msg <- c(
+        glue::glue("Gene '{gene}' not found in exon annotation."),
+        "Please check the gene symbol spelling."
+    )
+
+    if (length(similar_genes) > 0) {
+        shown_genes <- paste(utils::head(similar_genes, max_similar), collapse = ", ")
+        if (length(similar_genes) > max_similar) {
+            shown_genes <- glue::glue("{shown_genes}, ... ({length(similar_genes) - max_similar} more)")
+        }
+        error_msg <- c(error_msg, glue::glue("Similar genes found: {shown_genes}"))
+    }
+
+    if (length(available_genes) <= max_available) {
+        error_msg <- c(
+            error_msg,
+            glue::glue("Available genes: {paste(available_genes, collapse = ', ')}")
+        )
+    } else {
+        error_msg <- c(
+            error_msg,
+            glue::glue("Use unique(exons(your_object)$symbol) to see all {length(available_genes)} available genes.")
+        )
+    }
+
+    paste(error_msg, collapse = "\n")
+}
+
 plot_gene_impl <- function(
         x,
         gene,
@@ -15,24 +71,13 @@ plot_gene_impl <- function(
         mod_scale = c(0, 1),
         span = NULL
 ) {
-    if (!missing("span")) {
+    if (!missing(span)) {
         warning("the 'span' argument has been deprecated, please use 'smoothing_window' instead")
     }
 
     avg_method <- match.arg(avg_method)
 
-    # validate genes
-    if (is.na(gene) || gene == "") {
-        stop("Gene symbol cannot be empty or NA. Please provide a valid gene symbol.")
-    }
-
-    if (nrow(exons(x)) == 0) {
-        stop(glue::glue(
-            "No exon annotation found in the data object.\n",
-            "Gene '{gene}' cannot be plotted without exon information.\n",
-            "Please add exon annotation using: exons(your_object) <- your_exons"
-        ))
-    }
+    validate_gene_symbol(x, gene)
 
     if (length(window_prop) == 1) {
         # convert to two sided window_prop
@@ -40,35 +85,6 @@ plot_gene_impl <- function(
     }
 
     exons_anno <- query_exons_symbol(x, symbol = gene)
-
-    if (nrow(exons_anno) == 0) {
-        available_genes <- unique(exons(x)$symbol)
-        similar_genes <- available_genes[grepl(paste0("^", substr(gene, 1, 3)), available_genes, ignore.case = TRUE)]
-
-        error_msg <- glue::glue(
-            "Gene '{gene}' not found in exon annotation.\n",
-            "Please check the gene symbol spelling."
-        )
-
-        if (length(similar_genes) > 0 && length(similar_genes) <= 10) {
-            error_msg <- paste0(
-                error_msg, "\n",
-                glue::glue("Similar genes found: {paste(similar_genes, collapse = ', ')}")
-            )
-        } else if (length(available_genes) <= 20) {
-            error_msg <- paste0(
-                error_msg, "\n",
-                glue::glue("Available genes: {paste(available_genes, collapse = ', ')}")
-            )
-        } else {
-            error_msg <- paste0(
-                error_msg, "\n",
-                glue::glue("Use unique(exons(your_object)$symbol) to see all {length(available_genes)} available genes.")
-            )
-        }
-
-        stop(error_msg)
-    }
 
     feature_chr <- unique(exons_anno$chr)
     feature_start <- min(exons_anno$start)

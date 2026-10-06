@@ -62,3 +62,43 @@ test_that("plot_gene_heatmap error handling", {
         "Gene 'NonExistentGene' not found in exon annotation"
     )
 })
+
+test_that("plot_gene_heatmap errors on empty or NA gene symbol", {
+    nmr <- load_example_nanomethresult()
+
+    expect_error(plot_gene_heatmap(nmr, ""), "Gene symbol cannot be empty or NA")
+    expect_error(plot_gene_heatmap(nmr, NA_character_), "Gene symbol cannot be empty or NA")
+})
+
+test_that("plot_gene_heatmap gives helpful hints for unknown genes", {
+    nmr <- load_example_nanomethresult()
+
+    # similar genes hint, with lines separated by real newlines
+    err <- expect_error(plot_gene_heatmap(nmr, "Pegx"), "Similar genes found: Peg3", fixed = TRUE)
+    expect_match(conditionMessage(err), "annotation.\nPlease check", fixed = TRUE)
+    expect_no_match(conditionMessage(err), "\\n", fixed = TRUE)
+
+    # available genes hint when no prefix match
+    err <- expect_error(plot_gene_heatmap(nmr, "Zzz1"), "Available genes: ")
+    expect_no_match(conditionMessage(err), "Similar genes found")
+})
+
+test_that("plot_gene_heatmap points to full symbol list when many genes are annotated", {
+    nmr <- load_example_nanomethresult()
+    extra_exons <- exons(nmr)[rep(1, 30), ]
+    extra_exons$symbol <- sprintf("Gene%02d", 1:30)
+    extra_exons$gene_id <- sprintf("id%02d", 1:30)
+    nmr@exons <- dplyr::bind_rows(exons(nmr), extra_exons)
+
+    err <- expect_error(
+        plot_gene_heatmap(nmr, "Zzz1"),
+        "Use unique(exons(your_object)$symbol) to see all 36 available genes.",
+        fixed = TRUE
+    )
+    expect_no_match(conditionMessage(err), "Available genes:")
+
+    # more than 10 similar genes are truncated and the count hint is still given
+    err <- expect_error(plot_gene_heatmap(nmr, "Genx"), "Similar genes found: Gene01")
+    expect_match(conditionMessage(err), "(20 more)", fixed = TRUE)
+    expect_match(conditionMessage(err), "see all 36 available genes", fixed = TRUE)
+})

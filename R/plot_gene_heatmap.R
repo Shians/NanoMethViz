@@ -1,44 +1,5 @@
 gene_to_region <- function(x, gene) {
-    if (is.na(gene) || gene == "") {
-        stop("Gene symbol cannot be empty or NA. Please provide a valid gene symbol.")
-    }
-
-    if (nrow(exons(x)) == 0) {
-        stop(glue::glue(
-            "No exon annotation found in the data object.\\n",
-            "Gene '{gene}' cannot be plotted without exon information.\\n",
-            "Please add exon annotation using: exons(your_object) <- your_exons"
-        ))
-    }
-
-    if (!gene %in% exons(x)$symbol) {
-        available_genes <- unique(exons(x)$symbol)
-        similar_genes <- available_genes[grepl(paste0("^", substr(gene, 1, 3)), available_genes, ignore.case = TRUE)]
-
-        error_msg <- glue::glue(
-            "Gene '{gene}' not found in exon annotation.\\n",
-            "Please check the gene symbol spelling."
-        )
-
-        if (length(similar_genes) > 0 && length(similar_genes) <= 10) {
-            error_msg <- paste0(
-                error_msg, "\\n",
-                glue::glue("Similar genes found: {paste(similar_genes, collapse = ', ')}")
-            )
-        } else if (length(available_genes) <= 20) {
-            error_msg <- paste0(
-                error_msg, "\\n",
-                glue::glue("Available genes: {paste(available_genes, collapse = ', ')}")
-            )
-        } else {
-            error_msg <- paste0(
-                error_msg, "\\n",
-                glue::glue("Use unique(exons(your_object)$symbol) to see all {length(available_genes)} available genes.")
-            )
-        }
-
-        stop(error_msg)
-    }
+    validate_gene_symbol(x, gene)
 
     pos_range <- gene_pos_range(x, gene)
 

@@ -7,7 +7,7 @@
 convert_methy_format(
   input_files,
   output_file,
-  samples = fs::path_ext_remove(fs::path_file(input_files)),
+  samples = extract_file_names(input_files),
   mod_code = NULL,
   verbose = TRUE
 )

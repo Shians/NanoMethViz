@@ -182,7 +182,7 @@ resolve_mod_code <- function(mod_code, methy_sources) {
 convert_methy_format <- function(
     input_files,
     output_file,
-    samples = fs::path_ext_remove(fs::path_file(input_files)),
+    samples = extract_file_names(input_files),
     mod_code = NULL,
     verbose = TRUE
 ) {

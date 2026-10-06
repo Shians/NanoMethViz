@@ -38,9 +38,10 @@ methylation data for entire reads overlapping the region will be returned.}
 
 \item{site_filter}{the minimum amount of coverage to report a site. This
 filters the queried data such that any site with less than the filter is
-not returned. The default is 1, which means that all sites are returned.
-This option can be set globally using the \code{options(NanoMethViz.site_filter = ...)}
-which will affect all plotting functions in NanoMethViz.}
+not returned. The default is 3. This can be set globally using
+\code{options(NanoMethViz.site_filter = ...)} which will affect all plotting
+functions in NanoMethViz. Note that coverage is currently counted pooled
+across all samples in the query result, rather than per-sample.}
 }
 \value{
 A table containing the data within the queried regions. If simplify

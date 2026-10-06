@@ -144,3 +144,8 @@ read_modbam_table <- function(x, chr, start, end, sample, mod_code) {
 
     lapply(reads, parse_modbam, sample = sample, mod_code = mod_code)
 }
+
+get_modbam_sequences <- function(path) {
+    idxstats <- Rsamtools::idxstatsBam(path)
+    idxstats$seqnames[idxstats$seqnames != "*"]
+}

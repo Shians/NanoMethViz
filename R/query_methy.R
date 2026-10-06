@@ -15,9 +15,10 @@
 #'   methylation data for entire reads overlapping the region will be returned.
 #' @param site_filter the minimum amount of coverage to report a site. This
 #'   filters the queried data such that any site with less than the filter is
-#'   not returned. The default is 1, which means that all sites are returned.
-#'   This option can be set globally using the `options(NanoMethViz.site_filter = ...)`
-#'   which will affect all plotting functions in NanoMethViz.
+#'   not returned. The default is 3. This can be set globally using
+#'   `options(NanoMethViz.site_filter = ...)` which will affect all plotting
+#'   functions in NanoMethViz. Note that coverage is currently counted pooled
+#'   across all samples in the query result, rather than per-sample.
 #'
 #' @return A table containing the data within the queried regions. If simplify
 #'   is TRUE (default) then returns all data in a single table, otherwise returns
@@ -54,9 +55,14 @@ query_methy <- function(
     assert_valid_genomic_coords(chr, start, end)
 
     # validate site_filter
-    if (!is.numeric(site_filter) || site_filter < 0) {
+    if (
+        !is.numeric(site_filter) ||
+        length(site_filter) != 1 ||
+        is.na(site_filter) ||
+        site_filter < 1
+    ) {
         stop(glue::glue(
-            "site_filter must be a non-negative number. Got: {site_filter}\n",
+            "site_filter must be a single number greater than or equal to 1. Got: {site_filter}\n",
             "This parameter filters sites with coverage below the threshold. Set using `options(NanoMethViz.site_filter = ...)`."
         ))
     }
@@ -74,14 +80,12 @@ query_methy <- function(
         msg = "vectors 'chr', 'start' and 'end' must be the same length"
     )
 
-    assert_that(site_filter > 0)
-
     input_type <- guess_input_type(x)
     if (input_type == "tabix") {
         out <- query_methy_tabix(x, chr, start, end, force = force)
 
     } else if (input_type == "modbam") {
-        out <- query_methy_modbam(x, chr, start, end, mod_code)
+        out <- query_methy_modbam(x, chr, start, end, mod_code, force = force)
         if (truncate) {
             truncate_fn <- function(x, start, end) {
                 x %>%
@@ -185,12 +189,10 @@ query_methy_tabix <- function(x, chr, start, end, force) {
     # set up tabix file
     tabix_file <- Rsamtools::TabixFile(x)
 
-    # set up output
-    out <- list()
-    for (i in seq_along(chr)) {
-        nm <- paste0(chr[i], ":", start[i], "-", end[i])
-        out[[nm]] <- empty_methy_query_output()
-    }
+    # set up output, one entry per input region so duplicated regions each get
+    # their own slot
+    out <- rep(list(empty_methy_query_output()), length(chr))
+    names(out) <- paste0(chr, ":", start, "-", end)
 
     miss <- get_missing_seqs(x)
     # if missing sequences, warn and remove from query
@@ -200,23 +202,16 @@ query_methy_tabix <- function(x, chr, start, end, force) {
             "requested sequences missing from tabix file and will be excluded from query:",
             paste(miss_seqs, collapse = ", ")
         )
-
-        # remove queries with missing sequences
-        chr <- chr[-miss]
-        start <- start[-miss]
-        end <- end[-miss]
     }
 
-    # if no sequences left, return empty output
-    if (length(chr) == 0) {
-        if (!force) {
-            stop("no chromosome matches between query and tabix file, please check chromosome format matches between query and methylation file.")
-        }
+    keep <- setdiff(seq_along(chr), miss)
+    if (length(keep) == 0 && !force) {
+        stop("no chromosome matches between query and tabix file, please check chromosome format matches between query and methylation file.")
     }
 
-    # make query into a granges object
-    query <- make_granges(chr, start, end)
-    if (length(query) > 0) {
+    if (length(keep) > 0) {
+        # make query into a granges object
+        query <- make_granges(chr[keep], start[keep], end[keep])
         query_result <- Rsamtools::scanTabix(tabix_file, param = query)
         # helper function to parse tabix output
         parse_tabix <- function(x) {
@@ -237,15 +232,13 @@ query_methy_tabix <- function(x, chr, start, end, force) {
             parse_tabix
         )
 
-        for (i in seq_along(methy_data)) {
-            out[[names(query_result)[i]]] <- methy_data[[i]]
-        }
+        out[keep] <- methy_data
     }
 
     out
 }
 
-query_methy_modbam <- function(x, chr, start, end, mod_code) {
+query_methy_modbam <- function(x, chr, start, end, mod_code, force = FALSE) {
     assertthat::assert_that(
         is(x, "ModBamResult") ||
         is(x, "ModBamFiles")
@@ -256,6 +249,22 @@ query_methy_modbam <- function(x, chr, start, end, mod_code) {
 
     assert_readable(x$path)
 
+    # exclude queries with sequences missing from the modbam headers
+    bam_seqs <- unique(unlist(purrr::map(x$path, get_modbam_sequences)))
+    miss <- which(!chr %in% bam_seqs)
+    if (length(miss) != 0) {
+        miss_seqs <- unique(chr[miss])
+        warning(
+            "requested sequences missing from modbam file and will be excluded from query:",
+            paste(miss_seqs, collapse = ", ")
+        )
+    }
+
+    keep <- setdiff(seq_along(chr), miss)
+    if (length(keep) == 0 && !force) {
+        stop("no chromosome matches between query and modbam file, please check chromosome format matches between query and methylation file.")
+    }
+
     # query each file
     x <- data.frame(
         sample = x$sample,
@@ -263,43 +272,26 @@ query_methy_modbam <- function(x, chr, start, end, mod_code) {
     )
 
     # get data for each region from each file
-    out <- x %>%
-        dplyr::mutate(
-            mod_table = map_rows(x, function(x) {
-                read_modbam_table(
-                    x$path,
-                    chr = chr,
-                    start = start,
-                    end = end,
-                    sample = x$sample,
-                    mod_code = mod_code)
-            })
-        )
+    mod_tables <- map_rows(x, function(x) {
+        read_modbam_table(
+            x$path,
+            chr = chr[keep],
+            start = start[keep],
+            end = end[keep],
+            sample = x$sample,
+            mod_code = mod_code)
+    })
 
-    # reduce list nesting by one level
-    tables <- do.call(c, out$mod_table)
-
-    # assign bind together tables from the same regions
-    nms <- names(tables)
-
-    if (is.null(nms)) {
-        warning(glue::glue("no data found in {chr}:{start}-{end}"))
-    }
-
-    # extract and bind data from each region from each file
-    extract_and_bind_data <- function(nm, tables) {
-        out <- do.call(rbind, tables[names(tables) == nm])
-        if (is.null(out)) {
-            out <- empty_methy_query_output()
+    # bind data from all files for each region, regions are assigned by index so
+    # duplicated regions each get their own copy of the data and regions with no
+    # data keep a typed empty output
+    out <- rep(list(empty_methy_query_output()), length(chr))
+    for (i in seq_along(keep)) {
+        bound <- do.call(rbind, lapply(mod_tables, function(tables) tables[[i]]))
+        if (!is.null(bound) && nrow(bound) > 0) {
+            out[[keep[i]]] <- bound
         }
-        out
     }
-
-    out <- purrr::map(
-        unique(nms),
-        extract_and_bind_data,
-        tables = tables
-    )
 
     out
 }
@@ -343,10 +335,10 @@ guess_input_type <- function(x) {
 }
 
 read_methy_lines <- function(x) {
-    read.delim(
-        textConnection(x),
-        header = FALSE,
-        col.names = methy_col_names()
-    ) %>%
-        tibble::tibble()
+    readr::read_tsv(
+        I(x),
+        col_names = methy_col_names(),
+        col_types = methy_col_types(),
+        progress = FALSE
+    )
 }

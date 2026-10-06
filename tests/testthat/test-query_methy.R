@@ -73,3 +73,118 @@ test_that("Querying methylation works", {
     )
     expect_s3_class(query_methy_df(mbr, queries_with_empty), "data.frame")
 })
+
+get_query_test_modbamresult <- function() {
+    ModBamResult(
+        methy = ModBamFiles(
+            paths = system.file("peg3.bam", package = "NanoMethViz", mustWork = FALSE),
+            samples = "sample1"
+        ),
+        samples = tibble::tibble(sample = "sample1", group = "group1")
+    )
+}
+
+test_that("duplicated regions return one output per region", {
+    # setup
+    methy_path <- system.file("methy_subset.tsv.bgz", package = "NanoMethViz", mustWork = FALSE)
+    mbr <- get_query_test_modbamresult()
+    chr <- c("chr7", "chr7", "chr7")
+    start <- c(6703892, 6717162, 6703892)
+    end <- c(6717161, 6730431, 6717161)
+
+    # test
+    out_tabix <- query_methy(methy_path, chr, start, end, simplify = FALSE)
+    expect_length(out_tabix, length(chr))
+    expect_identical(out_tabix[[1]], out_tabix[[3]])
+
+    out_modbam <- query_methy(mbr, chr, start, end, simplify = FALSE)
+    expect_length(out_modbam, length(chr))
+    expect_identical(out_modbam[[1]], out_modbam[[3]])
+
+    # duplicated regions should not double count data
+    single <- query_methy(mbr, chr[1], start[1], end[1], truncate = FALSE)
+    dup <- query_methy(mbr, chr[1:2], start[1:2], end[1:2], truncate = FALSE, simplify = FALSE)
+    expect_length(dup, 2)
+    expect_identical(dup[[1]], single)
+})
+
+test_that("modbam regions with no reads return typed empty output", {
+    # setup
+    mbr <- get_query_test_modbamresult()
+    chr <- c("chr7", "chr7", "chr7")
+    start <- c(6703892, 1, 6717162)
+    end <- c(6717161, 10, 6730431)
+
+    # test
+    out <- query_methy(mbr, chr, start, end, simplify = FALSE)
+    expect_length(out, length(chr))
+    expect_equal(nrow(out[[2]]), 0)
+    expect_true(all(methy_col_names() %in% colnames(out[[2]])))
+
+    out_internal <- query_methy_modbam(mbr, chr[2], start[2], end[2], mod_code(mbr))
+    expect_s3_class(out_internal[[1]], "data.frame")
+    expect_equal(colnames(out_internal[[1]]), methy_col_names())
+    expect_equal(nrow(out_internal[[1]]), 0)
+})
+
+test_that("force returns empty output for sequences missing from modbam", {
+    # setup
+    mbr <- get_query_test_modbamresult()
+
+    # test hard error without force
+    expect_warning(
+        expect_error(query_methy(mbr, "chrZZ", 1, 10), "no chromosome matches between query and modbam file"),
+        "requested sequences missing from modbam file and will be excluded from query:chrZZ"
+    )
+
+    # force returns empty output with warning
+    expect_warning(
+        out <- query_methy(mbr, "chrZZ", 1, 10, force = TRUE),
+        "requested sequences missing from modbam file and will be excluded from query:chrZZ"
+    )
+    expect_equal(nrow(out), 0)
+    expect_equal(colnames(out), c(methy_col_names(), "mod_prob"))
+
+    # mixed valid and invalid sequences
+    expect_warning(
+        out_mixed <- query_methy(mbr, c("chr7", "chrZZ"), c(6703892, 1), c(6717161, 10), force = TRUE, simplify = FALSE),
+        "chrZZ"
+    )
+    expect_length(out_mixed, 2)
+    expect_gt(nrow(out_mixed[[1]]), 0)
+    expect_equal(nrow(out_mixed[[2]]), 0)
+})
+
+test_that("read_methy_lines parses numeric chromosomes consistently", {
+    # setup
+    lines_num <- "sample1\t1\t100\t+\t0.5\tread1"
+    lines_chr <- "sample1\tchr1\t200\t-\t-0.5\tread2"
+
+    # test
+    methy_num <- read_methy_lines(lines_num)
+    methy_chr <- read_methy_lines(lines_chr)
+    expect_equal(nrow(methy_num), 1)
+    expect_false(is.numeric(methy_num$chr))
+    expect_true("1" %in% as.character(methy_num$chr))
+
+    # chunks with numeric and character chromosome names combine cleanly
+    combined <- dplyr::bind_rows(methy_num, methy_chr)
+    expect_equal(nrow(combined), 2)
+    expect_equal(as.character(combined$chr), c("1", "chr1"))
+})
+
+test_that("site_filter validation rejects invalid values", {
+    # setup
+    methy_path <- system.file("methy_subset.tsv.bgz", package = "NanoMethViz", mustWork = FALSE)
+
+    # test
+    expect_error(
+        query_methy(methy_path, "chr7", 6703892, 6717161, site_filter = 0),
+        "site_filter must be a single number greater than or equal to 1"
+    )
+    expect_error(
+        query_methy(methy_path, "chr7", 6703892, 6717161, site_filter = "a"),
+        "site_filter"
+    )
+    expect_no_error(query_methy(methy_path, "chr7", 6703892, 6717161, site_filter = 1))
+})

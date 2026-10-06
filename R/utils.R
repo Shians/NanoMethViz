@@ -71,7 +71,18 @@ vec_zip <- function(..., .names = NULL) {
 }
 
 extract_file_names <- function(x) {
-    fs::path_ext_remove(fs::path_file(x))
+    known_exts <- c("tsv", "gz", "bgz")
+    names <- fs::path_file(x)
+
+    repeat {
+        ext <- tolower(fs::path_ext(names))
+        if (!all(ext %in% known_exts)) {
+            break
+        }
+        names <- fs::path_ext_remove(names)
+    }
+
+    names
 }
 
 logit <- function(p) {

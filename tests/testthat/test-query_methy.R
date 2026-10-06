@@ -176,6 +176,50 @@ test_that("modbam regions on interleaved chromosomes keep their input order", {
     )
 })
 
+test_that("modbam files with differing headers only query their own sequences", {
+    # setup: copy of the example bam without chr1 in its header
+    bam_path <- system.file("peg3.bam", package = "NanoMethViz", mustWork = FALSE)
+    sam_path <- Rsamtools::asSam(bam_path, withr::local_tempfile())
+    sam_lines <- readLines(sam_path)
+    sam_lines <- sam_lines[!grepl("^@SQ\tSN:chr1\t", sam_lines)]
+    writeLines(sam_lines, sam_path)
+    no_chr1_path <- Rsamtools::asBam(sam_path, withr::local_tempfile())
+
+    mbr <- ModBamResult(
+        methy = ModBamFiles(
+            paths = c(bam_path, no_chr1_path),
+            samples = c("sample1", "sample2")
+        ),
+        samples = tibble::tibble(
+            sample = c("sample1", "sample2"),
+            group = c("group1", "group1")
+        )
+    )
+    chr <- c("chr7", "chr1")
+    start <- c(6703892, 1e6)
+    end <- c(6717161, 2e6)
+
+    # test
+    expect_warning(
+        out <- query_methy(mbr, chr, start, end, simplify = FALSE),
+        "requested sequences missing from some modbam files, no data will be returned for the listed samples:chr1 (sample2)",
+        fixed = TRUE
+    )
+    expect_length(out, 2)
+    expect_setequal(as.character(unique(out[[1]]$sample)), c("sample1", "sample2"))
+    expect_equal(nrow(out[[2]]), 0)
+
+    expect_warning(
+        out_chr1 <- query_methy(mbr, "chr1", 1e6, 2e6),
+        "chr1 (sample2)",
+        fixed = TRUE
+    )
+    expect_equal(nrow(out_chr1), 0)
+
+    # sequences present in every file do not warn
+    expect_no_warning(query_methy(mbr, "chr7", 6703892, 6717161))
+})
+
 test_that("read_methy_lines parses numeric chromosomes consistently", {
     # setup
     lines_num <- "sample1\t1\t100\t+\t0.5\tread1"

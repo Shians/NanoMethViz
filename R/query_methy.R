@@ -249,8 +249,9 @@ query_methy_modbam <- function(x, chr, start, end, mod_code, force = FALSE) {
 
     assert_readable(x$path)
 
-    # exclude queries with sequences missing from the modbam headers
-    bam_seqs <- unique(unlist(purrr::map(x$path, get_modbam_sequences)))
+    # exclude queries with sequences missing from all modbam headers
+    file_seqs <- purrr::map(x$path, get_modbam_sequences)
+    bam_seqs <- unique(unlist(file_seqs))
     miss <- which(!chr %in% bam_seqs)
     if (length(miss) != 0) {
         miss_seqs <- unique(chr[miss])
@@ -265,35 +266,66 @@ query_methy_modbam <- function(x, chr, start, end, mod_code, force = FALSE) {
         stop("no chromosome matches between query and modbam file, please check chromosome format matches between query and methylation file.")
     }
 
-    # scanBam returns regions grouped by chromosome in order of first
-    # appearance, so order the kept indices to match its output
-    keep <- keep[order(factor(chr[keep], levels = unique(chr[keep])))]
+    # warn about sequences missing from only some modbam headers, as this
+    # usually means the files were aligned to different references
+    partial_miss <- purrr::map_chr(unique(chr[keep]), function(seq_name) {
+        miss_samples <- x$sample[!purrr::map_lgl(file_seqs, ~seq_name %in% .)]
+        if (length(miss_samples) == 0) {
+            return(NA_character_)
+        }
+        paste0(seq_name, " (", paste(miss_samples, collapse = ", "), ")")
+    })
+    partial_miss <- partial_miss[!is.na(partial_miss)]
+    if (length(partial_miss) != 0) {
+        warning(
+            "requested sequences missing from some modbam files, no data will be returned for the listed samples:",
+            paste(partial_miss, collapse = "; ")
+        )
+    }
 
     # query each file
     x <- data.frame(
         sample = x$sample,
         path = x$path
     )
+    x$file_index <- seq_len(nrow(x))
 
-    # get data for each region from each file
+    # get data for each region from each file, returned as a list aligned to the
+    # input regions with NULL for regions the file has no data for
     mod_tables <- map_rows(x, function(x) {
-        read_modbam_table(
+        tables <- vector("list", length(chr))
+
+        # scanBam errors on sequences missing from the file header, so only
+        # query regions on sequences this file has
+        file_keep <- keep[chr[keep] %in% file_seqs[[x$file_index]]]
+        if (length(file_keep) == 0) {
+            return(tables)
+        }
+
+        # scanBam returns regions grouped by chromosome in order of first
+        # appearance, so order the indices to match its output
+        file_keep <- file_keep[
+            order(factor(chr[file_keep], levels = unique(chr[file_keep])))
+        ]
+
+        tables[file_keep] <- read_modbam_table(
             x$path,
-            chr = chr[keep],
-            start = start[keep],
-            end = end[keep],
+            chr = chr[file_keep],
+            start = start[file_keep],
+            end = end[file_keep],
             sample = x$sample,
             mod_code = mod_code)
+        tables
     })
 
     # bind data from all files for each region, regions are assigned by index so
     # duplicated regions each get their own copy of the data and regions with no
     # data keep a typed empty output
     out <- rep(list(empty_methy_query_output()), length(chr))
-    for (i in seq_along(keep)) {
+    for (i in keep) {
         bound <- do.call(rbind, lapply(mod_tables, function(tables) tables[[i]]))
         if (!is.null(bound) && nrow(bound) > 0) {
-            out[[keep[i]]] <- bound
+            out[[i]] <- bound
         }
     }
 

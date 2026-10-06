@@ -41,6 +41,11 @@ test_that("genomic coordinate validation works", {
         "Start position must be numeric"
     )
 
+    expect_error(
+        assert_valid_genomic_coords("chr1", 1, "xyz"),
+        "End position must be numeric. Got: xyz"
+    )
+
     # Test allow_equal = TRUE
     expect_silent(assert_valid_genomic_coords("chr1", 100, 100, allow_equal = TRUE))
     expect_error(

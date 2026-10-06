@@ -16,8 +16,21 @@ sort_methy_file <- function(x) {
         methy_df <- dplyr::arrange(methy_df, .data$chr, .data$pos)
         readr::write_tsv(methy_df, x, col_names = FALSE, progress = FALSE)
     } else {
-        cmd <- glue::glue("sort --compress-program=gzip -S 4G -k2,3V {x} -o {x}")
-        system(cmd)
+        args <- c(
+            "--compress-program=gzip",
+            "-S", "4G",
+            "-k2,3V",
+            shQuote(x),
+            "-o", shQuote(x)
+        )
+        status <- system2("sort", args)
+        if (status != 0) {
+            stop(glue::glue(
+                "Failed to sort methylation file '{x}'.\n",
+                "The 'sort' command exited with status {status}.\n",
+                "Please check that 'sort' is available and the file is readable."
+            ))
+        }
     }
 
     invisible(x)

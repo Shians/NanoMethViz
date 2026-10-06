@@ -1,5 +1,13 @@
 # Skeleton for merge function for two methylation files, currently Unix only
 merge_methy_files <- function(inputs, output) {
+    if (.Platform$OS.type != "unix") {
+        stop(glue::glue(
+            "merge_methy_files is only supported on Unix systems, as it relies ",
+            "on the 'sort -m' command which is unavailable on this platform.\n",
+            "Please run the merge on a Unix system."
+        ))
+    }
+
     assertthat::assert_that(
         all(fs::is_file(inputs)),
         all(fs::file_exists(inputs))
@@ -22,9 +30,19 @@ merge_methy_files <- function(inputs, output) {
         ~R.utils::gunzip(.x, destname = .y, remove = FALSE)
     )
 
-    files_str <- paste(temp_files, collapse = " ")
-    cmd <- glue::glue("sort -m -k2,3V -o {temp_merged} {files_str}")
-    system(cmd)
+    args <- c(
+        "-m", "-k2,3V",
+        "-o", shQuote(temp_merged),
+        shQuote(temp_files)
+    )
+    status <- system2("sort", args)
+    if (status != 0) {
+        stop(glue::glue(
+            "Failed to merge methylation files: {paste(inputs, collapse = ', ')}.\n",
+            "The 'sort' command exited with status {status}.\n",
+            "Please check that 'sort' is available and the files share the same sort key convention."
+        ))
+    }
 
     fs::file_copy(temp_merged, output, overwrite = TRUE)
     if (fs::file_exists(paste0(output, ".bgz.tbi"))) {

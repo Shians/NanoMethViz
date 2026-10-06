@@ -47,6 +47,19 @@ test_that("repeated methy_to_bsseq calls don't share state", {
     }
 })
 
+test_that("methy_to_bsseq creates a nested out_folder that does not exist", {
+    # setup
+    methy_file <- system.file("methy_subset.tsv.bgz", package = "NanoMethViz", mustWork = FALSE)
+    out_folder <- fs::path(withr::local_tempdir(), "nested", "dss")
+    expect_false(fs::dir_exists(out_folder))
+
+    # test
+    bss <- methy_to_bsseq(methy_file, out_folder, verbose = FALSE)
+    expect_true(fs::dir_exists(out_folder))
+    expect_s4_class(bss, "BSseq")
+    expect_gt(length(fs::dir_ls(out_folder, glob = "*.txt")), 0)
+})
+
 test_that("methy_to_bsseq matches samples by name, not path order", {
     methy_file <- file.path(tempdir(), paste0("methy-sample-order-", Sys.getpid(), ".tsv"))
     writeLines(

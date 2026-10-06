@@ -367,7 +367,7 @@ guess_input_type <- function(x) {
         }
     }
 
-    return("uknown")
+    return("unknown")
 }
 
 read_methy_lines <- function(x) {

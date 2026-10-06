@@ -50,3 +50,19 @@ test_that("extract_file_names strips each file independently", {
     )
     expect_equal(extract_file_names(character()), character())
 })
+
+test_that("map_rows rejects empty or non-data.frame input", {
+    expect_error(map_rows(data.frame(), identity), "'x' must be a non-empty data.frame")
+    expect_error(map_rows(data.frame(a = numeric()), identity), "'x' must be a non-empty data.frame")
+    expect_error(map_rows(list(a = 1:3), identity), "'x' must be a non-empty data.frame")
+})
+
+test_that("map_rows applies the function to each row", {
+    # setup
+    df <- data.frame(a = 1:3, b = c(10, 20, 30))
+
+    # test
+    out <- map_rows(df, function(row, offset) row$a + row$b + offset, offset = 1)
+    expect_type(out, "list")
+    expect_equal(out, list(12, 23, 34))
+})

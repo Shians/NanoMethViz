@@ -1,3 +1,11 @@
+## Version 3.9.4
+* Fixed `query_methy(simplify = FALSE)` collapsing duplicated regions into a single entry, and double counting their data for modBAM input. Each input region now gets its own output entry.
+* Fixed `query_methy()` on modBAM input returning data in the wrong order when regions on the same chromosome were interleaved with regions on other chromosomes.
+* Fixed `query_methy()` on modBAM input failing when a sequence is missing from the headers of only some BAM files. It now warns and returns no data for the affected samples.
+* Fixed `query_methy()` on modBAM input dropping regions with no reads. They now return an empty table with the standard columns.
+* Changed `query_methy()` on modBAM input to warn about sequences missing from all BAM files and error if no queried sequence is present, unless `force = TRUE`. This matches the behaviour for tabix input.
+* Changed `query_methy()` to require `site_filter` to be a single number of at least 1.
+
 ## Version 3.9.3
 * Fixed `methy_to_bsseq()` silently attributing methylation data to the wrong samples when the sample annotation order differs from the order samples appear in the methylation file.
 * Fixed modBAM MM tags declaring multiple modification codes (e.g. `C+mh` from dorado's 5mCG_5hmCG model) being silently dropped during parsing.

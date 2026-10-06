@@ -58,10 +58,11 @@ query_methy(
 
   the minimum amount of coverage to report a site. This filters the
   queried data such that any site with less than the filter is not
-  returned. The default is 1, which means that all sites are returned.
-  This option can be set globally using the
+  returned. The default is 3. This can be set globally using
   `options(NanoMethViz.site_filter = ...)` which will affect all
-  plotting functions in NanoMethViz.
+  plotting functions in NanoMethViz. Note that coverage is currently
+  counted pooled across all samples in the query result, rather than
+  per-sample.
 
 ## Value
 
@@ -83,7 +84,7 @@ nmr <- load_example_nanomethresult()
 query_methy(methy(nmr), "chr7", 6703892, 6730431)
 #> # A tibble: 16,473 × 7
 #>    sample             chr       pos strand statistic read_name          mod_prob
-#>    <chr>              <chr>   <int> <chr>      <dbl> <chr>                 <dbl>
+#>    <fct>              <fct>   <int> <fct>      <dbl> <chr>                 <dbl>
 #>  1 B6Cast_Prom_1_bl6  chr7  6704092 *          -1.05 d06f0069-470a-4ba…   0.259 
 #>  2 B6Cast_Prom_1_bl6  chr7  6704092 *          -4.05 dd27e4e1-a012-494…   0.0171
 #>  3 B6Cast_Prom_1_bl6  chr7  6704092 *           1.25 653d9fc1-f4a6-459…   0.777 

@@ -8,7 +8,8 @@ Convert methylation calls to NanoMethViz format
 convert_methy_format(
   input_files,
   output_file,
-  samples = fs::path_ext_remove(fs::path_file(input_files)),
+  samples = extract_file_names(input_files),
+  mod_code = NULL,
   verbose = TRUE
 )
 ```
@@ -26,6 +27,11 @@ convert_methy_format(
 - samples:
 
   the names of samples corresponding to each file
+
+- mod_code:
+
+  the modification code to extract from modkit input. NULL uses "m"
+  (5mC). Must be NULL unless at least one input is from modkit.
 
 - verbose:
 

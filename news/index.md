@@ -1,5 +1,77 @@
 # Changelog
 
+## Version 3.9.4
+
+- Fixed `query_methy(simplify = FALSE)` collapsing duplicated regions
+  into a single entry, and double counting their data for modBAM input.
+  Each input region now gets its own output entry.
+- Fixed
+  [`query_methy()`](https://shians.github.io/NanoMethViz/reference/query_methy.md)
+  on modBAM input returning data in the wrong order when regions on the
+  same chromosome were interleaved with regions on other chromosomes.
+- Fixed
+  [`query_methy()`](https://shians.github.io/NanoMethViz/reference/query_methy.md)
+  on modBAM input failing when a sequence is missing from the headers of
+  only some BAM files. It now warns and returns no data for the affected
+  samples.
+- Fixed
+  [`query_methy()`](https://shians.github.io/NanoMethViz/reference/query_methy.md)
+  on modBAM input dropping regions with no reads. They now return an
+  empty table with the standard columns.
+- Changed
+  [`query_methy()`](https://shians.github.io/NanoMethViz/reference/query_methy.md)
+  on modBAM input to warn about sequences missing from all BAM files and
+  error if no queried sequence is present, unless `force = TRUE`. This
+  matches the behaviour for tabix input.
+- Changed
+  [`query_methy()`](https://shians.github.io/NanoMethViz/reference/query_methy.md)
+  to require `site_filter` to be a single number of at least 1.
+- Fixed
+  [`create_tabix_file()`](https://shians.github.io/NanoMethViz/reference/create_tabix_file.md)
+  merging all modification types from modkit input into one
+  indistinguishable set of calls. Modkit input is now filtered to a
+  single modification code, set with the new `mod_code` argument
+  (default 5mC, `"m"`). It errors if no calls match, or if `mod_code` is
+  given for non-modkit input.
+- Fixed
+  [`ModBamFiles()`](https://shians.github.io/NanoMethViz/reference/ModBamFiles.md)
+  rejecting BAM files indexed with `.csi` instead of `.bai`.
+- Fixed
+  [`create_tabix_file()`](https://shians.github.io/NanoMethViz/reference/create_tabix_file.md)
+  continuing with an unsorted file when the system `sort` command
+  failed. It now errors instead.
+- Fixed
+  [`create_tabix_file()`](https://shians.github.io/NanoMethViz/reference/create_tabix_file.md)
+  default sample names keeping `.tsv` from compressed inputs
+  (e.g. `sample1.tsv.gz` became `sample1.tsv`).
+
+## Version 3.9.3
+
+- Fixed
+  [`methy_to_bsseq()`](https://shians.github.io/NanoMethViz/reference/methy_to_bsseq.md)
+  silently attributing methylation data to the wrong samples when the
+  sample annotation order differs from the order samples appear in the
+  methylation file.
+- Fixed modBAM MM tags declaring multiple modification codes
+  (e.g. `C+mh` from dorado’s 5mCG_5hmCG model) being silently dropped
+  during parsing.
+
+## Version 3.9.2
+
+- Fixed ModKit positions being off by 1.
+- Fixed
+  [`modbam_to_tabix()`](https://shians.github.io/NanoMethViz/reference/modbam_to_tabix.md)
+  leaving the tabix index (.tbi) in the temporary directory, making the
+  converted file unqueryable.
+- Fixed
+  [`methy_to_bsseq()`](https://shians.github.io/NanoMethViz/reference/methy_to_bsseq.md)
+  failing or corrupting output when called multiple times in the same R
+  session due to internal state persisting between calls.
+- Fixed
+  [`plot_mds()`](https://shians.github.io/NanoMethViz/reference/plot_mds.md)
+  plotting unscaled MDS eigenvectors, distorting the geometry of the
+  plot relative to the variance explained shown on the axes.
+
 ## Version 3.8.0
 
 - Addes sorting to the heatmap so reads appear from most to least

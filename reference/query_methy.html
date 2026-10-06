@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">NanoMethViz</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.9.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.9.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -96,9 +96,10 @@ methylation data for entire reads overlapping the region will be returned.</p></
 <dt id="arg-site-filter">site_filter<a class="anchor" aria-label="anchor" href="#arg-site-filter"></a></dt>
 <dd><p>the minimum amount of coverage to report a site. This
 filters the queried data such that any site with less than the filter is
-not returned. The default is 1, which means that all sites are returned.
-This option can be set globally using the <code>options(NanoMethViz.site_filter = ...)</code>
-which will affect all plotting functions in NanoMethViz.</p></dd>
+not returned. The default is 3. This can be set globally using
+<code>options(NanoMethViz.site_filter = ...)</code> which will affect all plotting
+functions in NanoMethViz. Note that coverage is currently counted pooled
+across all samples in the query result, rather than per-sample.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -120,7 +121,7 @@ if it overlaps multiple regions.</p>
 <span class="r-in"><span><span class="fu">query_methy</span><span class="op">(</span><span class="fu"><a href="methy.html">methy</a></span><span class="op">(</span><span class="va">nmr</span><span class="op">)</span>, <span class="st">"chr7"</span>, <span class="fl">6703892</span>, <span class="fl">6730431</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 16,473 × 7</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    sample             chr       pos strand statistic read_name          mod_prob</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> B6Cast_Prom_1_bl6  chr7  6<span style="text-decoration: underline;">704</span>092 *          -<span style="color: #BB0000;">1.05</span> d06f0069-470a-4ba…   0.259 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> B6Cast_Prom_1_bl6  chr7  6<span style="text-decoration: underline;">704</span>092 *          -<span style="color: #BB0000;">4.05</span> dd27e4e1-a012-494…   0.017<span style="text-decoration: underline;">1</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> B6Cast_Prom_1_bl6  chr7  6<span style="text-decoration: underline;">704</span>092 *           1.25 653d9fc1-f4a6-459…   0.777 </span>
@@ -144,7 +145,7 @@ if it overlaps multiple regions.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

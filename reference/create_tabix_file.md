@@ -9,6 +9,7 @@ create_tabix_file(
   input_files,
   output_file,
   samples = extract_file_names(input_files),
+  mod_code = NULL,
   verbose = TRUE
 )
 ```
@@ -27,6 +28,12 @@ create_tabix_file(
 
   the names of samples corresponding to each file
 
+- mod_code:
+
+  modkit input only: the modification code to extract, e.g. "h" for
+  5hmC. NULL uses "m" (5mC). Supplying it when no input is from modkit
+  is an error.
+
 - verbose:
 
   TRUE if progress messages are to be printed
@@ -44,11 +51,11 @@ methy_calls <- system.file(package = "NanoMethViz",
 temp_file <- paste0(tempfile(), ".tsv.bgz")
 
 create_tabix_file(methy_calls, temp_file)
-#> [2026-07-03 10:23:01] creating methylation table
+#> [2026-10-06 23:45:03] creating methylation table
 #> processing /home/runner/work/_temp/Library/NanoMethViz/sample1_nanopolish.tsv.gz...
 #> guessing file is produced by nanopolish...
 #> processing /home/runner/work/_temp/Library/NanoMethViz/sample2_nanopolish.tsv.gz...
 #> guessing file is produced by nanopolish...
-#> [2026-07-03 10:23:02] sorting methylation table
-#> [2026-07-03 10:23:02] compressing methylation table to tabix with index
+#> [2026-10-06 23:45:03] sorting methylation table
+#> [2026-10-06 23:45:03] compressing methylation table to tabix with index
 ```

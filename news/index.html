@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">NanoMethViz</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.9.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.9.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,6 +36,31 @@
       <small>Source: <a href="https://github.com/Shians/NanoMethViz/blob/devel/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="3.9.4" id="version-394">Version 3.9.4<a class="anchor" aria-label="anchor" href="#version-394"></a></h2>
+<ul><li>Fixed <code>query_methy(simplify = FALSE)</code> collapsing duplicated regions into a single entry, and double counting their data for modBAM input. Each input region now gets its own output entry.</li>
+<li>Fixed <code><a href="../reference/query_methy.html">query_methy()</a></code> on modBAM input returning data in the wrong order when regions on the same chromosome were interleaved with regions on other chromosomes.</li>
+<li>Fixed <code><a href="../reference/query_methy.html">query_methy()</a></code> on modBAM input failing when a sequence is missing from the headers of only some BAM files. It now warns and returns no data for the affected samples.</li>
+<li>Fixed <code><a href="../reference/query_methy.html">query_methy()</a></code> on modBAM input dropping regions with no reads. They now return an empty table with the standard columns.</li>
+<li>Changed <code><a href="../reference/query_methy.html">query_methy()</a></code> on modBAM input to warn about sequences missing from all BAM files and error if no queried sequence is present, unless <code>force = TRUE</code>. This matches the behaviour for tabix input.</li>
+<li>Changed <code><a href="../reference/query_methy.html">query_methy()</a></code> to require <code>site_filter</code> to be a single number of at least 1.</li>
+<li>Fixed <code><a href="../reference/create_tabix_file.html">create_tabix_file()</a></code> merging all modification types from modkit input into one indistinguishable set of calls. Modkit input is now filtered to a single modification code, set with the new <code>mod_code</code> argument (default 5mC, <code>"m"</code>). It errors if no calls match, or if <code>mod_code</code> is given for non-modkit input.</li>
+<li>Fixed <code><a href="../reference/ModBamFiles.html">ModBamFiles()</a></code> rejecting BAM files indexed with <code>.csi</code> instead of <code>.bai</code>.</li>
+<li>Fixed <code><a href="../reference/create_tabix_file.html">create_tabix_file()</a></code> continuing with an unsorted file when the system <code>sort</code> command failed. It now errors instead.</li>
+<li>Fixed <code><a href="../reference/create_tabix_file.html">create_tabix_file()</a></code> default sample names keeping <code>.tsv</code> from compressed inputs (e.g. <code>sample1.tsv.gz</code> became <code>sample1.tsv</code>).</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="3.9.3" id="version-393">Version 3.9.3<a class="anchor" aria-label="anchor" href="#version-393"></a></h2>
+<ul><li>Fixed <code><a href="../reference/methy_to_bsseq.html">methy_to_bsseq()</a></code> silently attributing methylation data to the wrong samples when the sample annotation order differs from the order samples appear in the methylation file.</li>
+<li>Fixed modBAM MM tags declaring multiple modification codes (e.g. <code>C+mh</code> from dorado’s 5mCG_5hmCG model) being silently dropped during parsing.</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="3.9.2" id="version-392">Version 3.9.2<a class="anchor" aria-label="anchor" href="#version-392"></a></h2>
+<ul><li>Fixed ModKit positions being off by 1.</li>
+<li>Fixed <code><a href="../reference/modbam_to_tabix.html">modbam_to_tabix()</a></code> leaving the tabix index (.tbi) in the temporary directory, making the converted file unqueryable.</li>
+<li>Fixed <code><a href="../reference/methy_to_bsseq.html">methy_to_bsseq()</a></code> failing or corrupting output when called multiple times in the same R session due to internal state persisting between calls.</li>
+<li>Fixed <code><a href="../reference/plot_mds.html">plot_mds()</a></code> plotting unscaled MDS eigenvectors, distorting the geometry of the plot relative to the variance explained shown on the axes.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="3.8.0" id="version-380">Version 3.8.0<a class="anchor" aria-label="anchor" href="#version-380"></a></h2>
 <ul><li>Addes sorting to the heatmap so reads appear from most to least methylated. This is done by calculating the average methylation across the region for each read and sorting by this value.</li>
@@ -174,7 +199,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

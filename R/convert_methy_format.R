@@ -74,9 +74,10 @@ reformat_megalodon <- function(x, sample) {
         dplyr::select(methy_col_names())
 }
 
-reformat_modkit <- function(x, sample) {
+reformat_modkit <- function(x, sample, mod_code = "m") {
     x %>%
         dplyr::filter(ref_position >= 0) %>% # remove unmapped positions
+        dplyr::filter(.data$mod_code == !!mod_code) %>%
         add_column(sample = sample, .before = 1) %>%
         dplyr::rename(
             chr = "chrom",
@@ -143,12 +144,37 @@ guess_methy_source <- function(methy_file) {
     stop("Format not recognised.")
 }
 
+# Validate mod_code against the input sources and fill in the modkit default.
+resolve_mod_code <- function(mod_code, methy_sources) {
+    has_modkit <- any(methy_sources == "modkit")
+
+    if (!is.null(mod_code) && !has_modkit) {
+        stop(glue::glue(
+            "mod_code only applies to modkit input, but no input file was ",
+            "detected as modkit (detected: {paste(unique(methy_sources), collapse = ', ')}).\n",
+            "Remove the mod_code argument."
+        ))
+    }
+
+    if (is.null(mod_code)) {
+        return(if (has_modkit) "m" else NULL)
+    }
+
+    if (!is.string(mod_code) || is.na(mod_code) || mod_code == "") {
+        stop("mod_code must be a single non-empty string, e.g. \"m\" for 5mC.")
+    }
+
+    mod_code
+}
+
 #' Convert methylation calls to NanoMethViz format
 #' @keywords internal
 #'
 #' @param input_files the files to convert
 #' @param output_file the output file to write results to (must end in .bgz)
 #' @param samples the names of samples corresponding to each file
+#' @param mod_code the modification code to extract from modkit input. NULL
+#'   uses "m" (5mC). Must be NULL unless at least one input is from modkit.
 #' @param verbose TRUE if progress messages are to be printed
 #'
 #' @return invisibly returns the output file path, creates a tabix file (.bgz)
@@ -156,12 +182,16 @@ guess_methy_source <- function(methy_file) {
 convert_methy_format <- function(
     input_files,
     output_file,
-    samples = fs::path_ext_remove(fs::path_file(input_files)),
+    samples = extract_file_names(input_files),
+    mod_code = NULL,
     verbose = TRUE
 ) {
     for (f in input_files) {
         assert_readable(f)
     }
+
+    methy_sources <- purrr::map_chr(input_files, guess_methy_source)
+    mod_code <- resolve_mod_code(mod_code, methy_sources)
 
     assert_that(
         is.character(output_file)
@@ -171,11 +201,11 @@ convert_methy_format <- function(
     file.create(path.expand(output_file))
     assert_that(is.writeable(output_file))
 
-    for (element in vec_zip(file = input_files, sample = samples)) {
+    for (element in vec_zip(file = input_files, sample = samples, source = methy_sources)) {
         if (verbose) {
             message(glue::glue("processing {element$file}..."))
         }
-        methy_source <- guess_methy_source(element$file)
+        methy_source <- element$source
         if (verbose) {
             message(glue::glue("guessing file is produced by {methy_source}..."))
         }
@@ -193,15 +223,20 @@ convert_methy_format <- function(
             "nanopolish" = reformat_nanopolish,
             "f5c" = reformat_f5c,
             "megalodon" = reformat_megalodon,
-            "modkit" = reformat_modkit
+            "modkit" = function(x, sample) reformat_modkit(x, sample, mod_code = mod_code)
         )
 
+        # track modkit codes seen so an unmatched mod_code fails loudly
+        # rather than producing an empty file
+        rows_written <- 0
+        codes_seen <- character()
         writer_fn <- function(x, i) {
-            readr::write_tsv(
-                reformatter(x, sample = element$sample),
-                file = output_file,
-                append = TRUE
-            )
+            if (methy_source == "modkit") {
+                codes_seen <<- union(codes_seen, unique(x$mod_code))
+            }
+            out <- reformatter(x, sample = element$sample)
+            rows_written <<- rows_written + nrow(out)
+            readr::write_tsv(out, file = output_file, append = TRUE)
         }
         readr::local_edition(1) # temporary fix for vroom bad value
         readr::read_tsv_chunked(
@@ -209,6 +244,20 @@ convert_methy_format <- function(
             col_types = col_types,
             readr::SideEffectChunkCallback$new(writer_fn)
         )
+
+        if (methy_source == "modkit" && rows_written == 0) {
+            codes_seen <- codes_seen[!is.na(codes_seen)]
+            found <- if (length(codes_seen) > 0) {
+                paste0("'", codes_seen, "'", collapse = ", ")
+            } else {
+                "none"
+            }
+            stop(glue::glue(
+                "No calls with mod_code '{mod_code}' found in modkit file '{element$file}'.\n",
+                "Mod codes found in file: {found}.\n",
+                "Set mod_code to one of the codes present."
+            ))
+        }
     }
 
     invisible(output_file)

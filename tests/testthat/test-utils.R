@@ -27,3 +27,26 @@ test_that("make_granges throws error for unequal input lengths", {
     # Expect an error to be thrown for unequal input lengths
     expect_error(make_granges(chr, start, end))
 })
+
+test_that("extract_file_names strips compound extensions", {
+    expect_equal(extract_file_names("sample1_nanopolish.tsv.gz"), "sample1_nanopolish")
+    expect_equal(extract_file_names("sample1_nanopolish.tsv.bgz"), "sample1_nanopolish")
+    expect_equal(extract_file_names("sample1_nanopolish.gz"), "sample1_nanopolish")
+    expect_equal(extract_file_names("sample1_nanopolish.bgz"), "sample1_nanopolish")
+    expect_equal(extract_file_names("sample1_nanopolish.tsv"), "sample1_nanopolish")
+    expect_equal(extract_file_names("sample1_nanopolish"), "sample1_nanopolish")
+})
+
+test_that("extract_file_names preserves dots in sample names", {
+    expect_equal(extract_file_names("sample.1.tsv.gz"), "sample.1")
+    expect_equal(extract_file_names("sample.1.tsv"), "sample.1")
+    expect_equal(extract_file_names("sample.1"), "sample.1")
+})
+
+test_that("extract_file_names strips each file independently", {
+    expect_equal(
+        extract_file_names(c("x.gz", "y.tsv.gz", "z", "dir/sample.1.tsv.bgz")),
+        c("x", "y", "z", "sample.1")
+    )
+    expect_equal(extract_file_names(character()), character())
+})

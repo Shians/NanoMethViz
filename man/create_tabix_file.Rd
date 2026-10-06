@@ -8,6 +8,7 @@ create_tabix_file(
   input_files,
   output_file,
   samples = extract_file_names(input_files),
+  mod_code = NULL,
   verbose = TRUE
 )
 }
@@ -17,6 +18,10 @@ create_tabix_file(
 \item{output_file}{the output file to write results to (must end in .bgz)}
 
 \item{samples}{the names of samples corresponding to each file}
+
+\item{mod_code}{modkit input only: the modification code to extract, e.g.
+"h" for 5hmC. NULL uses "m" (5mC). Supplying it when no input is from
+modkit is an error.}
 
 \item{verbose}{TRUE if progress messages are to be printed}
 }

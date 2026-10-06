@@ -71,7 +71,16 @@ vec_zip <- function(..., .names = NULL) {
 }
 
 extract_file_names <- function(x) {
-    fs::path_ext_remove(fs::path_file(x))
+    known_exts <- c("tsv", "gz", "bgz")
+
+    strip_known_exts <- function(name) {
+        while (tolower(fs::path_ext(name)) %in% known_exts) {
+            name <- fs::path_ext_remove(name)
+        }
+        name
+    }
+
+    purrr::map_chr(fs::path_file(x), strip_known_exts)
 }
 
 logit <- function(p) {

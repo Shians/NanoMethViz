@@ -15,7 +15,7 @@ cluster_reads(x, chr, start, end, min_pts = 5)
 
 \item{end}{the end position of the region.}
 
-\item{min_pts}{the minimum number of points needed to form a cluster (default = 10).}
+\item{min_pts}{the minimum number of points needed to form a cluster (default = 5).}
 }
 \value{
 A tibble with information about each read's cluster assignment and read statistics.

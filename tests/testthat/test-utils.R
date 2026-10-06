@@ -42,3 +42,11 @@ test_that("extract_file_names preserves dots in sample names", {
     expect_equal(extract_file_names("sample.1.tsv"), "sample.1")
     expect_equal(extract_file_names("sample.1"), "sample.1")
 })
+
+test_that("extract_file_names strips each file independently", {
+    expect_equal(
+        extract_file_names(c("x.gz", "y.tsv.gz", "z", "dir/sample.1.tsv.bgz")),
+        c("x", "y", "z", "sample.1")
+    )
+    expect_equal(extract_file_names(character()), character())
+})

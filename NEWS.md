@@ -1,6 +1,7 @@
 ## Version 3.9.3
 * Fixed `methy_to_bsseq()` silently attributing methylation data to the wrong samples when the sample annotation order differs from the order samples appear in the methylation file.
 * Fixed modBAM MM tags declaring multiple modification codes (e.g. `C+mh` from dorado's 5mCG_5hmCG model) being silently dropped during parsing.
+* Fixed `create_tabix_file()` merging all modification types from modkit input into one indistinguishable set of calls. Modkit input is now filtered to a single modification code, set with the new `mod_code` argument (default 5mC, `"m"`). It errors if no calls match, or if `mod_code` is given for non-modkit input.
 
 ## Version 3.9.2
 * Fixed ModKit positions being off by 1.

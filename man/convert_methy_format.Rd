@@ -8,6 +8,7 @@ convert_methy_format(
   input_files,
   output_file,
   samples = fs::path_ext_remove(fs::path_file(input_files)),
+  mod_code = NULL,
   verbose = TRUE
 )
 }
@@ -17,6 +18,9 @@ convert_methy_format(
 \item{output_file}{the output file to write results to (must end in .bgz)}
 
 \item{samples}{the names of samples corresponding to each file}
+
+\item{mod_code}{the modification code to extract from modkit input. NULL
+uses "m" (5mC). Must be NULL unless at least one input is from modkit.}
 
 \item{verbose}{TRUE if progress messages are to be printed}
 }

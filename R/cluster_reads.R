@@ -4,7 +4,7 @@
 #' @param chr the chromosome name where to find the region.
 #' @param start the start position of the region.
 #' @param end the end position of the region.
-#' @param min_pts the minimum number of points needed to form a cluster (default = 10).
+#' @param min_pts the minimum number of points needed to form a cluster (default = 5).
 #'
 #' @return A tibble with information about each read's cluster assignment and read statistics.
 #'
@@ -62,11 +62,11 @@ cluster_reads <- function(x, chr, start, end, min_pts = 5) {
     }
 
     # remove positions with high missingness (>60%) then reads with high missingness (>30%)
-    mod_mat_filled <- mod_mat[order(rownames(mod_mat)), ]
+    mod_mat_filled <- mod_mat[order(rownames(mod_mat)), , drop = FALSE]
     col_missingness <- mat_col_map(mod_mat_filled, missingness)
-    mod_mat_filled <- mod_mat_filled[, col_missingness < 0.6]
+    mod_mat_filled <- mod_mat_filled[, col_missingness < 0.6, drop = FALSE]
     row_missingness <- mat_row_map(mod_mat_filled, missingness)
-    mod_mat_filled <- mod_mat_filled[row_missingness < 0.3, ]
+    mod_mat_filled <- mod_mat_filled[row_missingness < 0.3, , drop = FALSE]
 
     # fill in missing values with mean methylation probability across that read
     for (i in seq_len(nrow(mod_mat_filled))) {

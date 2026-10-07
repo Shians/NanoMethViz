@@ -76,6 +76,80 @@ test_that("reformat_modkit filters rows by mod_code", {
     expect_equal(nrow(result_no_match), 0)
 })
 
+test_that("reformat_modkit takes strand from the reference and shifts reverse CG calls", {
+    # simplex reads have mod_strand "+" whatever their alignment, so strand
+    # must come from ref_mod_strand; query_kmer is read-oriented
+    modkit_data <- tibble::tibble(
+        read_id = c("fwd_cg", "rev_cg", "rev_ca", "rev_6ma"),
+        forward_read_position = c(10, 20, 30, 40),
+        ref_position = c(99, 200, 300, 400),
+        chrom = "chr1",
+        mod_strand = "+",
+        ref_strand = c("+", "-", "-", "-"),
+        ref_mod_strand = c("+", "-", "-", "-"),
+        fw_soft_clipped_start = 0,
+        fw_soft_clipped_end = 0,
+        read_length = 100,
+        mod_qual = 0.9,
+        mod_code = c("m", "m", "m", "a"),
+        base_qual = 30,
+        ref_kmer = ".",
+        query_kmer = c("GACGG", "TACGT", "TACAT", "GTAGC"),
+        canonical_base = c("C", "C", "C", "A"),
+        modified_primary_base = c("C", "C", "C", "A"),
+        inferred = FALSE,
+        flag = c(0, 16, 16, 16)
+    )
+
+    result_m <- reformat_modkit(modkit_data, sample = "sample1")
+    expect_equal(result_m$read_name, c("fwd_cg", "rev_cg", "rev_ca"))
+    expect_equal(as.character(result_m$strand), c("+", "-", "-"))
+    # forward CG keeps 1-based pos, reverse CG moves from G (201) to C (200),
+    # reverse non-CG stays on its aligned base
+    expect_equal(result_m$pos, c(100L, 200L, 301L))
+
+    # non-C modifications are never shifted
+    result_a <- reformat_modkit(modkit_data, sample = "sample1", mod_code = "a")
+    expect_equal(result_a$pos, 401L)
+    expect_equal(as.character(result_a$strand), "-")
+})
+
+test_that("modkit import matches modbam_to_tabix on the same BAM", {
+    skip_if(Sys.which("modkit") == "", "modkit not installed")
+
+    bam <- system.file("peg3.bam", package = "NanoMethViz")
+    extract_file <- withr::local_tempfile(fileext = ".tsv")
+    status <- system2(
+        "modkit",
+        c("extract", "full", "--mapped-only", bam, extract_file),
+        stdout = FALSE, stderr = FALSE
+    )
+    skip_if(status != 0, "modkit extract failed")
+
+    modkit_out <- withr::local_tempfile(fileext = ".tsv")
+    convert_methy_format(extract_file, modkit_out, samples = "s1", verbose = FALSE)
+
+    mbr <- ModBamResult(
+        ModBamFiles("s1", bam),
+        data.frame(sample = "s1", group = "g")
+    )
+    modbam_out <- withr::local_tempfile(fileext = ".tsv.bgz")
+    suppressMessages(modbam_to_tabix(mbr, modbam_out))
+
+    read_calls <- function(path) {
+        readr::read_tsv(
+            path,
+            col_names = methy_col_names(),
+            col_types = methy_col_types()
+        ) %>%
+            dplyr::mutate(strand = as.character(.data$strand)) %>%
+            dplyr::select("read_name", "pos", "strand") %>%
+            dplyr::arrange(.data$read_name, .data$pos)
+    }
+
+    expect_equal(read_calls(modkit_out), read_calls(modbam_out))
+})
+
 test_that("resolve_mod_code defaults to 5mC for modkit and NULL otherwise", {
     expect_equal(resolve_mod_code(NULL, "modkit"), "m")
     expect_equal(resolve_mod_code(NULL, c("nanopolish", "modkit")), "m")

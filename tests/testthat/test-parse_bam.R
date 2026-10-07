@@ -41,6 +41,24 @@ test_that("parse_bam_cpp keeps ML stream in sync across multi-code groups", {
     expect_equal(out_m2$statistic, logit(250 / 255))
 })
 
+test_that("parse_bam_cpp shifts only reverse strand CG calls onto the forward C", {
+    # read TTCGAACATT has a C in CG context (read index 2) and one in CA
+    # context (read index 6); SEQ holds the reverse complement
+    seq <- "AATGTTCGAA"
+    cigar <- "10M"
+    mm <- "C+m,0,0;"
+    ml <- "200,100"
+
+    # the CG call is aligned to the G at 107 and moves to its C at 106, the CA
+    # call stays at 103
+    out_rev <- parse_bam_cpp(seq, cigar, mm, ml, 100, "-", "m")
+    expect_equal(out_rev$pos, c(106L, 103L))
+
+    # forward strand calls are never shifted
+    out_fwd <- parse_bam_cpp("ACGTCACGTCACGTCACGTC", "20M", "C+m,0,0;", ml, 100, "+", "m")
+    expect_equal(out_fwd$pos, c(101L, 104L))
+})
+
 test_that("parse_bam_cpp handles multi-code MM tags with '.' flag", {
     seq <- "ACGTCACGTCACGTCACGTC"
     cigar <- "20M"

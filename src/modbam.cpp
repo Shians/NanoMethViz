@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <cctype>
 #include <cmath>
 #include <iostream>
 #include <sstream>
@@ -499,9 +500,16 @@ parse_bam_cpp(
         }
 
         if (strand == "-") {
-            if (mod_code == "m" || mod_code == "h") {
-                // assume CG symmetry and shift pos by -1
-                for (size_t i = 0; i < output.pos.size(); ++i) {
+            // place reverse strand CG calls on the C of the forward strand so
+            // both strands of a CG share one coordinate; other contexts are
+            // left in place. seq is reference-oriented, so the read's CG
+            // appears as "CG" ending at the called base
+            for (size_t i = 0; i < output.pos.size(); ++i) {
+                int seq_ind = output.seq_pos[i];
+                bool is_cg = output.base[i] == 'C' &&
+                    seq_ind > 0 &&
+                    std::toupper(seq.at(seq_ind - 1)) == 'C';
+                if (is_cg) {
                     output.pos[i] -= 1;
                 }
             }

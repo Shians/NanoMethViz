@@ -74,6 +74,14 @@ reformat_megalodon <- function(x, sample) {
         dplyr::select(methy_col_names())
 }
 
+# TRUE where the read base after the centre of the read-oriented kmer is G,
+# i.e. the called base is the C of a CG on the read
+is_read_cg <- function(canonical_base, query_kmer) {
+    centre <- (nchar(query_kmer) + 1) %/% 2
+    next_base <- toupper(substr(query_kmer, centre + 1, centre + 1))
+    !is.na(next_base) & canonical_base == "C" & next_base == "G"
+}
+
 reformat_modkit <- function(x, sample, mod_code = "m") {
     x %>%
         dplyr::filter(ref_position >= 0) %>% # remove unmapped positions
@@ -82,14 +90,20 @@ reformat_modkit <- function(x, sample, mod_code = "m") {
         dplyr::rename(
             chr = "chrom",
             pos = "ref_position",
-            strand = "mod_strand",
+            # mod_strand is relative to the read, ref_mod_strand to the
+            # reference
+            strand = "ref_mod_strand",
             statistic = "mod_qual",
             read_name = "read_id"
         ) %>%
         dplyr::mutate(
             sample = as.factor(.data$sample),
             chr = factor(.data$chr),
-            pos = as.integer(.data$pos) + 1,
+            # reverse strand CG calls sit on the G, shift them onto the C of
+            # the forward strand so both strands share one coordinate
+            shift = .data$strand == "-" &
+                is_read_cg(.data$canonical_base, .data$query_kmer),
+            pos = as.integer(.data$pos) + 1L - .data$shift,
             strand = factor(.data$strand, levels = c("+", "-", "*")),
             statistic = logit(.data$statistic)
         ) %>%

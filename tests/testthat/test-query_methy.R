@@ -253,3 +253,20 @@ test_that("site_filter validation rejects invalid values", {
     )
     expect_no_error(query_methy(methy_path, "chr7", 6703892, 6717161, site_filter = 1))
 })
+
+test_that("readable files that are not tabix indexed are rejected", {
+    # setup
+    nmr <- load_example_nanomethresult()
+    plain_path <- withr::local_tempfile(fileext = ".tsv")
+    writeLines("sample1\tchr7\t100\t+\t1.5\tread1", plain_path)
+
+    # test
+    expect_false(can_open_tabix(plain_path))
+    expect_true(can_open_tabix(methy(nmr)))
+
+    expect_equal(guess_input_type(plain_path), "unknown")
+    expect_error(
+        query_methy(plain_path, "chr7", 1, 1000),
+        "not a recognised file type"
+    )
+})

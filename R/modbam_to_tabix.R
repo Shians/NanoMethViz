@@ -65,8 +65,8 @@ modbam_to_tabix <- function(x, out_file, mod_code = NanoMethViz::mod_code(x)) {
     cli::cli_alert_info(paste0("Moving data to final location: ", out_file))
 
     output_dir <- fs::path_dir(out_file)
-    if (output_dir != "" && fs::file_exists(output_dir)) {
-        fs::dir_create(fs::path_dir(out_file))
+    if (output_dir != "" && !fs::dir_exists(output_dir)) {
+        fs::dir_create(output_dir)
     }
 
     fs::file_move(tmp_out, out_file)
@@ -81,9 +81,9 @@ modbam_to_tabix <- function(x, out_file, mod_code = NanoMethViz::mod_code(x)) {
 run_modbam_to_tsv_converter <- function(x, out_file, mod_code) {
     # if .bgz at end of output name then trim it so final output
     # doesn't end with .bgz.bgz
-    if (stringr::str_detect(out_file, ".bgz$")) {
+    if (stringr::str_detect(out_file, "\\.bgz$")) {
         out_file <- out_file %>%
-            stringr::str_remove(".bgz$")
+            stringr::str_remove("\\.bgz$")
     }
 
     bam_info <- dplyr::inner_join(samples(x), methy(x), by = dplyr::join_by(sample))

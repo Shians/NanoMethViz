@@ -12,8 +12,9 @@
 #' @param binary_threshold the modification probability such that calls with
 #'   modification probability above the threshold are considered methylated, and
 #'   those with probability equal or below are considered unmethylated.
-#' @param group_col the column to group aggregated trends by. This column can
-#'   be in from the regions table or samples(x).
+#' @param group_col the column to group and colour violins by. This column can
+#'   be from the regions table or samples(x). If NULL, a single violin is drawn
+#'   for all regions and samples.
 #' @param palette the ggplot colour palette used for groups.
 #'
 #' @return a ggplot object containing the methylation violin plot.
@@ -58,27 +59,42 @@ plot_violin <- function(
     regions <- regions %>%
         dplyr::filter(purrr::map_lgl(.data$methy_data, function(x) nrow(x) != 0))
 
+    # summarise each region per sample, keeping any annotation columns of the
+    # regions table so they remain available for grouping
+    region_cols <- setdiff(
+        colnames(regions),
+        c("chr", "strand", "start", "end", "methy_data")
+    )
     region_data <- regions %>%
+        dplyr::mutate(.region_id = dplyr::row_number()) %>%
         dplyr::select(!dplyr::any_of(c("chr", "strand", "start", "end"))) %>%
         tidyr::unnest("methy_data") %>%
         dplyr::summarise(
             methy_prop = mean(.data$mod_prob > binary_threshold),
-            .by = c("gene_id", "symbol", "sample", "chr", "strand")) %>%
+            .by = dplyr::all_of(c(".region_id", region_cols, "sample"))) %>%
         dplyr::inner_join(samples(x), by = "sample", multiple = "all")
 
     if (!is.null(group_col)) {
         aes_spec <- ggplot2::aes(
                 x = .data[[group_col]],
                 y = .data$methy_prop,
-                col = .data$group)
+                col = .data[[group_col]])
     } else {
+        # a single violin over all regions and samples
         aes_spec <- ggplot2::aes(
-                x = .data[[group_col]],
+                x = "",
                 y = .data$methy_prop)
     }
 
+    # draw_quantiles was deprecated in ggplot2 4.0.0
+    if (utils::packageVersion("ggplot2") >= "4.0.0") {
+        violin <- ggplot2::geom_violin(quantiles = 0.5, quantile.linetype = 1)
+    } else {
+        violin <- ggplot2::geom_violin(draw_quantiles = 0.5)
+    }
+
     ggplot2::ggplot(region_data, aes_spec) +
-        ggplot2::geom_violin(draw_quantiles = 0.5) +
+        violin +
         ggplot2::scale_y_continuous(limits = c(0, 1)) +
         ggplot2::theme_bw() +
         palette

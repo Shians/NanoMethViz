@@ -22,8 +22,9 @@ start and end. Any additional columns can be used for grouping.}
 modification probability above the threshold are considered methylated, and
 those with probability equal or below are considered unmethylated.}
 
-\item{group_col}{the column to group aggregated trends by. This column can
-be in from the regions table or samples(x).}
+\item{group_col}{the column to group and colour violins by. This column can
+be from the regions table or samples(x). If NULL, a single violin is drawn
+for all regions and samples.}
 
 \item{palette}{the ggplot colour palette used for groups.}
 }

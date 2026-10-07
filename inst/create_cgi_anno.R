@@ -27,6 +27,8 @@ read_cgi_anno <- function(x) {
             end = chromEnd
         ) %>%
         mutate(
+            # UCSC starts are 0-based, the package convention is 1-based
+            start = start + 1,
             transcript_id = gene_id,
             strand = "*",
             symbol = gene_id
@@ -67,31 +69,53 @@ download_parse_and_save(
     "https://hgdownload.soe.ucsc.edu/goldenPath/hg38/database/cpgIslandExt.txt.gz"
 )
 
-# T2T ----
-download_parse_and_save(
-    "t2t",
-    "https://hgdownload.soe.ucsc.edu/gbdb/hs1/bbi/cpgIslandExt.bb"
-)
+# T2T (hs1) ----
+# UCSC only distributes hs1 CpG islands as a bigBed, which uses GenBank
+# accessions as sequence names and has no bin column. Rename sequences to UCSC
+# names with the chromAlias table and recompute the UCSC bin so the table
+# matches the other genomes' cpgIslandExt layout. import.bb() already returns
+# 1-based starts.
 
-# T2T Genome ----
-temp_path <- tempfile()
-download.file("https://hgdownload.soe.ucsc.edu/gbdb/hs1/bbi/cpgIslandExt.bb", temp_path)
+# UCSC standard binning scheme (binFromRange in kent/src/lib/binRange.c)
+ucsc_bin <- function(start, end) {
+    bin_offsets <- c(512 + 64 + 8 + 1, 64 + 8 + 1, 8 + 1, 1, 0)
+    start_bin <- start %/% 2^17
+    end_bin <- (end - 1) %/% 2^17
+    bin <- rep(NA_real_, length(start))
+    for (offset in bin_offsets) {
+        hit <- is.na(bin) & start_bin == end_bin
+        bin[hit] <- offset + start_bin[hit]
+        start_bin <- start_bin %/% 2^3
+        end_bin <- end_bin %/% 2^3
+    }
+    bin
+}
 
-anno_t2t <- rtracklayer::import.bb(temp_path) %>%
-    as_tibble()
+bb_path <- tempfile(fileext = ".bb")
+alias_path <- tempfile(fileext = ".txt")
+download.file("https://hgdownload.soe.ucsc.edu/gbdb/hs1/bbi/cpgIslandExt.bb", bb_path)
+download.file("https://hgdownload.soe.ucsc.edu/goldenPath/hs1/bigZips/hs1.chromAlias.txt", alias_path)
 
-cgi_anno_t2t <- anno_t2t %>%
-    dplyr::rename(
-        gene_id = name,
-        chr = seqnames
+chrom_alias <- read_tsv(alias_path, comment = "#", col_names = FALSE) %>%
+    dplyr::select(ucsc = X1, genbank = X2)
+
+cgi_anno_t2t <- rtracklayer::import.bb(bb_path) %>%
+    as_tibble() %>%
+    mutate(
+        chr = chrom_alias$ucsc[match(as.character(seqnames), chrom_alias$genbank)],
+        start = as.numeric(start),
+        end = as.numeric(end),
+        bin = ucsc_bin(start - 1, end),
+        across(c(length, cpgNum, gcNum), as.numeric)
     ) %>%
+    dplyr::select(bin, chr, start, end, gene_id = name, length, cpgNum, gcNum, perCpg, perGc, obsExp) %>%
     mutate(
         transcript_id = gene_id,
         strand = "*",
         symbol = gene_id
     )
 
-anno_name <- paste0("inst/cgi_t2t.rds")
-saveRDS(exon_anno_t2t_formatted, anno_name, compress = "xz")
+stopifnot(!anyNA(cgi_anno_t2t$chr))
+saveRDS(cgi_anno_t2t, "inst/cgi_t2t.rds", compress = "xz")
 
-fs::file_delete(temp_path)
+fs::file_delete(c(bb_path, alias_path))

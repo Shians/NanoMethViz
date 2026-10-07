@@ -233,6 +233,25 @@ test_that("guess_methy_source detects modkit", {
     expect_equal(guess_methy_source(modkit_file), "modkit")
 })
 
+test_that("guess_methy_source rejects modkit extract calls output", {
+    calls_file <- write_methy_lines(
+        c(
+            "read_id", "forward_read_position", "ref_position", "chrom",
+            "mod_strand", "ref_strand", "ref_mod_strand",
+            "fw_soft_clipped_start", "fw_soft_clipped_end", "read_length",
+            "call_prob", "call_code", "base_qual", "ref_kmer", "query_kmer",
+            "canonical_base", "modified_primary_base", "fail", "inferred",
+            "within_alignment", "flag"
+        ),
+        paste0(
+            "read1\t10\t0\tchr1\t+\t+\t+\t0\t0\t100\t0.9\tm\t30\t.\tGACGG\t",
+            "C\tC\tfalse\tfalse\ttrue\t0"
+        )
+    )
+
+    expect_error(guess_methy_source(calls_file), "modkit extract full")
+})
+
 test_that("guess_methy_source errors on unrecognised header", {
     unknown_file <- write_methy_lines(c("foo", "bar", "baz"), "1\t2\t3")
 

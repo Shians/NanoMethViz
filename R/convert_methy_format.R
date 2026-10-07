@@ -147,6 +147,15 @@ guess_methy_source <- function(methy_file) {
         return("modkit")
     }
 
+    if (has_all(c("read_id", "ref_position", "chrom", "call_prob", "call_code"))) {
+        stop(
+            "File looks like `modkit extract calls` output, which holds ",
+            "thresholded calls rather than per-modification probabilities.\n",
+            "Use `modkit extract full` instead, or read the modBAM directly ",
+            "with ModBamResult()."
+        )
+    }
+
     if (has_all(c("chromosome", "strand", "start", "read_name", "log_lik_ratio", "num_motifs", "sequence"))) {
         return("nanopolish")
     }

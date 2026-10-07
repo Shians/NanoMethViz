@@ -52,21 +52,21 @@ mbr <- ModBamResult(
 #> Successfully created ModBamResult with 1 matched samples.
 
 modbam_to_tabix(mbr, out_file)
-#> ℹ Writing data to temporary file: /tmp/RtmpVY9GTC/file50a95c6b2c13.tsv
-#> ✔ Writing data to temporary file: /tmp/RtmpVY9GTC/file50a95c6b2c13.tsv [4ms]
+#> ℹ Writing data to temporary file: /tmp/RtmptcWepz/file1a1b404babef.tsv
+#> ✔ Writing data to temporary file: /tmp/RtmptcWepz/file1a1b404babef.tsv [6ms]
 #> 
 #> ℹ Converting data to TSV
-#> ✔ Converting data to TSV [97ms]
+#> ✔ Converting data to TSV [123ms]
 #> 
 #> ℹ Sorting data
-#> ✔ Sorting data [19ms]
+#> ✔ Sorting data [24ms]
 #> 
 #> ℹ Compressing data
-#> ℹ Moving data to final location: /tmp/RtmpVY9GTC/file50a938d16552.tsv.bgz
+#> ℹ Moving data to final location: /tmp/RtmptcWepz/file1a1b1b842621.tsv.bgz
 #> ℹ Compressing data
-#> ✔ Compressing data [17ms]
+#> ✔ Compressing data [24ms]
 #> 
-#> ℹ Tabix file created: /tmp/RtmpVY9GTC/file50a938d16552.tsv.bgz
-#> ✔ Tabix file created: /tmp/RtmpVY9GTC/file50a938d16552.tsv.bgz [7ms]
+#> ℹ Tabix file created: /tmp/RtmptcWepz/file1a1b1b842621.tsv.bgz
+#> ✔ Tabix file created: /tmp/RtmptcWepz/file1a1b1b842621.tsv.bgz [10ms]
 #> 
 ```

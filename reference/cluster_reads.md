@@ -28,7 +28,7 @@ cluster_reads(x, chr, start, end, min_pts = 5)
 
 - min_pts:
 
-  the minimum number of points needed to form a cluster (default = 10).
+  the minimum number of points needed to form a cluster (default = 5).
 
 ## Value
 

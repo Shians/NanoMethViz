@@ -2,6 +2,18 @@
 
 ## Version 3.9.4
 
+- Fixed
+  [`get_cgi_t2t()`](https://shians.github.io/NanoMethViz/reference/get_exons.md)
+  returning exon annotation instead of CpG islands.
+- Fixed CpG island annotations from
+  [`get_cgi_hg19()`](https://shians.github.io/NanoMethViz/reference/get_exons.md),
+  [`get_cgi_hg38()`](https://shians.github.io/NanoMethViz/reference/get_exons.md),
+  [`get_cgi_t2t()`](https://shians.github.io/NanoMethViz/reference/get_exons.md),
+  [`get_cgi_mm10()`](https://shians.github.io/NanoMethViz/reference/get_exons.md)
+  and
+  [`get_cgi_grcm39()`](https://shians.github.io/NanoMethViz/reference/get_exons.md)
+  using 0-based starts. Starts are now 1-based like the rest of the
+  package, so every island starts 1 bp later than before.
 - Fixed `query_methy(simplify = FALSE)` collapsing duplicated regions
   into a single entry, and double counting their data for modBAM input.
   Each input region now gets its own output entry.

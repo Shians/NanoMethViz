@@ -38,7 +38,9 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="3.9.4" id="version-394">Version 3.9.4<a class="anchor" aria-label="anchor" href="#version-394"></a></h2>
-<ul><li>Fixed <code>query_methy(simplify = FALSE)</code> collapsing duplicated regions into a single entry, and double counting their data for modBAM input. Each input region now gets its own output entry.</li>
+<ul><li>Fixed <code><a href="../reference/get_exons.html">get_cgi_t2t()</a></code> returning exon annotation instead of CpG islands.</li>
+<li>Fixed CpG island annotations from <code><a href="../reference/get_exons.html">get_cgi_hg19()</a></code>, <code><a href="../reference/get_exons.html">get_cgi_hg38()</a></code>, <code><a href="../reference/get_exons.html">get_cgi_t2t()</a></code>, <code><a href="../reference/get_exons.html">get_cgi_mm10()</a></code> and <code><a href="../reference/get_exons.html">get_cgi_grcm39()</a></code> using 0-based starts. Starts are now 1-based like the rest of the package, so every island starts 1 bp later than before.</li>
+<li>Fixed <code>query_methy(simplify = FALSE)</code> collapsing duplicated regions into a single entry, and double counting their data for modBAM input. Each input region now gets its own output entry.</li>
 <li>Fixed <code><a href="../reference/query_methy.html">query_methy()</a></code> on modBAM input returning data in the wrong order when regions on the same chromosome were interleaved with regions on other chromosomes.</li>
 <li>Fixed <code><a href="../reference/query_methy.html">query_methy()</a></code> on modBAM input failing when a sequence is missing from the headers of only some BAM files. It now warns and returns no data for the affected samples.</li>
 <li>Fixed <code><a href="../reference/query_methy.html">query_methy()</a></code> on modBAM input dropping regions with no reads. They now return an empty table with the standard columns.</li>

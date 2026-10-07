@@ -1,4 +1,6 @@
 ## Version 3.9.4
+* Fixed `get_cgi_t2t()` returning exon annotation instead of CpG islands.
+* Fixed CpG island annotations from `get_cgi_hg19()`, `get_cgi_hg38()`, `get_cgi_t2t()`, `get_cgi_mm10()` and `get_cgi_grcm39()` using 0-based starts. Starts are now 1-based like the rest of the package, so every island starts 1 bp later than before.
 * Fixed `query_methy(simplify = FALSE)` collapsing duplicated regions into a single entry, and double counting their data for modBAM input. Each input region now gets its own output entry.
 * Fixed `query_methy()` on modBAM input returning data in the wrong order when regions on the same chromosome were interleaved with regions on other chromosomes.
 * Fixed `query_methy()` on modBAM input failing when a sequence is missing from the headers of only some BAM files. It now warns and returns no data for the affected samples.

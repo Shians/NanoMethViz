@@ -27,6 +27,8 @@ read_cgi_anno <- function(x) {
             end = chromEnd
         ) %>%
         mutate(
+            # UCSC starts are 0-based, the package convention is 1-based
+            start = start + 1,
             transcript_id = gene_id,
             strand = "*",
             symbol = gene_id
@@ -70,8 +72,9 @@ download_parse_and_save(
 # T2T (hs1) ----
 # UCSC only distributes hs1 CpG islands as a bigBed, which uses GenBank
 # accessions as sequence names and has no bin column. Rename sequences to UCSC
-# names with the chromAlias table, recompute the UCSC bin, and convert back to
-# 0-based starts so the table matches the other genomes' cpgIslandExt layout.
+# names with the chromAlias table and recompute the UCSC bin so the table
+# matches the other genomes' cpgIslandExt layout. import.bb() already returns
+# 1-based starts.
 
 # UCSC standard binning scheme (binFromRange in kent/src/lib/binRange.c)
 ucsc_bin <- function(start, end) {
@@ -100,9 +103,9 @@ cgi_anno_t2t <- rtracklayer::import.bb(bb_path) %>%
     as_tibble() %>%
     mutate(
         chr = chrom_alias$ucsc[match(as.character(seqnames), chrom_alias$genbank)],
-        start = as.numeric(start) - 1,
+        start = as.numeric(start),
         end = as.numeric(end),
-        bin = ucsc_bin(start, end),
+        bin = ucsc_bin(start - 1, end),
         across(c(length, cpgNum, gcNum), as.numeric)
     ) %>%
     dplyr::select(bin, chr, start, end, gene_id = name, length, cpgNum, gcNum, perCpg, perGc, obsExp) %>%

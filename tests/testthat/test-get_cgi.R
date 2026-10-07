@@ -14,6 +14,8 @@ test_that("CGI getters work", {
         expect_gt(ncol(cgi_anno), 0)
         expect_contains(colnames(cgi_anno), c("gene_id", "chr", "strand", "start", "end", "transcript_id", "symbol"))
         expect_true(all(startsWith(cgi_anno$gene_id, "CpG:")))
+        # 1-based closed intervals span end - start + 1 bases
+        expect_equal(cgi_anno$end - cgi_anno$start + 1, cgi_anno$length)
     }
 })
 

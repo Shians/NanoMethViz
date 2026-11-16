@@ -36,11 +36,12 @@ test_that("create_tabix_file rejects mod_code for non-modkit input", {
 test_that("sort_methy_file stops when the sort command fails", {
     skip_on_os("windows")
 
+    # A directory passes the existence check but makes the real `sort` fail
+    # (EISDIR), independent of user privileges.
     x <- tempfile()
-    writeLines(c("sample1\tchr1\t1\t+\t0.5\tread1"), x)
-    withr::defer(unlink(x))
+    dir.create(x)
+    withr::defer(unlink(x, recursive = TRUE))
 
-    Sys.chmod(x, "0000")
     expect_error(sort_methy_file(x), "Failed to sort methylation file")
 })
 
